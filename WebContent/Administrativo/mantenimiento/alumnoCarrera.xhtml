@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body onload="#{alumnoCarreraB.mostrarAlumnoCarrera(1)}">
+        <h:form id="frmAlumnoCarrera" >
+            <h:panelGroup id="pnDatos">
+            <h:outputLabel value="CARRERA" />
+            <h:selectOneMenu value="#{alumnoCarreraB.alumnoCarrera.carrera}" >
+                <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(1)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}" />
+            </h:selectOneMenu>
+            
+            <h:outputLabel value="ALUMNO" />
+            <h:inputText value="#{alumnoCarreraB.alumnoCarrera.alumno}" />
+            </h:panelGroup>
+            <br />
+            <h:panelGroup layout="block">
+                <h:commandButton value="NUEVO">
+                    
+                </h:commandButton>
+                <h:commandButton value="GUARDAR">
+                    
+                </h:commandButton>
+                <h:commandButton value="EDITAR">
+                    
+                </h:commandButton>
+                <h:commandButton value="CANCELAR">
+                    
+                </h:commandButton>
+            </h:panelGroup>
+            
+            <p:dataTable value="#{alumnoCarreraB.alumnoCarreraL}" var="alumnoCarrera" rowKey="#{alumnoCarrera}" selectionMode="single" selection="#{alumnoCarreraB.alumnoCarrera}">
+                <p:ajax event="rowSelect"  update=":frmAlumnoCarrera:pnDatos"     /> 
+                <p:column headerText="ALUMNO">
+                    #{alumnoCarrera.alumno}
+                </p:column>
+                <p:column headerText="CARRERA">
+                    #{alumnoCarrera.carrera}
+                </p:column>
+                <p:column headerText="CATEGORIA">
+                    #{alumnoCarrera.categoria}
+                </p:column>
+                
+                <p:column headerText="DESCUENTO">
+                    #{alumnoCarrera.descuento}
+                </p:column>
+                
+                <p:column headerText="ESTADO">
+                    #{alumnoCarrera.estadoRegistro}
+                </p:column>
+                
+            </p:dataTable>
+            
+        </h:form>
+    </h:body>
+</html>
+

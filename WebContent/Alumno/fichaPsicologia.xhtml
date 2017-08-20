@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>FICHA PSICOLOGICA INTEGRAL UPIG</title>        
+        <style>
+            /*#CCF0F0*/
+            /*#BCE4E4*/
+            html{font-family: "Tahoma";width: 70%;margin: 0 auto;background: silver;border: 1px solid;}
+            body{margin: 0;padding: 5px;background-color: white;box-shadow: 1px 2px 3px #000}
+            #fichaPsicologica-datosPersonales{border: 1px solid #000;padding: 5px;margin: 0 auto 8px;}
+            /*#fichaPsicologica-datosPersonales span{ width: 140px;display: inline-block}*/
+            .frmFichaPsicologica-opciones{margin-left: 50px}
+
+            .frmFichaPsicologica-opciones table td{padding: 2px 6px}
+            .frmFichaPsicologica-opciones-sub{font-weight: bold}
+
+            h1{padding: 5px 10px;margin-bottom: 10px;margin-top: -5px;font-size: 2em;text-align: center;}
+            form > label, div > label{float: left;width: 13em;margin-right: 5px;font-weight: bold}
+            input[type="submit"]{padding: 5px 10px;}
+            input[type="text"].textoresp{border: none;border-bottom: dashed;text-transform: uppercase;width: 26%;}
+            .botonera{display: block;text-align: center;margin-bottom: 10px;}
+            .botonera input{padding: 7px 20px;margin-right: 2em;margin-left: 2em;font-size: 1.4em;cursor: pointer;border: 1px solid black;background: #0069B3;color: white;}                                    
+        </style>
+    </h:head>
+    <h:body>
+<h:panelGroup  >
+        <img src="http://www.upig.edu.pe/java/documentos/BANNER.jpg" width="100%" height="100%"/>
+
+        <h1>FICHA PSICOLOGICA INTEGRAL UPIG</h1>
+
+        <h:form id="frmFichaPsicologica" >
+            
+            
+            <div id="fichaPsicologica-datosPersonales">
+                <h:outputLabel for="txtnom" value="NOMBRES Y APELLIDOS"/>
+                <h:inputText id="txtnom" value="#{usuarioB.persona.paterno} #{usuarioB.persona.materno} #{usuarioB.persona.nombres}" readonly="true" style="width: 40%;" 
+                             class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtdni" value="DNI" />
+                <h:inputText id="txtdni" readonly="true" value="#{usuarioB.persona.numero_documento}" style="width: 11%;" class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtfecnac" value="FECHA NACIMIENTO"/>
+                <h:inputText id="txtfecnac" readonly="true" value="#{usuarioB.persona.fecha_nacimiento}"  style="width: 11%;" class="textoresp"/>
+                <br/>
+             
+                
+                <h:outputLabel for="txtecivil" value="ESTADO CIVIL"/>
+                <h:inputText id="txtecivil" readonly="true" value="#{estadoCivilB.mostrarEstadoCivil(usuarioB.persona.estado_civil).descripcion}" class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtrecdom" value="RECCION DOMICILIARIA"/>
+                <h:inputText id="txtrecdom" readonly="true" value="#{usuarioB.persona.direccion_ubigeo}" style="width: 49%;" class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtfono" value="TELEFONO CASA"/>
+                <h:inputText id="txtfono" readonly="true" value="#{usuarioB.persona.telefono}" class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtcel" value="CELULAR"/>
+                <h:inputText id="txtcel" readonly="true" value="#{usuarioB.persona.celular}" class="textoresp"/>
+                <br/>
+                <h:outputLabel for="txtmail" value="E-MAIL"/>
+                <h:inputText readonly="true" value="#{usuarioB.persona.emailP}" class="textoresp"/>
+                <br/>
+            </div>
+
+            <div style="border: 1px solid;margin-bottom: 20px;padding: 4px 4px ">
+                <ui:repeat value="#{encuestaB.mostrarGrupo(4)}" var="grupo">
+                    <h3>#{grupo.descripcion}</h3>
+
+                    <ui:repeat value="#{encuestaB.mostrarPreguntas(4,grupo.grupo,'P')}" var="preguntas" varStatus="status" >
+                        <span style="padding: 10px 20px;display: block;width: 95%;font-weight: bold;">
+                            <span style="color: orangered;font-size: 1.5em;">#{preguntas.orden}</span> 
+                            <span style="font-size: 0.8em;color: #0069B3;">#{preguntas.descricion.toUpperCase()}</span>
+                        </span> 
+
+                        <div class="frmFichaPsicologica-opciones" >
+                            <h:inputText  value="#{encuestaB.rpt}"  rendered="#{preguntas.tipo eq 'texto'}" style="width: 50%;" required="true" class="textoresp">
+                                <f:ajax execute="@this" listener="#{encuestaB.adicionarRepuesta(4, preguntas.pregunta, 0,encuestaB.rpt,usuarioB.usu)}" />
+                            </h:inputText>
+
+                            <h:selectOneRadio  value="#{encuestaB.rpt}"  rendered="#{preguntas.tipo eq 'radio'}" required="true"  >
+                                <f:selectItems  value="#{encuestaB.mostrarRespuesta(4, preguntas.pregunta)}" var="repuesta" itemLabel="#{repuesta.descripcion}" itemValue="#{repuesta.repuesta}"  />
+                                <f:ajax execute="@this" listener="#{encuestaB.adicionarRepuesta(4, preguntas.pregunta, encuestaB.rpt,'',usuarioB.usu)}"  />
+                            </h:selectOneRadio>
+
+                            <div class="frmFichaPsicologica-opciones-sub">
+                                <ui:repeat value="#{encuestaB.mostrarSubPreguntas(4,grupo.grupo,preguntas.pregunta,'H')}" var="subPreguntas" varStatus="status" >
+                                    <span style="color: orangered;font-size: 1.1em;">#{preguntas.orden}. #{status.index+1}</span> 
+                                    <span style="font-size: 0.9em;color: #0069B3;">#{subPreguntas.descricion}</span><br/>
+                                    
+                                    <h:inputText  value="#{encuestaB.rpt}"  rendered="#{subPreguntas.tipo eq 'texto'}" style="width: 20%;" required="true" class="textoresp">
+                                        <f:ajax execute="@this" listener="#{encuestaB.adicionarRepuesta(4, subPreguntas.pregunta, 0,encuestaB.rpt,usuarioB.usu)}" />
+                                    </h:inputText>
+                                    
+                                    <h:selectOneRadio  value="#{encuestaB.rpt}"  rendered="#{subPreguntas.tipo eq 'radio'}" required="true"  >
+                                            <f:selectItems  value="#{encuestaB.mostrarRespuesta(4, subPreguntas.pregunta)}" var="repuesta" itemLabel="#{repuesta.descripcion}" itemValue="#{repuesta.repuesta}"  />
+                                            <f:ajax execute="@this" listener="#{encuestaB.adicionarRepuesta(4, subPreguntas.pregunta, encuestaB.rpt,'',usuarioB.usu)}"  />
+                                    </h:selectOneRadio>
+                                    <br/>
+                                </ui:repeat>
+                            </div>
+                            
+                        </div>
+                    </ui:repeat>
+                </ui:repeat>
+            </div>
+
+            <div class="botonera">
+                <h:commandButton value="ENVIAR" onclick="if (!confirm('¿Esta seguro de Enviar?'))
+                            return false;" >
+                    
+                    <f:ajax execute="@this" listener="#{encuestaB.guardar(1,usuarioB.periodoS,usuarioB.carrera.carrera,usuarioB.usu)}"/>
+                </h:commandButton>
+
+                <h:commandButton value="LIMPIAR" type="reset" actionListener="#{encuestaB.limpiar()}"/>
+
+            </div>
+     
+        </h:form>
+   </h:panelGroup>
+        <h:panelGroup rendered="#{encuestaB.controlEncuesta(1,usuarioB.periodoS,usuarioB.usu,4)}" >
+            GRACIAS YA INGRESO SU FICHA PSICOLOGICA..
+        </h:panelGroup>
+    </h:body>
+</html>
+

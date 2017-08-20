@@ -1,0 +1,123 @@
+
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        template="/Alumno/plantilla.xhtml"
+                        xmlns:p="http://primefaces.org/ui"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core">
+                       
+            <ui:define name="titulo">
+                Cronograma de Pagos
+            </ui:define>
+                  
+            <ui:define name="contenido">
+                <style>
+                    .fecha-clase{display: block;width: 100%}
+                    .fecha-clase li{display: inline-block;vertical-align: top;width: 49.5%;padding: 5px 0px}
+                    .fecha-clase li span{display: block;padding: 10px}
+                </style>
+                <span class="tituloCuerpo"> OFICINA DE ECONOMIA Y FINANZAS </span>
+                <h:form style="padding: 10px">
+                
+                    <ul class="fecha-clase">
+                        <li>
+                            <span ><b>Inicio de clases:</b>#{usuarioB.seccionPeriodoS.fechaInicio}</span>
+                        </li>
+                        <li>                            
+                            <span style="text-align: right"><b>Término de clases:</b>#{usuarioB.seccionPeriodoS.fechaFin}</span>
+                        </li>
+                    </ul>
+                     
+                    
+                    <p:dataTable value="#{cronogramaB.mostrarCronogramaPago(usuarioB.institucionS, usuarioB.periodoS,usuarioB.seccionPeriodoS.vencimiento,usuarioB.seccionPeriodoS.carrera,usuarioB.alumnoPeriodoS.nivel_referencial)}" var="cronograma" rowIndexVar="status" emptyMessage="NO SE REGISTRO ACTIVIDAD" >
+                        
+                        <p:column headerText="Nr." width="10">
+                            #{status +1 }
+                        </p:column>
+                        
+                        <p:column headerText="ACTIVIDADES">
+                            #{cronograma.actividad}
+                        </p:column>
+                        
+                        <p:column headerText="INVERSIÓN S/." width="100" style="text-align: center">
+                            #{cronograma.inversion}
+                        </p:column>
+                      
+                        <p:column headerText="FECHA DE PAGO" width="350">
+                            #{cronograma.fechaCompleta()}
+                        </p:column>
+                       
+                    </p:dataTable>
+                    
+                    
+                    
+                   
+                    
+                    <p>
+                        <b>La UPIG</b> establece el siguiente cronograma de pagos para el Semestre <b> #{periodoB.mostrarPeriodo(usuarioB.institucionS, usuarioB.periodoS).desPeriodo}</b>   con la opción de ser
+                        cancelado en 5 cuotas (*).
+                        <br/>
+                        <b>
+                            *El costo total del ciclo también tiene la opción de ser cancelado en 1, 2, 3 o 4 cuotas, para ello
+                            deberán acercarse a Economía para que le generen su nuevo cronograma de pagos.
+                        </b>
+                    </p>
+                    
+                     <p:dataTable value="#{cronogramaB.mostrarCronogramaVencimineto(usuarioB.institucionS, usuarioB.periodoS,usuarioB.seccionPeriodoS.vencimiento)}" var="vencimiento" emptyMessage="NO SE GENERA CUOTAS" style="width: 400px">
+                        <p:column headerText="CUOTA" >
+                           #{vencimiento.desConcepto}  #{vencimiento.cuota} 
+                            
+                        </p:column>
+                        <p:column headerText="FECHA VENCIMIENTO" >
+                            <h:outputLabel value="#{vencimiento.fecha}" >
+                                <f:convertDateTime pattern="dd /MM /yyyy" />
+                            </h:outputLabel>
+                            
+                        </p:column>
+                         <p:column headerText="MONTO" rendered="false" >
+                             
+                         </p:column>
+                    </p:dataTable>
+                    
+                    
+                    <p>
+                        Las cuotas se cancelan a través de los siguientes bancos (internet o agencia) con las siguientes
+                        instrucciones para el pago de pensiones:
+                    </p>
+                    
+                    <div style="display: block;border: 1px solid silver;height: 120px">
+                        <div style="display: inline-block;vertical-align: top;border: 1px solid #0069B3;;height: 100%;width: 48%">
+                            <b>CUENTA CORRIENTE UPIG</b><br/>                            
+                            <b>BANCO CONTINENTAL:</b><br/>
+                            <span> 011 749 0100001635 90</span><br/>
+
+                            <b>BANCO SCOTIBANK</b><br/>
+                            <span> 000 - 5599520</span><br/>
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;border: 1px solid #0069B3;height: 100%;width: 48%">
+                            <b>- AHORA TAMBIÉN PUEDES CANCELAR TU PAGOS CON</b><br/>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/175px-Visa.svg.png" width="150" />
+                            <img src="https://cdn.evbuc.com/images/12193218/88861954715/2/logo.png" width="150" />
+                        </div>
+                        
+                    </div>
+                    Es importante verificar los datos en el Boucher de depósito del banco, cualquier error es responsabilidad
+                    del usuario.
+
+                    <p>
+                        El Voucher de depósito será canjeado por un comprobante de pago en el área de Caja de la
+                        Universidad en el mes del depósito.
+                    </p>
+                    <p>
+                        El Estudiante tiene acceso al Reporte de no Adeudo que se encuentra en su intranet y que se
+                        accede desde la Página Web http://www.upig.edu.pe/ | opción /intranet/Estudiante - opción
+                        /Facturación y Cobranza.
+                    </p>
+                </h:form>
+                
+                
+                
+            </ui:define>
+            
+        </ui:composition>
+

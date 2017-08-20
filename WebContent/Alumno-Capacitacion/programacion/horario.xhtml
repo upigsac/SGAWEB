@@ -1,0 +1,160 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:jspc="http://xmlns.jcp.org/jsp/jstl/core"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Horario de Clases
+            </ui:define>
+            
+            
+            
+            <ui:define name="contenido">
+                
+                          
+        <script type="text/javascript">
+                        
+         $(document).ready(function(){
+             $(".curso").mouseenter(function(){
+                 
+                 var curso="."+$(this).find("div").attr("class");
+                
+                $(curso).parent().parent().addClass("curso-activo");
+                
+             });
+             
+             
+             $(".curso").mouseleave(function(){
+                 
+                 var curso="."+$(this).find("div").attr("class");
+                $(curso).parent().parent().removeClass("curso-activo");
+                
+                
+             });
+         });
+            
+
+        </script>
+                <style>
+                    .botonera{margin: 15px 0px;text-align: center}
+                    .botonera input[type="submit"]{padding: 10px 15px;margin: 2px 2px;cursor: pointer}
+                    #tbHorario{width: 100%;border-collapse: collapse}
+                    #tbHorario th{background-color: rgb(51,103,176);color: white;height: 40px;font-family: "tahoma";border: 1px solid white }
+                    #tbHorario td:first-child{width: 6%;background-color: rgb(51,103,176);color: white;font-family: "tahoma";font-size: 12px}
+                    #tbHorario td{text-align: center;border: 1px solid silver;width: 14%;;transition:  all 0.5s}
+                    .curso-activo{cursor: pointer;background-color: #ECF0F1;color: rgb(51,103,176);transition: all 0.5s}
+                    .curso{}
+                    td:not(.curso){background-color: rgba(0,0,0,0.2)}
+                    
+                </style>    
+                
+                <span class="tituloCuerpo"> HORARIO DE CLASES </span>
+                
+              
+                
+                <div class="seccionHorario">
+                
+                    <h:form id="frmSeccionHorario">
+                        
+                   
+                        <h:panelGroup layout="block" id="pnHorario" >
+                    <table id="tbHorario">
+                        <th>HORA</th>
+                        <th>LUNES</th>
+                        <th>MARTES</th>
+                        <th>MIERCOLES</th>
+                        <th>JUEVES</th>
+                        <th>VIERNES</th>
+                        <th>SABADO</th>
+                        
+                        
+                    <ui:repeat value="#{horarioB.horarioSeccionAlumno(1, usuarioB.periodoS,usuarioB.usu,'%')}" var="horario" >
+                        <tr style="height: 80px">
+                            <td  >#{horario.get(0)} - #{horario.get(1)}</td>
+                            <td ><h:outputLabel value="#{horario.get(2)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(3)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(4)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(5)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(6)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(7)}" escape="false"/> </td>
+                            
+                            
+                            
+                        </tr>
+                    
+                    </ui:repeat>
+                        
+                    </table>
+                            <script>
+                                
+                                for(x=7;x>=1;x--){
+                                  campo="NO EXISTE";
+                                  cont=0;
+                                    $("#tbHorario tr td:nth-child("+x+")").each(function(){
+                                       if($(this).text().trim()!==""){                                                                         
+                                           console.log($(this).text().trim());
+                                           cont++;
+                                           if (campo !== $(this).text()){                                             
+                                               obj=$(this);
+                                               campo=$(this).text();                                    
+                                               cont=1;
+                                           }else{
+                                              // alert(cont);
+                                                    
+                                               $(obj).attr("rowspan",cont);
+                                               $(obj).addClass("curso");
+                                               $(this).remove();                                               
+                                               //cont=;
+                                           } 
+                                       }
+                                       else{
+                                           campo="NO EXISTE";
+                                           cont=0;  
+                                       }
+                                   }) ;
+                        }
+                          //-------------------------------------------------------------------------------
+                          
+                   $("#tbHorario tr").each(function(){
+                       //$(this).children("td:nth-child(1)").css("font-weight", "bold");
+                       var cadena=$(this).children("td:nth-child(1)").text().split("-");
+                       var i="" + cadena[0];
+                       var x="" + cadena[1];
+                       
+                       var hora_fin=new Date("2000","01","01",x.toString().trim().substring(0,2),x.toString().trim().substring(3,6));
+                       var hora_ini=new Date("2000","01","01",i.toString().trim().substring(0,2),i.toString().trim().substring(3,6));
+                       $(this).css("height",((hora_fin.getTime() - hora_ini.getTime())/60000)+20);
+                    //   console.log((hora_fin.getTime() - hora_ini.getTime())/60000);
+                    //   console.log("----------------------------------------------");
+                   });
+                      
+                 </script>
+                                
+                                
+                    </h:panelGroup>
+                        <div class="botonera" >
+                             <h:commandButton value="HORARIO CLASES"  >
+                                 <f:ajax execute="@this" render="pnHorario" listener="#{horarioB.horario()}" />
+                            </h:commandButton>
+                            <h:commandButton value="EXAMEN PARCIAL"  >
+                                <f:ajax execute="@this" render="pnHorario" listener="#{horarioB.examenesParcial()}" />
+                            </h:commandButton>
+                            <h:commandButton value="EXAMEN FINAL" >
+                                <f:ajax execute="@this" render="pnHorario" listener="#{horarioB.examenesFinal()}" />
+                            </h:commandButton>
+                            
+                        </div>
+                   
+                    </h:form>
+                    
+                
+                </div>
+                    
+                    
+            </ui:define>
+            
+        </ui:composition>
+
+

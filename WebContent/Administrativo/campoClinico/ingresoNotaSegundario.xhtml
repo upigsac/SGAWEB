@@ -1,0 +1,207 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                          xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"
+                            xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/Administrativo/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+                INGRESO DE NOTAS CAMPO CLINICO
+                
+            </ui:define>
+             
+                         
+              <ui:define name="contenido">
+                  
+              
+        <script>
+           
+                    
+                $(document).ready(function(){
+                    
+                    
+                    
+                    
+                    
+                  $(document).on("keydown", ".ui-cell-editor-input input", function(event) {
+                        
+                    if (event.keyCode === 13 || event.keyCode===40 ) {
+                        
+                        var fila=$(this).closest("tr").index()+1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===38 ) { 
+      
+                        var fila=$(this).closest("tr").index()-1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===37 ) { 
+      
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()-1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    else if (event.keyCode===39 ) { 
+                            
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()+1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    
+                });
+                    
+                });    
+                
+                    
+                    
+                </script>
+        
+        <style>
+            #frmDocenteSecundario\:pnDatos{border: 1px solid silver;padding: 5px ;margin: 0px 0px 20px}
+            #frmDocenteSecundario\:pnDatos >label{display: inline-block;width: 150px;margin: 5px;vertical-align: top}
+             #frmDocenteSecundario\:pnDatos select{width: 250px}
+            #frmDocenteSecundario\:pnDatos table{display: inline-block}
+            #frmDocenteSecundario\:pnDatos table td{text-align: center}
+            #frmDocenteSecundario\:pnDatos table td input{display: block}
+            #frmDocenteSecundario\:pnDatos select{padding: 4px}
+            .aprovado{color: blue;display: block;text-align: center}
+            .deshaprovado{color:  red;display: block;text-align: center}
+             .temaAdmin table tbody,.temaAdmin table thead{font-size: 0.8em}
+            
+            .temaAdmin table thead th:nth-child(1){width: 20px}
+            .temaAdmin table thead th:nth-child(2){width: 80px}
+            .temaAdmin table thead th:nth-child(3){width: 350px}
+            .temaAdmin table tbody tr td{text-align: center}
+            .temaAdmin table tbody tr td:nth-child(3){text-align: left}
+            .temaAdmin table tbody tr td:nth-last-child(2){font-weight: bold;}
+        </style>
+        <span class="tituto-admin">INGRESO DE NOTAS CAMPO CLINICO  </span>
+        #{ingresoNotaCampoClinicoB.loadq(usuarioB.institucionS,usuarioB.periodoS)}
+        <h:form id="frmDocenteSecundario">
+            <h:panelGroup id="pnDatos" layout="block">
+             <h:outputLabel value="DOCENTE SECUNDARIO:" />
+             <h:selectOneMenu value="#{ingresoNotaCampoClinicoB.codPersona}">
+               
+                <f:selectItem itemLabel="--Seleccionar--"/>
+                <f:selectItems value="#{ingresoNotaCampoClinicoB.personaL}" var="docente" itemLabel="#{docente.nombreCompletos()}" itemValue="#{docente.persona}" />
+                <f:ajax execute="@this" render="cboCarrera" listener="#{ingresoNotaCampoClinicoB.mostrarSeccion}" />
+            </h:selectOneMenu>
+             <br/>
+             
+                <h:outputLabel value="CARRERA:" />
+             <h:selectOneMenu id="cboCarrera" value="#{admin_notaB.seleccionCarrera}">
+               
+                <f:selectItem itemLabel="--Seleccionar--"/>
+              
+                <f:selectItems value="#{carreraB.mostrarCarreraPersonalSecundario(usuarioB.institucionS, usuarioB.periodoS, personalB.buscarPersonalCodigo(admin_notaB.seleccionDocente).personal)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}" />
+                <f:ajax execute="@this" render="cboSeccion" />
+            </h:selectOneMenu>
+             <br/>
+             
+             
+             <h:outputLabel value="SECCION:" />
+             <h:selectOneMenu id="cboSeccion" value="#{mostrarSubNota.codSeccion}">
+               
+                <f:selectItem itemLabel="--Seleccionar-"/>
+                
+                <f:selectItems value="#{ingresoNotaCampoClinicoB.seccionL}" var="seccion" itemLabel="#{seccion.descripcion}" itemValue="#{seccion.seccion}" />
+                
+                <f:ajax execute="@this" render="cboCurso" listener="#{ingresoNotaCampoClinicoB.mostrarCurso}" />
+               
+            </h:selectOneMenu>
+             <br/>
+             <h:outputLabel value="CURSO:" />
+             <h:selectOneMenu id="cboCurso" value="#{ingresoNotaCampoClinicoB.codCurso}">               
+                <f:selectItem itemLabel="--Seleccionar--"/>
+                <f:selectItems value="#{ingresoNotaCampoClinicoB.cursoL}" var="curso" itemLabel="#{curso.curso} - #{curso.descripcion}" itemValue="#{curso.curso}" />
+                <f:ajax execute="@this" render="cboTipoExamen" listener="#{ingresoNotaCampoClinicoB.mostrarTipoExamen}"  />
+             </h:selectOneMenu>
+             <br/>
+             <h:outputLabel value="EVALUACIÓN:" />
+             <h:selectOneMenu id="cboTipoExamen" value="#{ingresoNotaCampoClinicoB.codTipoExamen}">               
+                <f:selectItem itemLabel="--Seleccionar--"/>                
+                <f:selectItems value="#{ingresoNotaCampoClinicoB.tipoExamenL}" var="tipoExamen" itemLabel="#{tipoExamen.descripcion}" itemValue="#{tipoExamen.tipo_examen}" />
+                <f:ajax execute="@this"  render="cboGrupo" listener="#{ingresoNotaCampoClinicoB.mostrarGrupo}"/>
+             </h:selectOneMenu>
+             <br/>
+             <h:outputLabel value="GRUPO:" />
+             <h:selectOneRadio id="cboGrupo" value="#{ingresoNotaCampoClinicoB.codGrupo}" layout="lineDirection">
+                 <f:selectItems value="#{cursoSeccionDocenteTipoExamenB.cursoSeccionDocenteTipoExamenL}"  var="grupo" itemValue="#{grupo.grupoExamen}"  itemLabel="#{grupo.grupoExamen}"/>
+                 <f:ajax execute="@this" render="notasSub"  listener="#{ingresoNotaCampoClinicoB.mostrarSubNota(true)}" />
+             </h:selectOneRadio>
+             </h:panelGroup>
+            
+           
+            
+            
+            <p:dataTable  id="notasSub" value="#{ingresoNotaCampoClinicoB.notaL}" var="registro" editable="true" editMode="cell"   style="min-height: 250px"    rowIndexVar="status"  styleClass="temaAdmin"   >
+             
+               <p:ajax event="cellEdit"  listener="#{admin_notaB.editarCelda}"  />
+               <f:facet name="header" >  
+                   <h:outputLabel value="#{admin_notaB.tipoExamen.descripcion}" style="color: red" title="#{admin_notaB.tipoExamen.tipo_examen}"  />
+               </f:facet>
+               <p:column headerText="N°" width="20">
+                              #{status+1}
+                          </p:column>   
+                          <c:forEach items="#{admin_notaB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}"  >
+                            
+                               <f:facet name="header" >  
+                                     <p:commandLink  rendered="#{(column.lectura eq 1)}"  >
+                                         <h:outputLabel escape="false"  value="#{column.header} "   style="display: block;cursor: pointer;color: blue;"  title="#{column.property}"   />
+                                         <f:ajax execute="@this" render="notasSub " listener="#{admin_notaB.mostrarSubNota(usuarioB.institucionS,usuarioB.periodoS,admin_notaB.seleccionCarrera,'200702',admin_notaB.seleccionCurso,admin_notaB.seleccionSeccion,column.property,admin_notaB.seleccionGrupoExamen,true)}" />                                         
+                                     </p:commandLink>
+                                      <h:outputLabel rendered="#{(column.lectura ne 1)}" escape="false"  value="#{column.header}" title="#{column.property}" styleClass="#{column.editable == true ? 'editable':''}"   />                               
+                                </f:facet>                             
+                            
+                            <p:cellEditor rendered="#{column.editable}">
+                            <f:facet name="output">                             
+                                
+                            <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} " />
+                            </f:facet>
+                                <f:facet name="input" >
+                                <p:inputText value="#{registro[column.property]}" style="width: 60px;display: block;margin: 0 auto;text-align: center"   maxlength="2"  onkeypress="return soloNumeros(event)"  onblur="valorIncorecto(this,20)" >
+                                    <f:validateDoubleRange minimum="#{column.numeroMinimo}" maximum="#{column.numeroMaximo}" />
+                                </p:inputText>
+                            
+                            </f:facet>
+                            </p:cellEditor>
+                            <h:outputText value="#{registro[column.property]}"  rendered="#{not column.editable}" styleClass="#{(column.property ne 'alumno' ? (column.property ne 'nombres' ? (column.property ne 'estado_registro' ? (column.property ne 'promedio'? ( registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'):''):''):''):'')} "/>                            
+                            
+                            </p:column>
+                        </c:forEach> 
+                            <f:facet name="footer"  >   
+                                
+                                <ul style="display: block;;width: 100%;margin: 0px;padding: 0px">
+                                    <li style="display: inline-block;width: 5%;vertical-align: top;text-align: left">
+                                        <p:commandButton  icon="ui-icon-refresh" style="display: inline-block">
+                                            <f:ajax render="notasSub" execute="@this" listener="#{ingresoNotaCampoClinicoB.mostrarSubNota(ingresoNotaCampoClinicoB.banderaAtras)}" />
+                                        </p:commandButton>
+                                    </li>
+                                    <li style="display: inline-block;width: 89%;vertical-align: top;padding: 8px 0px">
+                                        <h:outputLabel value=""  />
+                                            
+                                        
+                                        
+                                    </li>
+                                    <li style="display: inline-block;width: 5%;vertical-align: top">
+                                        
+                                        <p:commandButton   value="ATRAS" style="display: inline-block; " rendered="#{admin_notaB.banderaAtras}" >
+                                            <f:ajax render="notasSub" execute="@this" listener="#{ingresoNotaCampoClinicoB.mostrarSubNota(false)}" />
+                                        </p:commandButton>
+                                    </li>
+                                </ul>
+                            </f:facet>
+                                 
+
+                        </p:dataTable> 
+            
+        </h:form>
+        </ui:define>
+          </ui:composition>

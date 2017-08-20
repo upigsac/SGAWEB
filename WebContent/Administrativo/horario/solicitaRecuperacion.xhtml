@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            
+            DOCENTE
+            <BR/>
+            <BR/>
+            <BR/>
+            
+            
+              
+                    <p:dataTable value="#{cargaElectivaB.mostrarCargaElectiva(1,'20142','200702','000001','SIS02M1','IS202')}" var="detalleCE" rowIndexVar="status" >
+                <p:column headerText="" >                                       
+                    <span style="display: block;width: 20px;height: 20px;background-color: #{detalleCE.estadoRegistro eq 1?'blue':detalleCE.estadoRegistro eq 2?'red':'green'}" />
+                </p:column>
+                    
+                    
+                    <p:column headerText="N">
+                        #{status + 1}
+                    </p:column>
+                    
+                    <p:column headerText="FECHA">
+                        #{detalleCE.fecha}
+                        
+                        
+                    </p:column>
+                    <p:column headerText="DIA">
+                        #{utilB.listaDiasSemanaNormal[detalleCE.dia-1]}
+                        
+                    </p:column>
+                    <p:column headerText="HORA INICIO">
+                        #{detalleCE.hora_inicio}
+                    </p:column>
+                    <p:column headerText="HORA FIN">
+                        #{detalleCE.hora_fin}
+                    </p:column>
+                    <p:column headerText="GRUPO">
+                        #{detalleCE.grupo}
+                    </p:column>
+                    <p:column headerText="SEMANA">
+                        #{detalleCE.semana}
+                    </p:column>
+                    <p:column headerText="DESCRIPCION">
+                        #{detalleCE.descripcion}
+                    </p:column>
+                    <p:column headerText="RECUPERACION">
+                        <h:commandButton value="Solicitar" type="button" onclick="dlgRecuperacion.show()" disabled="#{not (utilB.convertDate(utilB.fechaHoy(),'yyyy-MM-dd') le detalleCE.fecha)}" >
+                            
+                        </h:commandButton>
+                    </p:column>
+            
+            </p:dataTable>
+            
+            <p:dialog widgetVar="dlgRecuperacion" modal="true">
+                
+                <h:outputLabel value="FECHA DE RECUPERACION"/>
+                <h:inputText value="#{recuperacionClasesB.registrotm.fecha_inicio}"/>
+                <BR/>
+                <h:outputLabel value="HORA INICIO"/>
+                <h:inputText value="#{recuperacionClasesB.registrotm.hora_inicio}"/>
+                <BR/>
+                <h:outputLabel value="HORA SALIDA" />
+                <h:inputText value="#{recuperacionClasesB.registrotm.hora_fin}"/>
+                <BR/>
+                <h:outputLabel value="OBSERVACION"/>
+                <h:inputTextarea value="#{recuperacionClasesB.registrotm.hora_fin}"/>
+                <BR/>
+                
+                <BR/>
+                <h:commandButton value="ENVIARS"  >
+                    <f:ajax execute="@this" listener="#{recuperacionClasesB.solicitar(recuperacionClasesB.registroReprogramacionm)}" />
+                </h:commandButton>
+            </p:dialog>
+            
+        </h:form>
+    </h:body>
+</html>
+

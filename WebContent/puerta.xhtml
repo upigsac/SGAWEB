@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ht="http://java.sun.com/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>..::. REGISTRO DE ENTRADA .::..</title>
+        
+        
+        <style>
+        *{padding: 0px;margin: 0px;font-family: sans-serif}
+        html{display: block;height: 99.4%;width: 100%}
+        body{display: block;height: 100%}
+        .banner{background: #0081c2;display: block;width: 100%;height: 100%;position: absolute;top: 0;left: 0;}
+        
+        .banner ul{display: block;width: 100%;height: 100%}
+        .banner ul li{display: block;width: 100%;height: 100%;position: absolute;left: 0px;z-index: 0 }
+        .banner ul li.activo{z-index: 1}
+        .ui-datatable-odd{background-color: white}
+        input:focus{outline: none}
+        #txtCodigo{font-size: 3.0em;border: none;width: 300px;text-align: center;background-color: transparent;color: white}
+        .cabecera{display: block;height: 8%;border: 1px solid silver;background-color: #0081c2;color: white;padding: 2px }
+        .cuerpo-principal{display: block;height: 91.9%;position: relative}
+        .cuerpo{display: block;width: 100%;height: 100%;background-color: rgb(236,240,245);}
+        
+        .cuerpo-central{display: block;height: 100%;max-width: 1224px;margin: 0px auto}
+        .cuerpo-central >div{display: inline-block;vertical-align: top;background-color: white;border-radius: 5px;border: 1px solid silver;overflow: hidden;position: relative;height: 95%;margin: 15px 5px}
+        .cuerpo-izquierda{width: 52%;}
+        .cuerpo-derecha{width: 45%}
+        .cuerpo-derecha-datos{display: block;padding: 10px}
+        .cuerpo-derecha-datos-personales label{font-weight: bold;color: #0069B3;font-size: 1.5em}
+        .cuerpo-derecha-datos span{font-size: 1.5em;margin-left: 50px}
+        .nota{width: 250px;min-height: 200px;display: inline-block;vertical-align: top;box-shadow:  5px 4px 2px silver;transform: rotate(-3deg);margin: 5px}
+        .nota-cabecera{display: block;height: 30px;width: 100%;border: 1px solid silver;text-align: center;font-weight: bold;line-height: 30px}
+        .nota-cuerpo{padding: 5px;font-size: 1.0em}
+        .tiempo{font-size: 2.0em;color: yellow}
+        
+        .notify{ width: 250px;padding: 10px 5px;border-radius: 5px;color: white}
+        .error{background-color: red}
+        .correcto{background-color: #008000}
+        
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+    <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        <script>
+        $(document).ready(function(){      
+          $("#txtCodigo").focus();
+          $(".cuerpo-principal").click(function(){
+               $("#txtCodigo").focus();
+          });
+          
+          
+          
+          var indice=0;
+          setInterval(function(){
+                    $(".banner ul li").removeClass("activo");
+                    $($(".banner ul li").get(indice)).addClass("activo");
+                    
+                    if(indice===($(".banner ul li").length-1)){
+                        indice=0;
+                    }else{
+                        indice++;
+                    }
+                    
+                    
+                },5000);
+                
+                
+         setInterval(function(){
+             var tiempo = new Date();
+             var hora = '0' + tiempo.getHours();
+             var minuto ='0'+ tiempo.getMinutes() ;  
+             var segundo =  '0' + tiempo.getSeconds()  ;
+             
+             $(".tiempo").text(hora.substr(-2) +":"+ minuto.substr(-2) +":"+segundo.substr(-2));
+            
+             
+             
+         },500);       
+                
+                
+        });
+            var tiempo;
+            var cont=10;
+            var bandera=true;
+            function start(){
+                cont=10;
+               
+                if (bandera){
+                    console.log("entre");
+                    tiempo=setInterval(function(){
+                    
+                        if(cont>=1){
+                            cont--;
+                            console.log(cont);
+                            bandera=false;
+                        }else{
+                              cont=10;
+                           
+                            bandera=true;
+                            $("#btRegresar").click();
+
+                        }
+
+
+                    },3000);
+                    
+                }
+                 
+            }
+            
+            function stop(){                 
+                clearInterval(tiempo);              
+            }
+            
+            
+            function notificacion(msg,speed,fadeSpeed,type){
+                $('.notify').remove();
+
+			      if (typeof fade != "undefined"){
+			      clearTimeout(fade);
+			      }
+			      $('body').append('<div class="notify '+type+'" style="display:none;position:fixed;right:10px"><p>'+msg+'</p></div>');
+			
+			      notifyHeight = $('.notify').outerHeight();
+			
+			      $('.notify').css('top',-notifyHeight).animate({top:10,opacity:'toggle'},speed);
+			
+			      fade = setTimeout(function(){
+			
+			      $('.notify').animate({top:notifyHeight+10,opacity:'toggle'}, speed);
+			
+			      }, fadeSpeed);
+			}
+    </script>
+        
+    </h:head>
+    
+    
+    
+    <h:body>
+    
+    	<span style="position: absolute;bottom: 0px;right: 0px;height: 100%;width: 50px;background-color: red;z-index: 999;transform: rotate(108deg) ;display: none;"></span>
+        <f:event type="preRenderView" listener="#{puertaB.validarPuerta}" />
+        <h:form prependId="false" style="display: block;height: 100%;width: 100%;position: relative"  ht:autocomplete="off">
+            
+       <div class="cabecera" >
+           <div style="height: 100%;display: block;width: 950px;margin: 0 auto">
+               <div style="display: inline-block;vertical-align: top;height: 100%;">
+                <h:commandLink onclick="dlgBusqueda.show()" >
+                <img src="http://www.upig.edu.pe/intranet/imagenes/indice/logotipo.png" style="width: 80px;height: 95%" />
+                   
+               <f:ajax execute="@this" />
+                </h:commandLink>
+                </div>
+                <div style="display: inline-block;vertical-align: top;height: 100%;height: 100%;text-align: center;font-family: tahoma!important;font-weight: bold">                    
+                    <h1>UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h1>
+                    <b class="tiempo" >08:00:00</b>
+                </div>
+           </div>
+            
+           
+            
+        </div>
+        <div class="cuerpo-principal" >
+            
+             <div style="position: absolute;top:  0px;left: 0px;z-index: 999;width: 100%;display: block">
+                 <div style="padding: 5px;border-radius: 10px;background-color: rgba(0,0,0,0.7);width: 300px;margin: 0 auto">
+                       <h:inputText id="txtCodigo" value="#{puertaB.codigo}" maxlength="10" required="true" />       
+                        <h:commandButton  id="btIngresar" value="ingresar" style="display: none" >
+                            <f:ajax execute="@this txtCodigo" render=" txtPersona txtCodigo imgFoto txtDatos  pnCuerpo tbPersonaDeuda"  listener="#{puertaB.busquedaAlumno}" />
+                        </h:commandButton>
+                        <h:commandButton  id="btRegresar" value="regresar" style="display: none">
+                            <f:ajax execute="@this " render="pnCuerpo"  listener="#{puertaB.regresar()}" />
+                        </h:commandButton>
+                 </div>
+              
+            </div>   
+            
+            
+           <h:panelGroup layout="block" id="pnCuerpo" style="display: block;width: 100%;height: 100%">
+           <div class="cuerpo" style="display: #{puertaB.bandera?'block':'none'};position: relative">
+               <div class="cuerpo-central" >
+                   
+             
+               
+                    <div class="cuerpo-izquierda" >
+                     <h:graphicImage id="imgFoto" value="SVerImagenAlumno?alumno=#{puertaB.persona.persona}" style="width: 100%;height: 100%"/>   
+                     
+                     </div>           
+
+                     <div class="cuerpo-derecha" >
+                     <span style="padding: 10px;background-color: rgb(245,245,245);color: rgba(88, 81, 81, 0.82);font-weight: bold;font-size: 1.5em;text-align: center;display: block"> DATOS PERSONALES </span>
+                     <div class="cuerpo-derecha-datos" >
+                         <div class="cuerpo-derecha-datos-personales">
+                             <h:outputLabel value="CODIGO" rendered="false" />
+                         <br/>
+                         <h:outputText id="txtPersona" value="#{puertaB.persona.persona}" rendered="false" />
+                         <br/>
+                         <h:outputLabel >
+                              <i class="fa fa-user" />
+                             APELLIDOS Y NOMBRES
+
+                         </h:outputLabel>
+                         <br/>
+                         <h:outputText id="txtDatos" value="#{puertaB.persona.paterno} #{puertaB.persona.materno} #{puertaB.persona.nombres}" />
+                         <br/>
+                         <h:outputLabel >
+                             <i class="fa fa-file-text-o" />
+                             DNI
+                         </h:outputLabel>
+                         <br/>
+                         <h:outputText id="txtDNI" value="#{puertaB.persona.numero_documento}" />
+                         <br/>
+
+                          
+
+                          <h:outputLabel > 
+                           <i class="fa fa-envelope-o" />
+                           E-MAIL
+                           </h:outputLabel>
+                         <br/>
+                         <h:outputText id="txtCorreo" value="#{puertaB.persona.emailP}" /> 
+                         <br/>
+                         
+                         <h:outputLabel > 
+                           <i class="fa fa-graduation-cap" />
+                           #{ puertaB.alumno ne null?'ALUMNO':puertaB.tipoPersona.descripcion}      
+                           </h:outputLabel>
+                         <br/>
+                         <h:outputText id="txtAlumno" value="#{puertaB.alumno.alumno}"  /> 
+                         </div>
+                         
+               
+
+                         
+                         
+                         <br/>
+                         <ui:repeat value="#{puertaB.notaL}" var="itemNota">
+                             <div class="nota" style="background-color: #{itemNota.color};">
+                                 <div class="nota-cabecera" >
+                                    #{itemNota.titulo}
+                                </div>
+                                 <div class="nota-cuerpo">
+                                     <p>
+                                         <h:outputLabel value="#{itemNota.mensaje}" escape="false" />
+                                    </p>
+                                 </div>
+                                
+                            </div>
+                         </ui:repeat>
+
+                     </div>
+                     
+
+
+
+
+                    
+                 </div>
+               </div>
+                <div style="display: block;position: absolute;bottom: 0px; text-align: center;height: 70px;line-height: 70px;width: 100%;font-size: 2.0em;background-color: #{puertaB.personaDeudaL.size() eq 0?'#008000':'#BC1010'}">
+
+                         <h:commandLink  style="color: white" rendered="#{(puertaB.personaDeudaL.size() eq 0)}" >
+                         <i class="fa fa-smile-o"  />
+                         <b>BIENVENIDO A LA UNIVERSIDAD</b> 
+                         <f:ajax execute="@this"  />
+                         </h:commandLink>
+                         
+                    <h:commandLink style="color: white" rendered="#{(puertaB.personaDeudaL.size() ne 0)}" onclick="dlgDeuda.show()" >
+                             <i class="fa fa-meh-o"  />
+                             <b>USTED  TIENE #{puertaB.personaDeudaL.size()} BOLETAS VENCIDAS, REGULARIZAR SUS PAGOS.</b>
+                             <f:ajax execute="@this" />
+                         </h:commandLink>
+                     </div>
+               
+               
+            </div>
+            
+            
+            
+                <div class="banner" style="display: #{puertaB.bandera?'none':'block'}">
+                <ul>
+                    <ui:repeat value="#{puertaB.bannerPuertaL}" var="itemBanner">
+                        <li style="background: url('#{itemBanner.ruta}') no-repeat  center center;background-size: 100% 100%" />
+                    </ui:repeat>
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            </h:panelGroup>
+            
+           
+        </div>
+            <p:dialog header="REGISTRO DE DEUDAD" widgetVar="dlgDeuda" modal="true" closeOnEscape="true" resizable="false" width="700" height="400" >
+                
+                <p:dataTable id="tbPersonaDeuda" value="#{puertaB.personaDeudaL}" var="itemPersonaDeuda" rowIndexVar="status" scrollable="true"  scrollHeight="300" >
+
+                         <p:column headerText="Nr." width="15">
+                             #{status +1}
+                        </p:column> 
+                         <p:column headerText="PERIODO" width="80">
+                             #{itemPersonaDeuda.periodo}
+                         </p:column>
+                         <p:column headerText="CUOTA" width="50">
+                             #{itemPersonaDeuda.numCuota}
+                         </p:column>
+                         <p:column headerText="CONCEPTO">
+                             #{itemPersonaDeuda.desConcepto}
+                         </p:column>
+                         <p:column headerText="FECHA" width="100">
+                             #{itemPersonaDeuda.fecha}
+                         </p:column>
+                         <p:column headerText="DIAS" width="50">
+                             <b style="color: red"> #{itemPersonaDeuda.dia}</b>
+                         </p:column>
+                     </p:dataTable>
+            </p:dialog>
+            
+            
+         </h:form>
+        <h:form prependId="false">
+            
+            <p:dialog header="..:: BUSQUEDA DE PERSONA ::.." widgetVar="dlgBusqueda" modal="#{true}" closeOnEscape="#{true}" resizable="#{false}" height="500" width="650"  >
+                
+                <h:outputLabel value="PATERNO" />
+                <h:inputText id="txtPaterno" value="#{puertaB.paternoB}" />
+                <br/>
+                <h:outputLabel value="MATERNO" />
+                
+                <h:inputText id="txtMaterno" value="#{puertaB.maternoB}" />
+                <br/>
+                <h:outputLabel value="NOMBRES" />
+                <h:inputText id="txtNombres" value="#{puertaB.nombresB}" />
+              
+                <h:commandButton value="BUSCAR" style="opacity: 0"  >
+                                <f:ajax execute="txtPaterno txtMaterno txtNombres" render="tbBusqueda" listener="#{puertaB.filtroPersona()}"/>
+                  </h:commandButton>    
+                
+                <p:dataTable id="tbBusqueda" value="#{puertaB.personaL}" var="itemPersona" rowKey="#{itemPersona.persona}" selectionMode="single"   selection="#{puertaB.persona}"    rowIndexVar="status" scrollable="#{true}" scrollHeight="300" >
+                    
+                    <p:ajax event="rowSelect"  listener="#{puertaB.seleccionaPersona()}" update=" txtPersona txtCodigo imgFoto txtDatos  pnCuerpo tbPersonaDeuda" oncomplete="dlgBusqueda.hide()" />
+                    <p:column headerText="Nr." width="10">
+                        #{status + 1}
+                    </p:column>
+                    <p:column headerText="DATOS">
+                        #{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}
+                    </p:column>
+                    
+                    <p:column headerText="TELEFONO" width="100">
+                        #{itemPersona.telefono}
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+    </h:body>
+    
+</html>
+

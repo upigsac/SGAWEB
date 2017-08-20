@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <script>
+            alert("Estas utilizando "+navigator.appName+" **  "+navigator.appVersion);
+            alert(navigator.appCodeName);
+        </script>
+        <h:form>
+   
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="Fecha inicial:" />
+                <p:calendar id="txtFechaIni" value="#{asistenciaInstitucionB.fechaInicio}" pattern="dd/MM/yyyy"  />
+                <br/>
+                <h:outputLabel value="Fecha Final:" />
+                <p:calendar id="txtFechaFin" value="#{asistenciaInstitucionB.fechaFinal}" pattern="dd/MM/yyyy" />
+                
+            
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera">
+                <h:commandLink type="button" value="Mostrar" >
+                    <f:ajax execute="@this txtFechaIni txtFechaFin " render="tbDetalle" listener="#{asistenciaInstitucionB.mostra()}" />
+                    
+                </h:commandLink>
+            </h:panelGroup>
+            
+            
+            <p:dataTable id="tbDetalle" value="#{asistenciaInstitucionB.detalleL}" var="detalle" rowIndexVar="status" >
+                <p:column headerText="Nro." width="10" >
+                    #{status+1}
+                </p:column>
+                
+                <p:column headerText="FECHA" width="100" >
+                    #{detalle.fecha}
+                </p:column>
+                
+               
+               
+              
+                
+                <p:column headerText="ENTRADA" width="100" >
+                    #{detalle.entrada}
+                </p:column>
+                <p:column headerText="SALIDA" width="100" >
+                    #{detalle.salida}
+                </p:column>
+                <p:column headerText="TIEMPO" width="100" >
+                    #{detalle.duracion}
+                </p:column>
+                 <p:column headerText="PUERTA" >
+                    #{detalle.desLocal}
+                </p:column>
+            </p:dataTable>
+            
+        </h:form>
+    </h:body>
+</html>
+

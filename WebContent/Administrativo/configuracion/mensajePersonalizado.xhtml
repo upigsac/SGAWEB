@@ -1,0 +1,201 @@
+
+    
+    
+    
+        <ui:composition   xmlns:ui="http://java.sun.com/jsf/facelets"
+        				  xmlns="http://www.w3.org/1999/xhtml"
+					      xmlns:h="http://xmlns.jcp.org/jsf/html"					      					          
+					      xmlns:p="http://primefaces.org/ui"
+					      xmlns:f="http://xmlns.jcp.org/jsf/core"
+					      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+                		  template="/Administrativo/plantilla.xhtml">
+              <ui:define name="titulo">
+                
+                CONTROL DE ACCESOS
+                
+            </ui:define>  
+            <ui:define name="contenido">  
+    
+    
+
+      
+                  
+        <h:form id="frmMensajeAlumno" prependId="false" >
+        
+        <div class="paneles">
+        <h:commandLink id="btNuevo"  disabled="#{mensajeB.bandera}" styleClass="boton-normal" >
+        <i class="fa fa-file-o" />
+        	Nuevo
+        	<f:ajax  execute="@this" render=":frmMensajeAlumno:pnPrincipal txtFechaInicio txtFechaFinal txtCuerpo txtPie btNuevo btInsertar btCancelar" listener="#{mensajeB.nuevo}" />
+        </h:commandLink>
+        <h:commandLink  id="btInsertar" disabled="#{not mensajeB.bandera}" styleClass="boton-normal" >
+        <i class="fa fa-floppy-o" />
+        	Insertar
+        	<f:ajax  execute="@this txtFechaInicio txtFechaFinal txtCuerpo txtPie"  render=":frmMensajeAlumno:pnPrincipal txtFechaInicio txtFechaFinal txtCuerpo txtPie btNuevo btInsertar btCancelar "  listener="#{mensajeB.insertar}" />
+        </h:commandLink>
+       <h:commandLink  id="btCancelar" disabled="#{not mensajeB.bandera}" styleClass="boton-normal" >
+       <i class="fa fa-undo" />
+        	Cancelar
+        	<f:ajax  execute="@this"  render=":frmMensajeAlumno:pnPrincipal btNuevo btInsertar btCancelar" resetValues="true" listener="#{mensajeB.cancelar}" />
+        </h:commandLink>
+        
+       
+        
+        </div>
+        
+        <div  class="paneles">
+        
+        <h:panelGroup layout="block" id="pnPrincipal" >
+        
+        
+        <h:panelGroup layout="block" rendered="#{not mensajeB.bandera}" >
+        <ui:repeat var="itemMensaje" value="#{mensajeB.mensajeL}">
+	        <div class="column paneles" style="width:  250px;max-height: 250px" >
+	           <div  class="paneles">
+		        	<h:outputLabel value="#{itemMensaje.fechaInicio} - #{itemMensaje.fechaFinal}" />
+		        	<h:commandLink  title="Nuevo"   >
+			        	<i class="fa fa-user-plus" />
+			        	<f:ajax  execute="@this"  render=":frmMensajeAlumno:pnAlumno" listener="#{mensajeB.nuevoAlumnoMensaje(itemMensaje)}" />
+			        </h:commandLink>
+			        
+			        <h:commandLink title="Editar" >
+			        <i class="fa fa-pencil" />
+			        <f:ajax  execute="@this" render=":frmMensajeAlumno:pnPrincipal :frmMensajeAlumno:btNuevo :frmMensajeAlumno:btInsertar :frmMensajeAlumno:btCancelar" listener="#{mensajeB.editar(itemMensaje)}" />
+			        </h:commandLink>
+	        	</div>
+		        <div class=" paneles" >
+		        	<h:outputLabel escape="false" value="#{itemMensaje.cuerpo}" />
+		        	
+		        
+		        </div>
+		        <div class=" paneles" >
+		        	
+		        	<h:outputLabel escape="false" value="#{itemMensaje.pie}" />
+		        
+		        </div>
+		        
+		     
+	        </div>        
+        </ui:repeat>
+        
+        
+        </h:panelGroup>
+        
+        
+        <h:panelGroup layout="block" rendered="#{ mensajeB.bandera}"  >
+        <h:outputLabel value="Fecha Inicio" />
+        <p:calendar id="txtFechaInicio"  value="#{mensajeB.mensaje.fechaInicio}" pattern="dd-MM-yyyy"  required="true" >
+            <p:ajax event="dateSelect" process="@this"  update="txtFechaFinal" />
+        
+        </p:calendar>
+        <br />
+        <h:outputLabel value="Fecha Final" />
+        <p:calendar  id="txtFechaFinal" value="#{mensajeB.mensaje.fechaFinal}" maxdate="#{mensajeB.mensaje.fechaInicio}" pattern="dd-MM-yyyy" required="true" />
+       
+         <p:editor id="txtCuerpo" value="#{mensajeB.mensaje.cuerpo}" />
+         <h:outputLabel value="Pie" />
+         <h:inputText  id="txtPie" value="#{mensajeB.mensaje.pie}"  />
+        
+        </h:panelGroup>
+        </h:panelGroup>
+        </div>
+        
+        
+        
+    
+        
+        
+        
+        
+        <p:dialog widgetVar="dlgMensajeAlumno" header="MENSAJE ALUMNO"  width="650" modal="true" closeOnEscape="true" resizable="false">
+        <h:outputLabel  value="Institucion" />
+        <h:selectOneMenu value="#{mensajeB.mensajeAlumno.institucion}" ><br />
+              
+        <f:selectItems  value="#{mensajeB.institucionL}" var="itemInstitucion" itemLabel="#{itemInstitucion.descripcion}" itemValue="#{itemInstitucion.institucion}" />
+        <f:ajax execute="@this"  render="cbPeriodo" listener="#{mensajeB.mostrarPeriodo}"  />
+        </h:selectOneMenu>
+        
+        <br />
+        <h:outputLabel  value="Periodo" /><br />
+        <h:selectOneMenu id="cbPeriodo" value="#{mensajeB.mensajeAlumno.periodo}" >
+         <f:selectItem itemLabel="TODOS"  itemValue="%" />     
+        <f:selectItems value="#{mensajeB.periodoL}" var="itemPeriodo"  itemLabel="#{itemPeriodo.desPeriodo}" itemValue="#{itemPeriodo.periodo}" />
+        <f:ajax execute="@this"  render="cbCarrera" listener="#{mensajeB.mostrarCarrera}"   />
+        </h:selectOneMenu>
+        <br />
+        <h:outputLabel  value="carrera" /><br />
+        <h:selectOneMenu id="cbCarrera" value="#{mensajeB.mensajeAlumno.carrera}" >
+         <f:selectItem itemLabel="TODOS"  itemValue="%" />     
+        <f:selectItems value="#{mensajeB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion}" itemValue="#{itemCarrera.carrera}" />
+        </h:selectOneMenu>
+        
+        
+        <div class="paneles" style="position: relative;" >
+        <i class="fa fa-search" />
+        <h:inputText id="txtBusqueda" value="#{mensajeB.busquedaAlumno}" autocomplete="false" hp:placeholder="Busqueda ..." style="border:none;width: 90%;"    >
+        <f:ajax event="keyup" execute="@this cbCarrera" render="pnPersona"  listener="#{mensajeB.filtraPersona}" />
+        </h:inputText>
+        
+        <div  style="max-height: 200px;overflow: auto;position: absolute;left: 0;display: block;width: 100%;background-color: white" >
+	        <h:panelGroup layout="block" id="pnPersona" >	     
+	        
+	        <ui:repeat var="itemPersona" value="#{mensajeB.personaL}">
+	        <div class="paneles">
+	          <h:commandLink style="display:block"> 
+	           <img src="SVerImagenAlumno?alumno=#{itemPersona.persona}" style="width: 25px;height: 25px" />
+		         #{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}
+		        <f:ajax execute="@this" render=":frmMensajeAlumno:txtBusqueda :frmMensajeAlumno:pnAlumno :frmMensajeAlumno:pnPersona" listener="#{mensajeB.seleccionaPersona(itemPersona)}" />
+	        </h:commandLink>
+	   		</div>
+	        </ui:repeat>	       
+	        </h:panelGroup>
+        </div>
+        
+        </div>
+        
+    
+        
+        
+        
+        
+        
+         
+        <div class="paneles" style="min-height: 250px">
+        
+        <h:panelGroup id="pnAlumno" layout="block">
+        <ui:repeat var="itemAlumnoMensaje" value="#{mensajeB.mensajeAlumnoL}" varStatus="status">
+        <div class="column" style="border: 1px solid silver;border-radius:3px;padding: 1px 2px"  >
+        
+        	#{itemAlumnoMensaje.alumno}
+        	<h:commandLink title="Eliminar">
+        	<i class="fa fa-times" />
+        	<f:ajax execute="@this" render=":frmMensajeAlumno:pnAlumno" listener="#{mensajeB.eliminarAlumnoMensaje(status.index)}" />
+        	</h:commandLink>
+        </div>
+                
+        </ui:repeat>
+        </h:panelGroup>
+        
+        
+        </div>
+                
+        
+       	  <f:facet name="footer">
+          <div style="display: block;text-align: right">
+          <h:commandLink  styleClass="boton-rojo" onclick="dlgMensajeAlumno.hide()" >
+          CANCELAR
+          <f:ajax execute="@this" />
+          </h:commandLink>
+          
+          
+          </div>
+          </f:facet>
+        </p:dialog>
+        
+        </h:form>
+        
+        
+        
+</ui:define>
+</ui:composition>
+

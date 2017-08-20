@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+        <h:form id="frmExamenOnline">
+          <h:panelGroup layout="block" id="pnBotonera">
+              <h:commandButton value="Nuevo Examen" onclick="dlExamenOnline.show()">
+                  <f:ajax execute="@this"  listener="#{administrarExamenOnlineB.nuevoExamen()}" />
+               </h:commandButton>
+              
+              <h:commandButton value="Nuevo Grupo" onclick="dlgArmado.show()">
+                  <f:ajax execute="@this"  listener="#{administrarExamenOnlineB.nuevoExamen()}" />
+               </h:commandButton>
+           </h:panelGroup>
+           
+            <p:dataTable id="tbExamen" value="#{administrarExamenOnlineB.examenL}" var="examen" rowIndexVar="status" rowKey="#{examen.examen}" selectionMode="single" selection="#{administrarExamenOnlineB.examen}" >
+               <p:column headerText="Nr.">
+                   #{status +1 }
+               </p:column>
+               <p:column headerText="EXAMEN">
+                   #{examen.descripcion }
+               </p:column>
+               <p:column headerText="FECHA INICIO">
+                   #{examen.fechaInicio }
+               </p:column>
+               <p:column headerText="FECHA FINAL">
+                   #{examen.fechaInicio}
+               </p:column>
+           </p:dataTable>
+           
+           
+           
+           <p:dialog header="Nuevo Examen Onlin" widgetVar="dlExamenOnline" width="500" height="700">
+           <h:outputLabel value="CODIGO" />
+           <h:inputText id="txtExamen" value="#{administrarExamenOnlineB.examen.examen}" />
+                         <br/>
+           <h:outputLabel value="Examen:" />
+           <h:inputText id="txtDescripcion" value="#{administrarExamenOnlineB.examen.descripcion}" />
+                         <br/>
+            <h:outputLabel value="Fecha Inicio" />
+            <p:calendar id="txtFechaInicio" value="#{administrarExamenOnlineB.examen.fechaInicio}" pattern="dd-MM-yyyy" />
+            <br/>
+           <h:outputLabel value="Fecha fin" />
+           <p:calendar id="txtFechaFinal" value="#{administrarExamenOnlineB.examen.fechaInicio}" pattern="dd-MM-yyyy" />
+          <h:panelGroup layout="block" id="pnSubBotonera">
+              <h:commandButton type="button" value="Guardar." >
+                  <f:ajax execute="txtExamen txtDescripcion txtFechaInicio txtFechaFinal" render="tbExamen" listener="#{administrarExamenOnlineB.guardarExamen()}" />
+               </h:commandButton>
+           </h:panelGroup>
+               
+           </p:dialog>
+            
+            
+            <p:dialog header="Armado de Pregunta Respuesta" widgetVar="dlgArmado" width="500" height="300">
+                <h:outputLabel value="Pregunta"  />
+                <h:inputText value="" />    
+                <br/>
+                <h:outputLabel value="Respuesta"  />
+                <h:selectOneRadio value="">
+                    <f:selectItems value="#{administrarExamenOnlineB.examRespuestaL}" var="respuesta" itemLabel="#{respuesta.descripcion}" itemValue="#{respuesta.respuesta}" />
+                </h:selectOneRadio>
+                
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+

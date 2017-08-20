@@ -1,0 +1,194 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                    xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Alumno-Capacitacion/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                Gestor de Contenidos
+            </ui:define>
+                        
+            <ui:define name="contenido">
+                <style>
+                    #visor{z-index: 1;border: 1px solid ;width: 100%;height: 100%;background: rgba(0,0,0,0.8);position: absolute;top: 0px;left: 0px;text-align: center;padding: 20px 0px;display: none;cursor: pointer}
+                    .vistaArchivo{border: 1px solid silver;height: 110px;width: 150px ;border-radius: 3px;position: relative}
+                    .vistaArchivo-opciones{position: absolute;top: 0px;left: 0px;width: 100%;height: 100%;background: rgba(0,0,0,0.8);display: none;border: 1px solid red;color: white}
+                    .vistaArchivo-opciones ul{display: block;width: 100%;position: absolute;bottom: 5px;text-align: center}
+                    .vistaArchivo-opciones ul li{display: inline-block;vertical-align: top;border: 1px solid silver;width: 30px;height: 30px}
+                    .vistaArchivo-opciones ul li:hover{background: #0069B3}
+                    .vistaArchivo:hover .vistaArchivo-opciones{display: block}
+                </style>
+                <script>
+                     function mostrarVisor(){
+                            $("#visor").css("display","block") ;
+                        }
+                        
+                        function ocultarVisor(){
+                            $("#visor").css("display","none") ;
+                        }
+                        
+                    </script>
+                <span class="tituloCuerpo"> GESTOR DE CONTENIDO </span>
+                               
+                <h:form id="archivos">
+                    
+               <!--
+                    <div id="panel"/>
+                   --> 
+                   
+                   
+                   <h:inputText id="oculto" value="#{subirArchivoBB.rutaArchivos}" size="150"/>
+                   <br/>
+                   <h:inputText id="ocultoLinea" value="#{subirArchivoBB.rutaArchivosLinea}" size="150"/>                 
+                   
+                   #{subirArchivoBB.cursoAlumno(usuarioB.usuarios.usuario,usuarioB.periodoS,carreraB.carrera.carrera)}                                             
+                   <br/>  
+                   <br/> 
+                   <h:commandButton value="Actualiza" >
+                       <f:ajax execute="@this" render="contenedor" />
+                       
+                   </h:commandButton>
+                   <h:panelGroup layout="block" id="contenedor">
+                  #{subirArchivoBB.buscar()}
+                  <ul>
+                        <li class="archivos liArchivo">ARCHIVO</li>
+                        <li class="archivos liNombre">NOMBRE</li>
+                        <li class="archivos liTipo">TIPO</li>
+                        <li class="archivos liFecha">FECHA DE MODIFICACION</li>
+                        
+                    </ul>
+                    
+                <h:outputLabel value="No existen archivos" rendered="#{empty subirArchivoBB.directorios}"
+                                   style="font-size: 2em;color: red;margin-top: 5px;position: absolute"/>
+                        
+                <ui:repeat  value="#{subirArchivoBB.directorios}" var="lista"  >
+ 
+                   
+                    <ul class="listaArchivos">
+                        
+                            <li class="archivos imagen">
+                                <div style="text-align: center;width: 80px">                               
+                                        <span class="#{subirArchivoBB.Imagen(lista.get(0))}"/>
+                                </div>
+                            </li>
+                                           
+                        <h:commandLink  disabled="#{lista.get(4) eq 'inline-block'}" onclick="document.getElementById('archivos:oculto').value+='\\' + '#{lista.get(0)}',
+                                           document.getElementById('archivos:ocultoLinea').value+='\\' + '#{lista.get(0)}'">
+                            
+                            <li class="archivos nombre">
+                                <h:outputLabel value="#{lista.get(1)}" style="font-size: 1.2em"/>
+                            </li>
+                                                          
+                            <li class="archivos tipo">
+                                #{lista.get(2)}
+                            </li>
+
+                            <li class="archivos fecha">
+                                #{lista.get(3)}
+                            </li>
+                                                                
+                                   <f:ajax  render=":archivos:contenedor" execute="@form"/>
+                                   
+                            </h:commandLink>
+
+                            <li class="archivos descargar">
+                                <div class="vistaArchivo" style="display: #{lista.get(4)}">
+                                    <div style="display: block;height: 80px;width: 100%;">
+                                        <span class="#{subirArchivoBB.Imagen(lista.get(0))}" />
+                                    </div >
+                                    <div style="display: block;height: 30px;width: 100%;border-top: 1px solid silver">
+                                        <h:outputLabel value="#{lista[1].toString().toUpperCase()}" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;display: block;line-height: 30px"/>
+                                    </div>
+                                    
+                                    <div class="vistaArchivo-opciones" >
+                                        #{lista[1].toString()}<br/>
+                                        #{lista[5].toString().concat(" kb")} 
+                                        <ul>
+                                            <li>
+                                                <h:commandLink actionListener="#{subirArchivoBB.Descargar(lista.get(0))}" title="Descargar archivo"
+                                               style="padding-top: 12px;width: 30px;margin-right: 10px;">
+                                                <img src="../../resources/imagenes/descarga_usu.png" height="30" width="25"/>
+                                                </h:commandLink>
+                                                
+                                            </li>
+                                            <li>
+                                                <a target="visor"  style="width: 30px; " title="Ver archivo en linea:"
+
+                                                   href="http://docs.google.com/viewer?url=#{subirArchivoBB.rutaArchivosLinea}/#{lista.get(0)}&amp;embedded=true" onclick="mostrarVisor()">
+                                                    <img src="../../resources/imagenes/descarga_linea.png" height="30" width="25"/>
+                                                </a>
+                                                
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                              
+                                
+                            </li>
+                     
+                    </ul>   
+                    <div id="visor" onclick="ocultarVisor()">
+                     <iframe name="visor" src="" width="80%" height="45%"   />
+                        
+
+                    </div>
+                    <!---
+                    <video  
+                           src="http://www.upig.edu.pe/siguWeb/mgestordoc/1%5C20151/000018/CA0001/CA01N1/0000001067%5CSEMANA_1%5CDIAPOSITIVAS/Derecho.webm" controls="" >
+                    <source src="foo.ogg" type="video/ogg" />
+                    <source src="foo.mp4" type="video/mp4" />
+                   <source src="foo.mp4" type="video/webm" />
+
+                      </video>           
+                -->
+                </ui:repeat>
+                     
+                         
+                         
+                 </h:panelGroup>
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   <script>   
+                   var ruta=document.getElementById('archivos:oculto').value;
+                   var cadena=ruta.split('\\');
+                    
+                    var html;
+                    html="<ul>";
+                    for (i=0; i&lt;cadena.length; i++){
+                       html+='<li>';
+                       html+= cadena[i];
+                       html+="</li>";
+                       }
+                    html+="</ul>";
+                    $("#panel").append(html);
+                    $("#panel ul li").css({display:"inline-block",
+                                            margin:"0px 5px",
+                                            cursor:"pointer"
+                                            });
+                                                                 
+                   function retroceder(valor){
+                       alert(valor);
+                   }
+                   
+                   $('#panel ul li').click(function(){
+                       
+                       alert($(this).text());
+                     
+                   ruta=ruta.replace("\\" + $(this).text() ,"");
+                   document.getElementById('archivos:oculto').value=ruta;
+                });
+                </script>
+              </h:form>   
+          
+            </ui:define>
+            
+        </ui:composition>
+

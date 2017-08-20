@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+       
+                     <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+                SISTEMA DE UPIG ADMINISTRATIVO
+            </ui:define>
+              
+  <ui:define name="contenido">
+      <style>
+          label{display: inline-block; width: 130px}
+          select{margin: 2px 0px}
+          #formReporte\:pnDatos{padding: 10px 15px}
+          #formReporte\:pnBotonera{padding: 20px 40px}
+          #formReporte\:pnBotonera a{border: 1px solid silver;padding: 8px;display: inline-block;width: 80px;text-align: center;background-color: #0069B3;color: white}
+      </style>
+           
+      <span class="tituto-admin">BOLETA DE NOTAS -  #{usuarioB.periodoS}</span>
+  
+            
+      <h:form id="formReporte" >
+          <h:panelGroup layout="block" id="pnDatos">
+              <label>CARRERA</label> 
+                    <h:selectOneMenu value="#{boleta_notasB.seleccionCarrera}"  id="cboCarrera"  >
+                        <f:selectItem itemLabel="-- SELECCIONE --" />
+                        <f:selectItems value="#{boleta_notasB.mostrarCarreraPerido(1,usuarioB.periodoS)}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+                        <f:ajax execute="@this" render="cboAlumno"  />
+                    </h:selectOneMenu>
+             <br/>         
+             <label>ALUMNO</label> 
+             <h:selectOneMenu value="#{boleta_notasB.seleccionAlumno}"  id="cboAlumno"  >
+                        <f:selectItem itemLabel="-- SELECCIONE --" />
+                        <f:selectItems value="#{boleta_notasB.mostrarAlumnoPeridoCarrera(usuarioB.periodoS,boleta_notasB.seleccionCarrera)}" var="alumno" itemValue="#{alumno.persona}" itemLabel="#{alumno.paterno} #{alumno.materno} #{alumno.nombres}" />
+                        <f:ajax execute="@this"  />
+             </h:selectOneMenu>
+          </h:panelGroup>   
+           
+             
+             
+             
+             <h:panelGroup layout="block" id="pnBotonera">
+                 <ui:param  name="param2" value="institucion,1,periodo,#{usuarioB.periodoS},alumno,#{boleta_notasB.seleccionAlumno}" />
+                <h:commandLink     value="IMPRIMIR" target="_blank" actionListener="#{utilB.imprimirIreports('alumno/notas/boletaNotas', 1,fn:split(param2,','))}"   />
+             </h:panelGroup>
+             
+                                
+         </h:form>
+                
+         
+        </ui:define>
+   </ui:composition>
+    </h:body>
+</html>
+

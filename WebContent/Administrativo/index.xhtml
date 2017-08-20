@@ -1,0 +1,139 @@
+
+ <ui:composition 
+ 				xmlns="http://www.w3.org/1999/xhtml"
+ 				xmlns:ui="http://java.sun.com/jsf/facelets"
+ 				xmlns:f="http://xmlns.jcp.org/jsf/core"
+ 				xmlns:h="http://xmlns.jcp.org/jsf/html"
+ 				xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+                template="plantilla.xhtml">
+    
+    <ui:define name="titulo">
+        SISTEMA DE UPIG ADMINISTRATIVO
+    </ui:define>
+    
+ 
+     <ui:define name="contenido">
+    
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+
+     <script>
+     
+     var bandera=false;
+     var idGeneral;
+  
+     function confirmacion(obj,cadena){
+         idGeneral=obj;
+         if(bandera){
+             $(".modal-fondo").remove();
+             $(".modal").remove();
+             bandera=false;
+             return true;
+         }else{
+            if(! $('.modal-fondo').hasClass("modal-fondo")){
+                $('body').append('<div class="modal-fondo"  /> ');
+                 $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                 }else{
+                 $(".modal-fondo").remove();
+                 $(".modal").remove();
+            }                    
+             
+             return false;
+         }
+         
+     }
+     
+     function valida(estado){
+         bandera=estado;           
+         $(idGeneral).click();            
+     }
+     
+     
+     
+     
+     
+     
+    $(document).ready(function(){
+    	 $("body").on("mouseenter",".ficha-note",function(){
+    	$(".ficha-note").draggable({
+            addClasses: false,cursor:'move',containment: '#pnNote',
+            start: function(){
+                   console.log("comenzo......:");
+                   
+            }
+            ,stop: function(){
+            	
+            	$(this).find(".top").val($(this).position().top);
+            	$(this).find(".left").val($(this).position().left);
+            	$(this).find(".btActualizar").click();
+            }
+      });
+      
+    }) 
+    });
+     
+     </script>
+     <style>
+	.ficha-note{border: 1px solid silver;position: absolute;box-shadow:2px 3px 4px silver}
+     .ficha-note-cabecera{display: block;height: 20px;border-bottom: 1px solid silver;padding: 5px 3px;position: relative;cursor: move;}
+     </style>
+           
+    <h:form id="frmNote" prependId="false" style=";height:100%;display:block">       
+    
+    #{adminInicioB.load(usuarioB.persona.persona)}
+    
+    
+    <h:panelGroup layout="block" id="pnNote" style="height:100%;display:block">
+    <ui:repeat  value="#{adminInicioB.personaNoteL}" var="itemNote">
+       
+         <div  class="ficha-note" draggable="true" style=" top: #{itemNote.top}px;left: #{itemNote.left}px;background-color: #{itemNote.color}" >
+         <div class="ficha-note-cabecera" >
+        
+         
+         
+         <h:commandLink title="agregar">
+         <i class="fa fa-plus" style="color:green;" />
+         <f:ajax execute="@this" render=":frmNote:pnNote" listener="#{adminInicioB.nuevoNote}" />
+         </h:commandLink>
+         
+         
+         <h:commandLink styleClass="btActualizar" title="actualizar" style="display:none" >
+         <i class="fa fa-refresh" style="color: green" />
+         <f:ajax execute="@form"  listener="#{adminInicioB.insertarNote(itemNote)}" />
+         </h:commandLink>
+         
+          <h:commandLink title="eliminar" rendered="#{itemNote.note ne 1}" style="position: absolute;top: 0;right: 0" onclick="return confirmacion(this,'Esta seguro de eliminar la Nota');" >
+        <i class="fa fa-times" style="color: red;" />
+         <f:ajax execute="@this" render=":frmNote:pnNote" listener="#{adminInicioB.eliminarNote(itemNote)}" />
+         </h:commandLink>
+         </div>
+         <div style="display: block;">
+		        <h:inputTextarea hp:placeholder="Escribir nota.."  value="#{itemNote.descripcion}" style=";background-color: #{itemNote.color};border:none" >
+		        <f:ajax execute="@this" listener="#{adminInicioB.insertarNote(itemNote)}" />
+		        </h:inputTextarea>
+		        <br/>
+		        <h:inputText  styleClass="top" value="#{itemNote.top}" size="2" style="display:none" />
+		        <h:inputText  styleClass="left" value="#{itemNote.left}" size="2" style="display:none" />
+         
+         </div>
+         	
+   
+         </div>
+         
+         
+         </ui:repeat>
+    </h:panelGroup>
+         
+   
+    
+    </h:form>
+              
+         
+         
+     
+         
+         
+     </ui:define>
+</ui:composition>
+
+

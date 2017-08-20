@@ -1,0 +1,132 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      template="/Alumno/plantilla.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+            
+            <ui:define name="titulo">
+            Historial Academico
+            </ui:define>
+            
+            <ui:define name="contenido">
+            <style>
+ .jqplot-title{
+        color:#FFFFFF;
+    }
+    .jqplot-xaxis-label{
+        color:#FFFFFF; 
+    }
+    .jqplot-yaxis-label{
+        color:#FFFFFF;
+    }
+    .jqplot-xaxis-tick{
+        color:#FFFFFF;
+    }
+    jqplot-yaxis-tick{
+        color:#FFFFFF;
+    }
+            </style>
+                
+             <span class="tituloCuerpo"> HISTORIAL ACADEMICO </span>
+             
+           
+             
+         <h:form id="frmHistorialAcademico" prependId="false"   >
+         #{historialAcademicoB.load(usuarioB.institucionS,usuarioB.usu,usuarioB.periodoL)}
+         <div class="paneles" >
+         
+                   <label>PERIODO INICIO </label>
+                 <h:selectOneMenu  id="cboPeriodoIni"  value="#{historialAcademicoB.periodoInicio}" > 
+                 <f:selectItem itemLabel="SELECCIONE"/>
+                 <f:selectItems value="#{usuarioB.periodoL}" var="periodoIni" itemValue="#{periodoIni.periodo}" itemLabel="#{periodoIni.desPeriodo}"/>
+                 <f:ajax execute="@this" render="cboPeriodoFin" />
+             </h:selectOneMenu>
+            <br/>
+            
+            <label>PERIODO FINAL </label>
+            <h:selectOneMenu  id="cboPeriodoFin"  value="#{historialAcademicoB.periodoFinal}" > 
+                 <f:selectItem itemLabel="SELECCIONE"/>
+                 <f:selectItems  value="#{usuarioB.periodoL}" var="periodoFin" itemValue="#{periodoFin.periodo}" itemLabel="#{periodoFin.desPeriodo}" itemDisabled="#{periodoFin.periodo lt historialAcademicoB.periodoInicio}"/>
+             
+             </h:selectOneMenu>
+         
+         </div>
+              <div class="paneles">
+                <h:commandLink  title="MOSTRAR"    rendered="true" styleClass="boton-normal">
+                <i class="fa fa-eye" />
+                MOSTRAR
+                <f:ajax execute="@this cboPeriodoIni cboPeriodoFin " render="tbDetalle pnEstadistico" listener="#{historialAcademicoB.mostrar}"  />
+            </h:commandLink>
+                
+                
+                
+                
+            <ui:param name="param" value="INSTITUCION,#{usuarioB.institucionS},ALUMNO,#{usuarioB.usu},PERIODOINI,#{historialAcademicoB.periodoInicio},PERIODOFIN,#{historialAcademicoB.periodoFinal}" />
+            <h:commandLink  target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('alumno/academico/historialAcademico', 1,fn:split(param,','))}"     rendered="#{true}"  >
+                
+                <i class="fa fa-print" />
+                IMPRESION
+            </h:commandLink>
+            
+          
+            
+            
+            
+            </div>
+                 
+             
+               <div class="paneles">
+             <p:chart id="pnEstadistico" type="line" model="#{historialAcademicoB.animatedModel1}"   />
+               </div>
+             
+           
+            
+          
+        
+            
+           
+            
+            
+            <p:dataTable id="tbDetalle" value="#{historialAcademicoB.detalleHistorialL}" var="item" rowIndexVar="index" rendered="#{true}" sortBy="#{item.periodo}" sortOrder="descending" >
+               <p:column headerText="PERIODO" width="100"  style="text-align: center" >
+                    #{item.desPeriodo}
+                </p:column>
+                <p:column headerText="CREDITOS" width="100" style="text-align: center">
+                    #{item.credito}
+                </p:column>
+                <p:column headerText="SECCION" width="100">
+                    #{item.desSeccion}
+                </p:column>
+                <p:column headerText="ASIGNATURA">
+                    #{item.desCurso}
+                </p:column>
+                <p:column headerText="PROMEDIO" width="100" style="text-align: center">
+                    #{item.promedio}
+                </p:column>
+                <p:summaryRow>
+                    <p:column colspan="4">
+                        PROMEDIO PONDERADO SEMESTRAL :
+                    </p:column>
+                    
+                    <p:column style="text-align: center;">
+                        #{item.promedioSemestral}
+                    </p:column>
+                </p:summaryRow>
+            </p:dataTable>
+            
+            
+            
+         
+                    
+          </h:form>
+                
+   
+                
+                
+            </ui:define>
+            
+        </ui:composition>
+

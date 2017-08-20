@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LABORATORIOS" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5de7304f-f3f9-4021-9886-d801df441a94">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="@ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="@NRO_EXPEDIENTE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL DI.RPT_CONT_EGRESADO(2,$P{@ALUMNO},$P{@NRO_EXPEDIENTE})}]]>
+	</queryString>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="FACULTADES" class="java.lang.String"/>
+	<field name="EXPIDE" class="java.lang.String"/>
+	<field name="PROFESIONAL" class="java.lang.String"/>
+	<field name="ENCARGADO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="65558472-7fad-40bd-9bc5-79319354ae89" x="146" y="61" width="262" height="24"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FACULTAD DE INGENIERÍAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef943702-d88a-4530-b59c-808bdc0bbcc4" x="59" y="85" width="200" height="20"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARRERA PROFESIONAL DE]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="93f5acb7-cfa3-4297-aae1-25471af1fb0b" x="259" y="85" width="235" height="20"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACULTADES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2d93d354-4247-4f68-bebb-c700c94bb71f" x="130" y="105" width="295" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPARTAMENTO DE LABORATORIO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="89" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6959c945-b2a7-47e7-ae71-83038c56483d" x="202" y="48" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6a4d5c1c-89f0-4ea7-89bc-510ae965d94f" x="259" y="48" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[/LAB/UPIG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7c576829-5a6e-4d5a-b167-b477a89be7f8" x="121" y="25" width="312" height="23"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA DE LABORATORIO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="202" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0890dc6a-fac6-479a-a34f-1eafa668a3b5" x="32" y="7" width="223" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Por la presente se deja constancia que:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f3cc223c-341e-4897-bb0a-60f1c190b289" x="32" y="27" width="341" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPIDE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="60880d37-002d-4f7a-aa04-ec9306263d21" x="32" y="63" width="474" height="35"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROFESIONAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c1e4692f-e392-4dc3-82fc-ebb0b25c0ab5" x="32" y="117" width="474" height="20"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Se expide la presentre constancia a solicitud del interesado.]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="7bc041aa-3f9c-4be3-9192-4ce9fa1173f3" x="330" y="157" width="225" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="65" splitType="Stretch">
+			<line>
+				<reportElement uuid="34e1a70a-d802-4c40-8f78-623074554776" x="143" y="18" width="269" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="778f7fb4-3110-41c9-9a0a-efa56565c3b6" x="170" y="19" width="214" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ENCARGADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ee247da9-7b54-4031-a89e-6a51a79b101c" x="221" y="39" width="113" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Jefe de Laboratorio]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>

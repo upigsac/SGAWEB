@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>PRESUPUESTO</title>
+        <script type="text/javascript" src="#{utilB.ruta}/SGAWEB/resources/js/modal.js"></script>   
+    </h:head>
+    <h:body>
+        <style>          
+            body{background-color: #fff;}
+            a{text-decoration: none;color:#004788 }
+            a:hover{text-decoration:underline }
+            .ui-datatable-odd{background: white}
+            section.cabeza{background-color: #555555;width:100%;padding:15px;box-sizing:border-box;color:#fff;font-weight:bold;font-size:14pt;font-family:"Open Sans";border-radius:5px;}
+            .total{width:1200px;margin:0 auto;}
+            table thead, table tbody{font-size: 0.6em}
+            .fila ,.filaB {border: 1px solid #C0C0C0;margin: 0px;color:#004080;padding: 1px;font-size:15px;border-collapse: collapse;box-sizing:border-box}
+            .fila{font-size:16px;background:rgba(0,0,0,0.1);}
+            .filaB li:nth-child(1){text-indent: 20px;font-weight:bold;font-size:14pt; }
+            .filaB li:last-child{color:#333;font-weight: bold;font-size:14pt;border-right:0;border-right: 1px solid;}
+            .fila li{font-weight: bold;padding:1px;box-sizing:border-box }
+            .cabecera {border: 1px solid ;margin-bottom: 0px;padding: 8px 0px;background-color: #0C7492;color:#fff;font-weight:bold;font-size: 0.9em;}            
+            li{border-right:  1px solid;width: 60px;}
+            .cabecera li,.filaB li,.fila li{display: inline-block;vertical-align: top;text-align: center}
+            .fila li:nth-child(1),.filaB li:nth-child(1){font-size: 0.6em;width: 300PX;text-align: left}
+            .cabecera li:nth-child(1){width: 297px;}
+            .inpt{width: 100%;}
+            table tbody tr td input[type="text"]{display: block;margin: 0 auto;}
+            .ui-widget-header{background: #0C7492;color: white;}
+            .ui-dialog .ui-dialog-content{background: #E5E5E5;}            
+            .botonModal{padding: 2px 20px;color: white;background: rgb(12,95,148);}           
+            .ui-widget-header{text-shadow: initial;}
+            .ui-widget-header .ui-icon{background-color: white;}
+            .ui-widget-overlay{background: black;opacity: 0.6;}           
+            //TABLAS
+            //.ui-datatable-tablewrapper table thead tr th{background: #0C7492 !important;color: white;}
+            .ui-widget-content .ui-state-default{background: none;border: 1px solid;}
+            .ui-dialog table tr td.columnaMes{text-align: center;font-weight: bold;}
+            
+            #pnCabecera{width: 60%;margin: 0 auto;}
+            #pnDetalle{width: 60%;margin: 0 auto;}
+        </style>
+
+        <h:form id="frmGrupo">
+
+            <section class="cabeza">
+                SEMESTRE ACADEMICO:
+                <h:selectOneMenu value="#{presupuestoB.periodo}" >                    
+                    <f:selectItem itemLabel="2014-II" itemValue="20142" />
+                    <f:selectItem itemLabel="2015-I" itemValue="20151" />
+                    <f:ajax execute="@this" render=":frmPresupuesto :frmCabecera:pnCabecera" listener="#{presupuestoB.mostrarGrupos}" />
+                </h:selectOneMenu>
+
+                <h:selectOneRadio id="rbGrupo" value="#{presupuestoB.grupo}" styleClass="radio" >                              
+                    <f:selectItem itemValue="1" itemLabel="PARTIDAS GENERICAS Y ESPECIFICAS" />
+                    <f:selectItem itemValue="2" itemLabel="GASTOS CORRIENTES"/>
+                    <f:ajax execute="@this" render=":frmPresupuesto :frmCabecera:pnCabecera" listener="#{presupuestoB.mostrarGrupos}"/>
+                </h:selectOneRadio>
+            </section>
+
+        </h:form>
+
+        <h:form id="frmCabecera">
+
+            <h:panelGroup id="pnCabecera" layout="block">
+                <ul class="cabecera">
+                    <li>#{presupuestoB.grupo eq '1'?'PARTIDAS GENERICAS Y ESPECIFICAS':'GASTOS CORRIENTES'}</li>                
+                    <ui:repeat value="#{presupuestoB.columnasDinamicas()}" var="colum" >
+                        <li>#{colum.cabecera}</li>
+                    </ui:repeat>
+                </ul>
+            </h:panelGroup>
+
+        </h:form>
+
+        <h:form id="frmPresupuesto">
+
+            <h:panelGroup id="pnDetalle" layout="block">                
+
+                <ui:repeat value="#{presupuestoB.detalleL}" var="detalle" >
+                    <ul class="fila">
+                        <li>
+                            <p:commandLink value="#{detalle.get(0)}.#{detalle.get(1)} - #{detalle.get(2)}" 
+                                           oncomplete="dlg.show()" update=":frmPresupuestoDetalle" 
+                                           actionListener="#{presupuestoB.subHijo(detalle.get(0),detalle.get(1),'0',detalle[detalle.size()-2],detalle[detalle.size()-1])}" />
+                        </li> 
+
+                        <!--meses-->
+                        <ui:repeat value="#{presupuestoB.columnaDinamica}" varStatus="estado" var="col"  >
+                            <li >
+                                <h:outputText value="#{detalle[estado.index+3]}"/>
+                            </li>
+                        </ui:repeat>
+                        <!--meses-->
+                    </ul>
+
+                    <!-- LISTADO DE HIJOS -->
+                    <ui:repeat value="#{presupuestoB.mostrarHijos(detalle.get(0), detalle.get(1))}" var="detalleB"  varStatus="estado" >
+                        <ul class="filaB">                            
+                            <li style="display: inline-block">
+                                <p:commandLink value="#{detalleB.get(0)}.#{detalleB.get(1)}.#{detalleB.get(2)} - #{detalleB.get(3)}" 
+                                               oncomplete="dlg.show()" update=":frmPresupuestoDetalle" 
+                                               actionListener="#{presupuestoB.subHijo(detalleB[0],detalleB[1],detalleB[2],detalleB[detalleB.size()-2],detalleB[detalleB.size()-1])}" />
+                            </li>
+                            <ui:repeat value="#{presupuestoB.columnaDinamica}" var="col1" varStatus="status" >
+                                <li style="display: inline-block">
+                                    <h:outputText value="#{detalleB[4+status.index]}" />
+                                </li>   
+                            </ui:repeat>
+                        </ul>
+                    </ui:repeat>
+                    <!-- LISTADO DE HIJOS -->
+
+                </ui:repeat>
+
+                <!-- TOTAL -->
+                <ui:repeat value="#{presupuestoB.mostrarGrupoTotal(presupuestoB.periodo,presupuestoB.grupo)}" var="detalleT">
+                    <ul class="fila">
+                        <li><h:outputText value="TOTAL" /></li>
+                        <ui:repeat value="#{presupuestoB.columnaDinamica}" var="col2"    varStatus="status">
+                            <li >
+                                <h:outputText value="#{detalleT[status.index+1]}" />
+                            </li>  
+                        </ui:repeat>
+                    </ul>
+                </ui:repeat>
+                <!-- TOTAL -->
+
+            </h:panelGroup>
+
+        </h:form>
+
+        <h:form id="frmPresupuestoDetalle">
+
+            <p:dialog id="dlgDetalle" widgetVar="dlg"  width="1050px" height="500px" header="#{presupuestoB.subTitulo}" 
+                      closable="true" draggable="true" minimizable="false" resizable="false" dynamic="true">
+
+                <p:ajax event="close" update=":frmPresupuesto"/>
+
+                <p:dataTable id="tbsubgrupo" emptyMessage="" value="#{presupuestoB.subGrupoL}" var="detalleC">
+
+                    <p:column headerText="ITEM">  
+                        <h:outputLabel value="#{detalleC[0]}.#{detalleC[1]}.#{detalleC[2]}.#{detalleC[3]}"   />
+                    </p:column>
+
+            
+                    <p:column headerText="#{presupuestoB.tituloColumna}">  
+                        <p:commandLink value="#{detalleC[6]}" rendered="#{not presupuestoB.editable}" 
+                                       oncomplete="dlgNieto.show()" update=":frmPresupuestoNieto"  
+                                       actionListener="#{presupuestoB.subNieto(detalleC[0],detalleC[1],detalleC[2],detalleC[3],'1')}" />
+                        
+                        <h:panelGroup layout="block" rendered="#{presupuestoB.editable}">
+                            <h:outputLabel value="#{detalleC[6]}" rendered="#{(detalleC[detalleC.size()-2]) ne 0}" />
+                            <h:inputText value="#{detalleC[6]}" rendered="#{(detalleC[detalleC.size()-2]) eq 0}" styleClass="inpt">
+                                <f:ajax event="change" execute="@this" listener="#{presupuestoB.editarSubgrupo(presupuestoB.periodo,detalleC[0],detalleC[1],detalleC[2],detalleC[3],'descripcion_nieto',detalleC[6])}"/>
+                            </h:inputText>
+                        </h:panelGroup>
+
+                    </p:column>  
+
+                    <p:column headerText="CANTIDAD ALUMNOS" rendered="#{presupuestoB.ocultarColumnaAlumnos()}">  
+                        <p:commandLink value="#{detalleC[7]}" rendered="#{not presupuestoB.editable}"   
+                                       oncomplete="dlgNieto.show()" update=":frmPresupuestoNieto"  
+                                       actionListener="#{presupuestoB.subNieto(detalleC[0],detalleC[1],detalleC[2],detalleC[3],'1')}" />
+
+                        <h:inputText size="1" value="#{detalleC[7]}" rendered="#{presupuestoB.editable}" onkeypress="return soloNumeros(event)">
+                            <f:ajax event="change" execute="@this"  
+                                    listener="#{presupuestoB.editarSubgrupo(presupuestoB.periodo,detalleC[0],detalleC[1],detalleC[2],detalleC[3],'n_alumnos',detalleC[7])}"/>
+                        </h:inputText>
+                    </p:column>
+
+                    <c:forEach items="#{presupuestoB.columnaNieto}" var="col3" varStatus="status" > 
+                        <p:column headerText="#{col3.cabecera}" styleClass="columnaMes">
+                            <h:outputText value="#{detalleC[status.index+8]}"  rendered="#{not (col3.editable and presupuestoB.editable)}" styleClass="valorMes" />
+                            <h:inputText  size="1" value="#{detalleC[status.index+8]}" rendered="#{col3.editable and presupuestoB.editable}" styleClass="valorMes" onkeypress="return soloNumeros(event)">
+                                <f:ajax event="change" execute="@this"  
+                                        listener="#{presupuestoB.registrar(presupuestoB.periodo,detalleC[0],detalleC[1],detalleC[2],detalleC[3],'0',col3.propiedad,detalleC[status.index+8])}"/>
+                            </h:inputText>
+                        </p:column>
+                    </c:forEach>
+
+                    <f:facet name="footer">
+                        <h:commandButton value="NUEVO" rendered="#{presupuestoB.agregarNieto}" styleClass="botonModal">                                 
+                            <f:ajax render=":frmPresupuestoDetalle:tbsubgrupo" 
+                                    listener="#{presupuestoB.nuevoHijo(presupuestoB.grupo, presupuestoB.padre, presupuestoB.hijo)}" />
+                        </h:commandButton>
+                    </f:facet>
+
+                </p:dataTable>
+
+            </p:dialog>
+
+        </h:form>
+
+        <h:form id="frmPresupuestoNieto">
+
+            <p:dialog id="dlgDetalleNieto" widgetVar="dlgNieto" modal="true"  width="950px" height="400px" header="#{presupuestoB.subTitulo}" 
+                      closable="true" draggable="true" minimizable="false" resizable="false">
+
+                <p:ajax event="close" update=":frmPresupuestoDetalle:tbsubgrupo"/>
+
+                <p:dataTable id="tbNieto" emptyMessage="" value="#{presupuestoB.detalleNietoL}" var="detalleD">
+
+                    <p:column headerText="ITEM">   
+                        <h:outputLabel value="#{detalleD[0]}.#{detalleD[1]}.#{detalleD[2]}.#{detalleD[3]}.#{detalleD[4]}"  />
+                    </p:column>
+
+                    <!--agrege una columna aumentar 1 desde [5]-->                    
+                    <p:column headerText="DESCRIPCION" rendered="#{presupuestoB.ocultarDescripcion()}" styleClass="inpt">                          
+                        <h:inputText value="#{detalleD[6]}">
+                            <f:ajax event="change" execute="@this" listener="#{presupuestoB.editarNieto(presupuestoB.periodo,detalleD[0],detalleD[1],detalleD[2],detalleD[3],detalleD[4],'descripcion_bisnieto',detalleD[index+6])}"/>
+                        </h:inputText>
+                    </p:column> 
+
+                    <p:column headerText="CARGO FUNCIONAL" rendered="#{presupuestoB.ocultarCargoFuncional()}" styleClass="inpt">  
+                        <h:inputText size="15" value="#{detalleD[7]}">
+                            <f:ajax event="change" execute="@this"  
+                                    listener="#{presupuestoB.editarNieto(presupuestoB.periodo,detalleD[0],detalleD[1],detalleD[2],detalleD[3],detalleD[4],'cargo_funcional',detalleD[index+7])}"/>
+                        </h:inputText>
+                    </p:column> 
+
+                    <p:column headerText="APELLIDOS Y NOMBRES" rendered="#{presupuestoB.ocultarApeNom()}" styleClass="inpt">  
+                        <h:inputText value="#{detalleD[8]}">
+                            <f:ajax event="change" execute="@this"  
+                                    listener="#{presupuestoB.editarNieto(presupuestoB.periodo,detalleD[0],detalleD[1],detalleD[2],detalleD[3],detalleD[4],'apellidos_nombres',detalleD[index+8])}"/>
+                        </h:inputText>
+                    </p:column> 
+
+                    <c:forEach items="#{presupuestoB.columnaNieto}" var="col4"  varStatus="status" >
+                        <p:column headerText="#{col4.cabecera} #{texto}" styleClass="columnaMes">
+                            <h:outputText value="#{detalleD[status.index+9]}"  rendered="#{not (col4.editable)}" />
+                            <h:inputText  size="1" value="#{detalleD[status.index+9]}" rendered="#{col4.editable}" onkeypress="return soloNumeros(event)">
+                                <f:ajax event="change" execute="@this"  
+                                        listener="#{presupuestoB.registrar(presupuestoB.periodo,detalleD[0],detalleD[1],detalleD[2],detalleD[3],detalleD[4],col4.propiedad,detalleD[status.index+9])}"/>
+                            </h:inputText>
+                        </p:column>
+                    </c:forEach>
+
+                    <f:facet name="footer">
+                        <h:commandButton value="NUEVO" id="btnuevo" rendered="#{presupuestoB.agregarsubNieto}" styleClass="botonModal" >
+                            <f:ajax execute="@form" render=":frmPresupuestoNieto:tbNieto" 
+                                    listener="#{presupuestoB.nuevoNieto(presupuestoB.grupo, presupuestoB.padre, presupuestoB.hijo, presupuestoB.subGrupo)}" />
+                        </h:commandButton>
+                    </f:facet>
+
+                </p:dataTable>
+
+            </p:dialog>
+
+        </h:form>
+
+    </h:body>
+
+</html>
+

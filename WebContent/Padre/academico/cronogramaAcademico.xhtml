@@ -1,0 +1,110 @@
+      <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                      xmlns="http://www.w3.org/1999/xhtml"
+                      xmlns:h="http://xmlns.jcp.org/jsf/html"                        
+          template="/Padre/plantilla.xhtml">
+          <ui:define name="titulo">
+                CRONOGRAMA ACADEMICO
+            </ui:define>
+            
+<ui:define name="contenido">
+    
+        <style>
+            *{padding: 0;margin: 0px}
+            ul li{list-style: none}
+            .crono-principal{min-width: 300px;display: block;margin: 10px;overflow:  hidden;padding: 2px}
+            .crono-principal:hover{overflow-x:  auto}
+            .crono-cabecera{min-height: 50px;background-color: white;display: table;}
+            .crono-cabecera ul{display: table-cell;vertical-align: top;min-width: 70px;}
+            .crono-cabecera ul li{outline: 1px solid black;}
+            .crono-cabecera ul li span{display: block;text-align: center;background-color: #E9EAED;}
+            .crono-cuerpo{display: block;;height: 280px;position: relative}
+            
+            .rotar{background-color:green;font-weight: bold;display:block;			//white-space:nowrap;
+			-webkit-transform-origin:25px 10px; /* ESTE VALOR SE CALCULA: A/2 */
+			-webkit-transform: rotate(-90deg);
+			-moz-transform-origin:25px 10px; /* ESTE VALOR SE CALCULA: A/2 */
+			-moz-transform: rotate(-90deg);
+			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			position:absolute;
+			bottom:20px; /* ESTE VALOR SE CALCULA: A/2 -5 */
+			bottom:5px\9;
+			left:0;
+			left:15px\9; /* ESTE VALOR SE CALCULA: A/2 -10 */
+                        width: 300px;
+                        height: 0px;
+			line-height:20px;}
+        </style>
+        <h:form>
+              <span class="tituloCuerpo"> CRONOGRAMA ACADEMICO </span>
+            
+      <ui:repeat value="#{cronogramaAcademicoB.mostrarCronogramaAcademico(usuarioB.institucionS, usuarioB.periodoS, usuarioB.usu)}" var="cronograma">
+        <b style="display: block;font-size: 1.5em;text-align: center;padding: 5px">#{cronograma.titulo}</b>
+                 
+               
+               
+                
+        <div class="crono-principal" >
+            
+                    <ui:repeat value="#{cronograma.cronogramaVencimientoModuloL}" var="itemVencimientoModulo">
+                       <div style="outline: 1px solid;;display: table-cell"> 
+                        
+                        
+                            <div style="display: block;outline: 1px solid ;text-align: center"> 
+                                <b>#{itemVencimientoModulo.cronogramaAcademicoVencimientoModulo.descripcion}</b>
+                            </div>
+                        
+                   <div class="crono-cabecera" >
+                     
+                    <ui:repeat value="#{itemVencimientoModulo.cronogramaL}" var="fecha" >
+                
+                        <ul >
+                          <li style="height: 10%"><b style="text-align: center;font-size: 2.0em;display: block">#{fecha.semana}</b></li>
+                          <li style="height: 5%"><span>#{utilB.convertDate(fecha.fechaIni,'dd/MM/yyyy')}</span> </li>
+                          <li style="height: 5%"><span>#{utilB.convertDate(fecha.fechaFin,'dd/MM/yyyy')}</span></li>
+
+                        </ul>   
+              
+               
+                    </ui:repeat> 
+                </div>  
+                
+                <div class="crono-cuerpo"  >
+                    <ui:repeat value="#{itemVencimientoModulo.cronogramaAcademicoL}" var="cuerpo">
+                        
+                        <div style="background-color: #{cuerpo.rotacion ? 'lightskyblue':'white'};display: table;vertical-align: top;position: absolute;height: 100%;width: #{cuerpo.duracion *70}px;outline: 2px solid black;left: #{(cuerpo.semana-1) * 70}px;">
+                            <div style="display: table-cell;vertical-align: middle;text-align: center" >
+                                
+                                <p class="#{cuerpo.rotacion ?'rotar':''}" >#{cuerpo.descripcion}</p>
+                            </div>
+                            
+                            
+                        </div>
+                    </ui:repeat>
+                    
+                </div>
+                        <div style="display: block;text-align: center;outline:  1px solid ;height: 50px">
+                            <p>#{itemVencimientoModulo.cronogramaAcademicoVencimientoModulo.pieModulo}
+                        
+                        
+                            </p>
+                        </div>  
+                           
+                           
+                           
+                </div>
+                    
+                    </ui:repeat> 
+                   
+                
+                
+            
+            </div>
+            
+            </ui:repeat>
+            
+            
+        </h:form>
+    
+    
+</ui:define>                
+      </ui:composition> 

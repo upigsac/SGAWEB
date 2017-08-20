@@ -1,0 +1,141 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:jspc="http://xmlns.jcp.org/jsp/jstl/core"
+                        template="/Alumno/plantilla.xhtml"
+                        xmlns:p="http://primefaces.org/ui"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core">
+            
+            <ui:define name="titulo">
+            Notas Actuales
+            </ui:define>
+            
+            
+    <ui:define name="contenido">
+        <style>
+                    .desaprobado ,.aprobado{font-weight: bold;font-size: 1.1em}
+                    .desaprobado{color: red}
+                    .aprobado{color: #2182C2}
+                    .temaAdmin table thead,.temaAdmin table tbody,.temaAdmin table tfoot{font-size: 0.7em}
+                    .temaAdmin .ui-datatable-odd{background-color: white}
+                    .temaAdmin .ui-state-highlight{background: #2182C2!important}
+                    .temaAdmin .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+                    .temaAdmin tr:hover{background-color: #EEEEEE!important;}
+                    .botones{border: none;border-radius: 3px;display: inline-block;vertical-align: top;padding: 10px 15px;margin: 2px;background-color: #2182C2;color: white;font-size: 1.2em}
+                    #frmMisNotas\:pnDatos{border: 1px solid silver;padding: 8px;margin: 5px 0px}
+                    #frmMisNotas\:pnDatos b{display: inline-block;vertical-align: top;width: 30px;height: 30px;border-radius: 50%;background-color: red;text-align: center;color: white;margin: 2px;font-size: 1.5em}
+                    #frmMisNotas\:pnDatos label{display: inline-block;vertical-align: top;width: 120px;}
+                    #listaPeriodos li{display: inline-block;vertical-align: top;margin:4px;text-align: center}
+                    #listaPeriodos .periodo{border-bottom: 5px solid silver;display: block;width: 50px;font-size: 1.2em}
+                    .seleccionPeriodo{font-weight: bold;color: #2182C2}
+                    .seleccionPeriodo .periodo{border-bottom: 5px solid red!important}
+        </style> 
+         <span class="tituloCuerpo"> NOTAS ACTUALES </span>
+        <h:form id="frmMisNotas" >
+            #{misNotasB.mostrarNotas(1,usuarioB.periodoS,usuarioB.usuarios.usuario)}            
+            <h:panelGroup layout="block" id="pnDatos">             
+                <h2>Resumen Ponderado General</h2> 
+                <ul id="listaPeriodos">
+                <ui:repeat value="#{misNotasB.detallePromedioPonderadoL}" var="periodo">
+                   
+                   <li class="#{usuarioB.periodoS eq periodo.periodo?'seleccionPeriodo':''}">
+                        <span class="periodo ">#{periodo.desPeriodo}</span>
+                        
+                        <span>#{periodo.promedioGeneral}</span>
+                    </li>
+                </ui:repeat>
+                </ul>
+               
+                 <hr/>
+                <br/>
+                
+                <h:outputLabel value="Total Curso" />
+                
+                <b style="background-color: #008000">
+                    <h:outputText value="#{misNotasB.matriculados}" />
+                    
+                </b>
+                
+                <br/>
+                <h:outputLabel value="Aprobados" />
+                <b style="background-color: #2182C2">
+                    <h:outputText value="#{misNotasB.aprobados}" />
+                </b>
+                
+                <br/>
+                <h:outputLabel value="Desaprobados" />
+                <b style="background-color: red">
+                    <h:outputText value="#{misNotasB.desaprobados}" />
+                </b>
+                
+                <br/>
+              
+            
+                                
+            </h:panelGroup>
+              
+            <ui:param name="param2" value="institucion,#{usuarioB.institucionS},periodo,#{usuarioB.periodoS},alumno,#{usuarioB.usuarios.usuario}" />
+                
+                    <h:commandLink  styleClass="botones "    target="_blank" actionListener="#{utilB.imprimirIreports('alumno/notas/boletaNotas', 1,fn:split(param2,','))}"   >
+                        <i class="fa fa-print"/>
+                        BOLETA DE NOTA
+                    </h:commandLink>
+                 
+                <ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},ALUMNO,#{usuarioB.usuarios.usuario}" />
+                <h:commandLink  styleClass="botones"    target="_blank" actionListener="#{utilB.imprimirIreports('alumno/notas/consolidadoNotas', 1,fn:split(param1,','))}"   >                
+                    <i class="fa fa-print"/>
+                        CONSOLIDADO DE NOTA
+                </h:commandLink>
+           
+             <p:dataTable value="#{misNotasB.detalleNotasL}" var="lista" rowIndexVar="status" styleClass="temaAdmin" >
+                <p:column headerText="Nr." width="15">
+                    #{status +1}
+                </p:column>
+                <p:column headerText="CODIGO" width="50">
+                    #{lista.curso}
+                </p:column>
+                <p:column headerText="ASIGNATURA">
+                    #{lista.desCurso}
+                </p:column>
+                
+                 <p:column headerText="E.P - I" width="50" rendered="#{usuarioB.alumnoCarrera.malla ne '2014SM'?usuarioB.alumnoCarrera.malla ne '2016EM':false }" >
+                    <h:outputLabel value="#{lista.practica1}" styleClass="#{ lista.practica1 ge 11?'aprobado':'desaprobado'}" />                    
+                </p:column>
+                
+                <p:column headerText="E.P - II" width="50" rendered="#{usuarioB.alumnoCarrera.malla ne '2014SM'?usuarioB.alumnoCarrera.malla ne '2016EM':false }" >               
+                    <h:outputLabel value="#{lista.practica2}"  styleClass="#{ lista.practica2 ge 11?'aprobado':'desaprobado'}"/>
+                </p:column>
+                
+                <p:column headerText="EXÁMEN PARCIAL" width="50">                    
+                    <h:outputLabel value="#{lista.examenParcial}" styleClass="#{ lista.examenParcial ge 11?'aprobado':'desaprobado'}" />
+                </p:column>
+                
+                <p:column headerText="EXÁMEN FINAL" width="50">
+                   
+                    <h:outputLabel value="#{lista.examenFinal}" styleClass="#{ lista.examenFinal ge 11?'aprobado':'desaprobado'}" />
+                </p:column>
+               <p:column headerText="PROMEDIO" width="70" rendered="false">
+                   
+                   <h:outputLabel value="#{lista.promedio}" styleClass="#{ lista.promedio ge 11?'aprobado':'desaprobado'}" />
+                </p:column>
+               <p:columnGroup type="footer" rendered="false">
+                <p:row>
+                    <p:column colspan="#{usuarioB.alumnoCarrera.malla ne '2014SM'?usuarioB.alumnoCarrera.malla ne '2016EM'?7:5:5 }" style="text-align:right" footerText="Promedio Ponderado Semestral:"  />
+                    
+                    <p:column  style="font-size: 1.5em" footerText="#{misNotasB.promedioSemenestral}" />
+
+                    
+                </p:row>
+                </p:columnGroup>
+                
+                
+            </p:dataTable>
+                
+                
+            
+        </h:form>
+    </ui:define>
+ </ui:composition>
+
+

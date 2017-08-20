@@ -1,0 +1,105 @@
+
+          <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                          xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Historial Academico
+            </ui:define>
+            
+            <ui:define name="contenido">
+                
+             <span class="tituloCuerpo"> CONSOLIDADO DE NOTAS </span>
+        <style>
+            #frmConsolidadoNotas\:pnNotas ul{list-style: none; }
+            #frmConsolidadoNotas\:pnNotas ul li{display: inline-block;padding: 5px 10px;width: 250px;vertical-align: top}
+            #frmConsolidadoNotas\:pnNotas >ul{display: block;border: 1px solid;margin: 1px}
+            
+            
+            #frmConsolidadoNotas\:pnNotas .subNotas{}
+            #frmConsolidadoNotas\:pnNotas .subNotas li{border-bottom:  1px solid;height: 20px;}
+            #frmConsolidadoNotas\:pnNotas .cabecera {background-color: #CECECE;color: #00173D;font-weight: bold;font-family: helvetica;font-size: 1.0em}
+            
+            #frmConsolidadoNotas\:pnDocentes{display: block;height: 250px ;margin: 10px 0px;width: 100%;overflow: auto}
+            #frmConsolidadoNotas\:pnDocentes ul {min-width: 150%;padding: 10px}
+            #frmConsolidadoNotas\:pnDocentes li{display: inline-block;vertical-align: top;margin: 2px 3px;border: 1px solid silver;width: 120px;border-radius: 3px;}
+            #frmConsolidadoNotas\:pnDocentes li:hover{opacity: 1;transition: all 0.5s}
+            .seleccion{opacity: 1}
+            .noSeleccion{opacity: 0.5}
+            .aprobado{color:blue;font-size: 20px}                
+            .desaprobado{color:red;font-size: 20px;font-weight: bold}
+        </style>
+        
+        <h:form id="frmConsolidadoNotas">
+            <h:panelGroup id="pnDocentes" layout="block">
+                <ul>
+                    
+                <ui:repeat value="#{cursoSeccionDocenteB.mostrarCursoSeccionDocenteAlumno(usuarioB.institucionS,  usuarioB.periodoS, usuarioB.usu)}" var="docentes" >
+                
+                    <li class="#{ consolidadoNotasB.cursoS ne docentes.curso?'noSeleccion':'Seleccion' }">
+                        <h:commandLink>
+                            
+                            <img  style="width: 120px;height: 150px;vertical-align: top;display: inline-block;" src="SVerImagenAlumno?alumno=#{personalB.mostrarPersona(docentes.personal).persona}" />
+                            <span style="border-top:  1px solid silver;display: block;text-align: center;height: 40px">#{cursoB.mostrarCurso(docentes.curso).descripcion}<br/> #{docentes.curso}</span>
+                            <f:ajax execute="@this" render=":frmConsolidadoNotas:pnDocentes :frmConsolidadoNotas:pnNotas" listener="#{consolidadoNotasB.mostrarConsolidadoNotas(usuarioB.institucionS, usuarioB.periodoS, usuarioB.usu, docentes.curso, '')}"/>
+                        </h:commandLink>
+                    </li>
+                    
+                </ui:repeat>
+               
+                   
+                    
+                </ul>
+               
+            </h:panelGroup>
+            
+            
+            
+            <h:panelGroup id="pnNotas" layout="block" >
+                
+                <span class="cabecera" style="display: block;padding: 10px 0px;text-align: center;border: 1px solid black;color: #0069B3">#{cursoB.mostrarCurso(consolidadoNotasB.cursoS).descripcion}</span>
+                <ul class="cabecera">
+                    <li>TIPO DE EXAMEN</li>
+                    <li>NOTA</li>
+                    <li>FECHA INICIO</li>
+                    <li>FECHA FIN</li>
+                </ul>
+                <ui:repeat value="#{consolidadoNotasB.detalleNotasL}" var="notas">
+                    <ul>
+                        <li>
+                            #{notas.descripcion}
+                        </li>
+                        <li>
+                            
+                            <h:outputLabel value="#{notas.nota }"  class="#{notas.nota le 10?'desaprobado':'aprobado'}"  rendered="#{notas.nota ne 0}"/> 
+                            
+                        </li>
+                        <li>
+                            #{notas.fechaInicio}
+                        </li>
+                        <li>
+                            #{notas.fechaFin}
+                        </li>
+                        
+                        <ui:repeat value="#{consolidadoNotasB.mostrarConsolidadoNotas(usuarioB.institucionS, usuarioB.periodoS, usuarioB.usu, consolidadoNotasB.cursoS, notas.tipoExamen)}" var="subnotas">
+                            <ul class="subNotas">
+                                <li>#{subnotas.descripcion}</li>
+                                <li>
+                                    <h:outputLabel value="#{subnotas.nota }"   class="#{subnotas.nota le 10?'desaprobado':'aprobado'}"   rendered="#{subnotas.nota ne 0}" />
+                                    
+                                </li>
+                            </ul>
+                        </ui:repeat>
+                    </ul>
+                </ui:repeat>
+       
+            </h:panelGroup>
+            
+        </h:form>
+            </ui:define>
+          </ui:composition>
+
+

@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"             
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <style scoped="true">
+            *{vertical-align: middle;}
+            #frmDatosPersona label{display: inline-block;width: 10em;margin: 4px 2px}
+            #frmDatosPersona\:pnBotonera{border: 1px solid red;padding: 10px }
+            #frmDatosPersona\:pnBotonera input{padding: 10px;margin: 2px;cursor: pointer}
+            #frmDatosPersona\:pnBotonera input:disabled{cursor: default}
+            #frmDatosPersona\:pnPersona input{padding: 3px 3px;box-shadow: none;border-radius: 0px}
+            .codigo{font-weight: bold}
+            /*resetear estilos inputtext pf*/
+            .pfinput input[type="text"]{box-shadow: initial;border-radius: initial;color: black;text-shadow: initial;font-family: inherit;font-size: inherit;}
+            .pfinput:hover input[type="text"],.pfinput:focus input[type="text"]{box-shadow: initial;text-shadow: initial;font-family: inherit;font-size: inherit;}
+        </style>
+        <span class="tituto-admin">MANTENIMENTO DE PERSONA </span>
+        <h:form id="frmDatosPersona">
+            <h:panelGroup id="pnPersona" layout="block">
+                <div>
+                    <div  style="display: inline-block;width: 80%;border: 1px solid">
+                        <h:outputLabel  value="CODIGO" />
+                        <h:inputText class="codigo" value="#{personaB.persona.persona}" disabled="TRUE"/><br/>
+                        <h:outputLabel value="A. PATENO:" />
+                        <h:inputText value="#{personaB.persona.paterno}" disabled="#{not personaB.bandera}"/><br/>
+                        <h:outputLabel value="A. MATENO:" />
+                        <h:inputText value="#{personaB.persona.materno}" disabled="#{not personaB.bandera}"/><br/>
+                        <h:outputLabel value="NOMBRES:" />
+                        <h:inputText value="#{personaB.persona.nombres}" disabled="#{not personaB.bandera}"/><br/>
+                        <h:outputLabel value="ESTADO CIVIL:" />                     
+                        <h:selectOneMenu value="#{personaB.persona.estado_civil}" disabled="#{not personaB.bandera}">
+                            <f:selectItems value="#{estadoCivilB.mostrarEstadoCivil()}" var="ECivil" itemLabel="#{ECivil.descripcion}" itemValue="#{ECivil.estadoCivil}" />
+                        </h:selectOneMenu><br/>
+                        <h:outputLabel value="TIPO DOCUMENTO:" />                                          
+                        <h:selectOneMenu value="#{personaB.persona.tipodocumento}" disabled="#{not personaB.bandera}">
+                            <f:selectItems value="#{tipoDocumentoB.mostrarTipoDocumentos(21)}" var="Documento" itemLabel="#{Documento.descripcion}" itemValue="#{Documento.tipoDocumento}" />
+                        </h:selectOneMenu><br/>
+                        <h:outputLabel value="NUMERO:" />
+                        <h:inputText value="#{personaB.persona.numero_documento}" disabled="#{not personaB.bandera}"/><br/>
+                        <h:outputLabel value="SEXO:" />
+                        <h:selectOneRadio value="#{personaB.persona.sexo}" style="display: inline-block;" disabled="#{not personaB.bandera}">
+                            <f:selectItem itemLabel="MASCULINO" itemValue="1"/>
+                            <f:selectItem itemLabel="FEMEMNINO" itemValue="0"/>
+                        </h:selectOneRadio>
+                    </div>
+                    <div style="display: inline-block;width: 15%;vertical-align: top">
+                        <img  style="height: 180px;border: 1px solid;width: 150px"  src="SVerImagenAlumno?alumno=#{personaB.persona.persona}" /><br/>
+                        <h:commandButton value="EXAMINAR"  type="button" style="width: 150px"/>
+                    </div>
+                </div>
+                <h:outputLabel value="DIRECCION:" />                 
+                <h:inputText value="#{personaB.persona.direccion_ubigeo}" disabled="#{not personaB.bandera}"/>
+                <h:commandButton value=".." type="button" onclick="dlgUbigeo.show()" disabled="#{not personaB.bandera}"/>
+                <h:outputLabel id="lblDireccion" value="#{ubigeoDistritoB.mostrarUbigeo(personaB.persona.direccion_ubigeo).descripcion}"/>
+                <br/>
+                <h:outputLabel value="FECHA NACIMIENTO:" />   
+                <p:calendar  value="#{personaB.persona.fecha_nacimiento}" pattern="dd-MM-yyyy" styleClass="pfinput" disabled="#{not personaB.bandera}" /><BR/>                
+                <h:outputLabel value="TELEFONO:" />   
+                <h:inputText value="#{personaB.persona.telefono}" disabled="#{not personaB.bandera}"/>
+                <h:outputLabel value="CELULAR:" />   
+                <h:inputText value="#{personaB.persona.celular}" disabled="#{not personaB.bandera}"/><br/>
+                <h:outputLabel value="EMAIL:" />   
+                <h:inputText value="#{personaB.persona.emailP}" disabled="#{not personaB.bandera}"/>
+            </h:panelGroup>   
+
+
+            <h:panelGroup id="pnBotonera" layout="block" >
+                <h:commandButton value="NUEVO" disabled="#{personaB.bandera}" >
+                    <f:ajax render="pnBotonera pnPersona" listener="#{personaB.nuevoPersona()}" />
+                </h:commandButton>
+                <h:commandButton value="GUARDAR" disabled="#{not personaB.bandera}" >
+                    <f:ajax execute="@form" render="pnPersona" listener="#{personaB.insertarPersona()}"  />
+
+                </h:commandButton>
+                <h:commandButton value="EDITAR"  >                   
+
+                </h:commandButton>
+                <h:commandButton value="BUSQUEDA" type="button" onclick="dlgModal.show()" disabled="#{personaB.bandera}" />
+                <h:commandButton  value="CANCELAR" disabled="#{not personaB.bandera}" >
+                    <f:ajax render="pnBotonera" listener="#{personaB.cancelarPersona()}" />
+                </h:commandButton>
+
+
+                <h:commandButton  value="GENERA USUARIO" rendered="#{(empty alumnoB.mostrarAlumno(15,personaB.persona.persona).alumno) and (not empty personaB.persona.persona)}"  onclick="if (!confirm('¿Esta seguro de Generar Alumno Cepre?'))
+                           return false;"  >
+
+                    <f:ajax render="pnBotonera" listener="#{alumnoB.insertarAlumnoInstitucion(15, personaB.persona.persona)}"  />
+                </h:commandButton>
+
+            </h:panelGroup>
+        </h:form>
+
+
+        <p:dialog widgetVar="dlgModal" width="650px" height="450px"  modal="true"  header="BUSQUEDA DE PERSONAL">
+            <h:form id="frmBusqueda">
+                <label for="txtbus_paterno">PATERNO</label>
+                <h:inputText id="txtbus_paterno" value="#{personaB.busPaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" />
+                </h:inputText><br/>
+                <label for="txtbus_materno">MATERNO</label>
+                <h:inputText id="txtbus_materno" value="#{personaB.busMaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" />
+                </h:inputText><br/>
+                <label for="txtbus_nombres">NOMBRES</label>
+                <h:inputText id="txtbus_nombres" value="#{personaB.busNombres}" >
+                    <f:ajax execute="@this" render="tbBusqueda " />
+                </h:inputText>
+                <br/><br/>
+
+                <p:dataTable id="tbBusqueda" value="#{personaB.filtroPersona( personaB.busPaterno, personaB.busMaterno, personaB.busNombres)}" var="detalle" selection="#{personaB.persona}" selectionMode="single" rowKey="#{detalle.persona}" emptyMessage="No hay resultados">
+                    <p:ajax event="rowSelect"    update=":frmDatosPersona"    oncomplete="dlgModal.hide()"  /> 
+                    <p:column headerText="CODIGO" >
+                        #{detalle.persona}
+                    </p:column>
+                    <p:column headerText="PERSONAL" >
+                        #{detalle.paterno} #{detalle.materno}, #{detalle.nombres}
+                    </p:column>
+                    <p:column headerText="TELEFONO" >
+                        #{detalle.telefono}
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+
+        <p:dialog widgetVar="dlgUbigeo" width="400px" height="300px"  modal="true"  header="UBIGEO">
+            <h:form id="frmUbigeo" >
+                DEPARTAMENTO<br/>
+                <h:selectOneMenu id="cboDepartamento" value="#{ubigeoDepartamentoB.seleccion}" >
+                    <f:selectItem itemValue="--SELECCIONAR --" />
+                    <f:selectItems value="#{ubigeoDepartamentoB.mostrarDepartamento()}" var="departamento" itemValue="#{departamento.departamento}" itemLabel="#{departamento.descripcion}" />
+                    <f:ajax execute="@this" render="cboProvincia" />
+                </h:selectOneMenu><br/>
+                PROVINCIA<br/>
+                <h:selectOneMenu id="cboProvincia" value="#{ubigeoProvinciaB.seleccion}" >
+                    <f:selectItem itemValue="--SELECCIONAR --" />
+                    <f:selectItems value="#{ubigeoProvinciaB.mostrarProvincia(ubigeoDepartamentoB.seleccion)}" var="provincia" itemValue="#{provincia.provincia}" itemLabel="#{provincia.descripcion}" />
+                    <f:ajax execute="@this" render="cboDistrito" />
+                </h:selectOneMenu><br/>
+                DISTRITO<br/>
+                <h:selectOneMenu id="cboDistrito" value="#{ubigeoDistritoB.selecion}">
+                    <f:selectItem itemValue="--SELECCIONAR --" />
+                    <f:selectItems value="#{ubigeoDistritoB.mostrarDistrito(ubigeoDepartamentoB.seleccion, ubigeoProvinciaB.seleccion)}" var="distrito" itemValue="#{distrito.distrito}" itemLabel="#{distrito.descripcion}" />
+                </h:selectOneMenu><br/>
+
+                <div style="border: 1px solid;margin: 20px 0px;text-align: center ">
+                    <h:commandButton value="ACEPTAR" >
+                        <f:ajax  execute="@form" render=":frmDatosPersona:lblDireccion" listener="#{personaB.insertarUbigeo(ubigeoDepartamentoB.seleccion, ubigeoProvinciaB.seleccion, ubigeoDistritoB.selecion)}" />
+                    </h:commandButton>
+                    <h:commandButton value="CANCELAR" type="BUTTON" onclick="dlgUbigeo.hide()" />
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+               REGISTRO DE EVALUACIÓN
+            </ui:define>
+              
+              <ui:define name="contenido">
+        
+        
+                  <style>
+                      label{display: inline-block;width: 150px}
+                      .botones{background: #0088CE;color: white;margin: 2px;padding: 8px;border-radius: 4px}
+                  </style>
+                 
+                  
+        <h:form >
+             <span class="tituto-admin">REGISTRO DE EVALUACIÓN </span>
+            
+            <div class="paneles">
+            
+           
+                #{adminRegistroEvaluacionB.refrescar(usuarioB.institucionS, usuarioB.periodoS)}
+            
+         <h:outputLabel  value="DOCENTE" />
+		<h:selectOneMenu id="cbPersona" value="#{adminRegistroEvaluacionB.persona}" >
+		<f:selectItem itemLabel="Seleccionar" />
+		<f:selectItems value="#{adminRegistroEvaluacionB.personaL}" var="itemPersona" itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" itemValue="#{itemPersona.persona}" />
+		<f:ajax  execute="@this" render="cbCarrera " listener="#{adminRegistroEvaluacionB.mostrarCarrera}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel  value="CARRERA" />
+		<f:selectItem itemLabel="Seleccionar" />
+		<h:selectOneMenu id="cbCarrera" value="#{adminRegistroEvaluacionB.carrera}" >
+			<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{adminRegistroEvaluacionB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion} " itemValue="#{itemCarrera.carrera}" />
+			<f:ajax  execute="@this" render="cbSeccion " listener="#{adminRegistroEvaluacionB.mostrarSeccion}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel  value="SECION" />
+		<h:selectOneMenu id="cbSeccion" value="#{adminRegistroEvaluacionB.seccion}" >
+		<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{adminRegistroEvaluacionB.seccionL}" var="itemSeccion" itemLabel="#{itemSeccion.descripcion}" itemValue="#{itemSeccion.seccion}" />
+			<f:ajax execute="@this" render="cbCurso " listener="#{adminRegistroEvaluacionB.mostrarCurso}" />
+		</h:selectOneMenu>		
+		<br />		
+		<h:outputLabel  value="CURSO" />
+		<h:selectOneMenu id="cbCurso" value="#{adminRegistroEvaluacionB.curso}">
+			<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{adminRegistroEvaluacionB.cursoL}" var="itemCurso"   itemLabel="#{itemCurso.curso} - #{itemCurso.descripcion}" itemValue="#{itemCurso.curso}" />
+			<f:ajax execute="@this" />
+		</h:selectOneMenu>
+		
+		<br />
+       </div>
+            
+                    
+            
+                    
+                   
+                   <div class="paneles">
+                    <ui:param name="param1" value="item,1,institucion,#{usuarioB.institucionS},periodo,#{usuarioB.periodoS},carrera,#{adminRegistroEvaluacionB.carrera},curso,#{adminRegistroEvaluacionB.curso},seccion,#{adminRegistroEvaluacionB.seccion}" />
+                            
+                          <h:commandLink   target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/matricula/registroEvaluacion', 1,fn:split(param1,','))}"       >
+
+                          <i class="fa fa-print" />
+                              IMPRESION
+                          </h:commandLink>
+                            
+                          <ui:param name="param2" value="item,2,institucion,#{usuarioB.institucionS},periodo,#{usuarioB.periodoS},carrera,#{adminRegistroEvaluacionB.carrera},curso,#{adminRegistroEvaluacionB.curso},seccion,#{adminRegistroEvaluacionB.seccion}" />
+                          <h:commandLink  target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/matricula/registroEvaluacion', 1,fn:split(param2,','))}"       >
+
+                              <i class="fa fa-print" />
+                              IMPRESION CON NOTAS
+                          </h:commandLink>
+                          
+                          
+                          
+                           <ui:param name="param3" value="item,3,institucion,#{usuarioB.institucionS},periodo,#{usuarioB.periodoS},carrera,#{adminRegistroEvaluacionB.carrera},curso,#{adminRegistroEvaluacionB.curso},seccion,#{adminRegistroEvaluacionB.seccion}" />
+                          <h:commandLink  target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/matricula/registroEvaluacion', 1,fn:split(param3,','))}"       >
+
+                              <i class="fa fa-print" />
+                              IMPRESION CON FECHAS  ASISTENCIA
+                          </h:commandLink>
+                   </div>
+                  <div class="paneles">
+                  <ui:param name="param2" value="@LSPERSON,#{adminRegistroEvaluacionB.persona},@LSCARRER,#{adminRegistroEvaluacionB.carrera},@LSCURSOS,#{adminRegistroEvaluacionB.curso}" />
+                            
+                          <h:commandLink   target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/matricula/REGISTRO_20162', 1,fn:split(param2,','))}"       >
+
+                          <i class="fa fa-print" />
+                              IMPRESION
+                          </h:commandLink>
+                  </div>
+                                
+                            
+                        
+                            
+                
+              
+        
+        
+        </h:form>
+              </ui:define>
+            
+        </ui:composition>
+        
+    </h:body>
+</html>
+

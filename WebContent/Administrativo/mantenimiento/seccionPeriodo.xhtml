@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body onload="#{seccionPeriodoB.mostrarSeccionPeriodo(1, '20142')}">
+        <h:form id="frmSeccionPeriodo">
+            <h:panelGroup id="pnDatos" layout="block">
+                <h:outputLabel value="SECCION"/>
+                <h:inputText value="#{seccionPeriodoB.seccionPeriodo.seccion}" disabled="#{not seccionPeriodoB.bandera}" /><br/>
+                <h:outputLabel value="CARRERA"/>
+                <h:inputText value="#{seccionPeriodoB.seccionPeriodo.carrera}" disabled="#{not seccionPeriodoB.bandera}" /><br/>
+                <h:outputLabel value="TURNO"/>
+                <h:selectOneMenu value="#{seccionPeriodoB.seccionPeriodo.turno}" disabled="#{not seccionPeriodoB.bandera}">
+                    <f:selectItems value="#{turnoB.mostrarTurno()}" var="turno" itemLabel="#{turno.descripcion}" itemValue="#{turno.turno}" />
+                </h:selectOneMenu><br/>
+                    
+                <h:outputLabel value="NIVEL ACADEMICO"/>
+                <h:inputText value="#{seccionPeriodoB.seccionPeriodo.nivelModular}" disabled="#{not seccionPeriodoB.bandera}"/><br/>
+                <h:outputLabel value="FECHA INICIO"/>
+                <p:calendar  value="#{seccionPeriodoB.seccionPeriodo.fechaInicio}" pattern="dd-MM-yyyy"  disabled="#{not seccionPeriodoB.bandera}">
+                    <p:ajax event="dateSelect"   />
+                </p:calendar>
+                
+                <h:outputLabel value="FECHA FIN"/>
+                <p:calendar  value="#{seccionPeriodoB.seccionPeriodo.fechaFin}" pattern="dd-MM-yyyy"  disabled="#{not seccionPeriodoB.bandera}">
+                    <p:ajax event="dateSelect"   />
+                </p:calendar><br/>
+                
+                
+                <h:outputLabel value="FRECUENCIA" />
+                <h:selectOneMenu value="#{seccionPeriodoB.seccionPeriodo.frecuencia}" disabled="#{not seccionPeriodoB.bandera}">
+                    <f:selectItems value="#{frecuenciaB.mostrarFrecuencia()}" var="frecuencia" itemLabel="#{frecuencia.descripcion}" itemValue="#{frecuencia.frecuencia}" />
+                </h:selectOneMenu><br/>
+            </h:panelGroup>
+            
+            <h:panelGroup id="pnBotonera" layout="block">
+                <h:commandButton value="NUEVO" disabled="#{seccionPeriodoB.bandera}" >
+                    <f:ajax execute="@this" render="pnBotonera" listener="#{seccionPeriodoB.nuevo()}" />
+                </h:commandButton>
+                <h:commandButton value="GUARDAR" disabled="#{not seccionPeriodoB.bandera}" >
+                    <f:ajax execute="@this" render="pnBotonera" />
+                </h:commandButton>
+                <h:commandButton value="EDITAR" disabled="#{seccionPeriodoB.bandera}" >
+                    <f:ajax execute="@this" render="pnBotonera" />
+                </h:commandButton>
+                <h:commandButton value="CANCELAR" disabled="#{not seccionPeriodoB.bandera}" >
+                    <f:ajax execute="@this" render="pnBotonera" listener="#{seccionPeriodoB.cancelar()}" />
+                </h:commandButton>
+            </h:panelGroup>
+            
+            <p:dataTable id="tbSeccionPeriodo" value="#{seccionPeriodoB.seccionPeriodoL}" var="seccionPeriodo" selectionMode="single" rowKey="#{seccionPeriodo.seccion}" selection="#{seccionPeriodoB.seccionPeriodo}" >
+                 <p:ajax event="rowSelect"  update=":frmSeccionPeriodo:pnDatos"     /> 
+                <p:column headerText="SECCION">
+                    #{seccionPeriodo.seccion}
+                </p:column>
+                
+                <p:column headerText="CARRERA">
+                    #{carreraB.mostrarCarreraCodigo(seccionPeriodo.carrera).abreviatura}
+                    
+                </p:column>
+                
+                <p:column headerText="TURNO">
+                    #{turnoB.mostrarTurno(seccionPeriodo.turno).descripcion}
+                    
+                </p:column>
+                
+                <p:column headerText="NIVEL MODULAR">
+                    #{utilB.listaCiclos[seccionPeriodo.nivelModular -1 ]}
+                    
+                                        
+                </p:column>
+                
+                <p:column headerText="TIPO NIVEL MODULAR">
+                   
+                     #{tipoNivelModularB.mostrarTipoNivelModular(seccionPeriodo.tipoNivelModular).descripcion}
+                </p:column>
+                
+                <p:column headerText="SEDE">
+                    #{seccionPeriodo.sede}
+                </p:column>
+                <p:column headerText="FECHA INI.">
+                    #{seccionPeriodo.fechaInicio}
+                </p:column>
+                
+                <p:column headerText="FECHA FIN.">
+                    #{seccionPeriodo.fechaFin}
+                </p:column>
+                
+                <p:column headerText="FRECUENCIA">
+                    
+                    #{frecuenciaB.mostrarFrecuencia(seccionPeriodo.frecuencia).descripcion}
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

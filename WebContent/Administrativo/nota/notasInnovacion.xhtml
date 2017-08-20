@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>INGRESO DE NOTAS </title>
+        <link type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+    </h:head>
+    <h:body>
+        
+        <script>
+            $(document).ready(function(){
+               $("body").on("click","a .celda",function(){
+                  $("a .celda").removeClass("check");
+                  $(this).addClass("check");
+               });
+            });
+            
+        </script>
+        
+        
+        <h:form id="frmNotasImnovacion" html5:autocomplete="off" >
+            
+            
+            <h:panelGroup layout="block" id="pn1" styleClass="contenedorLogin" rendered="#{not notasImnovacionB.banderaAcceso}">
+                <div class="formulario" style="display: block;border: 1px solid silver;;max-width: 300px;margin: 0px auto;text-align: center">
+                 <div>
+                        <h2>ACCESO DE USUARIO</h2>
+                        <p>Rellene el siguiente formulario para ingresar al Sistema</p>
+                        <h:outputLabel value="USUARIO" />
+                        <br/>
+                        <h:inputText id="txtDni" value="#{notasImnovacionB.dni}" html5:placeholder="INGRESE D.N.I" style="text-align: center"  maxlength="8" />
+                       <br/>
+                       <div class="seccionBotones">
+                           <h:commandLink type="button" value="INGRESAR" >
+                           <f:ajax execute="txtDni" render="@form" listener="#{notasImnovacionB.acceso()}" />
+                       </h:commandLink>
+                       </div>
+                       
+                  </div>    
+                    
+                
+                
+            </div>
+            </h:panelGroup>
+            
+            
+            
+            
+            <h:panelGroup layout="block" id="pn2" rendered="#{notasImnovacionB.banderaAcceso}">
+                
+           
+                
+            
+            
+            
+                <h:panelGroup layout="block" id="pnDatos" styleClass="panel">
+                    <div style="display: block;width: 100%">
+                        <div style="display: inline-block;vertical-align: top;width: 10%">
+                        <img src="SVerImagenAlumno?alumno=#{notasImnovacionB.persona.persona}"   style="border: 1px solid;width: 90px"  />
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;width: 85%">
+                            <h:outputLabel value="CARRERA" styleClass="label" />
+                            <h:selectOneMenu id="cboCarrera" value="#{notasImnovacionB.carreraS}" disabled="#{notasImnovacionB.bandera}" >
+                                <f:selectItem itemLabel="--SELECCIONAR -- " />
+                                <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(1)}" var="carrera" itemLabel="#{carrera.abreviatura}" itemValue="#{carrera.carrera}" />
+                                <f:ajax execute="@this" render="cboCurso" />
+                            </h:selectOneMenu>
+                            <BR/>
+                            <h:outputLabel value="CURSO" styleClass="label"  />
+                            <h:selectOneMenu id="cboCurso" value="#{notasImnovacionB.cursoS}" disabled="#{notasImnovacionB.bandera}"   >
+                                <f:selectItem itemLabel="--SELECCIONAR -- " />
+                                <f:selectItems value="#{cursoB.mostrarCursoInvestigacion(1, '20152', notasImnovacionB.carreraS)}" var="cursos" itemLabel="#{cursos.descripcion}" itemValue="#{cursos.curso}" />
+                                <f:ajax execute="@this" render="cboSeccion" />
+                            </h:selectOneMenu>
+                            <BR/>
+                            <h:outputLabel value="SECCION" styleClass="label" />
+                                <h:selectOneMenu id="cboSeccion" value="#{notasImnovacionB.seccionS}" disabled="#{notasImnovacionB.bandera}"   >
+                                <f:selectItem itemLabel="--SELECCIONAR -- " />
+                                <f:selectItems value="#{seccionB.mostrarListaSeccion(1, '20152', notasImnovacionB.carreraS, notasImnovacionB.cursoS)}" var="seccion" itemLabel="#{seccion.descripcion}" itemValue="#{seccion.seccion}" />
+                                <f:ajax execute="@this" render="pnGrupo" listener="#{notasImnovacionB.mostrarGrupos()}" />
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                
+                
+                
+                <h:outputLabel value="GRUPOS" style="display: block;width: 100%;text-align: center;padding: 5px 0px;background-color: silver"  />
+                <h:panelGroup layout="block" id="pnGrupo">
+                    <div style="display: block;overflow-x:  auto;height: 100%">
+                   <ul style="width: #{notasImnovacionB.cursoSeccionGrupoL.size() *270}px">
+                    <ui:repeat  value="#{notasImnovacionB.cursoSeccionGrupoL}" var="grupo">
+                       
+                           <li>
+                               <h:commandLink disabled="#{notasImnovacionB.bandera}"  >  
+                                   <div style="display: block;height: 100%" class="celda "  >
+                                       <b style="display: block;padding: 5px;background-color: #000;color: white;text-align: center">GRUPO  #{grupo.grupoExamen} </b>
+                                       <p>
+                                           #{grupo.tema} 
+                                       </p>
+                                        
+                                     
+                               </div>
+                               
+                               
+                            
+                            <f:ajax execute="@this" render=":frmNotasImnovacion:tbRegistro" listener="#{notasImnovacionB.mostrarNotas(grupo.grupoExamen)}" />
+                            
+                            
+                            </h:commandLink>
+                            
+                         </li> 
+                       
+                   </ui:repeat>
+                </ul> 
+                        </div>
+                </h:panelGroup>
+               
+            </h:panelGroup>
+            
+  
+                <h:panelGroup layout="block" id="pnBotonera" styleClass="panel">
+                <h:commandLink title="EDITAR" disabled="#{notasImnovacionB.bandera}" styleClass="botones" >
+                    <i class="fa fa-pencil-square-o"/>
+                    EDITAR
+                <f:ajax execute="@this" render="tbRegistro pnBotonera pnGrupo cboCarrera cboCurso cboSeccion"  listener="#{notasImnovacionB.editar()}" />
+            </h:commandLink>
+            
+             <h:commandLink title="CANCELAR" disabled="#{not notasImnovacionB.bandera}" styleClass="botones">
+                 <i class="fa fa-ban" />
+                 CANCELAR
+                 <f:ajax execute="@this" render="tbRegistro pnBotonera pnGrupo cboCarrera cboCurso cboSeccion"  listener="#{notasImnovacionB.cancelar()}" />
+            </h:commandLink> 
+                
+            <h:commandLink title="GUARDAR" disabled="#{not notasImnovacionB.bandera}" styleClass="botones">
+                <i class="fa fa-floppy-o" />
+                GUARDAR
+                <f:ajax execute="tbRegistro" render="tbRegistro pnBotonera pnGrupo cboCarrera cboCurso cboSeccion"  listener="#{notasImnovacionB.guardar()}" />
+            </h:commandLink>
+                
+                 
+                
+             <p:remoteCommand name="btAutomatico" update="pn2"   actionListener="#{notasImnovacionB.automatico()}"  >
+                 
+             </p:remoteCommand>
+                
+            <h:commandLink title="CERRAR SESION" disabled="#{notasImnovacionB.bandera}" styleClass="botones" >
+                <i class="fa fa-user-times"/>
+                CERRAR SESION
+                <f:ajax execute="@this" render="@form"  listener="#{notasImnovacionB.cerrarAcceso()}" />
+            </h:commandLink>       
+                
+            </h:panelGroup>
+            
+            
+                <p:dataTable id="tbRegistro" value="#{notasImnovacionB.detalleAlumnoL}" var="alumno" rowIndexVar="status" styleClass="tabla" >
+                <f:facet name="header">
+                    PRINCIPAL
+                </f:facet>
+                
+                <p:columnGroup type="header">
+                 <p:row>
+                     <p:column headerText="Nro." rowspan="2"   width="10"  />
+                     <p:column headerText="ALUMNO" rowspan="2" width="80" /> 
+                     <p:column headerText="NOMBRES" rowspan="2"  width="250"  />
+                     <ui:repeat value="#{notasImnovacionB.detalleTipoExamenL}" var="tipoExamen">
+                         
+                             <p:column  colspan="#{tipoExamen.detalleTipoExamenValorL.size()}"     >
+                                 <f:facet name="header">
+                                 <h:outputLabel value="#{tipoExamen.desTipoExamen} " title="#{tipoExamen.tipoExamen}" />
+                              </f:facet>
+                             </p:column>                        
+                         
+                     </ui:repeat>
+                </p:row>
+                
+                <p:row>
+                    
+                   <ui:repeat value="#{notasImnovacionB.detalleTipoExamenL}" var="cabecera">
+                      
+                         <ui:repeat value="#{cabecera.detalleTipoExamenValorL}" var="itemCabecera">                             
+                              <p:column   >
+                                  <f:facet name="header">
+                                      <h:outputLabel value="#{itemCabecera.valor}" />
+                                  </f:facet>
+                                  
+                              </p:column>
+                         </ui:repeat>
+                   </ui:repeat>
+                </p:row>
+                    
+                    
+                </p:columnGroup>
+                <p:column>
+                    <h:outputLabel value="#{status +1}"  />
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{alumno.alumno}"  />
+                </p:column>                
+                <p:column>
+                    <h:outputLabel value="#{alumno.desAlumno}"  />
+                </p:column>
+                <c:forEach items="#{notasImnovacionB.detalleTipoExamenL}" var="itemNota"  >
+                    <c:forEach items="#{itemNota.detalleTipoExamenValorL}" var="valor" >
+                        <p:column style="text-align: center">                     
+                        <h:outputLabel value="#{alumno.detalleNotaImnovacionL[itemNota.tipoExamen.concat('-').concat(valor.valor)].nota}" rendered="#{not notasImnovacionB.bandera ?true: notasImnovacionB.persona.persona ne alumno.detalleNotaImnovacionL[itemNota.tipoExamen.concat('-').concat(valor.valor)].persona}" />
+                        
+                        <p:inputText value="#{alumno.detalleNotaImnovacionL[itemNota.tipoExamen.concat('-').concat(valor.valor)].nota}"  rendered="#{notasImnovacionB.persona.persona eq alumno.detalleNotaImnovacionL[itemNota.tipoExamen.concat('-').concat(valor.valor)].persona and notasImnovacionB.bandera}" style="width: 100%;text-align: center" maxlength="1" styleClass="caja" >
+                            <f:validateDoubleRange minimum="0" maximum="4" />
+                        </p:inputText>
+                        
+                    </p:column>
+                        
+                    </c:forEach>
+                    
+                </c:forEach>
+               
+                    
+                        
+             
+                
+            </p:dataTable>
+                 </h:panelGroup>
+        </h:form>
+        
+        
+        <p:socket onMessage="auto" channel="/notify" >
+            <p:ajax event="message"    />
+        </p:socket>
+        
+        <style>
+            body{ background-color: #E9EAED;    font-family: sans-serif;}
+
+            a{text-decoration: none}
+            #frmNotasImnovacion\:pnGrupo{border: 1px solid silver;display: block;height: 220px}
+            #frmNotasImnovacion\:pnGrupo ul{padding: 0px;margin: 0px;height: 100%}
+            #frmNotasImnovacion\:pnGrupo ul li{display: inline-block;vertical-align: top;border: 1px solid silver;margin: 0px;padding: 5px;width: 250px;height: 90%}
+            #frmNotasImnovacion\:pnGrupo ul li a div:hover{color: #004080}
+            .tabla thead th,.tabla tbody td{font-size: 0.8em}
+            .tabla .ui-datatable-odd{background-color: white}
+            .caja{box-shadow: none!important}
+            .panel{padding: 10px;border: 1px solid silver;margin: 5px 0px;background-color: white}
+            span.botones{opacity: 0.2}
+            .botones{display: inline-block;vertical-align: top;padding: 5px;color: white;background-color: #0069b3;border-radius: 3px;margin: 2px;min-width: 100px}
+            .check{background-color: red}
+            .label{display: inline-block; vertical-align: top;width: 120px}
+            .contenedorLogin{ margin-top: 100px; text-align: center; width: 100%;}
+            .formulario{background-color: #F3F3F3;border-radius: 7px;box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4), 0px 0px 4px white inset, 2px 2px 2px rgba(0, 0, 0, 0.2); display: inline-block;    margin: 0 auto;    text-align: center;    vertical-align: middle;    width: 270px;    -webkit-animation: entrada 1s;    -moz-animation: entrada 1s;    -ms-animation: entrada 1s;    -o-animation: entrada 1s;    animation: entrada 1s;}
+            .formulario a{    color: #7C96B7;}  
+            .formulario h2{    color: #414848;}  
+            .formulario input[type=submit]{    background-color: #409FBA;    border: none;    border-radius: 2px;    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4), 0px 0px 2px white inset;    color: white;    font-size: 17px;    height: 35px;    margin: 4px;    min-width: 100px;    -webkit-transition: background-color 0.2s;    -moz-transition: background-color 0.2s;    -ms-transition: background-color 0.2s;    -o-transition: background-color 0.2s;    transition: background-color 0.2s;}
+            .formulario input[type=submit]:hover{    background-color: #D84530;    cursor: pointer;}  
+            .formulario input[type=submit]:focus{    outline: none;}  
+            .formulario input[type=text], .formulario input[type=password]{    border: none;    border-radius: 4px;    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2) inset, -1px -1px 1px rgba(0, 0, 0, 0.1) inset, 0px 0px 2px white;    height: 30px;    margin: 0px;    min-width: 240px;    padding: 5px;}  
+            .formulario input[type=text]:focus, .formulario input[type=password]:focus{    outline: none;}
+            .formulario input[type=text]:hover, .formulario input[type=password]:hover{    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2) inset, -1px -1px 1px rgba(0, 0, 0, 0.1) inset, 0px 0px 2px white, 0px 0px 2px rgba(0, 0, 0, 0.2);}
+            .formulario p{    color: #7C96B7;}
+            .seccionBotones{    background-color: #D4DEDF;    border-radius: 0px 0px 7px 7px;    box-shadow: 0px 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.2), 0px 0px 2px white inset;    padding-bottom: 10px;    padding-top: 10px;    text-align: right;}
+@-webkit-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -webkit-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -webkit-transform: rotate(0deg);
+    }
+}
+  
+@-moz-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -moz-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -moz-transform: rotate(0deg);
+    }
+}
+  
+@-ms-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -ms-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -ms-transform: rotate(0deg);
+    }
+}
+  
+@-o-keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        -o-transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        -o-transform: rotate(0deg);
+    }
+}
+  
+@keyframes entrada
+{
+    0%
+    {
+        margin-top: -1000px;
+        transform: rotate(360deg);
+    }
+    75%
+    {
+        margin: 30px auto;
+    }
+    100%
+    {
+        margin: 0px auto;
+        transform: rotate(0deg);
+    }
+}
+        </style>
+        <script> 
+          function auto(message) {
+                
+                btAutomatico();
+            }
+        </script>
+            
+            
+    </h:body>
+</html>
+

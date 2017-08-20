@@ -1,0 +1,260 @@
+ <ui:composition 
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 template="/Docente/plantilla.xhtml"
+                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+                 xmlns:f="http://xmlns.jcp.org/jsf/core">
+            <ui:define name="titulo">
+               ..: REGISTRO DE ASISTENCIA :.. 
+            </ui:define>
+     <ui:define name="contenido">
+         
+         
+     
+        <style>
+           
+       
+            .panel{position: relative}
+            .vista-mosaico{display: inline-block;vertical-align: top;width: 250px;}
+            .vista-lista{display: block;border-radius: 0%;transition: all 1.5s;}
+            .vista-lista img{border-radius: 50%;width: 25px;height: 25px;vertical-align: top;display: inline-block;border: 1px solid silver;transition: all 1.5s;}
+            .vista-lista .ficha-alumno-dato span{display: inline-block;vertical-align: top}
+            .vista-lista .ficha-alumno-dato span:nth-child(1){display: none}
+            .vista-lista .ficha-alumno-dato span:nth-child(2){width: 100px}
+            .vista-mosaico .ficha-alumno-dato span{display: block}
+            .vista-mosaico img{width: 65px;height: 65px;vertical-align: top;display: inline-block;transition: all 1.5s;}
+            .vista-lista img{border-radius: 50%;transition: all 1.5s;}
+            .ficha-alumno{border: 1px solid silver;margin: 2px;transition: all 1.5s;background-color: white;}
+            .ficha-alumno:hover{background-color: #D1D3D4}
+            .ficha-alumno-dato{display: inline-block;vertical-align: top;padding:1px 2px;width: 175px}
+            .bloqueo:after{content: "";position: absolute;display: block;height: 100%;width: 100%;top: 0;left: 0;background-color: rgba(0,0,0,0.5);z-index: 1}
+            .activo{background:green!important;}
+            .desactivo{position: relative;opacity: 0.5;}
+            .bloqueado{background:red!important;}
+            .ui-state-active{z-index: 1!important}
+            
+            .timeline-event-content{color:white;font-weight: normal;}
+            .ficha-curso{display: inline-block;vertical-align: top;border-radius: 3px;height: 150px;min-width: 150px;max-width: 200px;position: relative;;background-color: white;border: 1px solid silver}
+            .ficha-curso.select-curso span{opacity: 1!important;}
+            .ficha-curso.select-curso{box-shadow:  0 2px 4px rgba(0,0,0,0.1)}
+            .ficha-curso:hover{box-shadow:  0 2px 4px rgba(0,0,0,0.1);transition: all 0.5s}
+            .ficha-curso .cheked{position: absolute;bottom: 2px;right: 2px;border: 2px solid #0069B3;height: 30px;width: 30px;border-radius: 50%;display: inline-block;text-align: center;opacity: 0;transition: opacity 0.5s}
+            .ficha-curso:hover span{opacity: 0.9}
+            .cabecera-detalle{margin: 0;padding: 0;border: 1px solid silver;display: none;background-color: #0c94e4;color: white;padding: 4px 0px}
+            .cabecera-detalle li{display: inline-block;vertical-align: top;padding: 2px}
+            .cabecera-detalle li:nth-child(1){width: 40px}
+            .cabecera-detalle li:nth-child(2){width: 100px}
+            .boton{padding: 5px;display: inline-block;border: 1px solid;margin: 2px;border-radius: 2px; }
+            
+            .timeline-axis{background:#0088ce;opacity:1!important}
+            .timeline-axis-text{color: white}
+            .panel-leyenda{display: block;border: 1px solid silver;margin: 5px 0px;background-color: white;padding: 5px 2px;position: relative;}
+            .panel-leyenda label{margin: 0px 4px}
+            .panel-leyenda label span{width: 20px;height: 20px;display: inline-block;vertical-align: top}
+            /* originally authored by Nick Pettit - https://github.com/nickpettit/glide */
+
+            @-webkit-keyframes pulse {
+              from {
+                -webkit-transform: scale3d(1, 1, 1);
+                transform: scale3d(1, 1, 1);
+              }
+
+              50% {
+                -webkit-transform: scale3d(1.05, 1.05, 1.05);
+                transform: scale3d(1.05, 1.05, 1.05);
+              }
+
+              to {
+                -webkit-transform: scale3d(1, 1, 1);
+                transform: scale3d(1, 1, 1);
+              }
+            }
+
+            @keyframes pulse {
+              from {
+                -webkit-transform: scale3d(1, 1, 1);
+                transform: scale3d(1, 1, 1);
+              }
+
+              50% {
+                -webkit-transform: scale3d(2.05, 2.05, 2.05);
+                transform: scale3d(2.05, 2.05, 2.05);
+              }
+
+              to {
+                -webkit-transform: scale3d(1, 1, 1);
+                transform: scale3d(1, 1, 1);
+              }
+            }
+
+            .pulse {
+              -webkit-animation-name: pulse;
+              animation-name: pulse;
+            
+            }
+            .animated {
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+          }
+
+          .animated.infinite {
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+          }
+            
+        </style>
+        <script>
+            $(document).ready(function(){
+                $(".btVista").click(function(e){
+                    e.preventDefault();
+                   if($(".ficha-alumno").hasClass("vista-mosaico")){
+                       $(".ficha-alumno").removeClass("vista-mosaico");
+                       $(".ficha-alumno").addClass("vista-lista");
+                       $(".cabecera-detalle").css("display","block");
+                       
+                   }else{
+                           $(".ficha-alumno").addClass("vista-mosaico");
+                       $(".ficha-alumno").removeClass("vista-lista");
+                       $(".cabecera-detalle").css("display","none");
+                   }
+                });
+                
+              
+            });
+            
+        
+        </script>
+ 
+        
+        
+        
+        <h:form id="frmAsistenciaAlumno" style="background-color: #eeeeee;">
+                 <span class="tituto-docente">REGISTRO DE ASISTENCIA  </span>  
+            <div class="panel" >
+            
+                #{registroAsistenciaB.mostrarCursoDocente(usuarioB.periodoS,usuarioB.personal.personal)}
+                <h:panelGroup layout="block" id="pnCurso" style="border: 1px solid silver;display: block;min-height: 150px;margin: 5px 0px;padding: 10px">
+                    <ui:repeat value="#{registroAsistenciaB.cursoSeccionDocentePL}" var="itemCursoSeccionDocente">
+                    <h:commandLink>                        
+                        <div class="ficha-curso #{itemCursoSeccionDocente.cursoSeccionDocente eq registroAsistenciaB.cursoSeccionDocente?'select-curso':''}" data-curso="#{itemCursoSeccionDocente.cursoSeccionDocente.institucion} - #{itemCursoSeccionDocente.cursoSeccionDocente.carrera} -#{itemCursoSeccionDocente.cursoSeccionDocente.malla} - #{itemCursoSeccionDocente.cursoSeccionDocente.curso} - #{itemCursoSeccionDocente.cursoSeccionDocente.seccion}" >
+                      <b style="display: block;color: white;text-align: center;padding: 1.5px;background-color: #0088CE">#{itemCursoSeccionDocente.carrera.abreviatura}</b>
+                        <div style="padding: 5px">  
+                        <span>Curso</span><br/>
+                        <label>#{itemCursoSeccionDocente.cursos.descripcion}</label><br/>
+                        <span>Seccion</span>                          <br/>
+                        <label>#{itemCursoSeccionDocente.seccion.descripcion}</label><br/>
+                            
+                                                     
+                        </div>
+                       <span class="cheked" >
+                                <i class="fa fa-check" style="font-size: 1.5em;line-height: 30px;color: #{itemCursoSeccionDocente.carrera.color}" />
+                       </span>
+                    </div>
+                        <f:ajax execute="@this" render=":frmAsistenciaAlumno:pnCurso :frmAsistenciaAlumno:timeline :frmAsistenciaAlumno:pnAsistencia" listener="#{registroAsistenciaB.seleccionarCurso(itemCursoSeccionDocente.cursoSeccionDocente)}" />
+                    </h:commandLink>
+                    
+                </ui:repeat>
+                
+                </h:panelGroup>
+
+
+
+           
+
+                <p:timeline id="timeline" value="#{registroAsistenciaB.model}"   var="itemModelo"    showNavigation="true"  zoomable="true"       widgetVar="timeline" selectable="true" locale="es"      style="font-size: 0.7em">
+                    <p:ajax event="select"  process="@this" update=":frmAsistenciaAlumno:pnAsistencia" listener="#{registroAsistenciaB.onSelect}" oncomplete="$('body').addClass('loaded');" onstart="$('body').removeClass('loaded');" />  
+                </p:timeline>
+            </div>
+            
+            
+            <div class="panel-leyenda" >
+            	<label>
+            	<span style="background: green;"  />
+            	CORRECTO	
+            	</label>
+            	<label>
+            		<span style="width: 20px;height: 20px;background: red;display: inline-block;"  />
+            	FALTA
+            	</label>
+            	
+	            <a title="Vista Previa" href="#" class="btVista" style="position: absolute;top: 10px;right: 5px" > 
+	                <i class="fa fa-align-justify" />
+	                
+	            </a>
+            </div>
+            
+            
+          
+          
+            <h:panelGroup layout="block" id="pnAsistencia" style="display: block;min-height: 200px;border: 1px solid  silver;margin: 5px 0px;position: relative">
+                <div style="display: block;background-color:  white;padding: 5px;min-height: 50px">
+                <div style="display: inline-block;vertical-align: top;width: 100%">
+                    <span style="color: darkgrey">TEMA:</span><br/>
+                    <label style="text-transform:uppercase;font-size:1.2em">#{registroAsistenciaB.registrotd.tema}</label>
+                </div>
+             
+                <div style="position: absolute;right: 5px;top: 5px">
+                  
+                    <p:commandLink id="btEditar" styleClass="boton" disabled="#{registroAsistenciaB.banderaBotonera?registroAsistenciaB.bandera:true }" >
+                        <i class="fa fa-pencil" />
+                        Editar
+                        
+                         <p:ajax process="@this" update="@(.pnFicha-alumno) btCancelar btGuardar btTodo btEditar" listener="#{registroAsistenciaB.editar()}" />
+                    </p:commandLink>
+                    
+                    
+                    
+                    <p:commandLink id="btGuardar" styleClass="boton" disabled="#{registroAsistenciaB.banderaBotonera?not registroAsistenciaB.bandera:true}">
+                          <i class="fa fa-floppy-o" />
+                          Guardar
+                      
+                         <p:ajax process="@this" update="@(.pnFicha-alumno) btCancelar btGuardar btTodo btEditar" listener="#{registroAsistenciaB.guardar()}" />
+                    </p:commandLink>
+                    
+                    <p:commandLink id="btCancelar" styleClass="boton" disabled="#{registroAsistenciaB.banderaBotonera?not registroAsistenciaB.bandera:true}">                    
+                        <i class="fa fa-reply" />
+                        Cancelar
+                        <p:ajax process="@this" update="@(.pnFicha-alumno) btCancelar btGuardar btTodo btEditar" listener="#{registroAsistenciaB.cancelar()}" />
+                        
+                    </p:commandLink>
+                    
+                    <p:commandLink id="btTodo" styleClass="boton" disabled="#{registroAsistenciaB.banderaBotonera?not registroAsistenciaB.bandera:true}" >
+                        <i class="fa fa-check-square-o" />
+                        Todo
+                        
+                       <p:ajax process="@this" update="@(.pnFicha-alumno) " listener="#{registroAsistenciaB.seleccionarTodo()}" />
+                    </p:commandLink>
+                </div>
+              </div>
+              <hr/>
+              <div style="padding: 10px 5px" >
+                  <ul class="cabecera-detalle"><li>Nro.</li><li>CODIGO</li><li>NOMBRES Y APELLIDOS</li></ul>    
+                
+                <ui:repeat value="#{registroAsistenciaB.alumnoAsistenciaL}" var="itemPersona" varStatus="index">
+                   
+                    <div class="ficha-alumno vista-mosaico "  >
+                       <h:commandLink styleClass="pnFicha-alumno" disabled="#{not registroAsistenciaB.bandera}"> 
+                              
+                                <div style="position: relative;background-color: #{itemPersona.alumnoCursoAsistencia.asistencia?'white':''}">
+                                <i class="fa fa-check  #{itemPersona.alumnoCursoAsistencia.asistencia?'pulse animated ':''}" style="position: absolute;top: 0;right: 2px;font-size: 1.2em;color: green;display: #{itemPersona.alumnoCursoAsistencia.asistencia?'block':'none'}" />
+                                <img  src="SVerImagenAlumno?alumno=#{itemPersona.persona.persona}"  />
+                                <div class="ficha-alumno-dato" >
+                                    <span>#{index.index+1}</span>
+                                    <span><b>#{itemPersona.alumno.alumno}</b></span>
+                                    <span title="#{itemPersona.persona.paterno} #{itemPersona.persona.materno} #{itemPersona.persona.nombres}" style="overflow: hidden;white-space:nowrap;text-overflow: ellipsis;display: block;" >#{itemPersona.persona.paterno} #{itemPersona.persona.materno} #{itemPersona.persona.nombres}</span>
+                                    
+                                </div>
+                            </div>
+                        <f:ajax execute="@this" render="@this" listener="#{registroAsistenciaB.seleccionar(index.index)}" />
+                     </h:commandLink>  
+                    </div>
+                </ui:repeat>
+                    </div>
+            </h:panelGroup>
+            
+        </h:form>
+</ui:define>
+</ui:composition>

@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+       
+    </h:head>
+   
+    <h:body>
+         
+          <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+              <ui:define name="titulo">
+                
+                MANTENIMIENTO
+                
+            </ui:define>  
+              <ui:define name="contenido">  
+                  <style>
+            #frmCursoPeriodo label{width: 8em;display: inline-block;margin: 0px 10px 0px 0px;}
+            #frmCursoPeriodo input[type="submit"]{padding: 5px 10px;margin: 5px 5px;cursor: pointer}
+            #frmCursoPeriodo #tbDetalle table thead tr th{padding: 5px 0px;}#frmCursoPeriodo #tbDetalle table tbody tr td{padding: 5px 5px;}
+            #frmCursoPeriodo #tbDetalle table thead tr th,#frmCursoPeriodo #tbDetalle table tbody tr td{margin: 0;font-size: 0.85em;}
+            
+
+        </style>
+                  <span class="tituto-admin">MANTENIMENTO DE CURSOS PERIODO </span>
+        <h:form id="frmCursoPeriodo" prependId="false">
+            <h:outputLabel value="CARRERA" />
+            <h:selectOneMenu id="cboCarrera" value="#{carreraB.seleccion}">
+                <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(institucionB.seleccionInstitucion)}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.descripcion}" />
+                <f:ajax execute="@this" render="cboCurso pnBotonera" />
+            </h:selectOneMenu>
+            <br/>
+            <h:outputLabel value="MALLA" />
+            <h:selectOneMenu id="cboCurso" value="#{horMallaCurricularB.seleccion}">
+                <f:selectItems value="#{horMallaCurricularB.mostrarMallaCurricular(institucionB.seleccionInstitucion, carreraB.seleccion)}" var="malla" itemValue="#{malla.malla}" itemLabel="#{malla.descripcion}" />
+                <f:ajax execute="@this" render="pnBotonera"  />
+            </h:selectOneMenu>
+            <br/>
+            <h:panelGroup id="pnBotonera" layout="block">
+            <h:commandButton value="Mostrar Curso periodo" disabled="#{empty carreraB.seleccion}" >                
+                <f:ajax render="@form" listener="#{cursoPeriodoB.mostrarCursoPeriodo(institucionB.seleccionInstitucion, usuarioB.periodoS, carreraB.seleccion)}" onevent="onevent" />
+                <f:ajax render="@form" listener="#{cursoPeriodoB.mostrarBandera(false)}" />
+            </h:commandButton>
+
+            <h:commandButton value="Mostrar malla cursos" disabled="#{empty carreraB.seleccion}" >                
+                <f:ajax render="@form" execute="cboCurso cboCarrera" listener="#{mallaCurricularCursoB.mostrarMallaCurricularCurso(institucionB.seleccionInstitucion,usuarioB.periodoS, carreraB.seleccion, horMallaCurricularB.seleccion)}" onevent="onevent" />
+                <f:ajax render="@form" listener="#{cursoPeriodoB.mostrarBandera(true)}" />
+            </h:commandButton>
+            </h:panelGroup>
+            
+            
+            
+
+                <p:dataTable id="tbDetalle" value="#{cursoPeriodoB.cursoPeriodoL}" var="cursoPeriodo" editable="true"  rowIndexVar="status" rendered="#{not cursoPeriodoB.bandera}" emptyMessage="No hay registros">
+                    <p:ajax event="rowEdit" listener="#{cursoPeriodoB.onRowEdit}"  />
+                    <p:column headerText="N">
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="CARRERA">
+                        <h:outputLabel value="#{carreraB.mostrarCarreraCodigo(cursoPeriodo.carrera).abreviatura}" />                         
+                        
+                    </p:column>
+                    <p:column headerText="MALLA">
+                        #{cursoPeriodo.malla}
+                    </p:column>
+                    <p:column headerText="CURSO" >
+                        #{cursoPeriodo.curso} - #{cursoB.mostrarCurso(cursoPeriodo.curso).descripcion}
+                    </p:column>
+                    <p:column headerText="FORMULA">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{cursoPeriodo.formula}-#{formulaB.mostrarFormula(cursoPeriodo.formula).descripcion}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{cursoPeriodo.formula}" style="width:95%;text-align: center;">
+                                    <f:selectItems value="#{formulaB.mostrarFormula()}" var="formula" itemLabel="#{formula.descripcion}" itemValue="#{formula.formula}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    
+                    <p:column width="5%">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column width="5%">
+                        <h:commandLink value="Eliminar" >
+                            <f:ajax execute="@this" render="tbDetalle"  listener="#{cursoPeriodoB.eliminar(cursoPeriodo)}" onevent="onevent"/>
+                        </h:commandLink>
+                    </p:column>
+                    
+                </p:dataTable>
+
+                <p:dataTable id="tbMallaCurso" value="#{mallaCurricularCursoB.mallaCurricularCursoL}" var="mallaCurso" rowKey="#{mallaCurso.curso}" selection="#{mallaCurricularCursoB.mallaCurricularCursoSeleccionL}" rendered="#{cursoPeriodoB.bandera}" emptyMessage="No hay registros">
+                    <p:column selectionMode="multiple" width="1%;"/>
+                    <p:column headerText="CARRERA" styleClass="excepcion">
+                        #{carreraB.mostrarCarreraCodigo(mallaCurso.carrera).abreviatura}
+                        <!--#{mallaCurso.carrera}-->
+                    </p:column>
+                    <p:column headerText="CURSO" styleClass="excepcion">
+                        #{mallaCurso.curso} - #{cursoB.mostrarCurso(mallaCurso.curso).descripcion}
+                    </p:column>
+                    <f:facet name="footer">
+                        <h:commandButton value="INSERTAR CURSOS">
+                            <f:ajax execute="@form" render="tbMallaCurso" listener="#{mallaCurricularCursoB.insertarCursoPeriodo(mallaCurricularCursoB.mallaCurricularCursoSeleccionL)}" />
+                        </h:commandButton>
+                    </f:facet>
+                </p:dataTable>
+
+            
+        </h:form>
+                  <script>
+                      function onevent(e){
+                        
+                        if(e.status==='begin'){
+                            document.getElementById('tope').style.display='block';
+                        }
+                        if(e.status==='success') {
+                          
+                          
+                        } 
+                        if(e.status==='complete') {
+                          
+                          document.getElementById('tope').style.display='none';
+                        } 
+                      }
+                      
+                  </script>
+                  </ui:define>
+          </ui:composition>
+    </h:body>
+    
+</html>
+

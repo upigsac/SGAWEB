@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+          <ui:composition  template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                INGRESO DE NOTAS ALUMNO
+            </ui:define>
+            
+            
+            
+              <ui:define name="contenido">
+                  
+           
+        <style>
+            #frmResumenNota\:tbDetalle table tbody,#frmResumenNota\:tbDetalle table thead{ font-size: 0.8em}
+            .paneles{display: block;border: 1px solid silver;padding: 10px;margin: 5px 0px}
+            .texto{display: inline-block;width: 100px}
+            .botones{min-width: 100px;padding: 5px;margin: 2px}
+        </style>
+        <span class="tituto-admin">RESUMEN POR TIPO DE EVALUACION</span>
+        <h:form id="frmResumenNota">
+            <h:panelGroup layout="block" id="pnDatos" class="paneles">
+                <h:outputLabel value="CARRERA:" class="texto" />
+                <h:selectOneMenu value="#{resumenTipoNotaB.carreraS}">
+                    <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(usuarioB.institucionS)}" var="carrera" itemLabel="#{carrera.abreviatura}" itemValue="#{carrera.carrera}"  />
+                    <f:ajax execute="@this" />
+                </h:selectOneMenu>
+                <br/>
+                
+                <h:outputLabel value="TIPO EXAMEN:" class="texto" />
+                <h:selectOneMenu value="#{resumenTipoNotaB.carreraS}">
+                    <f:selectItem itemLabel="1ra Practica" itemValue="U4" />
+                    <f:ajax execute="@this" />
+                </h:selectOneMenu>
+            </h:panelGroup>
+            
+            
+            
+            <h:panelGroup layout="block" id="pnBotonera" class="paneles">
+                <h:commandButton value="Mostrar" class="botones">
+                    <f:ajax execute="@this" render="tbDetalle" listener="#{resumenTipoNotaB.mostrar(usuarioB.institucionS,usuarioB.periodoS)}" />
+                </h:commandButton>
+            </h:panelGroup>
+            
+            
+            
+            
+            
+            
+            <p:dataTable id="tbDetalle" value="#{resumenTipoNotaB.cabeceraL}" var="itemCabecera" >
+                <f:facet name="header">
+                    RESUMEN DE NOTAS .
+                </f:facet>
+                
+                 <p:columnGroup type="header">
+                    <p:row>                       
+                        <p:column colspan="4"  />
+                        <p:column colspan="2" headerText="SE PRESENTO" width="80" />
+                    </p:row>
+                    <p:row>
+
+                        <p:column  headerText="CODIGO" width="60" />
+                        <p:column  headerText="ALUMNO" />
+                        <p:column  headerText="NOTA" width="50" />
+                        <p:column  headerText="ESTADO" width="80" />
+                        <p:column headerText="SI"  />
+                        <p:column headerText="NO" />
+
+                    </p:row>
+                </p:columnGroup>
+                <p:subTable  value="#{itemCabecera.detalleL}" var="detalleL" >
+                     <f:facet name="header">
+                         
+                         <h:graphicImage value="SVerImagenAlumno?alumno=#{itemCabecera.persona}" width="100" height="100"  style="display: inline-block;vertical-align: top"/>
+                         <div style="display: inline-block;vertical-align: top">
+                             <h:outputText value="#{itemCabecera.descarrera}" />
+                             <br/>
+                             <h:outputText value="#{itemCabecera.desPersona}" />
+                            <br/>
+                            <h:outputText value="#{itemCabecera.curso} - #{itemCabecera.desCurso}" />
+                            
+                            
+
+                             <br/>
+                             <h:outputText value="#{itemCabecera.desTurno}" />
+                              <br/>
+                             MATRICULADOS:#{itemCabecera.matriculados}
+                             <br/>
+                             APROBADOS:#{itemCabecera.aprobados}
+                             <br/>
+                             DESAPROBADOS:#{itemCabecera.desaprobados}
+                             <br/>
+                         </div>
+                         
+                     </f:facet>
+                     
+                    
+                    <p:column width="50">
+                           <h:outputText value="#{detalleL.codigo}" />
+                    </p:column>
+                     <p:column>
+                          <h:outputText value="#{detalleL.alumno}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{detalleL.nota}" style="color:#{detalleL.nota le 10?'red':'blue'}" />
+                    </p:column>
+                    <p:column>
+                           <h:outputText value="#{detalleL.estadoNota}" style="color:#{detalleL.nota le 10?'red':'blue'}" />
+                    </p:column>
+                    <p:column style="text-align: center">
+                         <i class="#{detalleL.presente eq '1'?'fa fa-check':''}" style="color: #008000" />
+                           
+                    </p:column>
+                     <p:column style="text-align: center">
+                         <i class="#{detalleL.falta eq '1'?'fa fa-times':''}" style="color: red" />
+                           
+                    </p:column>
+                  
+                </p:subTable>
+            </p:dataTable>
+        </h:form>
+                     </ui:define>
+          </ui:composition>
+    </h:body>
+</html>
+

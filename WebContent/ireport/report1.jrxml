@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="445ec184-de53-4c9f-893f-93d211d8ab50">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+ E.ABREVIATURA DESCARRERA,
+ F.DESCRIPCION DESCURSO,
+ SIGU.SF_NUMERO_ROMANO(1,B.NIVEL_MODULAR) CICLO,
+ H.DESCRIPCION DESTURNO,
+ COUNT(A.ALUMNO)MATRICULADOS,
+SUM(CASE WHEN ISNULL(AA.NOTA,0)>=11THEN 1 ELSE 0 END) APROBADOS,
+SUM(CASE WHEN ISNULL(AA.NOTA,0)<=10THEN 1 ELSE 0 END) DESAPROBADO
+FROM SIGU.ACA_ALUMNO_CURSO_SECCION A LEFT JOIN SIGU.ACA_ALUMNO_CURSO_NOTA AA
+ON AA.INSTITUCION=A.INSTITUCION AND AA.PERIODO=A.PERIODO AND AA.CARRERA=A.CARRERA AND AA.MALLA=A.MALLA AND AA.CURSO=A.CURSO AND AA.SECCION=A.SECCION AND AA.ALUMNO=A.ALUMNO AND AA.TIPO_EXAMEN='U4'
+LEFT JOIN SIGU.HOR_CURSO_SECCION_DOCENTE AB
+ON AB.INSTITUCION=A.INSTITUCION AND AB.PERIODO=A.PERIODO AND AB.CARRERA=A.CARRERA AND AB.MALLA=A.MALLA AND AB.CURSO=A.CURSO AND AB.SECCION=A.SECCION AND AB.ESTADO_REGISTRO IN(1,59)
+LEFT JOIN SIGU.PER_PERSONAL AC
+ON AC.PERSONAL=AB.PERSONAL
+LEFT JOIN UPA.DAT_PERSONAS AD
+ON AD.PERSONA=AC.PERSONA
+LEFT JOIN DI.SYS_SEMANA_EXAMEN AE
+ON AE.INSTITUCION=A.INSTITUCION AND AE.PERIODO=A.PERIODO AND  AE.TIPO_EXAMEN='U4' AND AE.GRUPO=0
+,SIGU.HOR_MALLA_CURRICULAR_CURSO_ACT B,SIGU.ACA_ALUMNO C,UPA.DAT_PERSONAS D,UPA.ACA_CARRERAS E,UPA.ACA_CURSOS F,SIGU.HOR_PERIODO_SECCION G,UPA.ACA_TURNOS H,UPA.ACA_PERIODOS I
+
+WHERE A.INSTITUCION=1 AND A.PERIODO=20152 AND A.CARRERA LIKE '%' AND A.ESTADO_REGISTRO=1 AND A.MALLA<>'2014SM'
+AND B.INSTITUCION=A.INSTITUCION AND B.CARRERA=A.CARRERA AND B.MALLA=A.MALLA AND B.CURSO=A.CURSO AND B.NIVEL_MODULAR >=2
+AND C.ALUMNO=A.ALUMNO AND C.INSTITUCION=A.INSTITUCION
+AND D.PERSONA=C.PERSONA
+AND E.CARRERA=A.CARRERA
+AND F.CURSO=A.CURSO
+AND G.INSTITUCION=A.INSTITUCION AND G.PERIODO=A.PERIODO AND G.CARRERA=A.CARRERA AND G.SECCION=A.SECCION
+AND H.TURNO=G.TURNO
+AND I.INSTITUCION=A.INSTITUCION AND I.PERIODO=A.PERIODO
+
+GROUP BY A.INSTITUCION,A.PERIODO,A.MALLA, I.DESCRIPCION,A.CARRERA,E.ABREVIATURA ,B.NIVEL_MODULAR,A.CURSO,F.DESCRIPCION ,A.SECCION,G.TURNO,H.DESCRIPCION ,AC.PERSONA,AC.CPERSONAL,AB.PERSONAL,AD.APELLIDO_PATERNO , AD.APELLIDO_MATERNO ,AD.NOMBRES]]>
+	</queryString>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="CICLO" class="java.lang.String"/>
+	<field name="DESTURNO" class="java.lang.String"/>
+	<field name="MATRICULADOS" class="java.lang.Integer"/>
+	<field name="APROBADOS" class="java.lang.Integer"/>
+	<field name="DESAPROBADO" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="7" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="10" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="3" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="18" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="474" splitType="Stretch">
+			<elementGroup>
+				<elementGroup>
+					<bar3DChart>
+						<chart>
+							<reportElement uuid="e9ee52c1-d44d-4583-9dbe-dab7504dc7ea" x="13" y="13" width="542" height="461"/>
+							<chartTitle/>
+							<chartSubtitle/>
+							<chartLegend/>
+						</chart>
+						<categoryDataset>
+							<categorySeries>
+								<seriesExpression><![CDATA[$F{DESCARRERA}]]></seriesExpression>
+								<categoryExpression><![CDATA[$F{CICLO}]]></categoryExpression>
+								<valueExpression><![CDATA[$F{MATRICULADOS}]]></valueExpression>
+							</categorySeries>
+						</categoryDataset>
+						<bar3DPlot>
+							<plot/>
+							<itemLabel/>
+							<categoryAxisFormat>
+								<axisFormat/>
+							</categoryAxisFormat>
+							<valueAxisFormat>
+								<axisFormat/>
+							</valueAxisFormat>
+						</bar3DPlot>
+					</bar3DChart>
+				</elementGroup>
+			</elementGroup>
+		</band>
+	</summary>
+</jasperReport>

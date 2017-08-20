@@ -1,0 +1,342 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+    
+    </h:head>
+    <h:body>
+       
+        
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+                CAMPO CLINICO
+                
+            </ui:define>
+             
+                         
+             <ui:define name="contenido">
+        <style>
+            #frmPrincipal\:pnDatos{border: 1px solid silver ;padding: 10px}
+            #frmPrincipal\:pnDatos label{display: inline-block;width: 120px;margin: 5px;}
+            #frmPrincipal\:pnDatos select{padding:  4px;}
+            #frmPrincipal\:pnBotonera{border: 1px solid silver;margin: 4px;padding: 20px}
+            #frmPrincipal\:pnBotonera input{padding: 10px;width: 120px;margin-right:4px}
+            #frmGrupo\:pnSubDatos{}
+            #frmGrupo\:pbSubBotonera {border: 1px solid silver;padding: 10px;margin-top: 80px  ;text-align: right}
+            #frmGrupo\:pbSubBotonera  input{margin-right: 4px;padding: 5px;width: 120px}
+            #frmGrupo\:pnSubDatos label{margin: 7px;width: 150px;   display: inline-block}
+            #frmGrupo\:pnSubDatos input{padding: 4px;box-shadow: none;border-radius: 0px}
+            #frmGererarGrupo\:pnGeneraGrupoIzquierda{display: inline-block;width: 35%;padding: 2px}
+            #frmGererarGrupo\:pnGeneraGrupoIzquierda ul{margin: 0px ;padding: 0px}
+            #frmGererarGrupo\:pnGeneraGrupoIzquierda ul li{ display: inline-block;}
+            #frmGererarGrupo\:pnGeneraGrupoIzquierda ul li:first-child{ width: 100px}
+            #frmGererarGrupo\:pnGeneraGrupoDerecha{display: inline-block;width: 62%;vertical-align: top}
+            #frmGererarGrupo\:pnGeneraGrupoBotonera{padding: 50px 0px 5px;text-align: right}
+            #frmGererarGrupo\:pnGeneraGrupoBotonera input{width: 100px;margin-left:  2px;padding: 5px}
+            #frmMatenimientoGrupo\:pnGrupoBotonera{border: 1px solid silver;text-align: right;padding: 10px}
+            #frmMatenimientoGrupo\:pnGrupoBotonera input{padding: 5px;margin-right:  5px;width: 100px}
+            .ui-datatable-odd{background-color: white}
+            .Seleccion{background-color: lavender}
+            .subTitulo{display: block;text-align: center}
+        </style>
+        <span class="tituto-admin">CREAR GRUPOS CAMPO CLINICO </span>
+        <h:form id="frmPrincipal">
+            
+            <h:panelGroup layout="block" id="pnDatos">
+                <div>
+                    <h:outputLabel value="CARRERA" />
+                    <h:selectOneMenu value="#{carreraB.seleccion}">
+                                                <f:selectItem itemLabel="--Seleccionar--" />
+                                                <f:selectItem itemLabel="ENFERMERIA" itemValue="000005" />
+                        <f:ajax execute="@this" render="cboCurso" />
+                    </h:selectOneMenu><BR/>
+                    <h:outputLabel value="CURSO" />
+                    <h:selectOneMenu id="cboCurso" value="#{cursoB.seleccion}">
+                        <f:selectItem itemLabel="--Seleccionar--" />
+                        <f:selectItems value="#{cursoB.mostrarCursosClinico(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion)}" var="curso" itemLabel="#{curso.curso.concat(' - ').concat(curso.descripcion) }" itemValue="#{curso.curso}" />
+                        <f:ajax execute="@this"  render="tbGrupo tbCursos" listener="#{docenteTipoExamenB.mostrarCursoPeriodo(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion,  cursoB.seleccion)}" />
+                    </h:selectOneMenu>
+                </div>
+                
+                </h:panelGroup> 
+            <h:panelGroup layout="block" id="pnBotonera" >
+                <h:commandButton value="Nuevo Grupo" onclick="dlgGrupo.show()" disabled="#{empty tipoExamenB.seleccion}">
+                    
+                    <f:ajax execute="@this" render=":frmMatenimientoGrupo"  listener="#{docenteTipoExamenB.nuevoGrupo(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion, '200702', cursoB.seleccion)}" />
+                </h:commandButton>
+                <ui:param name="param2" value="INSTITUCION,1,PERIODO,#{usuarioB.periodoS},CARRERA,#{carreraB.seleccion},CURSO,#{cursoB.seleccion}"   />
+                <h:commandLink  value="Imprimir Grupos"  target="_blank" actionListener="#{utilB.imprimirIreports('administrativo\\campoClinico\\gruposTipoExamen', 1, fn:split(param2,','))}" style="  border: 1px solid silver;  padding: 9px;  background-color: #E8E8E8;  color: black;"  disabled="#{empty tipoExamenB.seleccion}"/>
+                
+            </h:panelGroup>
+                
+
+              
+
+            
+            
+            
+            <p:dataGrid id="tbGrupo" value="#{docenteTipoExamenB.cursoPeriodoGrupoExamenL}" var="grupo" columns="4" rendered="#{true}">
+                 <f:facet name="header" >
+                    
+                     LISTADO DE GRUPOS 
+                     <BR/>
+                     VACANTES:#{docenteTipoExamenB.totalVacantes} de #{docenteTipoExamenB.totalVacantesGrupo}
+                </f:facet>
+                
+                
+                <div style="display: block;border: 1px solid silver;padding: 5px;text-align: center">
+                    <h:outputLabel value="GRUPO"/>
+                    
+                    <h:commandLink  type="button"  title="VER CURSO"  style="margin: 5px 0px" >
+                    <span style="display: block;width: 100%;font-size: 5.0em;font-weight: bold">#{grupo.grupoExamen}</span>
+                    <f:ajax execute="@this" render=":frmPrincipal:tbCursos" listener="#{docenteTipoExamenB.mostrarCursoGrupo(grupo)}" />
+                      </h:commandLink>
+                    
+                    <h:outputLabel value="MAXIMO VACANTES"/>
+                    #{grupo.maximoVacantes}
+                    <BR/>
+                    <h:outputLabel value="VACANTES ACTUALES"/>
+                    #{grupo.vacantesActuales}
+                    <br/>
+                     <h:commandLink  type="button" onclick="dlgAlumnoGrupo.show()" title="Agregar Alumnos" style="display: inline-block;width: 35px;height: 35px;border-radius: 50%;background-color: #0088CE;color:white;line-height: 30px" >
+                                <i class="fa fa-user-plus"/>
+                                <f:ajax execute="@this" render=":frmGrupoAlumnos" listener="#{docenteTipoExamenB.mostrarAlumnos(grupo)}" />
+                     </h:commandLink>
+                    
+                    <h:commandLink  type="button"  title="Editar Grupo" onclick="dlgGrupo.show()" style="display: inline-block;width: 35px;height: 35px;border-radius: 50%;background-color: #0088CE;color:white;line-height: 30px" >
+                               <i class="fa fa-pencil" />
+                               <f:ajax execute="@this"  render=":frmMatenimientoGrupo" listener="#{docenteTipoExamenB.editarGrupo(grupo)}" />
+                     </h:commandLink>
+                </div>
+            </p:dataGrid>
+            
+            <p:dataGrid id="tbCursos" value="#{docenteTipoExamenB.grupoTipoExamenDocenteL}" var="itemCurso"  columns="4" rendered="#{true}" >
+                <f:facet name="header" >
+                    
+                    GRUPO #{docenteTipoExamenB.cursoPeriodoGrupoExamenS.grupoExamen} 
+                   
+                </f:facet>
+                <div style="display: block;border: 1px solid silver;text-align: center">
+                    <span style="display: block;background-color: #0088CE;color: white;padding: 5px 0px">#{itemCurso.desTipoExamen}</span> 
+                    <br/>
+                    <h:graphicImage value="SVerImagenAlumno?alumno=#{itemCurso.persona}" width="150" height="150" style="border-radius: 50%;border: 5px solid " />
+                    <br/>
+                    <h:outputLabel value="#{itemCurso.desPersona}"  style="color: #015294" />
+                    <BR/>
+                    <i class="fa fa-calendar" /> <h:outputLabel value="Fecha Inicio:" />
+                    #{itemCurso.fechaInicio}
+                    <br/>
+                    <i class="fa fa-calendar" /> <h:outputLabel value="Fecha Final:" />
+                    #{itemCurso.fechaFin}
+                    <br/>                    
+                    <h:outputLabel value="Lugar:" />
+                    #{itemCurso.centro}
+                    <br/>                    
+                   
+                         <h:commandLink type="button"   title="Agregar Docente" style="display: inline-block;width: 35px;height: 35px;border-radius: 50%;background-color: #0088CE;color:white;line-height: 30px" >
+                                        <i class="fa fa-graduation-cap"/>
+                                        <f:ajax execute="@this" render=":frmGrupo"  listener="#{docenteTipoExamenB.nuevoDocenteTipoCurso(itemCurso)}" />
+                        </h:commandLink>
+                    
+                </div>
+                
+                
+            </p:dataGrid>
+            
+            
+        </h:form>
+
+        <h:form id="frmGrupo" >
+        <p:dialog id="dlgGrupoDocente" widgetVar="dlgGrupoDocente" header="ASIGNAR DOCENTE - #{docenteTipoExamenB.grupoTipoExamenDocenteS.desTipoExamen}" width="500" height="300" modal="true"  resizable="false">
+            
+            
+                <h:panelGroup layout="block" id="pnSubDatos">
+                    <h:outputLabel value="PERSONAL" />
+
+
+                <h:inputText id="txtPersonal" value="#{docenteTipoExamenB.cursoSeccionDocenteTipoExamen.personal}" readonly="true" required="true" />
+
+
+                <h:commandButton  type="button" value=".." onclick="dlgBusquedaPersona.show()" >
+                    <f:ajax execute="@this" render=":frmBusquedaDocente" listener="#{personaB.limpiarBusqueda()}" />
+                </h:commandButton>
+                <BR/>
+                <h:outputLabel value="FECHA INICIAL" />
+                <p:calendar value="#{docenteTipoExamenB.cursoSeccionDocenteTipoExamen.fechaInicio}" pattern="dd-MM-yyyy" required="#{true}" mindate="#{docenteTipoExamenB.seccionPeriodo.fechaInicio}" maxdate="#{docenteTipoExamenB.seccionPeriodo.fechaFin}" />
+                <BR/>
+                <h:outputLabel value="FECHA INICIAL" />
+                <p:calendar value="#{docenteTipoExamenB.cursoSeccionDocenteTipoExamen.fechaFin}" pattern="dd-MM-yyyy" required="#{true}" maxdate="#{docenteTipoExamenB.seccionPeriodo.fechaFin}" />
+                <BR/>
+                <h:outputLabel value="LUGAR" />
+                <h:inputText  value="#{docenteTipoExamenB.cursoSeccionDocenteTipoExamen.centro}"  required="true" />
+                </h:panelGroup>
+                
+                
+                <h:panelGroup layout="block" id="pbSubBotonera">
+                    
+                    <h:commandButton value="ACEPTAR"  disabled="#{empty docenteTipoExamenB.cursoSeccionDocenteTipoExamen.personal}"  >
+                        <f:ajax execute="@form" render=":frmPrincipal:tbCursos" listener="#{docenteTipoExamenB.insertarDocenteGrupo()}" />
+                    </h:commandButton>
+                    <h:commandButton value="SALIR" onclick="dlgGrupoDocente.hide()" >
+                        <f:ajax execute="@this"  />
+                    </h:commandButton>
+                </h:panelGroup>
+                
+            
+
+        </p:dialog>
+
+      </h:form>
+
+
+
+        <p:dialog widgetVar="dlgBusquedaPersona" width="650px" height="450px"  modal="true"  header="BUSQUEDA DE PERSONAL">
+            <h:form id="frmBusquedaDocente">
+                <label for="txtbus_paterno">PATERNO</label>
+                <h:inputText id="txtbus_paterno" value="#{personaB.busPaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" />
+                </h:inputText><br/>
+                <label for="txtbus_materno">MATERNO</label>
+                <h:inputText id="txtbus_materno" value="#{personaB.busMaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" />
+                </h:inputText><br/>
+                <label for="txtbus_nombres">NOMBRES</label>
+                <h:inputText id="txtbus_nombres" value="#{personaB.busNombres}" >
+                    <f:ajax execute="@this" render="tbBusqueda " />
+                </h:inputText>
+                <br/><br/>
+                <p:dataTable id="tbBusqueda" value="#{personaB.filtroPersonal(personaB.busPaterno, personaB.busMaterno, personaB.busNombres)}" var="detalle" selection="#{docenteTipoExamenB.persona}" selectionMode="single" rowKey="#{detalle.persona}" emptyMessage="No hay resultados" rowIndexVar="status">
+                    <p:ajax event="rowSelect"   update=":frmGrupo:txtPersonal :frmGrupo:pbSubBotonera"     oncomplete="dlgBusquedaPersona.hide()"  listener="#{docenteTipoExamenB.busquedaPersonal}" /> 
+                    <p:column headerText="Nr." width="20">
+                        #{status +1}
+                    </p:column>
+                    <p:column headerText="PERSONAL" >
+                        #{detalle.nombreCompletos()}
+                    </p:column>
+                    
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        
+        
+        
+        
+        <p:dialog widgetVar="dlgGrupo" header="MANTENIMINETO DE GRUPOS" width="500" height="250" modal="true" resizable="false">
+            <h:form id="frmMatenimientoGrupo">
+            <h:outputLabel value="VACANTES"/>
+            
+             <BR/>
+            <h:inputText value="#{docenteTipoExamenB.totalVacantes}" readonly="true" size="5"/>
+            <BR/>
+            <h:outputLabel value="VACANTES DISPONIBLES"/>
+             <BR/>
+            <h:inputText value="#{docenteTipoExamenB.vacantesDisponibles}" readonly="true" size="5"/>
+            <BR/>
+            <h:outputLabel value="GRUPO DE "/>
+             <BR/>
+            <h:inputText value="#{docenteTipoExamenB.cursoPeriodoGrupoExamen.maximoVacantes}" size="5"/>
+            
+            <h:panelGroup layout="block" id="pnGrupoBotonera">
+                <h:commandButton value="ACEPTAR"  >
+                    <f:ajax execute="@form" render=":frmPrincipal:tbGrupo" listener="#{docenteTipoExamenB.insertarGrupo(tipoExamenB.seleccion)}" />
+                </h:commandButton>
+                <h:commandButton type="button" value="SALIR"  onclick="dlgGrupo.hide()">
+                    
+                </h:commandButton>
+            </h:panelGroup>
+            </h:form>
+            
+        </p:dialog>
+        
+        
+        
+        <p:dialog  header="INSERTAR ALUMNOS" widgetVar="dlgAlumnoGrupo" width="1000" height="600" modal="#{true}" resizable="#{false}">
+            <p:ajax event="close" update=":frmPrincipal:tbGrupo" listener="#{docenteTipoExamenB.mostrarCursoPeriodo(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion,  cursoB.seleccion)}" />
+            <h:form id="frmGrupoAlumnos">
+           <div style="display: block;height: 500px">
+                    
+        
+            <h:panelGroup layout="block" id="pnDerecho" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 44%;height: 100%">
+                <span class="subTitulo">LISTA DE ALUMNOS LIBRES </span>
+                <p:dataGrid id="tbLibres" value="#{docenteTipoExamenB.alumnoGrupoLibresL}" var="libres" columns="2"  style="height: 450px;overflow: auto"  >
+                    
+                    <h:commandLink type="button" disabled="#{docenteTipoExamenB.cursoPeriodoGrupoExamenS.vacantesActuales ge docenteTipoExamenB.cursoPeriodoGrupoExamenS.maximoVacantes}" >
+                        <div style="display: block;width: 100%;height: 100px;border:1px solid silver;position: relative">
+                            <i class="#{libres.alumno eq docenteTipoExamenB.alumnoGrupoLibresS.alumno ?'fa fa-check':''}  " style="color: #008000;position: absolute;right: 0px;top: 2px;font-size: 1.5em"  />
+                            <div style="display:inline-block;vertical-align: top;">
+                                <h:graphicImage value="SVerImagenAlumno?alumno=#{libres.persona}" style="width: 50px;height: 50px" />
+                            </div>
+                            <div style="display:inline-block;vertical-align: top;font-size: 0.8em;width: 135px">
+                                <b style="display:block">#{libres.alumno}</b>
+                                <span>#{libres.desPersona}</span>
+                            </div>
+                        </div>
+                        <f:setPropertyActionListener value="#{libres}" target="#{docenteTipoExamenB.alumnoGrupoLibresS}"/>
+                        <f:ajax execute="@this" render="tbLibres" />
+                    </h:commandLink>
+                    
+                    
+                </p:dataGrid>
+                <div >
+                    <h:inputText id="txtBusqueda" value="#{docenteTipoExamenB.busAlumno}" pt:placeholder="INGRESE NOMBRES">
+                      <f:ajax render="tbLibres" execute="@this" event="keyup" listener="#{docenteTipoExamenB.filtroAlumnoLibres()}"/>
+                </h:inputText>
+                <i class="fa fa-keyboard-o" />
+                </div>
+                  
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnCentro" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 10%;height: 100%">
+                <div style="display: block;margin-top: 200px;text-align: center">
+                    <h:commandLink type="button" title="PASAR"  >
+                    
+                    <i class="fa fa-arrow-right fa-3x" />
+                    <f:ajax execute="@this" render="tbLibres tbAlummoGrupo txtBusqueda" listener="#{docenteTipoExamenB.pasar()}" />
+                    </h:commandLink>
+                <br/>
+                <h:commandLink type="button" title="REGRESAR"  >
+                    <i class="fa fa-arrow-left fa-3x" />
+                    <f:ajax execute="@this" render="tbLibres tbAlummoGrupo" listener="#{docenteTipoExamenB.regresar()}"/>
+                </h:commandLink>    
+                </div>
+                
+            </h:panelGroup>
+            
+            <h:panelGroup  layout="block" id="pnIzquierdo" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 44%;height: 100%">
+                
+                <span class="subTitulo">LISTA DE ALUMNOS DEL GRUPO. <b>#{docenteTipoExamenB.cursoPeriodoGrupoExamenS.grupoExamen}</b></span>
+                <p:dataGrid id="tbAlummoGrupo" value="#{docenteTipoExamenB.alumnoGrupoL}" var="alumnoGrupo" columns="2" style="height: 450px;overflow: auto">
+                   <h:commandLink type="button">
+                        <div style="display: block;width: 100%;height: 100px;border:1px solid silver;position: relative">
+                            <i class="#{alumnoGrupo.alumno eq docenteTipoExamenB.alumnoGrupoS.alumno ?'fa fa-check':''}  " style="color: #008000;position: absolute;right: 0px;top: 2px;font-size: 1.5em"  />
+                        <h:graphicImage value="SVerImagenAlumno?alumno=#{alumnoGrupo.persona}" style="width: 30px;height: 30px" />
+                        
+                        #{alumnoGrupo.alumno}
+                        #{alumnoGrupo.desPersona}
+                        #{alumnoGrupo.seccion}
+                       
+                    </div>
+                        <f:setPropertyActionListener value="#{alumnoGrupo}" target="#{docenteTipoExamenB.alumnoGrupoS}"/>
+                        <f:ajax execute="@this" render="tbAlummoGrupo"  />
+                    </h:commandLink>
+                </p:dataGrid>
+            </h:panelGroup>
+          </div>
+           </h:form>
+        </p:dialog>
+        
+        </ui:define>
+         </ui:composition>
+    </h:body>
+</html>
+

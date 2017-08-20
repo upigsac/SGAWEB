@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+
+                REPORTE MENSUAL DE MARCACION DOCENTE
+
+            </ui:define>    
+
+             <ui:define name="contenido">
+                  <style>
+                    
+                    #frmTardanzas table thead tr th{font-size: 0.5em;width: 40px}
+                    #frmTardanzas table thead tr th:nth-child(1){width: 70px;}
+                    #frmTardanzas table thead tr th:nth-child(2){width: 150px; }
+                    #frmTardanzas table thead tr th:nth-last-child(1){width: 50px;} 
+                    #frmTardanzas  tbody tr td{font-size: 0.7em;padding: 2px;margin: 0px;text-align: center}
+                     #frmTardanzas div.ui-datatable-header,#frmTardanzas div.ui-datatable-footer{text-align: right;}
+                    #frmTardanzas  tbody tr td:nth-child(2){text-align: left}
+                    #frmTardanzas tbody tr td:nth-last-child(1){font-weight: bold;color: red}
+                    #frmTardanzas tbody tr td:nth-last-child(2){font-weight: bold;color: blue}
+                    .texto_a{display: inline-block;min-width: 80px;font-size: 0.9em;font-family: calibri,Arial Narrow;text-align: left;padding: 4px 10px 4px}
+                    .texto_a:after{content: " :"}
+                    input[type="text"]{border: 1px solid silver;font-size: 1em;padding:  2px 4px}
+                    select{border: 1px solid silver;padding:  5px 2px;min-width: 200px;margin: 1px 0px}
+                    input[type="submit"]{border: none;font-size: 1.1em;margin: 5px 0px;padding:  5px 10px;cursor: pointer;color: white;background-image:-moz-linear-gradient(center top , #4D8FFD, #4787ED)}
+                    .ui-datatable-odd{background: white}
+                </style>
+                 
+                 <script>
+                      
+                      
+    
+                    $.datepicker.regional["es"] = {
+                    closeText: 'Cerrar',
+                    prevText: 'Ant',
+                    nextText: 'Sig',
+                    currentText: 'Hoy',
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+                    dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+                    weekHeader: 'Sm',
+                    dateFormat: 'dd/mm/yy',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: ''
+                    };
+                    
+
+                    $.datepicker.setDefaults($.datepicker.regional["es"]);
+                    $(".fecha").datepicker({ dateFormat: "dd-mm-yy" });
+                                                           
+                    $.timepicker.regional["es"] = {
+                                timeOnlyTitle: 'Elegir una hora',
+                                timeText: 'Hora',
+                                hourText: 'Horas',
+                                minuteText: 'Minutos',
+                                secondText: 'Segundos',
+                                millisecText: 'Milisegundos',
+                                timezoneText: 'Huso horario',
+                                currentText: 'Ahora',
+                                closeText: 'Cerrar',
+                                timeFormat: 'hh:mm',
+                                amNames: ['a.m.', 'AM', 'A'],
+                                pmNames: ['p.m.', 'PM', 'P'],
+                                ampm: false
+                        };
+                        $.timepicker.setDefaults($.timepicker.regional["es"]);
+                        function cargar(){
+                      
+
+                            $('.hora').timepicker({
+                                    
+                            showSecond: true,
+
+                            timeFormat: 'hh:mm:ss'
+                        });
+                    }
+                </script>
+                 <span class="tituto-admin">RECORDS DE TARDANZAS </span>
+        
+            <h:form id="frmTardanzas" prependId="false">
+                <span class="texto_a"> TIPO </span>
+                    <h:selectOneMenu value="#{reporteMarcacion.seleccionTipo}">                                
+                                <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                                <f:selectItem itemLabel="CEPRE" itemValue="CEPRE" />
+                                <f:selectItem itemLabel="TALLER" itemValue="TALLER" />
+                                <f:selectItem itemLabel="TITULACION" itemValue="TITULACION" />
+                                <f:selectItem itemLabel="PRACTICAS PROF." itemValue="PRACTICAS" />
+                                <f:selectItem itemLabel="PRE-GRADO" itemValue="PREGRADO" />
+                                <f:selectItem itemLabel="EXTRA-CURRICULAR" itemValue="EXTRA" />
+                                <f:selectItem itemLabel="SEMIPRESENCIAL" itemValue="SEMIPRESENCIAL" />
+                                <f:selectItem itemLabel="ASESORIA T.I" itemValue="ASESORIA" />
+                    </h:selectOneMenu>                     
+                <BR/>
+                
+                 <span class="texto_a"> CARRERA </span>
+                 <h:selectOneMenu id="cbCarrera" value="#{reporteMarcacion.seleccionCarrera}">
+                         <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                         <f:selectItems value="#{carreraB.mostrarCarreraRegulares()}" var="carreras" itemLabel="#{carreras.abreviatura}" itemValue="#{carreras.carrera}" />
+                         <f:ajax execute="@this" render="cbDocente" />
+                    </h:selectOneMenu> 
+                  <BR/>
+                    
+                    <span class="texto_a">DOCENTE </span>
+                    <h:selectOneMenu id="cbDocente" value="#{reporteMarcacion.seleccionDocente}">
+                                
+                                <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                                
+                                <f:selectItems value="#{personaB.mostrarDocenteMarcacion(usuarioB.periodoS,reporteMarcacion.seleccionCarrera,reporteMarcacion.seleccionTipo)}" var="personal" itemValue="#{personal.persona}" itemLabel="#{personal.paterno}" />
+                    </h:selectOneMenu> 
+                    <BR/>
+                    <span class="texto_a">FECHA INI</span>
+                    <h:inputText id="txtini" value="#{reporteMarcacion.fini}"  class="fecha"  />
+                   <br/>
+                    <span class="texto_a">FECHA FIN</span>
+                    <h:inputText id="txtfin" value="#{reporteMarcacion.ffin}" class="fecha" />
+                    <BR/>
+                    <h:commandButton value="CONSULTAR" >
+                        <f:ajax execute="@form" render="tbDetalle" onevent="onevent"  listener="#{reporteMarcacion.cargarMarcacionTardanzas(reporteMarcacion.fini,reporteMarcacion.ffin,reporteMarcacion.seleccionDocente,reporteMarcacion.seleccionCarrera,reporteMarcacion.seleccionTipo)}" />                        
+                    </h:commandButton>
+                
+                
+                
+                    <p:dataTable id="tbDetalle" value="#{reporteMarcacion.marcacionL}" var="tardanzas" scrollable="true" >
+                          <f:facet name="header">
+                            #{reporteMarcacion.seleccionTipo}
+                            <h:commandLink disabled="#{empty reporteMarcacion.marcacionL}">
+                                <img src="../../resources/imagenes/excel.png" width="36"/>
+                                <p:dataExporter type="xls" target="tbDetalle" fileName="TARDANZAS"/>
+                            </h:commandLink>
+                        </f:facet>
+                    <p:columns  value="#{reporteMarcacion.columnas}" var="col" >
+                        <f:facet name="header"  >
+                                <h:outputLabel value="#{utilB.listaDiasSemana[utilB.diaSemanaHoy(2014,col.header.substring(0,2),col.header.substring(3))]}  #{col.header}"/>                                
+                            </f:facet>
+                          
+                            <h:outputLabel value="#{tardanzas[col.indice-1] }"/>
+                        </p:columns>
+                     
+                </p:dataTable>
+            </h:form>
+                
+       
+       
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

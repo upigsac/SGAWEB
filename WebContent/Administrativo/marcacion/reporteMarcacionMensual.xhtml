@@ -1,0 +1,542 @@
+
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml"
+                        xmlns:p="http://primefaces.org/ui"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:jsf="http://xmlns.jcp.org/jsf"
+                        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+            <ui:define name="titulo">
+
+                REPORTE MENSUAL DE MARCACION DOCENTE
+
+            </ui:define>    
+
+            <ui:define name="contenido">
+
+                <style>
+                    
+                    
+                    .ui-datatable-odd{background: white}
+                    .dtAsistencia-opt tbody tr td{border:none; text-align: center;padding: 0px 0px;margin: 0px 0px}
+                    
+                    
+                    .leyenda{margin: 5px 20px}
+                    .leyenda li{display: inline-block}
+                    .leyenda li{border: 1px solid silver;padding: 4px;font-weight: bold;font-family: arial}
+                    .leyenda li b{margin: 0px 10px;vertical-align: top;display: inline-block;width: 60px;height: 20px;}
+                    
+                    .panel-detalle{outline: 1px solid silver;padding: 5px;font-size:0.8em;background-color: white}
+                    .panel-detalle li{outline: 1px solid silver;vertical-align: top;text-align: center;height: 20px;width: 80px}
+                    .panel-cabecera ul{}
+                    .panel-cabecera ul li{height: 50px;background-color: #0069B3;color: white;text-align: center;}
+                    .columIzquierda{outline: 1px solid silver}
+                    .columIzquierda li{display: inline-block}
+                    .columIzquierda li:nth-child(1){width: 10%;}
+                    .columIzquierda li:nth-child(2){width: 20%;}
+                    .columIzquierda li:nth-child(3){width: 68%;text-align: left;}                    
+                    
+                    .columDerecha li{display: table-cell;}                                        
+                    .columDerecha .columDerecha-cuerpo li:nth-last-child(1) {font-weight: bold;color: #008000!important}
+                    .columDerecha-cuerpo ul:hover li{background-color: #DDDDDD}
+                </style>
+                <script>
+                    $(document).ready(function(){
+                    
+                        $("body").on("mouseover",".columDerecha-cuerpo ul ",function(){   
+                           $(".columIzquierda-cuerpo ul:nth-child("+($(this).index()+1)+")").css({"background-color":"#DDDDDD"});
+                        });
+                        
+                        $("body").on("mouseout",".columDerecha-cuerpo ul ",function(){ 
+                           $(".columIzquierda-cuerpo ul:nth-child("+($(this).index()+1)+")").css({"background-color":"white"});
+                        });
+                        
+                    });
+                    
+                    var bandera=false;
+                    var idGeneral;
+                 
+                    function confirmacion(obj,cadena){
+                        idGeneral=obj;
+                        if(bandera){
+                            $(".modal-fondo").remove();
+                            $(".modal").remove();
+                            bandera=false;
+                            return true;
+                        }else{
+                           if(! $('.modal-fondo').hasClass("modal-fondo")){
+                               $('body').append('<div class="modal-fondo"  /> ');
+                                $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                                }else{
+                                $(".modal-fondo").remove();
+                                $(".modal").remove();
+                           }                    
+                            
+                            return false;
+                        }
+                        
+                    }
+                    
+                    function valida(estado){
+                        bandera=estado;           
+                        $(idGeneral).click();            
+                    }
+                   
+                </script>
+
+
+
+
+                <span class="tituto-admin">REGISTRO DE ASISTENCIA DOCENTE</span>                
+                <h:form id="frmListado" prependId="false">
+                      #{reporteMarcacion.load(usuarioB.institucionS,usuarioB.usu)}
+                    
+                    <div class="paneles">
+                    
+                
+                      <h:outputLabel value="CARRERA" />
+                
+                    <h:selectOneMenu id="cbCarrera" value="#{reporteMarcacion.seleccionCarrera}">                                
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                        <f:selectItems value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="carreras" itemLabel="#{carreras.abreviatura}" itemValue="#{carreras.carrera}" />
+                        <f:ajax execute="@this" render="cbDocente" />
+                    </h:selectOneMenu> 
+                    <BR/>
+					<h:outputLabel value="DOCENTE" />
+                    
+                    <h:selectOneMenu id="cbDocente" value="#{reporteMarcacion.seleccionDocente}">                                
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%" />                        
+                        <f:selectItems value="#{personaB.mostrarDocenteMarcacion(usuarioB.periodoS,reporteMarcacion.seleccionCarrera,reporteMarcacion.seleccionTipo)}" var="personal" itemValue="#{personal.persona}" itemLabel="#{personal.paterno}" />
+                    </h:selectOneMenu> 
+                    <BR/>
+               		<h:outputLabel value="FECHA INI" />
+                    
+                    <p:calendar id="txtFechaIni" value="#{reporteMarcacion.fechaInicio}" pattern="dd-MM-yyyy" mask="true" >
+                              <p:ajax event="dateSelect"  update="txtFechaFin" />
+                    </p:calendar>
+                   
+                    <br/>
+                                  
+                    <h:outputLabel value="FECHA FIN" />
+                    <p:calendar id="txtFechaFin" value="#{reporteMarcacion.fechaFinal}" pattern="dd-MM-yyyy" mask="true" mindate="#{reporteMarcacion.fechaInicio}" >
+                        <p:ajax process="@this" />
+                    </p:calendar>
+                    <br/>
+                    
+                   <h:outputLabel value="REGISTRO ?" />
+                    <h:selectBooleanCheckbox id="ckRegistro"  value="#{reporteMarcacion.sin_marcacion}" />                       
+                    
+                 </div>
+                    
+                    
+                    <div class="paneles column"  style="width: 90%" >
+                    <h:commandLink value="CONSULTAR" styleClass="boton-normal" >
+                            <f:ajax execute=" cbDocente cbCarrera txtFechaIni txtFechaFin ckRegistro"  render=":frmListado:tableReporteMes :frmListado:pnDetalle txtDia txtFeriado"  onevent="onevent" listener="#{reporteMarcacion.cargarMarcacionMensual}" />                        
+                    </h:commandLink>
+                    
+                    <h:commandLink value="Mostrar Todo" styleClass="boton-normal" >
+                            <f:ajax execute="@form"  render=":frmListado:tableReporteMes :frmListado:pnDetalle txtDia txtFeriado"  onevent="onevent" listener="#{reporteMarcacion.mostrarTodo}" />                        
+                    </h:commandLink>
+                    
+                    </div>
+                    <div class="paneles column" style="width: 8%;text-align: center;" >
+                    <h:outputText id="txtDia"  title="Total Dia" value="#{reporteMarcacion.totalDia}" class="boton-circulo" style="opacity:1" />
+                        <h:outputText id="txtFeriado" title="Total Feriado" value="#{reporteMarcacion.totalFeriado}" class="boton-circulo" style="background-color: orange!important;opacity:1"  />
+                    
+                  		
+                    </div>
+                        
+                    
+                    
+                
+                    
+                    
+                     
+             
+                    <h:panelGroup layout="block" id="pnDetalle" styleClass="panel-detalle">                        
+                        
+                        <div style="display: block;outline: 1px solid silver;position: relative;height: 40px;background-color: #0069B3">
+                            <h:commandLink title="EXPORTAR EXCEL"  action="#{reporteMarcacion.getReportData}" disabled="#{empty reporteMarcacion.marcacionL}" style="position: absolute;right: 5px;top: 5px;color: white">
+                                EXPORTAR
+                                <i class="fa fa-file-excel-o" style="font-size: 1.5em;" />
+                                
+                            </h:commandLink>
+                        </div>
+                        
+                        <div style="display: #{reporteMarcacion.marcacionL eq null?'none':'block'}">
+                           <div class="columIzquierda" style="display: inline-block;vertical-align: top; ;width: 25%">
+                               <div class="panel-cabecera" style="height: 50px;min-width: 250px">
+                                <ul >
+                                     <li>Nro</li>
+                                    <ui:repeat value="#{reporteMarcacion.columnas}" var="itemCabeceraDer" size="2" >
+                                        <li>
+                                            <span>
+                                        
+                                                #{itemCabeceraDer.header}
+                                            </span>
+                                            
+
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                            
+                               <div class="columIzquierda-cuerpo"  style="overflow: hidden" >
+                                <ui:repeat value="#{reporteMarcacion.marcacionL}" var="itemPersonal" varStatus="status">
+                                          <ul style="display: block;min-width: 250px">  
+                                            <li>#{status.index + 1}</li>
+                                            <li><b>#{itemPersonal[0]}</b></li>
+                                            <li>
+                                                <div style="display: block;width: 100%;;position: relative;" >
+                                                    <p style="padding: 0px 2px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">#{itemPersonal[1]}</p>
+                                                </div>
+                                            </li>    
+                                          </ul>  
+                                </ui:repeat>    
+                            </div>
+                                   
+                            
+                            
+                        </div>
+                        
+                        
+                        <div class="columDerecha" style="display: inline-block;vertical-align: top;width: 74%;overflow: auto;padding-bottom: 5px">
+                            
+                          
+                            <div class="panel-cabecera"  style="width: #{(reporteMarcacion.columnas.size()-2) *80 }px">
+                                <ul style="display: block;width: 100%" >
+                                    <ui:repeat value="#{reporteMarcacion.columnas}" var="itemCabeceraIzq" offset="2" size="#{reporteMarcacion.columnas.size()-1}" >
+                                         <li style="background-color: #{itemCabeceraIzq.feriado eq 1?'orange':''}">                                            
+                                             <span style="display: block;height: 100%;">
+                                                <p >
+                                                    <span style="display: block">
+                                                        #{utilB.listaDiasSemana[utilB.convertTime(itemCabeceraIzq.header,'yyyy-MM-dd').day]}
+                                                    </span>
+                                                        #{itemCabeceraIzq.header}
+                                                </p>
+                                                
+                                                
+                                            </span>                                            
+
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </div>                           
+                            <div class="columDerecha-cuerpo" style="width: #{(reporteMarcacion.columnas.size()-2) *80 }px" >
+                                <ui:repeat value="#{reporteMarcacion.marcacionL}" var="itemPersonalDia"  >
+                                              <ul style="display: block;width: 100%">
+                                                  <ui:repeat value="#{reporteMarcacion.columnas}" var="itemColum" size="#{reporteMarcacion.columnas.size()-1}" offset="2" varStatus="indice">    
+                                                    <li>
+                                                        <h:outputLabel value="#{itemPersonalDia[indice.index]}" rendered="#{not itemColum.editable}" />
+                                                        
+                                                        <h:commandLink   style="color: #{itemPersonalDia[indice.index] eq '0.0' ?'red':'#4F4F4F' }" rendered="#{itemColum.editable?itemColum.header ne 'HORAS AGRE.':false}" >
+                                                            #{itemPersonalDia[indice.index]}
+                                                            <f:ajax render=":frmDetalle" listener="#{reporteMarcacion.detalleMarcacionDocente(itemPersonalDia[0],itemPersonalDia[1], itemColum.header,reporteMarcacion.seleccionTipo)}" disabled="#{not reporteMarcacion.sin_marcacion}" />
+                                                            <f:ajax render=":frmDetalle" listener="#{reporteMarcacion.detalleMarcacionSinDocente(itemPersonalDia[0],itemPersonalDia[1], itemColum.header,reporteMarcacion.seleccionTipo)}"  disabled="#{reporteMarcacion.sin_marcacion}" />
+                                                        </h:commandLink>
+                                                        
+                                                        
+                                                        
+                                                        <h:commandLink  title="AGREGAR HORAS"   rendered="#{itemColum.editable?itemColum.header eq 'HORAS AGRE.':false}" >
+                                                                    #{itemPersonalDia[indice.index]}
+                                                                <f:ajax  render=":frmHorasAgregadas" listener="#{reporteMarcacion.mostrarHorasAgregadas(itemPersonalDia[0])}" />
+                                                        </h:commandLink>
+                                                    
+                                                    </li>
+                                                    </ui:repeat>
+                                              </ul>
+                                            </ui:repeat>
+                                 </div>
+                                
+                       
+                            
+                        </div>
+                            
+                        </div>
+                       
+                           
+                    </h:panelGroup>
+                      
+                    
+
+                    <p:dataTable id="tableReporteMes" value="#{reporteMarcacion.marcacionL}" var="mensual"  emptyMessage=""  scrollable="true"   rowIndexVar="status"   rendered="#{false}"  >
+                        <f:facet name="header">
+                            #{reporteMarcacion.seleccionTipo}
+                            <h:commandLink disabled="#{empty reporteMarcacion.marcacionL}">
+                                <img src="../../resources/imagenes/excel.png" width="36"/>
+                                <p:dataExporter type="xls" target="tableReporteMes" fileName="reporteMensual" postProcessor="#{reporteMarcacion.postProcessXLS}"  />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column  style="font-weight: bold" >
+                            <f:facet name="header"  >
+                                <h:outputLabel value="Nº" />
+                            </f:facet>
+                            <h:outputLabel value="#{status +1 }"  />
+                        </p:column>
+                        <p:columns value="#{reporteMarcacion.columnas}" var="col" >
+                            <f:facet name="header" >
+                                
+                                <h:outputLabel   style="color: #{utilB.convertTime(col.header,'yyyy-MM-dd').day ne 0?col.feriado eq 0?'blue':'orange':'red'}" value="#{utilB.listaDiasSemana[utilB.convertTime(col.header,'yyyy-MM-dd').day]}  #{col.header}"/>
+                            </f:facet>                          
+                            <p:commandLink value="#{mensual[col.indice-1] }" oncomplete="dglDetalle.show()" style="color: #{mensual[col.indice-1] eq '0.0' ?'red':'#4F4F4F' }" title="#{reporteMarcacion.sin_marcacion}" rendered="#{(col.header ne 'CODIGO') and (col.header ne 'NOMBRE') and (mensual[col.indice-1] ne ' / ')and (col.header ne 'HORAS AGREGADAS')}" >
+                                <f:ajax render=":frmDetalle" listener="#{reporteMarcacion.detalleMarcacionDocente(mensual[0],mensual[1], col.header,reporteMarcacion.seleccionTipo)}" disabled="#{not reporteMarcacion.sin_marcacion}" />
+                                <f:ajax render=":frmDetalle" listener="#{reporteMarcacion.detalleMarcacionSinDocente(mensual[0],mensual[1], col.header,reporteMarcacion.seleccionTipo)}"  disabled="#{reporteMarcacion.sin_marcacion}" />
+                            </p:commandLink> 
+
+                            <h:commandLink value="#{mensual[col.indice-1]}"  rendered="#{(col.header eq 'HORAS AGREGADAS')}" >
+                                <f:ajax  render=":frmHorasAgregadas" listener="#{reporteMarcacion.mostrarHorasAgregadas(mensual[0])}" />
+                            </h:commandLink>
+
+                            <h:outputLabel value="#{mensual[col.indice-1]}" rendered="#{(col.header eq 'CODIGO')||(col.header eq 'NOMBRE')  }"  />                                
+
+                        </p:columns>    
+                   
+                    </p:dataTable>
+                    
+                    
+                    
+                   
+                    
+                    
+
+                </h:form>
+
+  <h:form id="frmDetalle" prependId="false">
+
+  
+                <p:dialog widgetVar="dglDetalle"  width="1200px" header="..: DETALLE MARCACION :.."    closeOnEscape="true" resizable="false" modal="true"   >
+
+                  
+                        
+                        <div style="border: 1px solid silver;height: 150px;margin: 2px 0px;padding: 5px">
+                            <div style="display: inline-block;vertical-align: top;width: 15%;text-align: center  ">
+                                <img src="SVerImagenAlumno?alumno=#{reporteMarcacion.personaS.persona}" style="height: 150px;width: 150px;border: 1px solid silver;" />
+                            </div>
+                            <div style="display: inline-block;vertical-align: top;width: 80%;">
+                                <h:outputLabel value="#{reporteMarcacion.personaS.persona}" />
+                                <br/>
+                                <h:outputLabel value="#{reporteMarcacion.personaS.nombreCompletos()}" />
+                                <br/>
+                                <h:outputLabel > 
+                                    <i class="fa fa-phone" />
+                                    #{reporteMarcacion.personaS.telefono}
+                                </h:outputLabel>
+                                
+                                <h:outputLabel > 
+                                    <i class="fa fa-mobile" />
+                                    #{reporteMarcacion.personaS.celular}
+                                </h:outputLabel>
+                                <br/>
+                                 <h:outputLabel > 
+                                    <i class="fa fa-envelope-o" />
+                                    #{reporteMarcacion.personaS.emailP}
+                                </h:outputLabel>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        <p:dataTable id="tbDetalle" editable="true" value="#{reporteMarcacion.marcacionDetalleL}" var="detalle" scrollable="true" scrollHeight="280"  style="border: 1px solid silver;font-size: 0.8em" rowIndexVar="status"  >
+                            <p:ajax event="rowEdit" listener="#{reporteMarcacion.onRowEdit(detalle)}" rendered="@form"  update="tbDetalle"   />
+                            <p:ajax event="rowEditCancel"   />
+                          
+                            <p:column headerText="Nr." width="10" >
+                                #{status+1}
+                            </p:column>
+                            
+                            <p:column headerText="Tipo Clase" width="90"  >                                
+                                #{detalle.periodo}
+                                <br/>
+                                #{tipoClaseB.mostrarTipoClase(detalle.tipoClase).descripcion}                                
+                                <br/>
+                                #{detalle.tipo}
+                            </p:column>
+
+                          
+                            <p:column headerText="Fecha Ing." width="80" >
+                                #{utilB.listaDiasSemanaNormal[detalle.dia-1]}
+                                <br/>
+                                #{detalle.fecha}  
+                                <br/>
+                                <b>#{detalle.total_horas}</b>   
+                            </p:column>
+                            <p:column headerText="Hora Ingreso" width="50" >
+                                
+                                
+                               <h:outputLabel value="#{utilB.convertTimes(detalle.hora_ing)}" />
+                                 
+                                  
+                              
+
+                            </p:column>
+                            <p:column headerText="Hora Salida" width="50" >
+                            	
+                                <h:outputLabel value="#{utilB.convertTimes(detalle.hora_sal)}" />
+                                
+                                
+                              
+                                
+                            </p:column>
+                            <p:column headerText="Carrera">
+                                #{carreraB.mostrarCarreraCodigo(detalle.carrera).abreviatura}
+                                <br/>
+                                
+                                 #{cursoB.mostrarCurso(detalle.curso).descripcion}
+                                <br/>
+                                #{detalle.seccion}- #{turnoB.mostrarTurno(detalle.turno).descripcion}
+                                  
+                            </p:column>
+                           
+                         
+                            
+                           
+                            <p:column headerText="Tema" >
+
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{detalle.tema}" /></f:facet>
+                                    <f:facet name="input"><h:inputTextarea  value="#{detalle.tema}" style="width: 100%;resize: none;height: 50px;display: block"    /></f:facet>
+
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Hora Entrada" width="50" >
+                                <p:cellEditor>
+                                    <f:facet name="output">                                        
+                                        
+                                     
+                                      
+                                        
+                                         <h:outputLabel value="#{utilB.convertTimes(detalle.registroIngreso)}" />
+                                         
+                                    </f:facet>
+                                    <f:facet name="input">              
+                                        <p:calendar value="#{detalle.registroIngreso}" pattern="HH:mm" timeOnly="true" mask="true" stepMinute="5" />
+                                    </f:facet>
+
+                                </p:cellEditor>
+
+                            </p:column>
+                            <p:column headerText="Hora Salida" width="50" >
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                    
+                                    
+                                   
+                                <h:outputLabel value="#{utilB.convertTimes(detalle.registroSalida)}" />
+                                      
+                                    </f:facet>
+                                    <f:facet name="input">
+                                                                     
+                                        <p:calendar value="#{detalle.registroSalida}" pattern="HH:mm" timeOnly="true" mask="true" stepMinute="5"  />
+                                    </f:facet>                                    
+                                </p:cellEditor>
+
+                            </p:column>
+
+                            <p:column headerText="Tard." width="20"  >
+                                <b style="color: red">#{detalle.tardanza}</b>
+								
+                            </p:column>
+                            <p:column width="10" rendered="#{reporteMarcacion.acceso.tipoSeguridad eq 4}" >
+                            
+                                <p:rowEditor  />
+                            </p:column>
+                        </p:dataTable>
+
+                   
+                    <f:facet name="footer">
+                        <div style="display: block;text-align: right">
+                            <h:commandLink onclick="dglDetalle.hide()">
+                                <i class="fa fa-sign-in" />
+                                SALIR
+                                <f:ajax execute="@this" />
+                            </h:commandLink>
+                        </div>
+                        
+                    </f:facet>
+                </p:dialog>
+           </h:form>
+
+
+
+ <h:form id="frmHorasAgregadas" prependId="false">
+                <p:dialog header="..: REGULARIZAR :.."  width="550" widgetVar="dlgRegulariza" modal="true" resizable="false" closeOnEscape="true">
+                   
+                   
+                   		<div class="paneles" >
+                   		
+                   		
+                   			<h:outputLabel value="ANO:"   />
+                            <h:selectOneMenu id="cbAnio" value="#{reporteMarcacion.horasAgregadas.anio}"  disabled="#{not reporteMarcacion.banderaRegulariza}" >
+                                <f:selectItem itemLabel="2014" itemValue="2014"/>
+                                <f:selectItem itemLabel="2015" itemValue="2015"/>
+                                <f:selectItem itemLabel="2016" itemValue="2016"/>
+                            </h:selectOneMenu><BR/>
+
+                            <h:outputLabel value="MES:" />
+                            <h:selectOneMenu id="cbMes" value="#{reporteMarcacion.horasAgregadas.mes}" disabled="#{not reporteMarcacion.banderaRegulariza}">
+                                <c:forEach items="#{utilB.listaMeses}" var="column" varStatus="colLoopStatus">
+                                    <f:selectItem itemLabel="#{column.toString()}" itemValue="#{colLoopStatus.index+1}" />
+                                </c:forEach>
+                            </h:selectOneMenu><BR/>
+                            <h:outputLabel value="T. HORAS"  />
+                            <h:inputText id="txtHora" value="#{reporteMarcacion.horasAgregadas.horas}" size="3" disabled="#{not reporteMarcacion.banderaRegulariza}" style="#{ component.valid ? '' : 'border-color:red;'}"  required="true"/><BR/>
+                   		   <h:outputLabel value="OBSERVACION" /><br/>
+                        <h:inputTextarea  id="txtObservacion" value="#{reporteMarcacion.horasAgregadas.observacion}" rows="3" cols="50" style="#{ component.valid ? '' : 'border-color:red;'}"   disabled="#{not reporteMarcacion.banderaRegulariza}" required="true" /><BR/>
+                    
+                   		 
+                   		</div>
+                       
+
+
+                     
+                        <p:dataTable id="tbHorasAgregadas" value="#{reporteMarcacion.horasAgregadasL}" var="detalleHoras">
+                            <p:column headerText="ANO" width="40">
+                                #{detalleHoras.anio}
+                            </p:column>
+                            <p:column headerText="MES" width="40">
+                             #{detalleHoras.mes}
+
+                            </p:column>
+
+                            <p:column headerText="HORAS" width="40">
+                                #{detalleHoras.horas}
+                            </p:column>
+                            <p:column headerText="OBERVACION">
+                                #{detalleHoras.observacion}
+                            </p:column>
+                            
+                            <p:column width="5" style="text-align:center">
+                                <h:commandLink title="Eliminar" onclick="return confirmacion(this,'Al cerrar');" >
+                                	<i class="fa fa-times" style="color: red" />
+                                	
+                                    <f:ajax execute="@this" render="tbHorasAgregadas" listener="#{reporteMarcacion.eliminarHorasAgregadas(detalleHoras)}" />
+                                </h:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    <f:facet name="footer">
+                        <div style="display: block;text-align: right">
+                             <h:commandLink id="btNuevo" styleClass="boton-normal"  disabled="#{reporteMarcacion.banderaRegulariza}"  >
+                             	NUEVO
+                                <f:ajax execute="@this" render="cbAnio cbMes txtHora txtObservacion tbHorasAgregadas btNuevo btGuardar btCancelar" listener="#{reporteMarcacion.nuevoHoraAgregada}"  />
+                            </h:commandLink>
+                            <h:commandLink  id="btGuardar" styleClass="boton-normal"  disabled="#{not reporteMarcacion.banderaRegulariza}">
+                            	GUARDAR
+                                <f:ajax execute="@this cbAnio cbMes txtHora txtObservacion tbHorasAgregadas" render="tbHorasAgregadas cbAnio cbMes txtHora txtObservacion tbHorasAgregadas btNuevo btGuardar btCancelar" listener="#{reporteMarcacion.insertarHorasAgregadas}" />
+                            </h:commandLink>
+                            <h:commandLink id="btCancelar" styleClass="boton-normal"  disabled="#{not reporteMarcacion.banderaRegulariza}">
+                            	CANCELAR
+                                <f:ajax execute="@this" render="cbAnio cbMes txtHora txtObservacion tbHorasAgregadas btNuevo btGuardar btCancelar" resetValues="true" listener="#{reporteMarcacion.cancelarAgregada}" />
+                            </h:commandLink>
+                        </div>
+                        
+                    </f:facet>
+                </p:dialog>
+   </h:form>
+            </ui:define>
+        </ui:composition>
+
+
+
+
+

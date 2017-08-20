@@ -1,0 +1,342 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <script  type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.js"></script>
+        <title>Facelet Title</title>
+        
+    </h:head>
+    <style>
+        #frmMatricula\:pnCreditos{border: 1px solid silver;padding: 30px 10px}
+        #frmMatricula\:pnBotonera{border: 1px solid silver;padding: 10px}
+        #frmMatricula\:pnBotonera a{margin: 3px;width: 100px}
+        #frmMatricula\:pnCreditos label{ border-right: 2px solid silver;padding: 20px 15px;text-align: center;vertical-align: top;display: inline-block }
+        #frmMatricula\:pnDatos{display: inline-block;vertical-align: top;width: 49%}
+        #frmMatricula\:pnDatosDetalle{display: inline-block;vertical-align: top;width: 49%}
+        #frmMatricula\:pnDatosDetalle img{width: 200px ;height: 150px}
+        #frmMatricula\:pnDatos label{display: inline-block;width: 120px}
+        #frmMatricula\:pnDatos input{display: inline-block;margin: 1px;padding: 2px}
+        #frmMatricula\:pnDisponibles,#frmMatricula\:pnRegistrados,
+        #frmMatricula\:pnHorario,#frmMatricula\:pnDatos{border: 1px solid silver;padding: 5px 8px;}
+        #frmMatricula\:pnHorario table th{padding: 10px;border: 1px solid silver}
+        #frmMatricula\:pnHorario table tr td{border: 1px solid silver ;text-align: center}
+        .curso:hover{cursor: pointer;background-color: cadetblue;transition: all 0.5s}
+        .curso{background-color: white;transition: all 0.5s}
+        .opciones li{display: inline-block;border: 1px solid silver;padding: 5px;margin-left: 2px}
+        
+                    .cambio .ui-datatable-odd{background-color: white}
+                    .cambio .ui-state-highlight{background: #2182C2!important;color: white}
+                    .cambio .ui-state-hover{box-shadow: none;background: #E4E4E4!important;}
+                     .cambio tbody,.cambio thead{font-size: 0.8em}
+                    
+        
+    </style>
+    
+    <script>
+        function mostrar(){
+              $('.ui-datatable-data').find('.ui-row-toggler').eq(3).trigger('click');
+              $('.ui-datatable-data').find('.ui-row-toggler').eq(1).trigger('click');
+              $('.ui-datatable-data').find('.ui-row-toggler').eq(2).trigger('click');
+          }
+      $(document).ready(function () {
+          
+          
+        
+    });
+    </script>
+    
+    <h:body >
+        <h:form id="frmMatricula">
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="Codigo"/>
+                <h:inputText /><br/>
+                <h:outputLabel value="Alumno"/>
+                <h:inputText /><br/>
+                <h:outputLabel value="Carrera"/>
+                <h:selectOneMenu value="" >                    
+                    <f:selectItems value="#{alumnoCarreraB.mostrarAlumnoCarrera(1, '2009010010')}" var="alumnoCarrera" itemLabel="#{carreraB.mostrarCarreraCodigo(alumnoCarrera.carrera).descripcion }" itemValue="#{alumnoCarrera.carrera}" />
+                    <f:ajax execute="@this"/>
+                </h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="Facultad"/>
+                <h:inputText /><br/>
+                
+                
+                
+                <h:outputLabel value="Semestre Actual de Matricula"/>
+                <h:inputText /><br/>
+                
+                <h:outputLabel value="Fecha Inicio"/>
+                <h:inputText value="#{matriculaUpigB.periodo.fechaDesde}" /><br/>
+                
+                <h:outputLabel value="Fecha Fin"/>
+                <h:inputText value="#{matriculaUpigB.periodo.fechaHasta}" /><br/>
+                
+            </h:panelGroup>
+            
+            <h:panelGroup id="pnDatosDetalle" layout="block">
+                <img   src="SVerImagenAlumno?alumno=#{matriculaB.foto}" />
+            </h:panelGroup>
+            
+            
+            <h:outputLabel value="ESTADO MATRIUCULA:" style="border: 1px dashed blue;display: block;padding: 8px ;background-color: #C9E3ED" />
+            <BR/>
+            <h:panelGroup id="pnBotonera" layout="block">
+                <h:commandLink value="BUSCAR ALUMNO" >
+                    <f:ajax execute="@this"  />
+                </h:commandLink>
+                
+                <h:commandLink value="MOSTRAR CURSO">
+                    <f:ajax execute="@this" render="tbAsignadas" listener="#{matriculaUpigB.mostrarCursosAsignados(1, '20151', '200702', '000001', '2009010010')}" />
+                </h:commandLink>
+                <h:commandLink value="REGISTRAR MATRICULA">
+                    <f:ajax execute="@this"  />
+                </h:commandLink>
+            </h:panelGroup>
+            
+            
+            
+            
+            
+            
+            <h:panelGroup id="pnCreditos" layout="block">
+                <h:outputLabel value="#{matriculaUpigB.creditosDisponibles}&lt;br/&gt; Créditos Disponibles" escape="#{false}" />
+                <h:outputLabel id="lblCreditosRegitrados" value="#{matriculaUpigB.creditosRegistrados}&lt;br/&gt;Créditos Registrados" escape="#{false}" />
+                <h:outputLabel value="0&lt;br/&gt;Créditos Adicionales" escape="#{false}" />
+            </h:panelGroup>
+            
+            <h:panelGroup id="pnDisponibles" layout="block">
+            <h3>Asignaturas Disponible</h3>
+            <p:commandButton type="button" onclick="jQuery('.ui-row-toggler').click()" value="Expand/Collapse All" />
+            
+            <p:commandButton type="button" onclick="mostrar()" value="Expand" />
+            <p:dataTable id="tbAsignadas" widgetVar="tbAsignada" value="#{matriculaUpigB.asignaturaAsignadaL}" var="asignaturaAsignada"  styleClass="cambio" rowIndexVar="status" expandedRow="#{false}" >
+                 <p:column headerText="Nro." width="50">
+                    
+                    #{status+1}
+                </p:column>
+                
+                
+                <p:column headerText="Ciclo" width="50">
+                    #{utilB.listaCiclos[asignaturaAsignada.ciclo-1]}
+                    
+                </p:column>
+                   
+                
+                <p:column headerText="Asignatura">
+                    #{asignaturaAsignada.curso} - #{asignaturaAsignada.desCurso}
+                </p:column>
+                <p:column headerText="Creditos" width="100">
+                    #{asignaturaAsignada.creditos}
+                </p:column>
+                <p:column headerText="Vez" width="100">
+                    #{asignaturaAsignada.veces}
+                </p:column>
+                <p:column headerText="Horas Teoria" width="150">
+                    #{asignaturaAsignada.horaTeoria}
+                </p:column>
+                <p:column headerText="Horas Practica" width="150">
+                    #{asignaturaAsignada.horaPractica}
+                </p:column>
+                <p:column style="width:16px">
+                <p:rowToggler  />
+                </p:column>
+                <p:rowExpansion >
+                    <p:dataTable id="tbSeccion" value="#{matriculaUpigB.mostrarSeccionAsignados(asignaturaAsignada.institucion, '20151', asignaturaAsignada.malla, asignaturaAsignada.carrera, asignaturaAsignada.curso)}" var="subDetalle"    >
+                        
+                        <p:column  headerText="Seccion"  width="100">
+                            #{subDetalle.seccion}
+                        </p:column>
+                        <p:column  headerText="Grupo" width="50">
+                            #{subDetalle.grupo}
+                        </p:column>
+                        <p:column  headerText="Docente" >
+                            <div style="display: inline-block;vertical-align: top;">
+                                <h:graphicImage value="SVerImagenAlumno?alumno=#{subDetalle.persona}" width="40px" height="60px" />
+                            </div>
+                            <div style="display: inline-block;vertical-align: top;width: 120px;padding: 5px">
+                                #{subDetalle.personal}<BR/>
+                                #{subDetalle.desPersona}
+                            </div>
+                            
+                            
+                        </p:column>
+                        <p:column  headerText="Turno" width="100">
+                            #{subDetalle.desTurno}
+                        </p:column>
+                        
+                        <p:column  headerText="Capacidad" width="80">
+                            #{subDetalle.capacidad}
+                        </p:column>
+                        <p:column  headerText="Matriculados" width="80">
+                            #{subDetalle.matriculados}
+                        </p:column>
+                        <p:column  headerText="Opciones?" width="150">
+                            <ul class="opciones">
+                                <li>
+                                    <h:commandLink value="pasar" >
+                                        <f:ajax execute="@this" render=":frmMatricula:pnRegistrados :frmMatricula:lblCreditosRegitrados :frmMatricula:tbAsignadas" listener="#{matriculaUpigB.agregarCurso(asignaturaAsignada,subDetalle)}" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink value="horario">
+                                <f:ajax execute="@this" />
+                            </h:commandLink>
+                                </li>
+                            </ul>
+                            
+                            
+                        </p:column>
+                    </p:dataTable>
+                </p:rowExpansion>
+            </p:dataTable>
+            </h:panelGroup>
+            
+            <h:panelGroup id="pnRegistrados" layout="block">
+                <h3>Asignaturas Registradas</h3>
+                
+                
+                <p:dataTable id="tbRegistradas" value="#{matriculaUpigB.asignaturasRegistradaL}" var="detalleAsignaturasRegistrada"  rowIndexVar="status" >
+                    
+                    <p:column headerText="Nro." width="20">
+                        #{status +1}
+                    </p:column>
+                    
+                    <p:column headerText="Ciclo" width="50">
+                        
+                        #{utilB.listaCiclos[detalleAsignaturasRegistrada.ciclo -1 ]}
+                        
+                    </p:column>
+                     <p:column headerText="Codigo" width="80">
+                        
+                        #{detalleAsignaturasRegistrada.curso}
+                        
+                    </p:column>
+                    
+                    <p:column headerText="Asignatura">
+                         #{detalleAsignaturasRegistrada.desCurso}
+                    </p:column>
+                    <p:column headerText="Sección" width="150">
+                        #{detalleAsignaturasRegistrada.seccion}
+                    </p:column>
+                    <p:column headerText="Créditos" width="100">
+                        #{detalleAsignaturasRegistrada.creditos}
+                    </p:column>
+                    <p:column headerText="Vez" width="100">
+                        #{detalleAsignaturasRegistrada.veces}
+                    </p:column>
+                    <p:column headerText="Tipo" width="200">
+                        #{detalleAsignaturasRegistrada.desTipo}
+                    </p:column>
+                    
+                    <p:column headerText="Opciones" width="150">
+                        <h:commandLink value="Quitar">
+                            <f:ajax execute="@this" render="tbRegistradas :frmMatricula:lblCreditosRegitrados" listener="#{matriculaUpigB.quitarCurso(detalleAsignaturasRegistrada)}" />
+                        </h:commandLink>
+                    </p:column>
+                    
+                </p:dataTable>
+            </h:panelGroup>
+            
+            
+            
+            <h:panelGroup layout="block" id="pnHorario">
+                <h3>Horario Registrado</h3>
+                
+                <table id="tbHorario" style="border: 1px solid silver">
+                        <th>HORA</th>
+                        <th>LUNES</th>
+                        <th>MARTES</th>
+                        <th>MIERCOLES</th>
+                        <th>JUEVES</th>
+                        <th>VIERNES</th>
+                        <th>SABADO</th>
+                <ui:repeat value="#{horarioB.horarioSeccionAlumno(1, 20142,'2007020022','%')}" var="horario" >
+                        <tr style="height: 80px">
+                            <td  >#{horario.get(0)} - #{horario.get(1)}</td>
+                            <td ><h:outputLabel value="#{horario.get(2)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(3)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(4)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(5)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(6)}" escape="false"/> </td>
+                            <td><h:outputLabel value="#{horario.get(7)}" escape="false"/> </td>
+                            
+                            
+                            
+                        </tr>
+                    
+                    </ui:repeat>
+                 </table>
+                
+                <script>
+                                
+                                for(x=7;x>=1;x--){
+                                  campo="NO EXISTE";
+                                  cont=0;
+                                    $("#tbHorario tr td:nth-child("+x+")").each(function(){
+                                       if($(this).text().trim()!==""){                                                                         
+                                           console.log($(this).text().trim());
+                                           cont++;
+                                           if (campo !== $(this).text()){                                             
+                                               obj=$(this);
+                                               campo=$(this).text();                                    
+                                               cont=1;
+                                           }else{
+                                              // alert(cont);
+                                                    
+                                               $(obj).attr("rowspan",cont);
+                                               $(obj).addClass("curso");
+                                               $(this).remove();                                               
+                                               //cont=;
+                                           } 
+                                       }
+                                       else{
+                                           campo="NO EXISTE";
+                                           cont=0;  
+                                       }
+                                   }) ;
+                        }
+                          //-------------------------------------------------------------------------------
+                          
+                   $("#tbHorario tr").each(function(){
+                       //$(this).children("td:nth-child(1)").css("font-weight", "bold");
+                       var cadena=$(this).children("td:nth-child(1)").text().split("-");
+                       var i="" + cadena[0];
+                       var x="" + cadena[1];
+                       
+                       var hora_fin=new Date("2000","01","01",x.toString().trim().substring(0,2),x.toString().trim().substring(3,6));
+                       var hora_ini=new Date("2000","01","01",i.toString().trim().substring(0,2),i.toString().trim().substring(3,6));
+                       $(this).css("height",((hora_fin.getTime() - hora_ini.getTime())/60000)+20);
+                    //   console.log((hora_fin.getTime() - hora_ini.getTime())/60000);
+                    //   console.log("----------------------------------------------");
+                   });
+                      
+                    var colores=[]         ;
+                    
+                    colores[colores.length]="lleyow";
+                 
+                    console.log(colores[0]);
+                    console.log(colores[1]);
+                    console.log(colores[2]);
+                    colores[3]="lleyow";
+                    
+                    console.log(colores[3]);
+                    console.log(colores.length);
+                           
+                   
+                    
+                  
+                        
+                                
+                            </script>
+            </h:panelGroup>
+            
+            
+        </h:form>
+    </h:body>
+</html>
+

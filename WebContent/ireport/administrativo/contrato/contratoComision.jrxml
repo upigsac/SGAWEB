@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contratoComision" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="99489b5a-51d8-408c-ab76-1b0feed37c8c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="142"/>
+	<parameter name="PERSONAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.PERSONAL,F.APELLIDO_PATERNO,F.APELLIDO_MATERNO,F.NOMBRES,F.NRO_DOCUMENTO,C.DESCRIPCION COMISON,D.DESCRIPCION ASIGNACION
+FROM DI.PER_CONTRATO_COMISION A,DI.SYS_COMISION_ASIGNACION B,DI.SYS_COMISION C,DI.SYS_ASIGNACION D
+,SIGU.PER_PERSONAL E,UPA.DAT_PERSONAS F
+WHERE A.PERSONAL=$P{PERSONAL} AND A.CONTRATO=$P{CONTRATO}
+AND B.COMISION=A.COMISION
+AND C.COMISION=B.COMISION
+AND D.ASIGNACION=B.ASIGNACION
+AND E.PERSONAL=A.PERSONAL
+AND F.PERSONA=E.PERSONA
+ORDER BY COMISON,ASIGNACION]]>
+	</queryString>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="APELLIDO_PATERNO" class="java.lang.String"/>
+	<field name="APELLIDO_MATERNO" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="NRO_DOCUMENTO" class="java.lang.String"/>
+	<field name="COMISON" class="java.lang.String"/>
+	<field name="ASIGNACION" class="java.lang.String"/>
+	<group name="comision">
+		<groupExpression><![CDATA[$F{COMISON}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement uuid="77decf01-941c-4ffc-a57a-428e0e2b6f24" mode="Opaque" x="64" y="7" width="384" height="20" backcolor="#999999"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMISON}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement uuid="b05f7496-e6ac-4584-8345-2f10e32d13f2" x="13" y="0" width="51" height="46"/>
+				<imageExpression><![CDATA["D:\\logo_upig.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement uuid="41f3e0af-c231-4ba4-90ce-5ef2eef7a682" x="14" y="52" width="521" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c3349d60-5852-4134-b6a4-5ee0334dce4c" x="0" y="0" width="555" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DECLARACIÓN JURADA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement uuid="0049a720-888b-44b1-b532-c6f100944f35" x="42" y="9" width="456" height="61"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA['Yo <b>' +$F{APELLIDO_PATERNO}+''+ $F{APELLIDO_MATERNO} + ' '+ $F{NOMBRES}+'</b>, identificado (a) con DNI N° <b>'+$F{NRO_DOCUMENTO}+'</b>'
++'<br/><br/>DECLARO BAJO JURAMENTO que tengo conocimiento de la trascendente labor que realiza el docente universitario, comprometiendome en el ciclo  académico 2016-I de participar en la:']]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f6f14ee7-1240-4e0a-8d6a-68e4e0fa2f29" x="64" y="0" width="384" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA['- '+$F{ASIGNACION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="235" splitType="Stretch">
+			<textField pattern="&apos;Lima, &apos; dd MMMMM yyyy">
+				<reportElement uuid="7391e29d-c428-4a8f-b411-315da0a907f1" x="175" y="62" width="323" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3ce0a088-3ba1-49d1-a44b-6695e5476971" x="31" y="134" width="480" height="53"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA['<b>'+$F{APELLIDO_PATERNO}+' '+$F{APELLIDO_MATERNO} +', '+$F{NOMBRES}+'</b>'
++'<br/> DNI Nº '+$F{NRO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="913b79af-87ed-4c37-b483-8eef35067b63" x="42" y="16" width="456" height="31"/>
+				<textElement/>
+				<text><![CDATA[En caso de incumplimiento asumire las sanciones establecidas en el reglamento de docente UPIG.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

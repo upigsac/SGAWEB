@@ -1,0 +1,565 @@
+
+     
+        <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+				      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core"
+				      xmlns:p="http://primefaces.org/ui"     
+				      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  
+        
+        
+        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                TRAMITE DOCUMENTARIO..
+            </ui:define>
+            <ui:define name="contenido">
+        
+                <span class="tituto-admin">TRAMITE DOCUMENTARIO</span>            
+                    
+                
+                <style>
+                    
+                    
+                   .pnFiltro ul{padding: 0px;margin: 0px}
+                   .tramite-oficina-eliminar{color: red;position: absolute;top: 0;right: 0;font-size: 1.5em;z-index: 1; display: none;}
+                    .tramite-oficina:HOVER .tramite-oficina-eliminar{display: block;}
+                  
+                                
+                    input[type="checkbox"]{width: 20px;height: 20px  ;  display: inline-block;    vertical-align: top;}
+                    .tabla .ui-datatable-odd{background-color: white}
+                    .tabla thead{font-size: 0.8em}
+                    .tabla tbody{font-size: 0.7em}
+                    
+                    input[type="text"]{padding: 2px 1px;margin: 1px }
+                    select{padding: 2px 1px;margin: 1px}
+                    .colum1 >label{display: inline-block;vertical-align: top;width: 80px;min-height: 22px;line-height: 22px;margin: 0px 2px}
+                    
+                    .pnFiltro ul li{display: inline-block;vertical-align: top}
+                    #ckRequisitos,#ckRequisitos tbody,#ckRequisitos tbody tr,#ckRequisitos tbody td{display: block;}
+                   
+                   #ckRequisitos label{display: inline-block;;vertical-align: top;width: 90%;}
+                     
+                     .fila{border: 1px solid silver;padding: 2px 4px;font-size: 0.8em}
+                     .fila:HOVER { background-color: #EEEEEE;cursor: pointer;}
+                     .tramite-oficina{border: 1px solid silver;display: inline-block;vertical-align: top;width: 150px;height: 140px;margin: 5px 40px 5px 5px;position: relative;padding: 10px 5px;text-align: center;background-color: white}
+                     .tramite-oficina:not(:LAST-CHILD):BEFORE{content: "\f061";font-family:"FontAwesome";position: absolute;bottom: 5%;right: -40px;color: red;font-size: 2.5em}
+                     .enviado:BEFORE {content: "\f07b";font-family:"FontAwesome";position: absolute;top: 25%;right: -50px;color: #2182C2;font-size: 2.2em}
+                     .revizado:BEFORE {content: "\f07c";font-family:"FontAwesome";position: absolute;top: 25%;right: -50px;color: #2182C2;font-size: 2.2em}
+                     
+                     
+                     	
+			.close{opacity: 0.0;transition: all 0.5s}
+			
+			.modal{width: 400px;min-height: 100px;background-color: white;margin: 0 auto;border-radius: 0px 0px 5px 5px ;position: fixed;top: 5%;left: 40%;display: block}
+			.modal-titulo{display: block;background-color:  #0069b3;color: white;padding: 3px 5px;font-size: 1.2em}
+            .modal-fondo{width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);position: fixed;display: block; top:0;;left: 0;color:white}
+            .modal-cuerpo{padding: 5px 1px}            
+            .modal-icono{font-size:4.0em;text-align:center;color:red;width: 80px}
+            .modal-texto{ font-size: 1.2em;width: 315px;line-height: 20px; color:silver}
+            .modal-botonera{display: block;width: 100%;padding: 5px 0px;text-align: center}
+            .modal-botonera a{padding: 2px 4px;min-width: 40px;display: inline-block;border-radius: 3px;color: white;font-size: 1.2em;border: 1px solid}
+            .modal-botonera a.positivo{background-color: #337ab7;border-color: #2e6da4}
+            .modal-botonera a.positivo:HOVER{background-color: #286090}
+            .modal-botonera a.negativo{background-color: #d9534f;border-color: #d43f3a}
+            .modal-botonera a.negativo:HOVER{background-color: #c9302c}            
+            
+            
+            
+            .btDesplazamiento{border: 1px solid silver;display: inline-block;vertical-align: top;height: 40px;margin: 0px 2px;width: 80px;text-align: center;color: #2182C2}
+            .btDesplazamiento i{font-size: 1.4em}
+                </style>
+                
+                
+                <script>
+                    $(document).ready(function(){
+                        
+                         
+                      // $("body").on("keyup",".pnFiltro" ).keyup(function( event ){
+                          //console.log("sxx")  ;
+                      // }); 
+                           
+                       
+                    });
+                    
+                    
+            		var bandera=false;
+    	            var idGeneral;
+    	         
+    	            function confirmacion(obj,cadena){
+    	                idGeneral=obj;
+    	                if(bandera){
+    	                    $(".modal-fondo").remove();
+    	                    $(".modal").remove();
+    	                    bandera=false;
+    	                    return true;
+    	                }else{
+    	                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+    	                       $('body').append('<div class="modal-fondo"  /> ');
+    	                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+    	                        }else{
+    	                        $(".modal-fondo").remove();
+    	                        $(".modal").remove();
+    	                   }                    
+    	                    
+    	                    return false;
+    	                }
+    	                
+    	            }
+    	            
+    	            function valida(estado){
+    	                bandera=estado;           
+    	                $(idGeneral).click();            
+    	            }
+                </script>
+              
+         
+                <h:form id="frmTramiteDocumentario" prependId="false"  style="background-color: #eeeeee;">
+                    
+                    <h:panelGroup layout="block" id="pnDesplazamiento" styleClass="paneles">   
+                         <h:commandLink id="btPrimero" disabled="#{tramTramitePersonaB.bandera}" styleClass="btDesplazamiento" >
+                                <i class="fa fa-step-backward" />
+                               <br/>
+                                 Primero
+                                 <f:ajax execute="@this"  listener="#{tramTramitePersonaB.primero}"  />                    
+                         </h:commandLink>
+
+                         <h:commandLink id="btAnterior"    disabled="#{tramTramitePersonaB.bandera}" styleClass="btDesplazamiento" >
+                                <i class="fa fa-backward"/>
+                                 <br/>
+                                 Anterior
+                                <f:ajax execute="@this"   listener="#{tramTramitePersonaB.anterior}"  />                    
+                         </h:commandLink>
+                         
+                         <h:inputText id="txtExpediente" value="#{tramTramitePersonaB.busExpediente}"    style="background-color: white;text-align: center;padding: 5px 2px ;width: 100px;border: none;;margin: 5px;border-bottom: 2px solid blue;font-weight: bold;font-size: 1.2em;#{tramTramitePersonaB.tramTramitePersona.estadoRegistro eq 1?'color:#008000':'color:red'}"  disabled="#{tramTramitePersonaB.bandera}" maxlength="8" onclick="$(this).select();" >
+                             <f:ajax event="change" execute="@this" render="pnDatosExpediente pnDatosSolicitante txtExpediente pnBotonera pnTramiteOficina pnDatosTramite pnTramiteRequisito" listener="#{tramTramitePersonaB.buscarTramiteExpedinte(tramTramitePersonaB.busExpediente)}" />
+                         </h:inputText>
+
+                        <h:commandLink id="btSiguiente"   disabled="#{tramTramitePersonaB.bandera}" styleClass="btDesplazamiento" >
+                            <i class="fa fa-forward"/>    
+                             <br/>                      
+                                 Siguientes                                
+                                <f:ajax execute="@this"    listener="#{tramTramitePersonaB.siguiente}" />                               
+                             </h:commandLink>
+                             
+                         <h:commandLink id="btUltimo"    disabled="#{tramTramitePersonaB.bandera}" styleClass="btDesplazamiento" >
+                                <i class="fa fa-step-forward" />   
+                                 <br/>                             
+                                 Ultimo
+                                 <f:ajax execute="@this"   listener="#{tramTramitePersonaB.ultimo}"  />                    
+                         </h:commandLink>
+                        
+                    </h:panelGroup>
+                    
+                    
+                    
+                    <h:panelGroup layout="block" id="pnDatosSolicitante" styleClass="paneles ">
+                    <div style="display: block;padding: 5px">
+                        <div style="display: inline-block;vertical-align: top;">
+                            
+                        <h:graphicImage id="imgFoto" value="SVerImagenAlumno?alumno=#{tramTramitePersonaB.tramTramitePersona.personaEmpresa}" width="120"  height="135"  style="border: 1px solid silver" />                       
+                    </div>
+                        <div class="colum1" style="display: inline-block;vertical-align: top;padding: 5px ">
+                        <h:outputLabel  for="cbTipoPersona"   value="Tipo" />
+                   <h:selectOneMenu id="cbTipoPersona" value="#{tramTramitePersonaB.tramTramitePersona.tipoPersona}" disabled="#{not tramTramitePersonaB.bandera}" >
+                        <f:selectItem itemLabel="NATURAL" itemValue="1" />
+                        <f:selectItem itemLabel="JURIDICA" itemValue="2" />
+                        <f:ajax execute="@this" render="txtNombres txtDireccion txtTelefono txtCelular txtCorreo btNuevoEmpresa" listener="#{tramTramitePersonaB.tipoPersona}"  />
+                    </h:selectOneMenu>                 
+                    
+                    
+                    <br/>
+                    <h:outputLabel for="txtNombres"  value="Nombres" />
+                    <div style="display: inline-block;vertical-align: top;position: relative;margin-left: -4px!important">
+                        <h:inputText id="txtNombres" styleClass="txtNombres" value="#{tramTramitePersonaB.personaEmpresa.nombre}" size="65" disabled="#{not tramTramitePersonaB.bandera}"  required="#{true}"  >
+                        <f:ajax event="keyup" execute="@this" render="pnFiltro" listener="#{tramTramitePersonaB.completeTheme(tramTramitePersonaB.personaEmpresa.nombre)}" />                    
+                    </h:inputText>
+         
+                        
+                     <h:panelGroup layout="block" id="pnFiltro" class="pnFiltro" style="position: absolute;border: 1px solid silver;background-color: white;z-index: 1;display: #{tramTramitePersonaB.banderaBusqueda?'block':'none'}">                            
+                         <div style="max-height: 400px;min-height: 50px;width: 500px;overflow: auto;" >
+                             <ui:repeat value="#{tramTramitePersonaB.personaEmpresaL}" var="itemPersonaEmpresa">
+                                <h:commandLink>
+                                    <ul class="fila">  
+                                        <li>                                                                                        
+                                            <h:graphicImage  value="SVerImagenAlumno?alumno=#{itemPersonaEmpresa.codigo}" title="#{itemPersonaEmpresa.codigo}" width="20"  height="20"  style="border: 1px solid silver" />                                                                   
+                                        </li>
+                                        <li style="width:350px">
+                                          
+                                            <h:outputLabel value="#{itemPersonaEmpresa.nombreWeb}" escape="#{false}"  />
+                                            
+                                        </li>
+                                     </ul>   
+                                    <f:ajax execute="@this" render=":frmTramiteDocumentario:pnDatosSolicitante  :frmTramiteDocumentario:pnFiltro" listener="#{tramTramitePersonaB.seleccionPersonaEmpresa(itemPersonaEmpresa)}" />
+                                </h:commandLink>
+                               
+                        </ui:repeat>
+                         </div>
+                         <hr/>
+                         <div style="display: block;text-align: right;padding: 10px">
+                             <h:commandLink id="btNuevoEmpresa" onclick="dlgEmpresa.show()" disabled="#{tramTramitePersonaB.tramTramitePersona.tipoPersona eq 1}" >
+                                 NUEVO
+                                 <i class="fa fa-plus"/>
+                                 <f:ajax execute="@this" render="txtRucE txtRazonSocialE txtTelefonoE txtDireccionE" listener="#{tramTramitePersonaB.nuevoEmpresa}" />
+                             </h:commandLink>  
+                         </div>                         
+                    </h:panelGroup>
+                    
+                    
+                    
+                    </div>
+                    
+                    <br/>
+                   
+                    <h:outputLabel for="txtTelefono" value="Teléfono" />
+                    <h:inputText id="txtTelefono" value="#{tramTramitePersonaB.personaEmpresa.telefono}" disabled="#{true}"/>
+                    <h:outputLabel for="txtCelular" value="Celular" />
+                    <h:inputText id="txtCelular" value="#{tramTramitePersonaB.personaEmpresa.celular}" disabled="#{true}"/>
+                    <br/>
+                    <h:outputLabel for="txtCorreo" value="Correo"  />
+                    <h:inputText id="txtCorreo" value="#{tramTramitePersonaB.personaEmpresa.correo}" size="65" disabled="#{true}"/>
+                     <br/>
+                     <h:outputLabel for="txtDireccion" value="Dirección"  />
+                    <h:inputTextarea id="txtDireccion" value="#{tramTramitePersonaB.personaEmpresa.direccion}" style="height:80px;resize:none;width:485px" disabled="#{true}"/>
+                    <br/>
+                    </div>
+                    </div>
+                    
+                    
+                     </h:panelGroup>
+                    <h:panelGroup layout="block" id="pnBotonera" styleClass="paneles">
+                        <h:commandLink id="btNuevo" styleClass="boton-normal" disabled="#{tramTramitePersonaB.bandera}"   >
+                            <i class="fa fa-file-text-o" />
+                            Nuevo
+                            <f:ajax execute="@this" render=" imgFoto cbTipoPersona txtNombres txtDireccion txtTelefono txtCelular txtCorreo lblFecha lblEstado lblTramite lblTipoTramite lblTiempo  pnBotonera   pnDesplazamiento pnTramiteOficina pnTramiteRequisito btNuenoSeguimiento"  listener="#{tramTramitePersonaB.nuevo}" />
+                        </h:commandLink>
+
+                        
+
+                        <h:commandLink id="btEditar"  styleClass="boton-normal"  disabled="#{tramTramitePersonaB.bandera}"  >
+                            <i class="fa fa-pencil" />
+                            Editar
+                            <f:ajax execute="@this" render=" pnBotonera  pnDatosExpediente pnDesplazamiento btNuenoSeguimiento"  listener="#{tramTramitePersonaB.editar}"   />
+                        </h:commandLink>
+                        
+                        <h:commandLink id="btCancelar" styleClass="boton-normal" disabled="#{not tramTramitePersonaB.bandera}"   >
+                            <i class="fa fa-reply" />
+                            Cancelar
+                            <f:ajax execute="@this" render="pnBotonera pnDatosSolicitante pnDatosExpediente pnDesplazamiento pnTramiteOficina btNuenoSeguimiento pnTramiteRequisito lblFecha lblEstado lblTramite lblTipoTramite lblTiempo" listener="#{tramTramitePersonaB.cancelar}"   />
+                        </h:commandLink>
+                        
+                        
+                        
+                        <h:commandLink  styleClass="boton-normal" disabled="#{tramTramitePersonaB.tramTramitePersona.estadoRegistro eq 0?true:tramTramitePersonaB.bandera }" onclick="return confirmacion(this,'¿ Esta seguro eliminar el numero de expediente  &lt;b style=color:red;> #{tramTramitePersonaB.busExpediente} &lt;b />?');"   >
+                            <i class="fa fa-times" />
+                            Eliminar
+                            
+                            <f:ajax execute="@this" render="pnDesplazamiento"  listener="#{tramTramitePersonaB.eliminar()}"   />
+                        </h:commandLink>
+                        
+                   
+                        <h:commandLink id="btBuscarExpediente"  styleClass="boton-normal"  type="button" disabled="#{tramTramitePersonaB.bandera }" >
+                            <i class="fa fa-search" />
+                            Buscar
+                            <f:ajax execute="@this" render="txtBusquedaPersonaEmpresa tbBusquedaPersonaEmpresa"  listener="#{tramTramitePersonaB.nuevaBusqueda}"  />
+                        </h:commandLink>
+                        
+                        
+                       
+                        
+                        <h:commandLink id="btTRamite"  styleClass="boton-normal"  disabled="#{not tramTramitePersonaB.bandera }" >
+                            
+                            <i class="fa fa-paper-plane-o" />
+                            Tramite
+                            <f:ajax execute="@this" render="txtFut cbTipoTramite cboTramite ckRequisitos txtObservacion"  listener="#{tramTramitePersonaB.nuevoTramite}" />
+                        </h:commandLink>
+                        
+                        <h:commandLink id="btImprimir"  styleClass="boton-normal"  disabled="true" >
+                            <i class="fa fa-print"  />
+                            Imprimir
+                            <f:ajax execute="@this"   />
+                        </h:commandLink>
+                        
+                    </h:panelGroup>
+                    
+                    <h:panelGroup id="pnDatosTramite" layout="block" style="display: block;border: 1px solid silver;background-color: white;position:relative;padding:5px ">
+                    
+                     
+                  	<h:outputLabel id="lblFecha" value="#{tramTramitePersonaB.tramTramitePersona.fechaIngreso}" title="fecha de creacion" style="position: absolute;bottom: 0;right: 5px;font-size: 1.2em;color: #2182C2" >
+                  	<i class="fa fa-calendar-o" />
+
+                  		<f:convertDateTime pattern="dd-MM-yyyy" /> 
+                  	</h:outputLabel>
+                  	
+                  	<h:outputLabel id="lblEstado" style="position: absolute;top: 0;right: 5px;font-size: 1.2em;color: #2182C2"  value="#{tramTramitePersonaB.tramTramitePersona.estadoRegistro ne 0?estadoB.mostrarEstadoCodigo(tramTramitePersonaB.tramTramitePersona.estadoRegistro).descripcion:''}" /> 
+                  	
+                  
+                  	
+                     <div style="display: block">
+                     
+                     <h:outputLabel id="lblTipoTramite" style="display: inline-block;vertical-align: top;width: 70px;text-align: center;font-size: 0.7em">                     	
+	                     <i class=" #{tramTramitePersonaB.tramTipoTramite.icono}" style="font-size: 3.0em;display: block;" />
+	                     #{tramTramitePersonaB.tramTipoTramite.descripcion}
+                     </h:outputLabel>
+                      
+                     
+	                 <div style="display: inline-block;vertical-align: top;padding-left: 10px">
+	                 	 
+	                   <h:outputLabel value="Tramite" />
+	                   <br/>
+	                   <h:outputLabel id="lblTramite" title="#{tramTramitePersonaB.tramTramitePersona.tramite}" value="#{tramTramitePersonaB.tramTramite.descripcion}"  style="font-size: 1.2em;font-weight: bold;" />
+	                   <br/>
+	                   <h:outputLabel id="lblTiempo"  title="Tiempo tramite"   >
+	                   
+	                   <i class="fa fa-clock-o" />
+	                   #{tramTramitePersonaB.tramTramite.tiempoEntrega} horas
+	                   </h:outputLabel>
+	                 	
+	                 </div>                     
+                     </div>
+                    
+               
+                    </h:panelGroup>
+                    
+                    
+                    <b>OFICINAS</b>
+                    <h:panelGroup layout="block" id="pnTramiteOficina" style="display:block;border:1px solid silver;min-height: 150px;position:relative;" >
+                    	<ui:repeat var="itemOficina" value="#{tramTramitePersonaB.tramiteOficinaExpedienteL}">                    	
+                    		<div class="tramite-oficina" title="#{itemOficina.tramTramiteSeguimiento.asunto}"  >
+                    		<h:commandLink styleClass="tramite-oficina-eliminar" title="Eliminar Oficna" rendered="#{itemOficina.tramTramiteSeguimiento.estadoRegistro eq 1}" onclick="return confirmacion(this,'¿ Esta seguro eliminar la Oficina  del expediente &lt;b style=color:red>#{tramTramitePersonaB.busExpediente}&lt;/b> ?');" >
+                    			<i class="fa fa-times"  />
+                    				<f:ajax execute="@this" render=":frmTramiteDocumentario:pnTramiteOficina" listener="#{tramTramitePersonaB.eliminarTramiteOficina(itemOficina.tramTramiteSeguimiento)}" /> 
+                    		</h:commandLink>
+                    		<div style="display: block;height:100%;position: relative;" class="#{itemOficina.tramTramiteSeguimiento.estadoRegistro eq 1?'':itemOficina.tramTramiteSeguimiento.estadoRegistro eq 70 ?'revizado':'enviado'}">
+                    			
+                    			<b style="display: block;;margin: 0 auto;" >#{itemOficina.oficina.descripcion}</b>
+                    		
+                    		</div>                    		
+                    		
+                    		<div style="position: absolute;bottom: 0;right: 0;display: block;padding: 2px 4px">
+                    			
+                    			<h:commandLink title="Enviar" disabled="#{itemOficina.tramTramiteSeguimiento.estadoRegistro ne 1}" >
+                    				<i class="fa fa-paper-plane-o" ></i>
+                    			<f:ajax execute="@this" render=":frmTramiteDocumentario:txtAsunto :frmTramiteDocumentario:txtPara"  listener="#{tramTramitePersonaB.enviarTramiteOficina(itemOficina.oficina,itemOficina.tramTramiteSeguimiento)}" />
+                    			</h:commandLink>
+                    			</div>
+                    		</div>
+                    	</ui:repeat>
+                    	<h:outputLabel value="NO SE ASIGNARON OFICINAS " style="font-size:2.2em;text-align:center;color:silver;display:block" rendered="#{tramTramitePersonaB.tramiteOficinaExpedienteL.size() eq 0}" />
+                    	<div style="position: absolute;bottom: 0;right: 0">
+	                    	<h:commandLink id="btNuenoSeguimiento" title="Nueva Oficina " styleClass="boton-circulo" disabled="#{tramTramitePersonaB.bandera}"    >
+	                    	<i class="fa fa-plus"  />
+	                    	<f:ajax execute="@this" render="cbOfinaTramiteTS txtObservacionTS" listener="#{tramTramitePersonaB.nuevaTramiteSeguimiento}" />
+	                    	</h:commandLink>
+                    	</div>
+                    	
+                    </h:panelGroup>
+                    
+                    
+                    <b>REQUISITOS</b>
+                    <h:panelGroup id="pnTramiteRequisito" layout="block" style="display:block;border:1px solid silver;background-color: white">                    
+	                    <ul>
+	                    <ui:repeat var="itemRequisito" value="#{tramTramitePersonaB.tramRequisitoL}">
+	                    	<li>
+	                    		<h:outputLabel value="#{itemRequisito.descripcion}"  />	 
+	                    	</li>
+	                    </ui:repeat>
+	                    </ul>                    
+                    </h:panelGroup>
+                    
+                    
+                    
+                    
+                    
+                   <p:dialog header="..: NUEVO TRAMITE :.."  widgetVar="dlgEnviarTramite" modal="true" resizable="false" closeOnEscape="true" width="700" >
+                   <h:panelGroup layout="block" id="pnDatosExpediente" styleClass="panel" style="position: relative;"> 
+                          
+                      <h:outputLabel for="txtFut"  value="F.U.T."   />
+                       <br/>
+                      <h:inputText id="txtFut"  value="#{tramTramitePersonaB.tramTramitePersona.fut}"    />
+                       <br/>
+                       
+                        <h:outputLabel for="cbTipoTramite" value="Tipo:"  />
+                         <br/>
+                      <h:selectOneMenu id="cbTipoTramite" value="#{tramTramitePersonaB.tramTramitePersona.tipoTramite}"  style="width:100%" disabled="#{ tramTramitePersonaB.banderaAccion}"  >
+                      		<f:selectItem itemLabel="-- NINGUNO --" />                            
+                        	<f:selectItems value="#{tramDocumentoB.mostrarTipoTramite()}" var="tipoTramite" itemValue="#{tipoTramite.tipoTramite}" itemLabel="#{tipoTramite.descripcion}"  />                        
+                      		<f:ajax execute="@this txtFut " render="cboTramite ckRequisitos" listener="#{tramTramitePersonaB.mostrarTramite}" />
+                      </h:selectOneMenu>
+                      
+                      <br/>
+
+                          <h:outputLabel for="cboTramite" value="Tramite" />
+                       <h:selectOneMenu id="cboTramite" value="#{tramTramitePersonaB.tramTramitePersona.tramite}"   style="width:100%" disabled="#{ tramTramitePersonaB.banderaAccion}"   >
+                                    <f:selectItem itemLabel="-- NINGUNO --" />
+                                    <f:selectItems value="#{tramTramitePersonaB.tramTramiteDocumentarioL}" var="tramite" itemLabel="#{tramite.descripcion}" itemValue="#{tramite.tramite}" />
+                                    <f:ajax execute="@this" render="ckRequisitos " listener="#{tramTramitePersonaB.mostrarTramite(1,tramTramitePersonaB.tramTramitePersona.tramite)}" />
+                         </h:selectOneMenu>
+                                
+                                <br/>   
+                                <h:outputLabel  value="Requisito"  />
+                                 <br/>
+                                <div style=";border: 1px solid silver;height: 180px;overflow-y: auto;width: 98%;vertical-align: top;display: block;padding: 5px">
+                                <h:selectManyCheckbox id="ckRequisitos"  value="#{tramTramitePersonaB.requisitosL}"      layout="pageDirection"    disabled="#{ tramTramitePersonaB.banderaAccion}" >
+                                        <f:selectItems value="#{tramTramitePersonaB.tramRequisitoL}" var="requisito" itemLabel="#{requisito.descripcion}" itemValue="#{requisito.requisito}"  />
+                                        <f:ajax execute="@this" />
+                                    </h:selectManyCheckbox>
+                                </div>
+                                
+                             
+                                  <h:outputLabel for="txtObservacion" value="Observacion:"  />
+                                  <br  />
+                                  <h:inputTextarea id="txtObservacion" value="#{tramTramitePersonaB.tramTramitePersona.observacion}" style="width: 98%;resize:none;height: 70px" />
+                                <br/>
+
+                    </h:panelGroup>
+
+                        <f:facet name="footer" >
+                            <div style="display: block;text-align: right">
+			                      <h:commandLink id="btRegistrar"  >
+			                            
+			                            ACEPTAR
+			                            <f:ajax execute="txtFut  cbTipoTramite txtObservacion" render="pnBotonera pnDesplazamiento pnDatosSolicitante pnDatosExpediente pnTramiteOficina pnTramiteRequisito lblTipoTramite lblTramite lblTiempo"   listener="#{tramTramitePersonaB.guardar}"     />
+			                      </h:commandLink>
+
+                                <h:commandLink onclick="dlgEnviarTramite.hide()">
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                            
+                        </f:facet>
+                    </p:dialog>
+                    
+                    
+
+                    <p:dialog header="..: REGISTRAR EMPRESA :.." widgetVar="dlgEmpresa" modal="true" resizable="false"  width="600" closeOnEscape="true" >
+                        
+                         
+                            <h:outputLabel  value="R.U.C:"  /><br/>
+                            <h:inputText id="txtRucE"  value="#{tramTramitePersonaB.empresa.ruc}"  maxlength="12" required="true" >
+                            <f:ajax execute="@this"  render="txtRucE" listener="#{tramTramitePersonaB.validarRuc()}" />
+                            </h:inputText>
+                         	<br/>
+                            <h:outputLabel  value="RAZÓN SOCIAL:"  /> <br/>
+                            <h:inputText id="txtRazonSocialE"  value="#{tramTramitePersonaB.empresa.razonSocial}"  required="true" style="width: 350px" />
+                             <br/>
+                            <h:outputLabel  value="TELEFONO:" /> <br/>
+                            <h:inputText  id="txtTelefonoE" value="#{tramTramitePersonaB.empresa.telefono}"  />
+							 <br/>	                         
+                            <h:outputLabel  value="DIRECCION:" />
+                           
+                            <h:inputTextarea id="txtDireccionE" value="#{tramTramitePersonaB.empresa.direccion}" style="resize: none;width: 500px;height: 100px" />
+
+                        
+                        <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="txtRucE txtRazonSocialE txtTelefonoE txtDireccionE" listener="#{tramTramitePersonaB.insertarEmpresa}" />
+                                </h:commandLink>
+                                <h:commandLink onclick="dlgEmpresa.hide()">
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                    </p:dialog>
+                    
+                    
+                  <p:dialog header="..: BUSQUEDA DE TRAMITE :.." widgetVar="dlgBusqueda" modal="true" resizable="false" width="650" height="500" closeOnEscape="true"   >                  
+                    
+                        <h:outputLabel value="RESPONSABLE" />
+                        <br/>
+                        <h:inputText  id="txtBusquedaPersonaEmpresa" value="#{tramTramitePersonaB.busPersonaEmpresa}" style="display:block;width:95%" hp:placeholder="Escribir busqueda" >
+                        	<f:ajax execute="@this" render="tbBusquedaPersonaEmpresa" listener="#{tramTramitePersonaB.filtroPersonaEmpresa}" />
+                        </h:inputText>
+                    <p:dataTable id="tbBusquedaPersonaEmpresa" value="#{tramTramitePersonaB.tramTramitePersonaEmpresaL}" var="itemTramTramitePersonaEmpresa" selectionMode="single" rowKey="#{itemTramTramitePersonaEmpresa}" selection="#{tramTramitePersonaB.tramTramitePersonaEmpresa}"  scrollable="true" scrollHeight="420" rowIndexVar="status" emptyMessage="No se encuentra resultado" style="font-size:0.8em" >
+                      <p:ajax event="rowSelect"  />
+                        <p:column headerText="EXPEDIENTE" width="80">
+                           #{itemTramTramitePersonaEmpresa.tramTramitePersona.expediente}
+                        </p:column>
+                        <p:column headerText="TRAMITE" >
+                            #{itemTramTramitePersonaEmpresa.tramTramitePersona.tramite}- #{itemTramTramitePersonaEmpresa.tramTramite.descripcion}
+                            <br/>
+                          	#{itemTramTramitePersonaEmpresa.persona.paterno} #{itemTramTramitePersonaEmpresa.persona.materno} #{itemTramTramitePersonaEmpresa.persona.nombres}  
+                        </p:column>
+                        
+                    </p:dataTable>
+                    
+                    
+                     <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="@this" render="pnDatosExpediente pnDatosSolicitante txtExpediente pnBotonera pnTramiteOficina pnDatosTramite txtExpediente pnTramiteRequisito"  listener="#{tramTramitePersonaB.seleccionBusqueda}" />
+                                </h:commandLink>
+                                <h:commandLink onclick="dlgBusqueda.hide()">
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                </p:dialog>
+                
+                
+                
+                <p:dialog header="ENVIAR MENSAJE" widgetVar="dlgEnviarOficina" modal="true"  width="500" closeOnEscape="true" resizable="false">
+                
+                	<h:outputLabel for="txtAsunto" value="Para:" />
+                	<br/>
+                	<h:inputText id="txtPara" value="#{tramTramitePersonaB.oficina.descripcion}" disabled="true" style="display:block;width:100%;" />
+                	<br/>
+                	<h:outputLabel for="txtAsunto" value="Asunto" />
+                	<br/>
+                	<h:inputTextarea id="txtAsunto" value="#{tramTramitePersonaB.tramTramiteSeguimiento.asunto}" style="display:block;width:100%;resize:none;height:100px" />
+                 <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="@this txtAsunto" render="pnTramiteOficina"  listener="#{tramTramitePersonaB.insertarTramiteOficina}" />
+                                </h:commandLink>
+                                <h:commandLink onclick="dlgEnviarOficina.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                </p:dialog>
+                    
+                    
+                    
+                    
+                    
+               <p:dialog header="..: NUEVA OFICINA :.." width="500"  widgetVar="dlgNuevaOficinaTramite" modal="true" resizable="false" closeOnEscape="true" >
+                 <h:outputLabel value="Oficina" />
+                 <br  />
+                 <h:selectOneMenu id="cbOfinaTramiteTS" value="#{tramTramitePersonaB.tramTramiteSeguimiento.oficina}" style="display: block;width: 100%" >
+                 	
+                 	<f:selectItems value="#{tramTramitePersonaB.oficinaL}" var="itemOficina" itemLabel="#{itemOficina.descripcion}" itemValue="#{itemOficina.oficina}" />
+                 </h:selectOneMenu>               
+                 <h:outputLabel value="Observacion" /><br/>
+                 <h:inputTextarea  id="txtObservacionTS" value="#{tramTramitePersonaB.tramTramiteSeguimiento.observacion}" required="true" style="#{ component.valid ? '' : 'border-color:red;'};display: block;width: 100%;height: 70px;resize:none" />
+                 
+                  <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink styleClass="boton-verde" >
+                                    ACEPTAR
+                                    <f:ajax execute="@this txtObservacionTS cbOfinaTramiteTS"  render="txtObservacionTS pnTramiteOficina" listener="#{tramTramitePersonaB.insertarTramiteSeguimiento}" />
+                                </h:commandLink>
+                                
+                                <h:commandLink styleClass="boton-rojo" onclick="dlgNuevaOficinaTramite.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this" render="txtObservacionTS" resetValues="true" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+               
+               </p:dialog>     
+                    
+                </h:form>
+             </ui:define>
+        </ui:composition>
+
+
+

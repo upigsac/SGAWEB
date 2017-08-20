@@ -1,0 +1,316 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>INGRESO DE NOTAS</title>
+        
+ 
+    </h:head>
+
+  
+        
+    <h:body>
+
+        <ui:composition  template="/Docente/plantilla.xhtml">
+            <ui:define name="titulo">
+                    INGRESO DE NOTAS - ASISTENCIA
+            </ui:define>    
+            <ui:define name="contenido">
+   
+                <script>
+           
+                         function mostrarNotas(){
+                     
+                        $("#div-asistencia").fadeOut(1000,function(){
+                        $("#div-notas").fadeIn(1000); 
+                    });
+                }
+                    
+                    function mostrarAsistencia(){
+                     
+                        $("#div-notas").fadeOut(1000,function(){
+                        $("#div-asistencia").fadeIn(1000); 
+                    });
+                }
+                $(document).ready(function(){
+                    
+                    $("#div-notas").css("display","none");
+                    $("#div-asistencia").css("display","none");
+                    
+                    
+                    
+                    
+                    
+                     $(document).on("keydown", ".ui-cell-editor-input input", function(event) {
+                          
+                   if (event.keyCode === 13 || event.keyCode===40 ) {
+                        
+                        var fila=$(this).closest("tr").index()+1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===38 ) { 
+      
+                        var fila=$(this).closest("tr").index()-1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===37 ) { 
+      
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()-1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    else if (event.keyCode===39 ) { 
+                            
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()+1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    });
+                    
+                    
+                    
+                    
+                });    
+                
+                    
+                    
+                </script>
+                <style>
+                     thead {font-size: 0.7em}
+                     tbody {font-size: 0.6em}
+            
+                   .ui-datatable-odd{background: white}
+                   //.ui-state-highlight{background-color:  rgba(204,201,204,0.5)!important}
+                 
+                   
+                   input[type="submit"]{border: none;font-size: 1.1em;margin: 5px 1px;padding:  5px 10px;cursor: pointer;color: white;background:-moz-linear-gradient(center top , #4D8FFD, #4787ED);background: -webkit-linear-gradient(top,#4d8ffd,#4787ed)}
+                   input[type="submit"]:disabled{border: none;font-size: 1.1em;margin: 5px 1px;padding:  5px 10px;cursor: default;color: white;background:-moz-linear-gradient(center top , #4D8FFD, #4787ED);background: -webkit-linear-gradient(top,#4d8ffd,#4787ed);opacity: 0.5}
+                   
+                    
+                   
+               
+                   
+             .temaAdmin table tbody{font-size: 0.8em}
+            
+            .temaAdmin table thead th:nth-child(1){width: 20px}
+            .temaAdmin table thead th:nth-child(2){width: 80px}
+            .temaAdmin table thead th:nth-child(3){width: 350px}
+            .temaAdmin table tbody tr td{text-align: center}
+            .temaAdmin table tbody tr td:nth-child(3){text-align: left}
+            .temaAdmin table tbody tr td:nth-last-child(2){font-weight: bold;}
+                       //------------------ ESTILO DE ASITENCIA --------------------
+                </style>
+              
+                
+                <span class="tituto-docente">INGRESO DE NOTAS </span>
+                
+                
+                <h:form id="frmNotas"   style="padding: 10px 20px" > 
+                    
+                   
+                                      
+                    
+
+
+                    <p:dataTable id="tbdetalle" value="#{docente_notaB.listaCargaCursos}" var="detalle" selectionMode="single" rowKey="#{detalle.item}" selection="#{docente_notaB.cargaCursos}" emptyMessage="" style="width: 80%" >
+                         
+                        <p:ajax event="rowSelect"  listener="#{docente_notaB.onRowSelect}"  update=":frmNotas:botonera " />
+                        <p:column headerText="ITEM" width="20">
+                            #{detalle.item}
+                        </p:column>
+                         <p:column headerText="INSTITUCION">
+                            #{detalle.desInstitucion}
+                        </p:column>
+                        <p:column headerText="CARRERA">
+                            #{detalle.desCarrera}
+                        </p:column>                       
+                        <p:column headerText="SECCION">
+                            #{detalle.seccion}
+                        </p:column>  
+                        <p:column headerText="ASIGNATURA">
+                            #{detalle.curso}- #{detalle.desCurso}
+                        </p:column>
+                    </p:dataTable>
+                        
+                    <!-- prime faces -->
+                    <br/>   
+                    <h:panelGroup id="botonera" layout="block">
+                    <h:commandButton id="btNotas" value="INGRESO DE NOTAS  "   onclick="mostrarNotas()" disabled="#{not docente_notaB.filaseleccion}"    >
+                        <f:ajax   execute="@this tbdetalle" render="notas"  listener="#{docente_notaB.mostrarDetalle(docente_notaB.cargaCursos)}"  />
+                    </h:commandButton>
+                    
+                    
+                        <h:commandButton id="btAsistencia" value="REGISTRO DE ASISTENCIA" onclick="mostrarAsistencia()" disabled="#{not docente_notaB.filaseleccion}"  rendered="#{false}"   >
+                        <f:ajax  execute="@this tbdetalle" render="tbAsistencia" listener="#{asistenciaB.filaSelect(docente_notaB.cargaCursos)}" />
+                    </h:commandButton>
+                    </h:panelGroup>
+                    
+                    
+                    <div id="div-notas">
+                        <p:dataTable id="notas" value="#{docente_notaB.notasL}" var="registro" editable="true" editMode="cell" emptyMessage="" rendered="true"   rowIndexVar="status" styleClass="temaAdmin">
+                        <f:facet name="header">                            
+                            <h3>REGISTROS DE NOTA </h3>
+                            
+                        </f:facet>
+                        <p:ajax event="cellEdit"  listener="#{docente_notaB.onCellEdit}" update=":frmNotas:notas" />
+                        <p:column headerText="Nro.">
+                            #{status +1}
+                        </p:column>
+                        <c:forEach items="#{docente_notaB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}"  > 
+                                
+                           <f:facet name="header">  
+                               <p:commandLink  rendered="#{(column.lectura eq 1)}"  oncomplete="dlg.show()" update=":frmsubNotas:notasSub"  style="width: 35px;"   actionListener="#{docente_notaB.mostrarDetalle(docente_notaB.cargaCursos)}" >
+                              <h:outputLabel escape="false"  value="#{column.header} "   style="display: block;cursor: pointer;color: blue"  title="#{column.property}"   />
+                                <f:param name="cabecera" value="#{column.property}" />
+                              </p:commandLink>
+                                      
+                               <p:outputLabel escape="false" value="#{column.header}" styleClass="#{column.editable == true ? 'editable':''}" 
+                                                     rendered="#{(column.lectura ne 1)}" title="#{column.property}"/> 
+                            </f:facet>  
+                            
+                            <p:cellEditor rendered="#{column.editable}" >
+                            <f:facet name="output" > 
+                                <h:outputText value="#{registro[column.property]}" style="color:#{registro[column.property] > 10.0 ? 'blue': 'red'}  "  />
+                            </f:facet>
+                            <f:facet name="input" >
+                                <p:inputText  value="#{registro[column.property]}" style="width: 40px;display: block;margin: 0 auto"  maxlength="2"   onkeypress="return soloNumeros(event)"  onblur="valorIncorecto(this,20)" >
+                                  <f:validateDoubleRange minimum="0" maximum="20" />
+                                </p:inputText>
+                            </f:facet>
+                            </p:cellEditor>
+                                <h:outputText value="#{column.property eq 'promedio'?utilB.redondeo(registro[column.property]):registro[column.property]}"      rendered="#{not column.editable  }"  /> 
+                            
+                            </p:column>
+                        </c:forEach> 
+
+               <f:facet name="footer" >                            
+                   <p:commandButton   icon="ui-icon-refresh" style="display: block"  rendered="#{docente_notaB.notasL.size() gt 0}" >
+                        <f:ajax render="notas" execute="@this" listener="#{docente_notaB.refrescar}" />
+                    </p:commandButton> 
+                    
+                  
+                   <span style="display: block">#{docente_notaB.formula} </span>  
+              </f:facet>
+              </p:dataTable>           
+           </div>
+                    
+                    
+                    
+                    
+           <div id="div-asistencia">   
+                             
+               <p:dataTable  id="tbAsistencia" value="#{asistenciaB.asistenciaL}" var="alumnos"   scrollable="true" >
+                   <f:facet name="header"    >                            
+                       <h:commandButton value="Anterior">
+                           <f:ajax   execute="@this" render="tbAsistencia" listener="#{asistenciaB.restarMes(docente_notaB.cargaCursos)}" /> 
+                       </h:commandButton>
+                     <h3 style="display: inline-block">REGISTRO DE ASISTENCIA  </h3>                            
+                     <h:commandButton value="Siguiente">
+                         <f:ajax   execute="@this" render="tbAsistencia" listener="#{asistenciaB.sumarMes(docente_notaB.cargaCursos)}" /> 
+                     </h:commandButton>
+                 </f:facet>               
+                   <p:columns value="#{asistenciaB.columnas}" var="columnas"  columnIndexVar="colIndex"    style="#{colIndex eq 1 ?'width: 250px':'width: 60px'}"  >                    
+                  <f:facet name="header"   >
+                         <!--<h:outputLabel  escape="false" value="{utilB.listaDiasSemana[utilB.diaSemanaHoy(Integer.parseInt(columnas.fecha.substring(0,4)),columnas.fecha.substring(5,7),columnas.fecha.substring(8,10))]} &lt;br/&gt; {columnas.encabezado}" /> -->
+                         <h:outputLabel  escape="false" value="#{utilB.listaDiasSemana[utilB.diaSemanaHoy(columnas.fecha.substring(0,4),columnas.fecha.substring(5,7),columnas.encabezado.substring(4))]} &lt;br/&gt; #{colIndex le 1?columnas.encabezado:columnas.fecha} " />
+                    </f:facet> 
+                 <h:outputLabel  rendered="#{columnas.editable}" value="#{alumnos[columnas.indice]} " />                    
+                 <h:panelGroup layout="block" rendered="#{not columnas.editable}" >
+                        #{asistenciaB.refrescar(alumnos[(utilB.parseInt(columnas.fecha.substring(8,10))+1)])}
+                 <h:selectOneRadio id="rbDetalle"  style="font-size: 1.2em !important " value="#{asistenciaB.seleccionAsistencia}"   disabled="#{columnas.fecha le utilB.convertDate(utilB.fechaHoy(), 'yyyy-MM-dd') ?false:true}"   layout="lineDirection"   >                              
+                             <f:selectItem itemValue="1" itemLabel="A"  />
+                             <f:selectItem itemValue="2" itemLabel="F"/>
+                             <f:ajax execute="@this"  render="@this" listener="#{asistenciaB.insertarAsistencia(alumnos.get(0),columnas.encabezado,columnas.fecha.substring(5,7),docente_notaB.cargaCursos )}" />
+                  </h:selectOneRadio>
+                 </h:panelGroup>                 
+                   
+                </p:columns>
+                <f:facet name="footer">
+                   <p:commandButton   icon="ui-icon-refresh" style="display: block"  >
+                       
+                    </p:commandButton> 
+                   
+                </f:facet>
+                </p:dataTable>         
+                 </div>   
+                </h:form>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                    <h:form id="frmsubNotas">                        
+                        <p:dialog id="modal"  header="REGISTRAR SUB NOTAS." widgetVar="dlg" modal="true" resizable="false"  hideEffect="clip" width="80%" height="600" maximizable="#{false}" >
+                             <p:ajax event="close" listener="#{docente_notaB.cerrar}" update=":frmNotas:notas" />
+                             <p:dataTable  id="notasSub" value="#{docente_notaB.notasL}" var="registro" editable="true" editMode="cell"   rowIndexVar="status" scrollable="#{true}" scrollHeight="470" styleClass="temaAdmin">
+
+                            <p:ajax event="cellEdit" listener="#{docente_notaB.onCellEdit}"  />
+                         <p:column headerText="Nro.">
+                            #{status +1}
+                        </p:column>
+                          <c:forEach items="#{docente_notaB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}" >
+                            
+                                  <f:facet name="header">  
+                                   
+                                      <h:outputLabel escape="false"  value="#{column.header}" title="#{column.property}" styleClass="#{column.editable == true ? 'editable':''}"   />    
+                           
+                            </f:facet>  
+                            
+                            
+                            <p:cellEditor rendered="#{column.editable}">
+                            <f:facet name="output">                             
+                                
+                                
+                            <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{registro[column.property]}" style="width: 40px;display: block;margin: 0 auto" maxlength="2" onkeypress="return soloNumeros(event)"  onblur="valorIncorecto(this,20)" >
+                                    <f:validateDoubleRange minimum="0" maximum="20" />
+                                </p:inputText>
+                            
+                            </f:facet>
+                            </p:cellEditor>
+                            <h:outputText value="#{column.property eq 'promedio'?utilB.redondeoDecimal(registro[column.property]):registro[column.property]}"  rendered="#{not column.editable}"/> 
+                            
+                            </p:column>
+                        </c:forEach>                             
+                            <f:facet name="footer" >   
+                                <p:commandButton  icon="ui-icon-refresh" style="display: inline-block">
+                                    <f:ajax render="notasSub" execute="@this" listener="#{docente_notaB.refrescar}" />
+                                 </p:commandButton>
+                                
+                                <p:commandButton  value="Guardardo Automatico"  style="display: none"  onclick="if (!confirm('¿ESTA SEGURO DE REALIZAR EL PROCESO?')) return false;" >
+                                    <f:ajax render="notasSub" execute="@this" listener="#{docente_notaB.guardado_automatico}"  />
+                                </p:commandButton> 
+                            </f:facet>
+                        </p:dataTable> 
+
+       
+                    </p:dialog>
+               </h:form>                
+
+              
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>
+

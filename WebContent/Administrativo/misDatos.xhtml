@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    
+    <h:body>
+   
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                CAMBIAR DATOS
+                
+            </ui:define>    
+                    
+        <ui:define name="contenido">    
+             #{svReporte.mensaje(usuarioB.persona.persona)}
+            <h:form id="Datos" class="form-style-a" target="_black">
+                 
+            <fieldset class="form-field"><legend>DATOS PERSONALES</legend>
+ 
+                <h:outputLabel value="Nombre: "/>
+                <h:inputText value="#{usuarioB.persona.nombres}" class="deshabilidado"/><br/>
+
+
+
+                <h:outputLabel value="Apellido Paterno: "/>
+                <h:inputText value="#{usuarioB.persona.paterno}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Apellido Materno: "/>
+                <h:inputText value="#{usuarioB.persona.materno}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Direccion: "/>
+                <h:inputText value="#{usuarioB.persona.direccion_recidencial}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Telefono: "/>
+                <h:inputText value="#{usuarioB.persona.telefono}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Celular: "/>
+                <h:inputText value="#{usuarioB.persona.celular}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Email: "/>
+                <h:inputText value="#{usuarioB.persona.emailP}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Email Opcional: "/>
+                <h:inputText value="#{usuarioB.persona.emailS}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="Tipo de Documento: "/>
+                <h:inputText value="#{usuarioB.persona.tipodocumento}" class="deshabilidado" /><br/>
+
+
+
+                <h:outputLabel value="DNI: "/>
+                <h:inputText value="#{usuarioB.persona.numero_documento}" class="deshabilidado" /><br/>
+
+                </fieldset>
+                <div id="wrapper-button">
+                    <input type="button"   value="Editar" id="btEditar" class="form-button btnEditar" onclick="EstadoBotones(false)"/>
+                    <h:commandButton id="btGuardar" value="Guardar" styleClass="form-button btnGuardar" onclick="if(!confirm('Desea Guardar?'))  return false" action="#{personalB.ingresoPersonal()}"/>
+                    <input type="button"   value="Cancelar" id="btCancelar" class="form-button btnCancelar" onclick="EstadoBotones(true)"/>
+                    
+                 </div>
+        </h:form>
+            <form action="SReporte" target="_blank">
+                        <input type="submit"   value="Imprimir" id="btImprime" class="form-button btnCancelar" />
+            </form>
+        </ui:define>
+            
+        </ui:composition>
+    </h:body>
+</html>
+

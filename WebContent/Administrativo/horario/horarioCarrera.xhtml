@@ -1,0 +1,52 @@
+      <ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+     <ui:define name="titulo">
+                HORARIO POR CARRERA 
+      </ui:define>
+    <ui:define name="contenido">
+        
+ 
+
+        <span class="tituto-admin">HORARIO POR CARRERA </span>
+        <style>
+            .label{display: inline-block;vertical-align: top;width: 120px}
+            .paneles{border: 1px solid silver;padding: 10px;margin: 4px 0px}
+            .botones{display: inline-block;vertical-align: top;color: white;background-color: #0069B3;font-weight: bold;padding: 8px;margin: 2px;border-radius: 3px}
+        </style>
+        <h:form>
+            <h:panelGroup layout="block" id="pnDatos" styleClass="paneles">
+                <h:outputLabel value="CARRERA" styleClass="label" />
+                <h:selectOneMenu value="#{horarioCarreraB.carreraS}">
+                    <f:selectItems value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}" />
+                </h:selectOneMenu>
+                <BR/>
+                <h:outputLabel value="TURNO" styleClass="label"  />
+                <h:selectOneMenu value="#{horarioCarreraB.turnoS}">
+                    <f:selectItems value="#{turnoB.mostrarTurno()}" var="turno" itemLabel="#{turno.descripcion}" itemValue="#{turno.turno}" />
+                </h:selectOneMenu>
+            </h:panelGroup>
+            
+            
+            <h:panelGroup layout="block" id="pnBotonera" styleClass="paneles">
+                  <ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{horarioCarreraB.carreraS},TURNO,#{horarioCarreraB.turnoS}" />
+            
+                  <h:commandLink target="_blank" title="IMPRIMIR" styleClass="botones" actionListener="#{utilB.imprimirIreports('administrativo/horario/horarioCarrera', 1,fn:split(param1,','))}" >
+                <i class="fa fa-file-excel-o"/>
+            IMPRIMIR
+            </h:commandLink>
+               
+           
+            <h:commandLink title="EXPORTAR" styleClass="botones" actionListener="#{utilB.imprimirIreports('administrativo/horario/horarioCarrera', 2,fn:split(param1,','))}" >
+                <i class="fa fa-file-pdf-o" />
+            EXPORTAR
+            </h:commandLink>
+            </h:panelGroup>
+          
+        </h:form>
+     </ui:define>
+ </ui:composition>
+

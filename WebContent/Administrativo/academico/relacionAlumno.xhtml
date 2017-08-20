@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                HISTORIAL ACADEMICO
+                
+            </ui:define>    
+                    
+            <ui:define name="contenido">
+                
+                <style>
+                    label{width: 120px;display: inline-block;margin-bottom: 10px}
+                    
+                </style>
+                
+                <span class="tituto-admin">RELACIONDE ALUMNO</span>
+        
+        
+        
+                <h:form prependId="false" target="_black">
+                                    
+                                    <label>CARRERA :</label> 
+                                    <h:selectOneMenu id="cboCarrera"  value="#{contenidoB.seleccionCarrera}">                           
+                                        <f:selectItem itemLabel="-- SELECCIONE --"/>
+                                        <f:selectItems value="#{contenidoB.listaCarreras}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.descripcion}"/>                                                                                
+                                    </h:selectOneMenu>
+                                    <br/>
+                                    
+                                    
+                                     <label>TURNO :</label> 
+                                     <h:selectOneMenu id="cboTurno"  value="#{seccionB.seleccionTurno}">                           
+                                        <f:selectItem itemLabel="-- SELECCIONE --"/>
+                                        <f:selectItem itemLabel="MAÑANA" itemValue="M" />
+                                        <f:selectItem itemLabel="NOCHE" itemValue="N" />                                        
+                                        <f:ajax execute="cboCarrera @this" render="cboSeccion" listener="#{seccionB.mostrarSeccionesPeriodoCarreraTurno(usuarioB.periodoS, contenidoB.seleccionCarrera, seccionB.seleccionTurno)}"/>
+                                    </h:selectOneMenu>
+                                    <br/>
+                                    
+                                    
+                                    <label>SECCION :</label> 
+                                   <h:selectOneMenu id="cboSeccion"  value="#{contenidoB.seleccionCarrera}">                           
+                                        <f:selectItem itemLabel="-- SELECCIONE --"/>
+                                        <f:selectItem itemLabel=" TODOS " itemValue="%"/>
+                                        <f:selectItems value="#{seccionB.listaSeccion}" var="seccion" itemValue="#{seccion.seccion}" itemLabel="#{seccion.descripcion}"/>
+                                        <f:ajax execute="@this"/>
+                                    </h:selectOneMenu>
+                                    
+                                    
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <h:commandLink class="linkpdf" value="IMPRIMIR &#x00A; FORMATO PDF"  action="reporte.jsp" >
+                                            <f:param name="reporte"  value="SGAWEB0007" />
+                                            <f:param name="periodo"  value="#{usuarioB.periodoS}" />
+                                        
+                                            <f:param name="formato"  value="5" />
+                                       </h:commandLink>
+
+                                    <h:commandLink class="linkexcel" value="IMPRIMIR &#x00A; FORMATO EXCEL"  action="reporte.jsp" >
+                                            <f:param name="reporte"  value="SGAWEB0007" />
+                                            <f:param name="periodo"  value="#{usuarioB.periodoS}" />
+                                        
+                                            <f:param name="formato"  value="2" />
+                                       </h:commandLink>
+                       </h:form>
+                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

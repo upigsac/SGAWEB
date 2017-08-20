@@ -1,0 +1,170 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui"
+                template="/Docente/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                ..: DATOS PERSONALES :..
+                
+            </ui:define>  
+              
+            
+        
+        <ui:define name="contenido">
+        	<style>
+			#frmDatos label{display: block;;margin-top: 6px;color: #0069b3}
+			#frmDatos select{width: 160px;margin: 0px 2px;background-color: white;}
+			#frmDatos input[type='text']{padding: 2px 4px;border: none;border-bottom: 1px solid #9e9e9e;display: block;width: 95%;box-shadow:none}
+			#frmDatos input[type='text']:FOCUS{border-color: #0069b3;box-shadow:0 1px 0 0 #0069b3}
+			#frmDatos a{padding: 8px 15px;background-color: green;color: white;border-radius:4px;display: inline-block; }
+			#frmDatos textarea {resize:none;width: 95%;height: 50px;padding: 2px 4px}
+			#frmDatos input:disabled{background-color: white;color: silver;}
+			  
+			
+			
+			
+			.close{opacity: 0.0;transition: all 0.5s}
+			.column{display: inline-block;vertical-align: top;}
+			.modal{width: 400px;min-height: 100px;background-color: white;margin: 0 auto;border-radius: 0px 0px 5px 5px ;position: fixed;top: 5%;left: 40%;display: block}
+			.modal-titulo{display: block;background-color:  #0069b3;color: white;padding: 3px 5px;font-size: 1.2em}
+            .modal-fondo{width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);position: fixed;display: block; top:0;;left: 0;color:white}
+            .modal-cuerpo{padding: 5px 1px}            
+            .modal-icono{font-size:4.0em;text-align:center;color:red;width: 80px}
+            .modal-texto{ font-size: 1.2em;width: 315px;line-height: 20px; color:silver}
+            .modal-botonera{display: block;width: 100%;padding: 5px 0px;text-align: center}
+            .modal-botonera a{padding: 2px 4px;min-width: 40px;display: inline-block;border-radius: 3px;color: white;font-size: 1.2em;border: 1px solid}
+            .modal-botonera a.positivo{background-color: #337ab7;border-color: #2e6da4}
+            .modal-botonera a.positivo:HOVER{background-color: #286090}
+            .modal-botonera a.negativo{background-color: #d9534f;border-color: #d43f3a}
+            .modal-botonera a.negativo:HOVER{background-color: #c9302c}
+            
+			</style>
+			<script type="text/javascript">
+				var bandera=false;
+	            var idGeneral;
+	         
+	            function confirmacion(obj,cadena){
+	                idGeneral=obj;
+	                if(bandera){
+	                    $(".modal-fondo").remove();
+	                    $(".modal").remove();
+	                    bandera=false;
+	                    return true;
+	                }else{
+	                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+	                       $('body').append('<div class="modal-fondo"  /> ');
+	                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+	                        }else{
+	                        $(".modal-fondo").remove();
+	                        $(".modal").remove();
+	                   }                    
+	                    
+	                    return false;
+	                }
+	                
+	            }
+	            
+	            function valida(estado){
+	                bandera=estado;           
+	                $(idGeneral).click();            
+	            }
+			</script>
+   <span class="tituto-docente"> ACTUALICE SUS DATOS </span>
+         <h:form id="frmDatos" prependId="false" style=";background-color: #eeeeee">
+        
+         <div>
+         <span style="position: relative;display: inline-block;padding: 3px">
+	         <i class="fa fa-desktop" style="font-size: 2.5em" />
+	         <i class="fa fa-refresh fa-spin " style="position: absolute;right: 17px;bottom: 24px" />
+         </span>
+
+
+         
+       	<span class="column" style="font-size: 1.6em;padding: 5px 2px">ACTUALICE SUS DATOS Y PERMITANOS MANTENERNOS EN CONTACTO CON USTED.</span>  	
+         
+         </div>
+         
+         
+         <div style="display: block;border: 1px solid silver;padding: 5px;background-color: white;">
+         
+         
+         <h:outputLabel value="PATERNO" /> 
+         <h:inputText id="txtPaterno" value="#{usuarioB.persona.paterno}" disabled="true" />
+        
+         <h:outputLabel value="MATERNO" /> 
+         <h:inputText id="txtMaterno" value="#{usuarioB.persona.materno}" disabled="true" />
+        
+         <h:outputLabel value="NOMBRES" /> 
+         <h:inputText id="txtNombres" value="#{usuarioB.persona.nombres}" disabled="true" />
+        
+         
+         <h:outputLabel value="D.N.I" /> 
+         <h:inputText id="txtNumeroDocumento" value="#{usuarioB.persona.numero_documento}" maxlength="8" >
+         <f:ajax execute="@this" render="@this" listener="#{usuarioB.validaNumeroDocumento}" />
+         </h:inputText>
+         
+       
+    
+       
+         <h:outputLabel value="TELEFONO FIJO" /> 
+         <h:inputText id="txtTelefono" value="#{usuarioB.persona.telefono}" />
+        
+         <h:outputLabel value="TELEFONO CELULAR" /> 
+         <h:inputText id="txtCelular" value="#{usuarioB.persona.celular}" />
+         
+         <h:outputLabel value="CORREO COORPORATIVO" /> 
+         <h:inputText id="txtCorreoP" value="#{usuarioB.persona.emailP}" />
+        
+         <h:outputLabel value="CORREO PERSONAL" /> 
+         <h:inputText id="txtCorreoS" value="#{usuarioB.persona.emailS}" />
+        
+         
+         <h:outputLabel value="FECHA NACIMENTO" />
+         <p:calendar id="txtFechaNacimiento" value="#{usuarioB.persona.fecha_nacimiento}" pattern="dd-MM-yyyy" mask="true"  navigator="true" />
+         
+         
+         <h:outputLabel value="DIRECCION UBIGEO" /> 
+     
+         			<h:selectOneMenu id="cboDepartamento" value="#{usuarioB.persona.ubigeoDepartamento}"  >                        
+                        <f:selectItems value="#{ubigeoDepartamentoB.mostrarDepartamento()}" var="departamento" itemValue="#{departamento.departamento}" itemLabel="#{departamento.descripcion}" />
+                        <f:ajax execute="@this" render="cboProvincia" />                         
+                    </h:selectOneMenu>
+                    
+             
+                    <h:selectOneMenu id="cboProvincia"  value="#{usuarioB.persona.ubigeoProvincia}"  >                        
+                        <f:selectItems value="#{ubigeoProvinciaB.mostrarProvincia(usuarioB.persona.ubigeoDepartamento)}" var="provincia" itemValue="#{provincia.provincia}" itemLabel="#{provincia.descripcion}" />
+                        <f:ajax execute="@this" render="cboDistrito" />                        
+                    </h:selectOneMenu>
+                    
+           
+                    <h:selectOneMenu id="cboDistrito" value="#{usuarioB.persona.ubigeoDistrito}"  >
+                        <f:selectItem itemLabel="--Ninguno --" />
+                        <f:selectItems value="#{ubigeoDistritoB.mostrarDistrito(usuarioB.persona.ubigeoDepartamento, usuarioB.persona.ubigeoProvincia)}" var="distrito" itemValue="#{distrito.distrito}" itemLabel="#{distrito.descripcion}" />
+                    </h:selectOneMenu>
+
+         
+         <h:outputLabel value="DIRECCION RECIDENCIAL" /> 
+         <h:inputTextarea id="txtDireccion" value="#{usuarioB.persona.direccion_recidencial}"/>
+         
+        
+        
+         
+         </div>
+         <div style="border: 1px solid silver;text-align: right;padding:  10px;background-color: white;margin-top: 5px">
+         <h:commandLink  onclick="return confirmacion(this,'¿ Esta deacuerdo con los datos ingresados ?');" >
+         
+       
+         	ACTUALIZAR MIS DATOS
+         <f:ajax execute="txtNumeroDocumento   txtTelefono txtCelular txtCorreoP txtCorreoS txtFechaNacimiento txtDireccion cboDepartamento cboProvincia cboDistrito" render="" listener="#{usuarioB.insertarPersona}" /> 
+         </h:commandLink>
+         </div>
+         
+         </h:form>
+        </ui:define>
+        
+        
+ </ui:composition>
+       

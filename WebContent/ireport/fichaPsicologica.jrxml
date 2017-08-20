@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fichaPsicologica" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ea47cdf4-f463-44eb-a9c7-a1309a7fdd63">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Administrador\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USUARIO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.INSTITUCION,A.PERIODO,A.CARRERA,B.DESCRIPCION,A.USUARIO,D.APELLIDO_PATERNO +' '+ D.APELLIDO_PATERNO +', '+ D.NOMBRES PERSONA,A.CREACION_FECHA
+FROM DI.ENCUESTA_PREGUNTA_RESPUESTA_EGRESADO_CABECERA A, UPA.ACA_CARRERAS B,SIGU.ACA_ALUMNO C, UPA.DAT_PERSONAS D
+where A.CARRERA=B.CARRERA AND A.INSTITUCION=C.INSTITUCION AND  A.USUARIO=C.ALUMNO AND C.PERSONA=D.PERSONA
+AND A.INSTITUCION=1 AND A.ENCUESTA=4 AND A.USUARIO=$P{USUARIO}]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Integer"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="USUARIO" class="java.lang.String"/>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="CREACION_FECHA" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f6496064-de8c-405a-aa32-0f7510c7cf9c" x="116" y="19" width="335" height="62"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FICHA  INTEGRAL PSICOLOGICA]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="3dc09ead-d10f-4212-8696-892b6bac1ef9" x="123" y="120" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PERIODO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="eccf8cac-deaa-4b1f-8493-6298f3c8a3d9" x="123" y="140" width="259" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3eae43eb-4690-4107-98fb-8a11787cc3a5" x="123" y="100" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{USUARIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="54c24a2f-78d3-4726-b270-6f57ab56833c" x="123" y="160" width="259" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PERSONA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="208f3235-431d-4162-9f0d-1a5697d9207b" x="349" y="181" width="203" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CREACION_FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3e249f49-7e8f-41df-904a-a581d0159057" x="16" y="100" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="53ee66d7-4ebe-4493-bbd7-e026fdbb4f5b" x="16" y="120" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEROIDO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3209d0d6-7fbd-4357-bf7f-2c85d41fadeb" x="16" y="140" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ CARRERA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5bf4e99c-952e-4f1f-8c16-60569766fb78" x="16" y="160" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERSONA:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="82f3dcad-d43b-4053-9dfa-2a4abfa05ae2" x="157" y="1" width="264" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[RESULTADO DE FICHA]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="957e1a92-bfae-4365-8cea-0b02f4ca9273" x="16" y="27" width="525" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<subreport isUsingCache="false" runToBottom="true">
+				<reportElement uuid="a68e4591-a78b-4d34-8633-f0e7f4da443a" x="0" y="0" width="555" height="21"/>
+				<subreportParameter name="DUSUARIO">
+					<subreportParameterExpression><![CDATA[$F{USUARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "fichaPsicologica_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1405af74-d017-4cf2-9a7d-a02f36215e0d" x="0" y="11" width="555" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ESTA FICHA ES EXTRICTAMENTE DE CARACTER PRIVADO]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

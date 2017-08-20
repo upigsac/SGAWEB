@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+         <script type="text/javascript" src="http://172.16.1.195:8084/Proyecto_Web_Upig/resources/js/modal.js"></script>
+         
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+         
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                CAMBIAR DATOS
+                
+            </ui:define>    
+       
+            <ui:define name="contenido">
+            
+       CONFIGURAION DE ACCESO AL SISTEMA
+       <br/>
+       
+      <br/>
+       <h:form id="opciones">
+           PERSONAL: 
+           <h:inputText value="#{personaB.busCodigo}" id="txtcodigo" />
+           <input type="button" value="buscar"  id="modales"/> <br/>
+           
+           
+           
+           PROGRAMA: 
+           
+           <h:selectOneMenu id="cbo1" value="#{opcionProgramaB.seleccion}"  >  
+               
+               <f:selectItem itemLabel="--seleccione--"/>
+               
+               <f:selectItems value="#{opcionProgramaB.programaL}" var="lista" itemValue="#{lista.programa}" itemLabel="#{lista.descripcion}"/>
+               
+               <f:ajax execute="cbo1 :opciones:txtcodigo" render="cbo2"  listener="#{opcionModuloB.cargarModulo()}"/>
+            
+            </h:selectOneMenu>
+           <br/>
+             
+            MODULO:
+            
+            <h:selectOneMenu id="cbo2" value="#{opcionModuloB.seleccion}">
+                
+                <f:selectItem itemLabel="--seleccione--"/>
+                
+                <f:selectItems value="#{opcionModuloB.moduloL}" var="lista" itemValue="#{lista.modulo}" itemLabel="#{lista.descripcion}"/>
+                
+                <f:ajax execute="cbo2 :opciones:txtcodigo" 
+                                     render=":opciones:tablaPadre :opciones:tablaTodoPadre
+                                     :opciones:tablaTodoHijo" 
+                                     listener="#{opcionAccesoB.cargarMenuPadre}"/>
+                
+            </h:selectOneMenu>
+                     
+            <br/>
+            TIPO:  
+            <h:selectOneRadio id="rda1" value="#{opcionProgramaB.tipo}"  > 
+                             <f:selectItem itemValue="1" itemLabel="Archivos" />
+                             <f:selectItem itemValue="2" itemLabel="Procesos"/>
+                             <f:selectItem itemValue="3" itemLabel="Reportes"/>   
+                             
+                             <f:ajax execute="rda1 :opciones:txtcodigo" 
+                                     render=":opciones:tablaPadre :opciones:tablaTodoPadre
+                                     :opciones:tablaTodoHijo" 
+                                     listener="#{opcionAccesoB.cargarMenuPadre}"/>
+                             
+            </h:selectOneRadio>
+            
+            
+            
+       
+           
+       
+              
+            
+             <!--             USUARIO  TABLA PADRES -->
+             
+             
+             <div style="overflow:auto; width:700px; height:200px; border: 1px solid #555555">
+            
+              
+                 
+            <h:dataTable id="tablaPadre"  value="#{opcionAccesoB.menuPadre}" var="mPadre" 
+                          binding="#{opcionAccesoB.datatableMenuPadre}" rules="groups" >
+                
+                 
+                
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Nro"/>
+                
+              </f:facet>
+                <h:commandButton  value="seleccion" actionListener="#{opcionAccesoB.seleccionMenuPadre}">
+                
+                 <f:ajax execute=":opciones:txtcodigo " 
+                         render=":opciones:tablaHijo "  />
+                </h:commandButton>
+                    
+            </h:column>
+                
+                
+              <h:column>
+              <f:facet name="header">
+                  <h:outputText value="+"/>
+                
+              </f:facet>
+                  <h:outputText value="#{mPadre.seleccion}"/>
+            </h:column>
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Lista de Opciones"/>
+                
+              </f:facet>
+                  <h:outputText value="#{mPadre.descripcion}"/>
+            </h:column>
+                
+              
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Seguridad"/>
+                
+              </f:facet>
+           <h:outputText value="Administrador"/>
+            </h:column>
+                  
+                  
+                  
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Filtro"/>
+                
+              </f:facet>
+          <h:outputText value="Sin Filtro"/>
+            </h:column>
+                    
+                
+                
+                
+              <h:column>
+              <f:facet name="header">
+                    <h:outputText value="Activo"/>
+                
+              </f:facet>
+                  <input type="checkbox" />
+                  
+            </h:column>
+                
+                
+              <h:column>
+              <f:facet name="header">
+                    <h:outputText value="Quitar"/>
+                
+              </f:facet>
+                  <h:commandButton value="eliminar" actionListener="#{opcionAccesoB.quitarPadre}">
+                  
+                  
+                    <f:ajax execute=":opciones:txtcodigo" render="@form"  />
+                    
+                  </h:commandButton>
+            </h:column>
+                
+            </h:dataTable>
+           
+          
+             </div>
+        
+       
+      
+       
+       
+       
+           <!--             USUARIO  TABLA HIJOS -->
+           
+               
+               
+         <br/><br/>
+         
+       
+         <div style="overflow:auto; width:700px; height:200px; border: 1px solid #555555">
+           
+           <h:dataTable id="tablaHijo" value="#{opcionAccesoB.menuHijo}" var="mHijo" 
+                        binding="#{opcionAccesoB.datatableMenuHijo}" rules="groups"   >
+                     <!--  <f:facet name="header">
+             <h:outputLabel value="opcionAccesoB. nombretitulo"/>
+                
+              </f:facet>-->
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Nro"/>
+              </f:facet>
+                <h:commandButton  value="seleccion" actionListener="#{opcionAccesoB.seleccionMenuHijo}" >
+                
+                
+                
+                    <f:ajax execute=":opciones:txtcodigo" render="@form"  />
+                </h:commandButton>
+              
+            </h:column>
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="+"/>
+                
+              </f:facet>
+          
+            </h:column>
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Lista de Opciones"/>
+                
+              </f:facet>
+                  <h:outputText value="#{mHijo.descripcion}"/>
+            </h:column>
+                
+              
+                
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Seguridad"/>
+                
+              </f:facet>
+           <h:outputText value="Administrador"/>
+            </h:column>
+                  
+                
+              <h:column>
+              <f:facet name="header">
+                <h:outputText value="Filtro"/>
+                
+              </f:facet>
+          <h:outputText value="Sin Filtro"/>
+            </h:column>
+              <h:column>
+              <f:facet name="header">
+                    <h:outputText value="Activo"/>
+              </f:facet>
+                  <input type="checkbox" />
+            </h:column>
+              <h:column>
+              <f:facet name="header">
+                    <h:outputText value="Quitar"/>
+                
+              </f:facet>
+                  <h:commandButton value="eliminar" actionListener="#{opcionAccesoB.quitarHijo}">
+                  
+                      <f:ajax execute=":opciones:txtcodigo tablaHijo" render="@form" />
+                      
+                  </h:commandButton>
+            </h:column>
+            </h:dataTable>
+           
+            
+       </div>
+     
+       
+       
+       
+       
+       <!--              TABLA PADRES -->
+       
+ <br/><br/>
+       
+       <div style="overflow:auto; width:500PX; height:200px; border: 1px solid #555555; position: relative ">
+           
+             <h:dataTable id="tablaTodoPadre" value="#{opcionAccesoB.todoPadre}" var="padre" rules="groups" 
+                           binding="#{opcionAccesoB.datatableTodoPadre}" >
+                 <h:column>
+              <f:facet name="header">
+                <h:outputText value="Enviar"/>
+              </f:facet>          
+                <h:commandButton value="enviar" actionListener="#{opcionAccesoB.insertarPadre}">
+                    <f:ajax execute=":opciones:txtcodigo :opciones:tablaTodoPadre" render="@form"/>
+                </h:commandButton>
+            </h:column>
+                 
+                 <h:column>
+                     
+                     <f:facet name="header">
+                <h:outputText value="+"/>
+              </f:facet>          
+                     #{padre.seleccion}
+                 </h:column>
+                 
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Lista de Opciones"/>
+              </f:facet>
+             <h:outputText value="#{padre.descripcion}"/>
+            </h:column>
+            </h:dataTable>
+           
+       </div>
+  
+       
+       
+       
+       
+         <!--              TABLA HIJOS -->
+       
+       <br/><br/>
+       
+      
+       <div style="overflow:auto; width:500PX; height:200px; border: 1px solid #555555">
+           
+           
+       <h:dataTable id="tablaTodoHijo" value="#{opcionAccesoB.todoHijo}" var="hijo"  rules="groups" 
+                     binding="#{opcionAccesoB.datatableTodoHijo}" >
+           
+           <h:column>
+              <f:facet name="header">
+                <h:outputText value="Enviar"/>
+                
+              </f:facet>
+                <h:commandButton value="enviar"  actionListener="#{opcionAccesoB.insertarHijo}" >
+                
+                <f:ajax execute=":opciones:txtcodigo :opciones:tablaTodoHijo" render="@form"/>
+                
+                </h:commandButton>
+            </h:column>
+           
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="+"/>
+                
+              </f:facet>
+                /
+            </h:column>
+           
+           
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Lista de Opciones"/>
+                
+              </f:facet>
+             <h:outputText value="#{hijo.descripcion}"/>
+            </h:column>
+           
+           
+       </h:dataTable>
+        
+       </div>
+     
+       
+       
+       
+       <div id="bgmodal" style="display: none;padding:5px">
+           
+           <!--<ui:include src="busquedaPersonal.xhtml" />-->
+            
+           Ingrese A. Paterno: &nbsp;&nbsp;&nbsp;
+            <h:inputText value="#{personaB.busPaterno}" id="txtPaterno"/><br/>
+            Ingrese A. Materno:&nbsp;&nbsp;
+            <h:inputText value="#{personaB.busMaterno}" id="txtMaterno"/><br/>
+            Ingrese Nombres:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h:inputText value="#{personaB.busNombres}" id="txtNombres"/><br/>
+            <h:commandButton id="buscarP" value="buscar"  >
+                
+                <f:ajax execute="txtPaterno txtMaterno txtNombres" render="tabla" listener="#{personaB.buscarPersonal}"/>
+
+            </h:commandButton>
+                <br /><br />
+        <div style="overflow:auto; width:100%; height:400px; border: 1px solid #555555">
+        
+        
+         </div>
+        
+           
+        </div>
+       
+       
+       
+       </h:form>
+      <br />
+       </ui:define>
+        </ui:composition>
+       
+       
+      
+   
+       
+       
+    </h:body>
+</html>
+

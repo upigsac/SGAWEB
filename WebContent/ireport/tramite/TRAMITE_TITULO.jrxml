@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TRAMITE_TITULO" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2595073b-2601-4b75-bfc8-5a714c4ce326">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="@ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="@NRO_EXPEDIENTE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL DI.RPT_CONT_EGRESADO(4,$P{@ALUMNO},$P{@NRO_EXPEDIENTE})}]]>
+	</queryString>
+	<field name="CUERPO" class="java.lang.String"/>
+	<field name="JEFE" class="java.lang.String"/>
+	<variable name="CUERPO_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{CUERPO}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b6db4a70-8745-41b4-8595-a148c66117a9" x="29" y="11" width="497" height="34"/>
+				<textElement>
+					<font fontName="Century" size="22"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA DE TRAMITE DE BACHILLER]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="3821a05b-826b-4f40-ab08-9f0dd07ea6e9" x="79" y="0" width="396" height="35"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[EL JEFE DE LA OFICINA CENTRAL DE GRADOS Y TÍTULOS  DE LA UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL, deja en:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="3f97b2cc-c83d-4746-81c5-ad2842facd44" x="173" y="18" width="181" height="39"/>
+				<textElement>
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="161" splitType="Stretch">
+			<textField>
+				<reportElement uuid="b3bf7ea0-b8a4-4c06-9053-d96ac6704f5f" x="33" y="27" width="481" height="134"/>
+				<textElement textAlignment="Justified">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUERPO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="55" splitType="Stretch">
+			<line>
+				<reportElement uuid="42d93f82-7df4-4bae-af3f-fbf19f1c1575" x="144" y="14" width="299" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="834d4d5e-3186-4e35-8821-da0e3379956d" x="147" y="15" width="260" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{JEFE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0ed7f85e-4480-4775-ae38-fb9fa223c179" x="186" y="35" width="182" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Jefe de la Oficina de Grados y Titulos]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>

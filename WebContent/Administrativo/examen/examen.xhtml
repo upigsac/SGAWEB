@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+        <style>
+            *{padding: 0px ;margin: 0px;list-style: none}
+            html{background-color: #3399ff}
+            ul li{display: inline-block;vertical-align: top;border: 1px solid; width: 250px;height: 250px;margin: 5px 10px;background-color: white;border-radius:  2px}
+        </style>
+    </h:head>
+    <h:body>
+        <h:form prependId="false">
+            
+    
+        <div style="display: block;width: 100%;min-height: 500px;max-width: 1200px;margin: 10px auto;background-color: rgba(254,254,254,0.8);border-radius: 2px;padding: 10px">
+            <h3>EXAMENES</h3>
+            
+            
+            
+                <h:panelGroup layout="block" id="pnExamne">
+                   <ul> 
+                    <ui:repeat value="#{examenB.examenL}" var="itemExamen">
+                <li>
+                    <h5>#{itemExamen.descripcion}</h5>
+                    #{itemExamen.fechaInicio}
+                    #{itemExamen.fechaFin}
+                    <h:commandLink value="click">
+                        <f:ajax execute="@this" render="pnGrupo" listener="#{examenB.seleccionExamen(itemExamen)}" />
+                    </h:commandLink>
+                </li>
+                </ui:repeat>
+                
+                
+            </ul>   
+                       
+                </h:panelGroup>
+                
+            <h:commandLink onclick="dlgExamen.show()">
+                NUEVO
+                <f:ajax execute="@this" listener="#{examenB.nuevoExamen()}" />
+            </h:commandLink>
+            
+        </div>
+        <div style="display: block;width: 100%;min-height: 500px;max-width: 1200px;margin: 10px auto;background-color: rgba(254,254,254,0.8);border-radius: 2px;padding: 10px">
+              <h3>GRUPO</h3>
+              
+              <h:panelGroup layout="block" id="pnGrupo">
+                  <ul>
+                      
+                      <ui:repeat value="#{examenB.grupoL}" var="itemGrupo" >
+                        <li>
+                            <h5>#{itemGrupo.descripcion}</h5>
+                            <h:commandLink value="click">
+                                
+                                <f:ajax execute="@this" />
+                            </h:commandLink>
+                        </li>
+                      </ui:repeat>
+                    
+                    
+                </ul>
+
+              </h:panelGroup>
+             
+        </div>
+        
+         <div style="display: block;width: 100%;min-height: 500px;max-width: 1200px;margin: 10px auto;background-color: rgba(254,254,254,0.8);border-radius: 2px;padding: 10px">
+              <h3>PREGUNTA</h3>
+              <h:selectOneMenu>
+                  <f:selectItem itemLabel="pregunta 1" itemValue="0"/>
+                  <f:selectItem itemLabel="pregunta 2" itemValue="0"/>
+              </h:selectOneMenu>
+              <BR/>
+              <h:outputLabel value="PUNTAJE"/>
+              <h:inputText />
+             <BR/>
+             <h:selectOneRadio value="" >
+                 <f:selectItems value="#{examenB.examenRespuestaL}" var="itemRespuesta"  itemLabel="#{itemRespuesta.descripcion}" itemValue="#{itemRespuesta.respuesta}"/>                 
+             </h:selectOneRadio>
+             <BR/>
+             <h:commandLink onclick="dlgPregunta.show()">
+                 AGREGAR PREGUNTA
+                 <f:ajax execute="@this" listener="#{examenB.nuevoRespuesta()}" />
+             </h:commandLink>
+        </div>
+            
+            
+            <p:dialog header="REGISTRAR EXAMEN" widgetVar="dlgExamen" modal="true" closeOnEscape="true" resizable="false" width="400" height="300">
+                <div>
+                    <h:outputLabel value="EXAMEN" />
+                    <h:inputText id="txtExamen" value="#{examenB.examen.descripcion}" />
+                    <br/>
+                    <h:outputLabel value="DESDE" />
+                    <p:calendar id="txtDesde" value="#{examenB.examen.fechaInicio}" pattern="dd-MM-yyyy" mask="true" />
+                    <br/>
+                    <h:outputLabel value="HASTA" />
+                    <p:calendar id="txtHasta" value="#{examenB.examen.fechaFin}" pattern="dd-MM-yyyy" mask="true" />
+                    <br/>
+                    <h:outputLabel value="ESTADO" />
+                    <h:selectOneMenu id="cboEstado" value="#{examenB.examen.estadoRegistro}" >
+                        <f:selectItem itemLabel="HABILITADO" itemValue="1" />
+                        <f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+                    </h:selectOneMenu>
+                    
+                    
+                </div>
+                
+                
+                <f:facet name="footer">
+                       <h:commandLink>
+                    ACEPTAR
+                    <f:ajax execute="@this txtExamen txtDesde txtHasta cboEstado"  listener="#{examenB.insertarExamen()}" />
+                </h:commandLink>
+                <h:commandLink onclick="dlgExamen.hide()">
+                    CANCELAR
+                    <f:ajax execute="@this" />
+                </h:commandLink>
+                </f:facet>
+            </p:dialog>
+            
+            
+            
+            
+            
+            <p:dialog header="Registar Pregunta" widgetVar="dlgPregunta" modal="true" resizable="false" width="500" height="500" closeOnEscape="true">
+                <h:outputLabel for="txtRespuesta" value="PREGUNTA"/>
+            <h:inputText id="txtRespuesta" value="#{examenB.examenRespuesta.descripcion}" />
+            <f:facet name="footer">
+                <h:commandLink>
+                    ACEPTAR
+                    <f:ajax execute="@this txtRespuesta" listener="#{examenB.insertarRespuesta()}" />
+                </h:commandLink>
+                <h:commandLink onclick="dlgPregunta.hide()">
+                    CANCELAR
+                    <f:ajax execute="@this" />
+                </h:commandLink>
+            </f:facet>                
+        </p:dialog>
+            
+            
+      </h:form>
+        
+        
+    </h:body>
+</html>
+

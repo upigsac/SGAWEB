@@ -1,0 +1,184 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                Gestor de Contenidos
+            </ui:define>
+                        
+            <ui:define name="contenido">
+            
+
+   
+        <style>
+            ul{list-style: none;margin: 0px;padding:  0px}
+            #frmExploradorArchivos\:pnExplorador ul li{display: inline-block;vertical-align: top;height: 120px;width:  120px;text-align: center;margin: 10px 5px;padding: 5px;border-radius: 5px;border: 1px solid silver}
+            #frmExploradorArchivos\:pnExplorador ul li:hover{border:2px solid #0069B3;}
+            .subOpcion{position: absolute;bottom: 20px;width: 100%;height: 34px ;display: none;padding: 0px 0px}
+            .subOpcion a{color: black;font-size: 1.3em;}
+            #frmExploradorArchivos\:pnExplorador ul li:hover .subOpcion{display: block;background-color: rgba(0,0,0,0.3)}
+            #frmExploradorArchivos\:pnCursos ul li{display: block;width: 100%;height: 50px;border: 1px solid red}
+            #frmExploradorArchivos\:pnCursos ul li:hover{background-color: silver}
+           
+.curso-docente{
+display: block;
+width: 100%;
+height: 50px;
+
+margin-bottom:  10px ;
+
+    
+}
+
+.curso-docente label {
+  width: 100%;
+  min-height: 50px;
+  
+  border-radius: 3px;
+  border: 1px solid #D1D3D4;
+}
+
+/* hide input */
+input.radio:empty {
+	//margin-top: 1px;
+        visibility: hidden;
+       // display: none;
+       //position: absolute;
+}
+
+/* style label */
+input.radio:empty ~ label {
+	position: relative;
+	//float: left;
+        display: inline-block;
+        vertical-align: top;
+        height: 50px;
+	
+	
+	
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+input.radio:empty ~ label:before {
+	position: absolute;
+	display: inline-block;
+        vertical-align: top;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	content: '';
+	width: 2.5em;
+	background: #D1D3D4;
+	border-radius: 3px 0 0 3px;
+        height: 50px;
+}
+
+/* toggle hover */
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #C2C2C2;
+}
+
+input.radio:hover:not(:checked) ~ label {
+	color: #888;
+        
+}
+
+/* toggle on */
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #9CE2AE;
+	background-color: #4DCB6D;
+}
+
+input.radio:checked ~ label {
+	color: #777;
+}
+
+/* radio focus */
+input.radio:focus ~ label:before {
+	box-shadow: 0 0 0 3px #999;
+    
+}
+        </style>
+                <span class="tituloCuerpo"> MIS ARCHIVOS ....</span>
+                <h:form id="frmExploradorArchivos"  >
+                    <div style="display: block;width: 100%;min-height: 500px">
+                        <div style="width: 22%;display: inline-block;vertical-align: top">
+                            <ui:repeat value="#{explorardorArchivoB.cursoL}" var="curso" varStatus="itemGrupo" >
+                        
+                            <div class="curso-docente">
+                                <input type="radio" jsf:id="UNO"  pt:name="radio" class="radio" >                                
+
+                                    <f:ajax execute="@this" render=":frmExploradorArchivos:pnExplorador" listener="#{explorardorArchivoB.seleccionCurso(curso.periodo.concat('\\').concat(curso.carrera).concat('\\').concat(curso.curso).concat('\\').concat(curso.seccion).concat('\\').concat(curso.personal))}" />
+                                </input>
+
+                                <label for="frmExploradorArchivos:j_idt34:#{itemGrupo.index}:UNO">
+                                    <span style="display: block;padding-left: 50px; height: 100%;">
+                                        #{curso.desCurso}    
+                                    </span>
+                                    
+                                    
+                                    </label>
+                            </div>
+
+                            </ui:repeat>
+                        </div>   
+                        
+                        
+                      
+
+                        
+                     <h:panelGroup layout="block" id="pnExplorador" style="border: 1px solid silver;min-height: 500px;position: relative;line-height: 50px;width: 75%;display: inline-block;vertical-align: top">
+                        <span>#{explorardorArchivoB.direcctorioS}</span>
+                        <ul>
+                        <ui:repeat value="#{explorardorArchivoB.directoriosL}" var="itemGestor">
+                           <li>
+                             
+                               <h:commandLink type="button" disabled="#{itemGestor.tipo eq 1}" >
+                                <div  style="position: relative;height: 100%">
+                                    <h:commandLink  actionListener="#{explorardorArchivoB.descargar(itemGestor.nombre)}" disabled="#{itemGestor.tipo eq 0}" >
+                                        <i class="fa #{itemGestor.icono} fa-4x" style="color: #{itemGestor.color};"/>
+                                    </h:commandLink>
+                                    <p style="display: block;width: 100%;font-size: 0.7em;height: 40px;overflow: hidden">#{itemGestor.nombre}</p> 
+                                    <h:panelGroup layout="block" id="pnSubOpciones" rendered="#{itemGestor.tipo ne 0}" class="subOpcion"  >
+                                        <h:commandLink title="DESCARGAR" actionListener="#{explorardorArchivoB.descargar(itemGestor.archivo)}"  >
+                                            <i class="fa fa-cloud-download "/>
+                                        </h:commandLink>
+                                        
+                                        <a href="https://docs.google.com/viewer?url=http://www.upig.edu.pe/#{explorardorArchivoB.ruta.concat(itemGestor.archivo)}" target="_blank" title="PREVIEW">
+                                            <i class="fa fa-eye  " />
+                                        </a>
+                                        
+                                    </h:panelGroup>
+                                </div>
+                                   <f:ajax execute="@this" render=":frmExploradorArchivos:pnExplorador" listener="#{explorardorArchivoB.adelante(itemGestor.archivo)}" />                                    
+                                </h:commandLink>
+                            </li>
+                        </ui:repeat>
+                        </ul>
+                        
+                        
+                        
+                        
+                        <h:commandLink   type="button" style="display: block;width: 50px ;height: 50px;border-radius: 50%;background-color: #0088CE;text-align: center;position: absolute;top: 5px;right: 5px;box-shadow: 1px 1px 1px  #000">
+                            <i class="fa fa-reply " style="color: white"/>
+                            <f:ajax execute="@this" render="pnExplorador" listener="#{explorardorArchivoB.atras()}" />
+                        </h:commandLink>
+                    </h:panelGroup>   
+                        
+                        
+                    </div>
+               </h:form>
+</ui:define>
+</ui:composition>

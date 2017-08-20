@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link href="#{utilB.ruta}/SGAWEB/resources/css/styles.css" type="text/css" rel="stylesheet"/> 
+    </h:head>
+    <h:body>
+        
+          <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Docente/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+               HORARIO SEMANAL
+                
+            </ui:define>
+                                       
+             
+              <ui:define name="contenido">
+        <style>
+            body{}
+            *{padding: 0px ;margin: 0px}
+            
+            #frmHorario\:pnDatos{border: 1px solid silver;padding: 10px;margin: 5px;background-color: #E9EAED}
+            #frmHorario\:pnDatos ul li{display: inline-block;vertical-align: top;margin: 2px 4px;padding: 5px}
+            #frmHorario\:pnDatos ul li b{width: 15px;height: 15px;display: inline-block ;vertical-align: top;margin: 4px}
+            #frmHorario\:pnHorario{display: block;width:  99%;margin: 0px 10px;overflow: hidden }
+            .dia{display: table-cell;vertical-align: top;list-style: none;width: 14%;position: relative;border-left:   1px  solid silver;background: gainsboro;}
+            .dia li{outline: 1px solid silver;}
+            .dia li:first-child{height: 40px;background-color:rgb(16,108,200);color: white;text-align: center;font-weight: bold;font-family: arial;}
+            .hora {height: 60px;background-color:rgb(16,108,200);position: relative}
+            .hora:before{content: "";width: 0%;height: 1px;position: absolute;bottom: 0px;left:  0px;background-color: silver;z-index: 1}
+            .hora-padre{display: table;height: 100%;width: 100%;text-align: center;color: white}
+            .hora-hijo{display: table-cell;vertical-align: middle}
+            .celda{position: absolute;width: 100%;background-color: white;text-align: center;display: block;z-index: 2;border: 1px solid silver}
+            .celda:hover{cursor: pointer}
+            .celda div span{display: block}
+            .botones{padding: 5px;min-width: 80px;margin: 2px;border: none;color: white;cursor: pointer}
+            .REGULAR{background-color: white}
+            .EXAMEN{background-color: khaki}
+            .RECUPERACION{background-color: pink}
+            .FERIADO{position: relative}
+            .FERIADO span{color: red;cursor: pointer}
+            .FERIADO:hover div{display: block}
+            .FERIADO div{width: 200px;min-height:40px;position: absolute;left: -10px;top: -50px;border-radius: 5px;z-index: 5;background-color: black;display: none }
+            .FERIADO div:before{content: "";position: absolute;left: 50%;bottom: -20px;border-left: 10px solid transparent; border-right:  10px solid transparent;border-top: 10px solid black;border-bottom:  10px solid transparent; }
+        </style>
+        
+         <span class="tituto-docente"> HORARIO DE CLASES</span>
+        <h:form id="frmHorario">
+            <h:panelGroup layout="block" id="pnDatos" >
+                <b>LEYENDA DIAS:</b>
+              <ul>
+                    <li><b style="background-color: red"/>FERIADO</li>
+                    <li><b style="background-color: white"/>NORMAL</li>
+                    
+                </ul> 
+                <b>LEYENDA CELDAS:</b>
+                <ul>
+                    <li><b style="background-color: white"/>REGULAR</li>
+                    <li><b style="background-color: khaki"/>EXMANEN</li>
+                    <li><b style="background-color: pink"/>RECUPERACION</li>
+                    <li><b style="background-color: violet"/>REPROGRAMACION</li>
+                </ul> 
+               
+                
+            </h:panelGroup>
+           
+            <h:panelGroup layout="block" id="pnHorario">
+                <div style="position: relative;display: block;height: 50px;width: 100%;background-color:rgb(16,108,200);border-radius: 8px 8px 0px 0px">
+                    <H2 style="color: white;text-align: center;padding: 5PX 0PX">#{utilB.listaMeses[horarioSemanalB.fechaInicio.month]}</H2>
+                <div style="position: absolute;right: 10px;bottom: 5px">
+                 <h:commandLink type="button"  class="botones" title="ANTERIOR">
+                    <i class="fa fa-chevron-left"/>
+                    <f:ajax execute="@this" render="pnDatos pnHorario"  listener="#{horarioSemanalB.anterior()}" />
+                </h:commandLink>
+                
+                <h:commandLink type="button"  class="botones" title="SIGUIENTE">
+                    <i class="fa fa-chevron-right"/>
+                    <f:ajax execute="@this" render="pnDatos pnHorario" listener="#{horarioSemanalB.siguiente()}" />
+                </h:commandLink>
+                </div>
+            </div>
+                
+                <ul class="dia" style="width:  60px">
+                    <li style="width: 60px;" ><i class="fa fa-clock-o" style="font-size: 1.7em;"/></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">8:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">9:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">10:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">11:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">12:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">13:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">14:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">15:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">16:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">17:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">18:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">19:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">20:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">21:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">22:00</div></div></li>
+                </ul>
+                <ui:repeat value="#{horarioSemanalB.detalleDiaL}" var="dia"  varStatus="index">    
+                    <ul class="dia">
+                        <li class="#{dia.feriadosL.size() eq 0?'':'FERIADO'}" >  
+                        
+                        <span style="display: block;">#{utilB.listaDiasSemana[dia.dia]}</span>
+                        <span style="display: block;">#{utilB.convertDate(dia.fecha,'dd / MM / yyyy')}</span>                    
+                        <div>
+                            <ui:repeat value="#{dia.feriadosL}" var="ferido">
+                                <b style="font-size: 0.6em;color: white">#{ferido.descripcion}</b>
+                            </ui:repeat>
+                        </div>
+                    </li>
+                        <li style="width: 100%;height: 900px;position: relative">    
+                  <ui:repeat value="#{dia.detalleHorarioL}" var="horario">
+                      <div style="height: #{horario.alto}px;top: #{horario.top}px;" class="celda #{horario.desTipoClase}" data-curso="#{horario.curso}" title="#{horario.desTipoClase}"  >
+                            <div style="display: table;height: 100%;width: 100%;">
+                                <div style="display: table-cell;vertical-align: middle">
+                                    <span style="color: #008000">#{horario.desCarrera}</span>
+                                    <span ><b>#{horario.desCurso}</b> </span>
+                                    <span>#{horario.seccion} - #{horario.aula}</span>
+
+                                    <span style="color: red"> #{utilB.convertDate(horario.horaInicio,"HH:mm")} - #{utilB.convertDate(horario.horaFinal,"HH:mm")}</span>
+                                </div>
+                                
+                            </div>
+                            
+                            
+                        </div>
+                        
+                    </ui:repeat> 
+                            </li>
+                        </ul>
+                </ui:repeat>
+            </h:panelGroup>
+            
+        </h:form>
+         <br/>
+         <br/>
+         <br/>
+                  </ui:define>
+          </ui:composition>
+    </h:body>
+</html>
+

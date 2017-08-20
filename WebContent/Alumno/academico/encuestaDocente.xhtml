@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"     >
+    <h:head>
+        <title>Facelet Title</title>
+         <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    </h:head>
+    <h:body>
+          <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            ENCUESTA DOCENTE
+            </ui:define>
+            
+              <ui:define name="contenido">
+        <style>
+            #frmEncuesta ul{list-style: none}
+          
+            
+            #frmEncuesta\:pnBotonera{padding: 10px;text-align: center;margin: 20px 0px}
+            #frmEncuesta\:pnBotonera input{ padding: 10px;margin: 2px;width: 120px}
+            .seleccion{opacity: 1;border: 2px solid red!important}
+           
+            .listo:before{content: "P";font-family: 'Wingdings 2';font-size: 36px;text-align: center;color: white;border-radius: 50%;height: 35px;width: 35px;background: #0069B3 ;position: absolute;top: 0px;right: 2px;}
+            .panel-encuesta{display: block;border: 1px solid silver;}
+            .panel-grupo{display: block;border: 1px solid silver}
+            .panel-grupo-pregunta{display: block;border: 1px solid silver;padding: 5px 10px}
+            .panel-grupo-respuesta{display: block;padding: 2px 20px}
+            
+            .ficha-docente-curso{display: inline-block;vertical-align: top;width: 150px;height: 200px;border: 1px solid silver;}
+            .ficha-docente-curso span{position: relative;opacity: 0.5}
+            //.ficha-docente-curso span:before{content: "CORRECTO";top: 0;display: block;width: 100%;height: 100%;position: absolute;background-color: rgba(0,0,0,0.7);color: red;font-size: 3.0em;text-align: center }
+            //.ficha-docente-curso span:after{content: "\f1b9";top: 20px;left: 0;display: block;width: 100%;height: 100%;position: absolute;color: red;font-size: 3.0em;text-align: center;font-family: "FontAwesome"}
+            .panel-grupo-respuesta table tr td label{display: block;width: 100%;height: 100%;padding: 5px 20px}
+           
+            .panel-grupo-respuesta table tr td label b{border: 2px solid silver;display: inline-block;width: 15px;height: 15px;border-radius: 50%;text-align: center}
+            .panel-grupo-respuesta table tr td label b span{display: block;height: 10px;width: 10px;border-radius: 50%;border: 2px solid white}
+            .panel-grupo-respuesta input:enabled +label{cursor: pointer}
+            .panel-grupo-respuesta input:enabled +label:hover{color: red}
+            .panel-grupo-respuesta input:checked + label{color: #0088CE}
+            .panel-grupo-respuesta input:checked + label b{border-color:  #0088CE}
+            .panel-grupo-respuesta input:checked + label b span{background-color: red}
+            .panel-grupo-respuesta input{opacity: 0;position: absolute}
+            .boton{display: inline-block;padding: 7px;background: #0069b3;border-radius: 2px;color: white;margin: 2px}
+            a.boton{opacity: 1}
+            span.boton{opacity: 0.5}
+        </style>
+        <script>
+            $(document).ready(function(){
+               
+                
+              
+                
+                
+             
+                
+                 $("body").on("click",".carrucel li a",function(){
+                     $(".carrucel li a").addClass("noSeleccion");
+                     $(this).removeClass("noSeleccion");
+                     $(this).addClass("seleccion");
+                   
+                });
+            });
+            
+            
+        </script>
+            
+            
+        <h:form id="frmEncuesta" >
+            
+            
+            <span class="tituloCuerpo"> ENCUESTA DOCENTES </span>
+          
+            
+            
+                 
+                 
+             <div style="border: 1px solid silver;position: relative;padding: 5px">
+                     DOCENTES #{encuestaDocenteB.mostrarEncuestaInstitucion(usuarioB.institucionS, usuarioB.periodoS).encuesta}
+              
+                     
+             </div>
+          
+            <div style="border: 1px solid silver;display: block;padding: 5px">
+                <h:panelGroup id="pnDocentes" layout="block" style="display: block; " >
+                    <ui:repeat value="#{encuestaDocenteB.alumnoCursoPersonalL}" var="itemAlumnoCursoPersonal" >
+                
+                        <div  class="ficha-docente-curso #{encuestaDocenteB.cursoSeccionDocente.curso eq itemAlumnoCursoPersonal.cursoSeccionDocente.curso?'seleccion':''}">
+                            <h:commandLink   style="display: block;width: 100%;height: 100%" disabled="#{itemAlumnoCursoPersonal.encuestaCursoSeccionDocenteL.size() ne 0}" >
+
+                                    
+                                 <img  style="width: 100%;height: 100px;vertical-align: top;display: inline-block;" src="SVerImagenAlumno?alumno=#{itemAlumnoCursoPersonal.persona.persona}" />                                 
+                                 <div style="border-top:  1px solid silver;padding: 3px;height: 93px;display: block;text-align: center;background-color: rgba(192, 192, 192, 0.21)">
+                                     <b style="color: red" data-curso="#{itemAlumnoCursoPersonal.cursos.curso}" >#{itemAlumnoCursoPersonal.cursos.descripcion}</b>
+                                      <p>#{itemAlumnoCursoPersonal.persona.nombreCompletos()}</p>  
+                                 </div>
+                                     
+                                        
+                                    <f:ajax execute="@this" render=":frmEncuesta:pnDocentes :frmEncuesta:pnPreguntas"  listener="#{encuestaDocenteB.seleccion(itemAlumnoCursoPersonal.cursoSeccionDocente)}" />
+                                </h:commandLink>   
+                           </div>
+                         </ui:repeat>
+                         </h:panelGroup>
+                 </div>
+              <br/>
+            <h:panelGroup layout="block" id="pnPreguntas" style="font-family: serif"  >
+                
+                <div class="panel-encuesta">
+                <ui:repeat value="#{encuestaDocenteB.personaEncuestaGrupoL}" var="itemGrupo" varStatus="indexG">
+                       <div class="panel-grupo">
+                       
+                        #{indexG.index+1}-#{itemGrupo.encuestaGrupo.descripcion}
+                   
+                   <ui:repeat value="#{itemGrupo.personaEncuestaGrupoPreguntaRespuestaL}" var="itemPregunta" varStatus="indexP">
+                       <div class="panel-grupo-pregunta">
+                           <p style="font-size: 1.5em">#{indexP.index +1} - #{itemPregunta.encuestaPregunta.descripcion}</p>
+                           <div class="panel-grupo-respuesta">
+                               <h:selectOneRadio id="rbRespuesta" value="#{encuestaDocenteB.encuestaCursoSeccionDocenteL[indexP.index].respuesta}"  required="true"  disabled="#{encuestaDocenteB.cursoSeccionDocente eq null}"   >
+                                   <f:selectItems value="#{itemPregunta.encuestaRespuestaL}" var="itemRepuesta" itemValue="#{itemRepuesta.repuesta}" itemLabel=" &lt;b > &lt;span >  &lt;/span> &lt;/b> #{itemRepuesta.descripcion}   "  itemLabelEscaped="false" />
+                                 <f:ajax execute="@this" />
+                             </h:selectOneRadio>
+                           </div>
+                       </div>
+                     
+                    </ui:repeat>
+                     </div>
+                 </ui:repeat>
+                 
+                  <hr/>
+                  <div style="display: block;text-align: right;padding: 10px">
+                      <ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},ALUMNO,#{usuarioB.usu}" />
+                      <h:commandLink styleClass="boton" immediate="true"  disabled="#{not encuestaDocenteB.banderaImpresion}"  target="_blank" actionListener="#{utilB.imprimirIreports('alumno/encuesta/declaracionJuradaEncuesta', 1,fn:split(param1,','))}"   >
+                          <i class="fa fa-print"  />
+                          CONSTANCIA
+                      </h:commandLink>
+                      
+                      
+                      
+                      <h:commandLink  styleClass="boton"  disabled="#{encuestaDocenteB.cursoSeccionDocente eq null}" >
+                     <i class="fa fa-floppy-o"  />
+                     GUARDAR
+                     <f:ajax execute="@form"  render=":frmEncuesta:pnDocentes :frmEncuesta:pnPreguntas" listener="#{encuestaDocenteB.calcular()}" />
+                 </h:commandLink>
+                  </div>
+                
+                
+            </div>
+                
+          
+            </h:panelGroup>
+            
+        </h:form>
+                  <h:form id="frmImprimir">
+             
+             <h:panelGroup layout="block" id="pnImpresion"  >
+                 <h2></h2>
+                 <br/><br/><br/>
+                 
+             </h:panelGroup>             
+         </h:form>
+        </ui:define>
+     </ui:composition>
+    </h:body>
+</html>
+

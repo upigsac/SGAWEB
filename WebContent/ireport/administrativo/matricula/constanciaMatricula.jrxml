@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="constanciaMatricula" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="01692d8a-fc65-43da-99ca-e436b5099742">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CARRERA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[EXECUTE DI.SPR_CONSTANCIA_MATRICULA 1,$P{INSTITUCION},$P{CARRERA},$P{ALUMNO}]]>
+	</queryString>
+	<field name="CONSTANCIA" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="DESFACULTAD" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="CREDITO" class="java.math.BigDecimal"/>
+	<field name="DESCICLO" class="java.lang.String"/>
+	<field name="CREACION_FECHA" class="java.sql.Timestamp"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="DESPERSONA" class="java.lang.String"/>
+	<field name="TOTALCICLO" class="java.lang.Integer"/>
+	<field name="TOTALCICLOLETRA" class="java.lang.String"/>
+	<field name="CICLO_SELECT" class="java.lang.String"/>
+	<field name="FECHA_SELECT" class="java.sql.Date"/>
+	<field name="PERIODO_SELECT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="be387edb-d512-4ab1-8ab5-f30e1280f9bd" x="31" y="22" width="494" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA DE MATRICULADO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="772952d8-bf98-41ae-b4d5-bd0bf101bd9f" x="31" y="48" width="494" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{CONSTANCIA}.isEmpty() ? 'GENERAR NUMERO CORRELATIVO' : $F{CONSTANCIA}+'-OAARC-UPIG/'+new SimpleDateFormat("YYYY").format(new java.util.Date()) )]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9b94b176-b051-4f1c-abc7-25fa07fb285b" x="31" y="0" width="494" height="29"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[La Oficina de Asuntos Académicos y Registro Central de la Universidad Peruana de Integración Global, deja constancia que:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="dada22ea-7d1b-413a-88dc-f3467359a37a" x="0" y="29" width="555" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESPERSONA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="db36cd60-24f5-416c-8cb5-a9392d06854f" x="31" y="67" width="494" height="48"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA['Con código de matrícula N° '+$F{ALUMNO}+', registra matrícula en la Facultad de '+$F{DESFACULTAD}+' Escuela Profesional de '+$F{DESCARRERA}+', cuya duración es de '+$F{TOTALCICLOLETRA} +' ('+$F{TOTALCICLO} + ') ciclos académicos; según el siguiente detalle.']]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="71d41150-9654-4a29-a762-fc4732975038" x="144" y="28" width="80" height="33"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEMESTRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a8a647dc-a475-48ae-9df1-5b7234be3859" x="224" y="28" width="73" height="33"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CICLO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3e8de7d0-feee-4273-b8f1-487952820b47" x="297" y="28" width="98" height="33"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº CREDITO MATRICULADO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="2ea32309-8d42-418e-ae94-709a1c77b34e" x="144" y="0" width="80" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESPERIODO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a66d9b29-630e-478a-a446-15ca30c7ea39" x="224" y="0" width="73" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCICLO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="71233521-435d-4924-af93-fe4758748026" x="297" y="0" width="98" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CREDITO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="108" splitType="Stretch">
+			<textField pattern="&apos;Surco,&apos; dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement uuid="ed5837b2-e7b4-4dbc-979b-63f837653a1b" x="31" y="13" width="494" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="be28ddd2-d373-40d8-8476-c74c6fdab8c2" x="31" y="55" width="494" height="53"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jessy Moscoso Velasco De Castillo
+Unidad de Registros Académicos
+Oficina de Asuntos Académicos y Registro Central
+Universidad Peruana de Integración Global
+]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="85" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="6067f113-ee4b-4b16-a2c5-525cdb8b87b2" x="31" y="17" width="494" height="68"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[( $F{CICLO_SELECT}.isEmpty() ? '' : 'Asimismo se precisa que en el Semestre Académico '+ $F{PERIODO_SELECT}+' estuvo debidamente matriculado en las asignaturas correspondiente al '+ $F{CICLO_SELECT}+' ciclo de estudios con fecha de matrícula '+new SimpleDateFormat("dd 'de' MMMMM 'del' YYYY").format($F{FECHA_SELECT}) ) +'.\n\nConstancia que se expide a solicitud del interesado, para los fines que estime conveniente.']]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

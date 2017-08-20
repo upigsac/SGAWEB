@@ -1,0 +1,140 @@
+ <ui:composition 
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 template="/Docente/plantilla.xhtml"
+                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+                 xmlns:f="http://xmlns.jcp.org/jsf/core">
+            <ui:define name="titulo">
+               .. REGISTRO DE ASISTENCIA ..
+            </ui:define>
+     <ui:define name="contenido">
+     
+  <style>
+    .gria-Docente{font-size: 0.8em}
+    .gria-Docente .ui-datatable-odd{background-color: white}
+    
+    .gria-Docente thead th{height: 40px}
+    .gria-Docente tbody tr td{height: 60px}
+    input[type="checkbox"]{width: 50px;height: 30px}
+    .ficha-curso{width: 200px;height: 200px;display: inline-block;vertical-align: top;position: relative;outline: 2px solid silver;font-size: 1.0em;margin: 2px;}
+    .panel-cursos {outline: 1px solid silver;padding: 10px;overflow-x:  hidden;height: 220px ;margin: 0px}
+    .panel-cursos:hover{overflow: auto}
+    .panel-cursos .select{background-color: #e1e1e1;outline-color: #0081c2}
+    .panel-cursos .select i{position: absolute;top: -10px;right: -10px;height: 30px;width: 30px;border-radius: 50%;background-color: red;color: white;text-align: center;line-height: 30px;z-index: 5;display: block!important}
+    /*
+    .gria-Docente .ui-datatable-frozenlayout-left{background-color: red;border: 1px solid red;max-width: 270px}
+    .gria-Docente .ui-datatable-frozenlayout-left .ui-frozen-column:nth-child(1){border: 1px solid #0069b3;width: 10px!important}
+    .gria-Docente .ui-datatable-frozenlayout-left .ui-frozen-column:nth-child(2){border: 1px solid #0069b3;width: 250px!important}
+    .gria-Docente .ui-datatable-frozenlayout-right {background-color: red;border: 1px solid   yellow  ;width: 80%}
+    */
+</style>
+
+                
+          <span class="tituto-docente">REGISTRO DE ASISTENCIA  </span>  
+
+                    <h:form id="frmRegistroAsistencia">
+                        <div class="panel-cursos">
+                           <h:panelGroup layout="block" id="pnDatos" style="height: 100%;width: #{registroAsistenciaB.mostrarCursoSeccionPersonal(usuarioB.institucionS,usuarioB.periodoS,usuarioB.personal.personal).size() * 210}px">
+                            <ui:repeat value="#{registroAsistenciaB.personalCursoSeccionL}" var="itemCurso"  >
+                                <h:commandLink  >
+                                    <div class="ficha-curso  #{itemCurso.curso.concat(itemCurso.seccion) eq registroAsistenciaB.personalCursoSeccionS.curso.concat(registroAsistenciaB.personalCursoSeccionS.seccion)?'select':''}" >
+                                   <b style="display: block;text-align: center;background-color: #0088CE;color: white;height: 50px">#{itemCurso.desCarrera}</b>
+                                   <div style="padding: 5px;display: block">
+                                       <b>Curso:</b>
+                                       <span>#{itemCurso.curso}</span><br/>
+                                       <span>#{itemCurso.desCurso}</span><br/>
+                                        <b>Seccion:</b><br/>
+                                        <span>#{itemCurso.desSeccion}</span><br/>
+                                        <b>Turno:</b><br/>
+                                        <span>#{itemCurso.desturno}</span><br/>
+                                   </div>
+                                    
+                                     <i class="fa fa-check" style="display: none" />
+                                    </div>
+                                    <f:ajax execute="@this" render=":frmRegistroAsistencia:pnDatos :frmRegistroAsistencia:tbAsistencia :frmRegistroAsistencia:pnFiltro " listener="#{registroAsistenciaB.selecionarCursoSeccion(itemCurso)}" />
+                                </h:commandLink>
+                            </ui:repeat>
+                            </h:panelGroup> 
+                        </div>
+                        
+                        
+                        <h:panelGroup layout="block" id="pnFiltro" style="display: block;padding: 10px;border: 1px solid silver;margin: 5px 0px">
+                             <h:outputLabel value="FECHA INICIAL :" />
+                             <p:calendar id="txtFechaIni" value="#{registroAsistenciaB.fechaInicial}" size="8" pattern="dd/MM/yyyy" mindate="#{registroAsistenciaB.personalCursoSeccionS.fechaInicio}" maxdate="#{registroAsistenciaB.personalCursoSeccionS.fechaFinal}" >
+                                 <p:ajax event="dateSelect" process="txtFechaIni txtFechaFin"  update="tbAsistencia" listener="#{registroAsistenciaB.mostrarAsistencia()}"   />
+                            </p:calendar>
+                            <h:outputLabel value="FECHA FINAL :" /> 
+                            <p:calendar id="txtFechaFin" value="#{registroAsistenciaB.fechaFinal}" size="8" pattern="dd/MM/yyyy" mindate="#{registroAsistenciaB.personalCursoSeccionS.fechaInicio}" maxdate="#{registroAsistenciaB.personalCursoSeccionS.fechaFinal}" >
+                                <p:ajax event="dateSelect" process="txtFechaIni txtFechaFin"  update="tbAsistencia" listener="#{registroAsistenciaB.mostrarAsistencia()}"   />
+                            </p:calendar>
+                            
+                      
+                        </h:panelGroup>
+                       
+                        
+                       <p:dataTable id="tbAsistencia" value="#{registroAsistenciaB.alumnoCursoAsistenciaL}" var="itemAlumno" styleClass="gria-Docente" rowIndexVar="status" scrollable="#{false}"  scrollWidth="300" frozenColumns="2" style="width: 100%;">
+                           <f:facet name="header">
+                               #{registroAsistenciaB.personalCursoSeccionS.desCurso}
+                           </f:facet>
+                           <p:column headerText="N." width="10" >
+                                #{status+1}
+                            </p:column>
+                        
+                           <p:column headerText="ALUMNO " width="350"  >
+                               <div style="display: block;">
+                                   <div style="vertical-align: top;display: inline-block;border: 1px solid ">
+                                    <img  style="width: 50px;height: 50px;vertical-align: top;display: inline-block;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{itemAlumno.persona}" />
+                                    
+                                    </div>
+                                    <div style="vertical-align: top;display: inline-block;height: 50px; width: 270px">
+                                        <b>#{itemAlumno.alumno}</b><BR/>
+                                    #{itemAlumno.desPersona}
+                                    </div>
+                                   
+                               </div>
+                                
+                                 
+                             
+                            </p:column>
+                           <p:columns value="#{registroAsistenciaB.fechaAsistenciaL}" var="itemFecha" style="text-align: center;" columnIndexVar="status" width="80"  >
+                                
+                                <f:facet name="header"   >
+                                    #{utilB.listaDiasSemana[itemFecha.dia]}
+                                    <br/>
+                                    #{itemFecha.fecha} 
+                                    <div style="display: #{itemFecha.estadoRegistro eq 0?'none':'block'}">
+                                        <h:commandLink title="GUARDAR" rendered="#{not itemFecha.bandera}">
+                                            <i class="fa fa-floppy-o"/>
+                                            <f:ajax execute="@this" render=":frmRegistroAsistencia:tbAsistencia" listener="#{registroAsistenciaB.guardar(status,itemFecha.fecha)}" />
+                                        </h:commandLink>
+                                        
+                                        <h:commandLink title="EDITAR" rendered="#{itemFecha.bandera}">
+                                            <i class="fa fa-pencil"/>
+                                            <f:ajax execute="@this" render=":frmRegistroAsistencia:tbAsistencia" listener="#{registroAsistenciaB.editar(status,itemFecha.fecha)}" />
+                                        </h:commandLink>
+                                            <h:commandLink title="CANCELAR" rendered="#{not itemFecha.bandera}">
+                                            <i class="fa fa-undo"/>
+                                            <f:ajax execute="@this" render=":frmRegistroAsistencia:tbAsistencia" listener="#{registroAsistenciaB.cancelar(status,itemFecha.fecha)}" />
+                                        </h:commandLink>
+                                        
+                                    
+                                    </div>
+                                </f:facet>
+                                
+                                
+                                <h:selectBooleanCheckbox  value="#{itemAlumno.alumnoRegistroAsistenciaL[utilB.convertDate(itemFecha.fecha, 'dd-MM-yyyy')].asitencia}"  disabled="#{itemFecha.bandera}" >      
+                                      <f:ajax execute="@this" />
+                                  </h:selectBooleanCheckbox>
+                            </p:columns>
+                        </p:dataTable>    
+                       
+                       
+                       
+                       
+                       
+
+                    </h:form>
+
+</ui:define>
+ </ui:composition>

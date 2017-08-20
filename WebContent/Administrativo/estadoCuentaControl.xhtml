@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <style>
+            label{width: 120px ;display: inline-block}
+        </style>
+        
+        
+        <h:form target="_black">
+                
+                <h:commandButton value="imprimi" actionListener="#{estadoCuentaAlumnoB.imprimire}"/>
+            </h:form>
+        
+        
+        <h:form id="frmDatos">
+            <label>Periodo</label>
+     <h:selectOneMenu  id="cboPeriodo"  value=""  > 
+            <f:selectItem itemLabel=" -- SELECCIONE -- " />
+                <f:selectItems value="#{boleta_notasB.listaperiodo}" var="lista" itemValue="#{lista.periodo}" itemLabel="#{lista.desPeriodo}"/>
+                <f:ajax  render="cboCarrera " listener="#{boleta_notasB.mostrarCarreraPerido}" />
+            </h:selectOneMenu>
+     <br/>
+     <label>Carrera</label>
+     <h:selectOneMenu value=""  id="cboCarrera"  >
+                        <f:selectItem itemLabel="-- SELECCIONE --" />
+                        <f:selectItems value="#{boleta_notasB.listacarrera}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+                        <f:ajax execute="@this"  listener="#{boleta_notasB.mostrarAlumnoPeridoCarrera}" />
+     </h:selectOneMenu>
+     <br/>
+     <label>Codigo Alumno</label>
+     
+     <h:inputText value="#{estadoCuentaAlumnoB.codigo}" maxlength="10">
+         <f:ajax event="change" execute="@this" render="txtNombres" listener="#{estadoCuentaAlumnoB.busqueda}"/>
+         
+     </h:inputText>
+     <p:commandLink  value=".."  oncomplete="msgModal.show()"  />
+     <br/>
+     <label>Nombres</label>
+     <h:inputText value="#{estadoCuentaAlumnoB.nombres}" id="txtNombres" size="40"/>
+     <br/>
+     
+     <p:dataTable>
+         <p:column headerText="CODIGO">
+             
+         </p:column>
+         
+         <p:column headerText="DESC.">
+             
+         </p:column>
+         
+         <p:column headerText="CUOTA">
+             
+         </p:column>
+         
+         <p:column headerText="BASE">
+             
+         </p:column>
+         
+         <p:column headerText="PARTE">
+             
+         </p:column>
+         
+         <p:column headerText="DESCU.">
+             
+         </p:column>
+         
+         <p:column headerText="MORA">
+             
+         </p:column>
+         
+         <p:column headerText="PAGO">
+             
+         </p:column>
+         
+         
+         <p:column headerText="F.VEN.">
+             
+         </p:column>
+         
+         
+         <p:column headerText="CANT">
+             
+         </p:column>
+         
+         
+         <p:column headerText="COM">
+             
+         </p:column>
+         
+         <p:column headerText="N° COMP">
+             
+         </p:column>
+         
+         <p:column headerText="ESTADO">
+             
+         </p:column>
+         
+     </p:dataTable>
+     
+     </h:form>
+        
+        
+     <h:form>
+            <p:dialog widgetVar="msgModal" header="BUSQUEDA ALUMNO" width="650px" height="500px" modal="true" >
+                
+                A. PATERNO <h:inputText value="#{matriculaB.bpaterno}"/>
+                <br/>
+                A. MATERNO <h:inputText value="#{matriculaB.bmaterno}"/>
+                <br/>
+                NOMBRES <h:inputText value="#{matriculaB.bnombre}" />
+                <br/>
+                <h:commandButton value="BUSCAR" >                
+                <f:ajax execute="@form" render="dtBusqueda " listener="#{matriculaB.busquedaAlumno}"/>
+                </h:commandButton>
+                
+                <p:dataTable id="dtBusqueda" value="#{matriculaB.listaAlumno}" var="alumno"    
+                             rowKey="#{alumno.persona}"  selection="#{matriculaB.seleccionBusqueda}"  selectionMode="single">
+                    <p:ajax event="rowSelect"   update=":frmDatos"  listener="#{estadoCuentaAlumnoB.onRowSelect}"  oncomplete="msgModal.hide()" /> 
+                   
+                    <p:column headerText="CODIGO">
+                        #{alumno.persona}
+                    </p:column >
+                    <p:column headerText="DATOS">
+                        #{alumno.paterno} #{alumno.materno} #{alumno.nombres}
+                    </p:column>
+                    <p:column headerText="DOCUMENTO">
+                        
+                    </p:column>
+                    
+                </p:dataTable>
+                
+            </p:dialog>
+            
+        </h:form>   
+        
+    </h:body>
+</html>
+

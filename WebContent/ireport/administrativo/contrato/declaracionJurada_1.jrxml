@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="declaracion_jurada" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fae7c5f1-89ca-4540-8660-150ff7ffea01">
+	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="119"/>
+	<parameter name="PERSONA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+PERSONA,NOMBRES+' '+APELLIDO_PATERNO+' '+APELLIDO_MATERNO NOMBRE_COMPLETO,DIRECCION_RECIDENCIA, DIST.DESCRIPCION DISTRITO,PROV.DESCRIPCION PROVINCIA, DEP.DESCRIPCION DEPARTAMENTO,CASE WHEN (TELEFONO IS NULL OR TELEFONO='') THEN 'NO ESPECIFICADO' ELSE TELEFONO END TELEFONO,CASE WHEN (TELEFONO_CELULAR IS NULL OR TELEFONO_CELULAR='') THEN 'NO ESPECIFICADO' ELSE TELEFONO_CELULAR END TELEFONO_CELULAR,
+NACIMIENTO_FECHA,CASE WHEN SEXO=1 THEN 'MASCULINO' ELSE 'FEMENINO' END SEXO,SEC.DESCRIPCION ESTADO_CIVIL,STD.DESCRIPCION TIPO_DOCUMENTO,NRO_DOCUMENTO
+FROM UPA.DAT_PERSONAS DP JOIN UPA.SYS_ESTADO_CIVIL SEC
+ON DP.ESTADO_CIVIL=SEC.ESTADO_CIVIL JOIN [SIGU].[SYS_TIPOS_DOCUMENTOS] STD
+ON DP.TIPO_DOCUMENTO=STD.TIPO_DOCUMENTO JOIN UPA.SYS_TIPOS_TRANSITO TV
+ON TV.TIPO_TRANSITO=DP.TIPO_TRANSITO JOIN UPA.SYS_UBIGEO_DEPARTAMENTO DEP
+ON DEP.DEPARTAMENTO=LEFT(DIRECCION_UBIGEO,2) JOIN UPA.SYS_UBIGEO_PROVINCIA PROV
+ON LEFT(DIRECCION_UBIGEO,2)=PROV.DEPARTAMENTO AND RIGHT(LEFT(DIRECCION_UBIGEO,4),2)=PROV.PROVINCIA JOIN UPA.SYS_UBIGEO_DISTRITO DIST
+ON LEFT(DIRECCION_UBIGEO,2)=DIST.DEPARTAMENTO AND RIGHT(LEFT(DIRECCION_UBIGEO,4),2)=DIST.PROVINCIA AND DIST.DISTRITO=RIGHT(DIRECCION_UBIGEO,2)
+WHERE PERSONA=$P{PERSONA} AND DP.ESTADO_REGISTRO=1]]>
+	</queryString>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="NOMBRE_COMPLETO" class="java.lang.String"/>
+	<field name="DIRECCION_RECIDENCIA" class="java.lang.String"/>
+	<field name="DISTRITO" class="java.lang.String"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="DEPARTAMENTO" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="TELEFONO_CELULAR" class="java.lang.String"/>
+	<field name="NACIMIENTO_FECHA" class="java.sql.Timestamp"/>
+	<field name="SEXO" class="java.lang.String"/>
+	<field name="ESTADO_CIVIL" class="java.lang.String"/>
+	<field name="TIPO_DOCUMENTO" class="java.lang.String"/>
+	<field name="NRO_DOCUMENTO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<image>
+				<reportElement uuid="18c4401e-4fcf-4a75-8fa6-ec11a8c74b7d" x="13" y="0" width="44" height="41"/>
+				<imageExpression><![CDATA["D:\\logo_upig.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement uuid="b364d93c-4c5f-416d-9d91-9946e81767f4" x="9" y="45" width="522" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="47">
+			<staticText>
+				<reportElement uuid="40b70f46-ddf7-47a0-9b6c-781e33c47f70" x="26" y="0" width="497" height="29" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[DECLARACION JURADA ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="566" splitType="Stretch">
+			<textField pattern="&apos;Lima, &apos; EEEEE dd MMMMM yyyy">
+				<reportElement uuid="9520c033-33e4-4f54-ad0a-33b98ef6d1f9" x="273" y="295" width="250" height="20"/>
+				<box rightPadding="0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="461b13fd-5d0a-459c-8be9-6e63317de36b" x="142" y="354" width="269" height="20" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_COMPLETO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7e51f378-26e5-4817-b4ae-3c40399890fc" x="26" y="101" width="497" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40f719d3-c192-434a-9a15-9b50f411d7e8" x="26" y="142" width="100" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="35a188d8-4c74-4a3d-a6c5-9342d0fad827" x="271" y="142" width="116" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono Celular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4a816dd4-8d46-400f-bea9-dab6f9080c0f" x="26" y="162" width="100" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Nacimiento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="acb0ace2-4eb0-4ca9-91fa-2eabc02a9d46" x="26" y="182" width="100" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="172f353a-991c-4d6f-9848-431919325b61" x="26" y="202" width="100" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado Civil:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b29f743-b91e-47de-936a-de13874b928c" x="271" y="162" width="116" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Documento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="841ecc8d-6a68-49dd-80cf-86b3a5c97e8b" x="271" y="182" width="116" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Documento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="97f29956-51af-48fa-a046-cf29490a6e5a" x="26" y="122" width="497" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION_RECIDENCIA}+' DISTRITO DE '+$F{DISTRITO} +' PROVINCIA Y DEPARTAMENTO DE LIMA.']]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1531ae1a-f3e1-4aa0-8977-fb21281b5ced" x="126" y="142" width="145" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8b4882b2-6e4f-4c74-8f2e-2be4a68122ba" x="387" y="142" width="136" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TELEFONO_CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement uuid="ac933cea-afa7-4b7b-a6a6-0c3dfb43d112" x="126" y="162" width="145" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NACIMIENTO_FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f4052fdb-2922-4be6-bad7-263151576950" x="126" y="182" width="145" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SEXO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="75aa2f56-f3f3-4689-a952-96f2357cef65" x="126" y="202" width="145" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ESTADO_CIVIL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8f48dcb2-9730-4ea1-8c8f-6648b0b51d60" x="387" y="162" width="136" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b6d63e25-16a9-4ebc-a46f-469d517c27e5" x="387" y="182" width="136" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NRO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="74647985-8142-47bd-8a51-3114e30eecfa" x="26" y="230" width="497" height="64"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[En caso de resultar falsa la información que proporciono, declaro haber incurrido en el delito de falsa declaración en Procesos Administrativos – Artículo 411° del Código Penal y Delito contra la Fe Pública – Título XIX del Código Penal, acorde al artículo 32° de la Ley N° 27444 – Ley de Procedimiento Administrativo General.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6e143319-09e4-49e3-b01d-13ca29cffe14" x="26" y="0" width="497" height="101"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_COMPLETO}+', identificado(a) con DNI N° '+$F{NRO_DOCUMENTO}+',DECLARO BAJO JURAMENTO la veracidad de mis siguientes datos personales:'
++'<br/><b>JURAMENTO </b>que los datos que consigno a continuación son verdaderos, y que la Universidad Peruana de Integración Global puede efectuar cualquier notificación a estos válidamente, por lo que asumo el compromiso de tener diligencia en el manejo de dichos medios de comunicación, asimismo, declaro que cualquier cambio de éstos datos serán comunicados por escrito presentando en Mesa de Partes y dirigida a la Oficina de Personal para considerarlo en el Legajo.']]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aad988dc-9c89-4010-a3b4-0aea8171555a" x="142" y="374" width="269" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA['D.N.I: ' + $F{NRO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e1da1e66-d8d6-4979-8e14-083f9e76e45a" x="142" y="353" width="269" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

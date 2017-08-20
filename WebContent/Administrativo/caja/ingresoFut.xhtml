@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>INGRESO DE FUT</title>
+	<link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/administrativo/style.css" />
+	 <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+</h:head>
+<h:body>
+<h:form id="frmFUT" prependId="false">
+<div class="paneles">
+<h:commandLink  >
+Nuevo
+<f:ajax execute="@this" render="txtNumeroComprobante cbConcepto txtFUT txtPersona txtObservacion" listener="#{administrarFUTB.nuevo}"  />
+</h:commandLink>
+
+<p:dataTable id="tbFUT" value="#{administrarFUTB.formatoUnicoTramiteL}" var="itemFormatoUnicoTramite" rowIndexVar="status">
+<p:column headerText="N." width="10" >
+	#{status +1 }
+</p:column>
+
+
+<p:column headerText="FUT" width="50">
+	#{itemFormatoUnicoTramite.fut}
+</p:column>
+<p:column headerText="Persona">
+#{itemFormatoUnicoTramite.persona}
+</p:column>
+
+<p:column headerText="Concepto">
+#{itemFormatoUnicoTramite.concepto}
+</p:column>
+
+<p:column headerText="Comprobante">
+#{itemFormatoUnicoTramite.numeroComprobante}
+</p:column>
+<p:column headerText="Obervacion">
+#{itemFormatoUnicoTramite.observacion}
+</p:column>
+<p:column width="50" >
+<h:commandLink title="Editar" >
+<i class="fa fa-pencil" />
+	<f:ajax execute="@this" render=":frmFUT:txtNumeroComprobante :frmFUT:cbConcepto :frmFUT:txtFUT :frmFUT:txtPersona :frmFUT:txtObservacion :frmFUT:tbFUT :frmFUT:txtDesPersona :frmFUT:imgPersona" listener="#{administrarFUTB.editar(itemFormatoUnicoTramite)}" />
+</h:commandLink>
+
+<h:commandLink title="Eliminar" >
+<i class="fa fa-times" />
+
+<f:ajax execute="@this" render=":frmFUT:tbFUT " listener="#{administrarFUTB.eliminar(itemFormatoUnicoTramite)}" />
+</h:commandLink>
+</p:column>
+
+</p:dataTable>
+
+
+
+</div>
+	<p:dialog header="NUEVO FUT" widgetVar="dlgFUT"  modal="true"  closeOnEscape="true" resizable="false" width="500">
+	<h:outputLabel value="Comprobante" />
+	
+	<h:inputText id="txtNumeroComprobante" value="#{administrarFUTB.formatoUnicoTramite.numeroComprobante}" />
+	
+	
+	<h:commandLink>
+		verificar
+		<f:ajax execute="@this txtNumeroComprobante" render="cbConcepto txtPersona txtDesPersona" listener="#{administrarFUTB.busquedaComprobante}" />
+	</h:commandLink>
+	<br />
+	<h:outputLabel value="Concepto" />
+	<h:selectOneMenu id="cbConcepto" value="#{administrarFUTB.formatoUnicoTramite.concepto}">
+		<f:selectItems value="#{administrarFUTB.conceptoL}" var="itemConcepto" itemLabel="#{itemConcepto.descripcion}" itemValue="#{itemConcepto.concepto}" />
+	</h:selectOneMenu>
+	<br />
+	<h:outputLabel value="FUT" />
+	
+	<h:inputText id="txtFUT" value="#{administrarFUTB.formatoUnicoTramite.fut}" />
+	<br />
+	<h:outputLabel value="CODIGO" />
+	
+	<h:inputText id="txtPersona" value="#{administrarFUTB.formatoUnicoTramite.persona}" />
+	<br />
+	<h:outputLabel value="PERSONA" />
+	
+	<h:inputText id="txtDesPersona" value="#{administrarFUTB.persona.paterno} #{administrarFUTB.persona.materno} #{administrarFUTB.persona.nombres}" />
+	<br />
+	<h:outputLabel value="Observacion" />
+	<br />
+	<h:inputTextarea id="txtObservacion" value="#{administrarFUTB.formatoUnicoTramite.observacion}" />
+	
+	<h:graphicImage id="imgPersona" value="SVerImagenAlumno?alumno=#{administrarFUTB.formatoUnicoTramite.persona}" style="width: 50px;height: 50px" />
+	
+	     <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="@this txtNumeroComprobante cbConcepto txtFUT txtPersona txtObservacion " render="tbFUT"  listener="#{administrarFUTB.insertar}"  />
+                                </h:commandLink>
+                                
+                                <h:commandLink onclick="dlgFUT.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+	</p:dialog>
+</h:form>
+</h:body>
+</html>

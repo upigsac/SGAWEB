@@ -1,0 +1,118 @@
+
+<ui:composition
+	template="/Administrativo/plantilla.xhtml"
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+ <ui:define name="titulo">
+               CONSTANCIA DE MATRICULA 
+            </ui:define>
+              
+             <ui:define name="contenido">
+<script>
+                    $(document).ready(function(){
+                        
+                         
+                      // $("body").on("keyup",".pnFiltro" ).keyup(function( event ){
+                          //console.log("sxx")  ;
+                      // }); 
+                           
+                       
+                    });
+                    
+                    
+            		var bandera=false;
+    	            var idGeneral;
+    	         
+    	            function confirmacion(obj,cadena){
+    	                idGeneral=obj;
+    	                if(bandera){
+    	                    $(".modal-fondo").remove();
+    	                    $(".modal").remove();
+    	                    bandera=false;
+    	                    return true;
+    	                }else{
+    	                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+    	                       $('body').append('<div class="modal-fondo"  /> ');
+    	                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+    	                        }else{
+    	                        $(".modal-fondo").remove();
+    	                        $(".modal").remove();
+    	                   }                    
+    	                    
+    	                    return false;
+    	                }
+    	                
+    	            }
+    	            
+    	            function valida(estado){
+    	                bandera=estado;           
+    	                $(idGeneral).click();            
+    	            }
+                </script>
+       <span class="tituto-admin">CONSTANCIA DE MATRICULA </span>
+
+
+
+<h:form prependId="false">
+
+<div class="paneles">
+<h:outputLabel value="Codigo" />
+<h:inputText value="#{constanciaMatriculaB.filtroAlumno}" >
+	<f:ajax  event="change" execute="@this" render="tbConstancia" listener="#{constanciaMatriculaB.filtrar}" />
+</h:inputText>
+<br />
+<h:outputLabel value="Persona" />
+<h:inputText value="#{constanciaMatriculaB.filtroPersona}" >
+	<f:ajax  event="change" execute="@this" render="tbConstancia" listener="#{constanciaMatriculaB.filtrar}" />
+</h:inputText>
+</div>
+
+<p:dataTable id="tbConstancia" value="#{constanciaMatriculaB.matriculaL}" var="itemMatricula"  rowIndexVar="status" >
+<p:column headerText="Nª" width="10">
+#{status+1}
+</p:column>
+<p:column headerText="Periodo Ingreso" width="80">
+#{itemMatricula.alumnoCarrera.periodoIngreso}
+</p:column>
+<p:column headerText="Carrera" width="150">
+#{itemMatricula.carrera.abreviatura}
+</p:column>
+<p:column headerText="Alumno" width="100">
+#{itemMatricula.alumno.alumno}
+</p:column>
+
+
+<p:column headerText="Persona">
+#{itemMatricula.persona.paterno} #{itemMatricula.persona.materno} #{itemMatricula.persona.nombres}
+</p:column>
+
+
+<p:column width="40" style="text-align:center">
+<h:commandLink title="Generar Numero"  rendered="#{itemMatricula.constanciaMatricula.constanciaMatricula eq null}"  onclick="return confirmacion(this,'¿ Esta seguro Generar?');" >
+<i class="fa fa-check" style="color:green" />
+	 
+	<f:ajax execute="@this" render="tbConstancia" listener="#{constanciaMatriculaB.insertar(itemMatricula)}"> </f:ajax>
+</h:commandLink>
+<h:outputText rendered="#{itemMatricula.constanciaMatricula.constanciaMatricula ne null}" value="#{itemMatricula.constanciaMatricula.constanciaMatricula}"  />
+
+
+
+</p:column>
+<p:column width="40">
+<ui:param name="param" value="INSTITUCION,1,CARRERA,#{itemMatricula.carrera.carrera},ALUMNO,#{itemMatricula.alumno.alumno}" />
+<h:commandLink title="Imprimir" styleClass="boton-normal" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/matricula/constanciaMatricula', 1,fn:split(param,','))}">
+<i class="fa fa-print" />
+
+</h:commandLink>
+</p:column>
+
+</p:dataTable>
+</h:form>
+</ui:define>
+
+</ui:composition>

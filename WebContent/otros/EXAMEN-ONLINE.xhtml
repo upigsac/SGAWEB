@@ -1,0 +1,421 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pp="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>EXAMEN VIRTUALes ....</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width"/>
+    </h:head>
+    <h:body   >
+        <script>
+            var fecha;
+            var tiempoInicio;
+
+            function iniciarExamen() {
+                console.log($("#lblfinal").text().trim());
+                console.log($('#lblInicio').text().trim());
+        
+                fecha = new Date($("#lblfinal").text().trim());
+                tiempoInicio = new Date($('#lblInicio').text().trim());
+              
+                cronometro();
+            }
+            function cronometro() {
+                var dias = 0;
+                var horas = 0;
+                var minutos = 0;
+                var segundos = 0;
+                var tiempo;
+
+                $("#lblHora").text("iniciando..");
+                tiempo = setInterval(function() {
+                    
+                    tiempoInicio.setSeconds(tiempoInicio.getSeconds() + 1);
+
+
+                    if (fecha >= tiempoInicio) {
+                        console.log("empiesa");
+                        var diferencia = (fecha.getTime() - tiempoInicio.getTime()) / 1000;
+                        dias = Math.floor(diferencia / 86400);
+                        diferencia = diferencia - (86400 * dias);
+                        horas = Math.floor(diferencia / 3600);
+                        diferencia = diferencia - (3600 * horas);
+                        minutos = Math.floor(diferencia / 60);
+                        diferencia = diferencia - (60 * minutos);
+                        segundos = Math.floor(diferencia);
+
+                        // console.log( horas + ' Horas, ' + minutos + ' Minutos, ' + segundos + ' Segundos');
+                        $("#lblHora").text(horas + ' : ' + minutos + ' : ' + segundos);
+                        if (dias > 0 || horas > 0 || minutos > 0 || segundos > 0) {
+
+
+
+                        } else {
+                            console.log("termine");
+                            $("#frmExamenVirtual\\:btCalifica").click();
+                            clearInterval(tiempo);
+                        }
+
+                    }else{
+                        console.log("no ");
+                    }
+                }, 1000);
+            }
+
+
+
+            $(window).scroll(function() {
+
+
+                //  console.log($(window).scrollTop());
+                //  console.log($(".solo").offset().top);
+                //  
+                //el padre del titulo a arrastrar va aqui
+                
+                
+
+                    $(".principal" ).each(function( index ) {                 
+                      
+                      if ($(window).scrollTop() > $(this).offset().top) {
+                                $(this).children(".grupo").addClass("stick");
+                                
+                            }
+
+                            else {
+                              
+                                 $(this).children(".grupo").removeClass("stick");
+                               
+
+                            }
+                    });
+                
+                
+                
+
+            });
+
+
+            /*        
+             $(document).ready(function(){
+             
+             var tiempo = {
+             hora: 0,
+             minuto: 0,
+             segundo: 0
+             };
+                         
+                          
+             $("#frmExamenVirtual\\:btn-comenzar").click(function(){
+             
+             if ( $("#frmExamenVirtual\\:btn-comenzar").val()=== 'Comenzar' )
+             {
+             
+             $("#frmExamenVirtual\\:btn-comenzar").val('Detener');                        
+             tiempo_corriendo = setInterval(function(){
+             // Segundos
+             tiempo.segundo++;
+             if(tiempo.segundo &gt;= 60)
+             {
+             tiempo.segundo = 0;
+             tiempo.minuto++;
+             }      
+             
+             // Minutos
+             if(tiempo.minuto &gt;= 60)
+             {
+             tiempo.minuto = 0;
+             tiempo.hora++;
+             }
+             
+             $("#hour").text(tiempo.hora &lt; 10 ? '0' + tiempo.hora : tiempo.hora);
+             $("#minute").text(tiempo.minuto &lt; 10 ? '0' + tiempo.minuto : tiempo.minuto);
+             $("#second").text(tiempo.segundo &lt; 10 ? '0' + tiempo.segundo : tiempo.segundo);
+             }, 1500);
+             }
+             else 
+             {
+             $(this).text('Comenzar');
+             clearInterval(tiempo_corriendo);
+             }
+             });
+             });
+             
+             */
+
+        </script>
+
+        <style>
+            ul{list-style: none;}
+            *{padding: 0px;margin: 0px}
+            #frmExamenVirtual\:pnDatosPersona{border: 1px solid silver;display: block;width: 99.7%;height: 100%;background-color: #919191;}
+            #frmExamenVirtual\:pnExamen{border: 1px solid silver;padding: 10px 30px}
+            #frmExamenVirtual\:pnDatosPersona input[type="text"],#frmExamenVirtual\:pnDatosPersona select{padding: 8px;border-radius: 3px;border: 1px solid silver;margin: 3px;width: 350px ;text-transform: uppercase}
+            #frmExamenVirtual\:pnDatosPersona input[type="button"]{padding: 10px}
+            #frmExamenVirtual\:pnExamen input[type="button"]{padding: 10px;border: 1px solid #919191;margin: 10px 0px;color: white;cursor: pointer;background-color: #019EE3}
+
+            
+
+            #hour ,#minute,#second{display: inline-block;border:1px solid silver;width: 50px;height: 50px;font-weight: bold;}
+            .container{display: block;text-align: center}
+            .pregrunta h3{background-color: red;margin-left: 0px}
+            .pregrunta{}
+            .respuesta{font-size: 0.8em;margin: 20px 0px 20px 50px}
+            .respuesta tbody  label{cursor: pointer}
+            .respuesta tbody tr td{padding: 5px 0px}
+            .pregrunta-titulo{color: #0069b3;font-weight: bold;background-color: silver;display: block;padding: 5px}
+            .grupo{background-color: #019EE3;padding: 20px 0px;text-align: center;color: white;display: block;width: 100%}
+            .principal{margin: 10px 0px 50px}
+            .grupo-pregunta{border:1px solid silver}
+            #frmExamenVirtual\:tbResultado table thead{font-size: 0.7em}
+            #frmExamenVirtual\:tbResultado table tfoot tr td{background: white}
+            #frmExamenVirtual\:tbResultado table tbody{font-size:  0.8em}
+            #frmExamenVirtual\:tbResultado table thead th{background: #019EE3;text-shadow: none;color: white;-webkit-box-shadow: none;box-shadow: none;-moz-box-shadow: none;border-color: black}
+            #frmExamenVirtual\:tbResultado .ui-datatable-odd{background-color: white}
+            .ui-datatable tbody td{border-style: none}
+            #lblHora{font-weight: bold;font-size: 2.5em;display: block;text-align: center;position: fixed;bottom: 20px;right: 50px;color: red}
+            .stick{position: fixed;top: 0px;left: 0px}
+            .subPregunta{border: 1px solid silver;padding: 10px}
+            
+            
+input[type="radio"] {
+  display: none
+}
+input[type="radio"] + label:before {
+    content: "";
+    color: blue;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+    -moz-border-radius:  50%;
+    border-radius:  50%;
+    background-color:silver;
+    border: 2px solid #0069b3;
+    
+}
+
+
+
+input[type="radio"]:checked + label:before {
+     background-color:red;
+}
+input[type="radio"]:checked + label{
+    color: red;
+}
+input[type="radio"] + label:before ,
+input[type="radio"]:checked + label:before  {
+  -webkit-transition:background-color 0.4s linear;
+  -o-transition:background-color 0.4s linear;
+  -moz-transition:background-color 0.4s linear;
+  transition:background-color 0.4s linear;
+}
+        </style>
+
+
+        <h:form id="frmExamenVirtual">
+
+            <h:panelGroup layout="block" id="pnDatosPersona" rendered="#{not examenVirtualB.bandera}">
+                <div style="border: 1px solid silver;margin: 5% auto;max-width: 750px;background-color: white;padding: 30px">
+                    <div style="display: inline-block;vertical-align: top;width: 40%">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxQSEhQUEhQUFRUVFBUZGBcYFRQXGBUVFRUXFxUVFRoYHCggGBolHBUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0mHCUuLCwsLCwsLCwsLCwsLS4tLCwsLy0sLDQsLCwsLCwsLCwsNCwsLCwsLCwsLCwsLCwsLP/AABEIAK8BIAMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAABgcDBAUBAgj/xABOEAABAwICBQcGCQoEBQUAAAABAAIDBBESIQUGMUFRBxMiYXGBkRQyQlKhsSNTcoKSosHR8BYXM0Nik7LC0uEIg5TiNGOj0/EVJCVEc//EABoBAQACAwEAAAAAAAAAAAAAAAABAgMEBQb/xAAsEQACAQIFAwMDBQEAAAAAAAAAAQIDEQQSITFRBRNBFHGBIjKRYbHB4fCh/9oADAMBAAIRAxEAPwC8VwdbK18UbSw2zOa7yiWt1YHNwtIIF89ous1COaaMGJnlpsj9FyhvjfhmAc2/nbwsemNI867EDcOzB3EHgq/0r55zvmvKDShZ0XHo7jw/stvH4BThenuvHJpdM6i4ztV2fnj+iTSOWHGtdk1819PfdeZs0z1l7oSvWq5yzFa8rDdWIPtkyzidbNJq5USsxxxucBw+ziuZKxzHFrgQRtBFiFLRCktjfZOvcRLmi9gXNB27CbFa8cdwrF1O1cifCJZW4jiNgdnR39eatTi5SsiKk1BXZ3dC6ux0zi9hcSW2zOQG+w7l2l4F6t9JLY5cpOTuwiIpICIiAIiIAiIgCIiAIiIAiIgC+WvB2EHs6lo6f0kKammndsijc7tIHRHebDvX5t0VrLVUr3SwTOa9xLnN85j3OJJxMORzJ6+tAfqJFqaIndJBE99sb42OdbZic0E26rrbQBERAEREBHNO6wNZ0Wkl3qtGJx7hs71AdNVU7sT207YzbaZWh5HW0ZHsK6NTpgxmznDEf1cQDnn5R2BcmtrWTOtJSyMO54BxA9dgLrs0aOTZfJwMRiM+7+P9/RCqiuLycQ6W/tWhI9SfWDQzjE6aMAlu3De5bvxA5gqLOzFxsK2nK5hhFLU7uq8wkdzLnYXH9GT5pPqHhfcV156d0bi14IP4zHEKDscQQRkQbg8CNitjV+rZX07ecF3tydxa71h27VxMfg033I/J3+n4xpduXwcKGC4ut7Qmh31EzWNHyjua3eSpFQ6sOLgwEFpObt4HWFOdG6OZA3DGLcTvPauVCi29TqzrxS03M1JTiNjWNFg0ABaGmtX4KofCsGLc4ZOHfv711CV6tyytY0U2ncg0fJ61rspjh4Yc/epnR0zY2NY3Y0WCzIojCMdi0qkpbsIiKxQIiIAiIgCIiAIiIAiIgCIiALxxsjnAC5yAWBpEljtbtH7R3HsQFb8tmmC2mjp9hnkDiN/NRWOfa/D4KpNEwc5Mxu69z2D+9lIOVHTHlOkZbG7IbRN+Z55+mXeC5+q8ZBLwL2Iy3ljc3269p68KhvQskforVwk0tPi28zHftwi66K5+gp2vgjLDcAYe9vRPuXQUlWEREAREQFRVOnYaUYYmMMh24cw3tec3Fct2mJZttQGfs+aoq6mLc3uWPFfYvSxppe55Ryctnp+miJXIZGtJEhccjt7fFcSvpGk4wA0OOdshi4EeiesbVhgqnRi+0bxxXQhnZILjzX9Eg7jwPXwKlpFE5LbYj1RSkbl2tRtKeTVLcR6EnQd3nI9xWpPJzV2yZhp278B9IdmXtSSiwuaRmDYtI2EHMELHOEZJxZswqyhaR+hdGRgZ5dS6SqGv0/J5LzXSxRPikJbcHmcrOB4tfYHqIVkas6U8oha82vbMjY4bnd/vuuJUw8oK7O5SxMaksq4OsiIsBshERAEREAREQBERAEREAREQBERAEREBz9Mx42CL4xwB+QOk/wAQLd619aNKijo5p/i4zhHF56LB9IhdBrbvLvVFh35n7FWHLtpi0cNK05vdzrx+yzJgPzs/moyEtSnZHkkk5kkkniSbk+KkmhHCNodcDB+sGfNv22kG+MmwPbuyKjcQu4Dr9y7okwsxA2ywh9suuKUcNtj7thqzKi1+RuvfLHUh3mMlaGgG4a4txOAJ3WLbKxVBORih5vRwfaxmmkk7gRG32RhTtSij3CIikgIiID8pkvec3fasrQW+kV9OyyC+CQvSWsebbv7G1HLff4+9eNdzT8QzY7JwG7+42hagksepbEbriztmw/yu+xTe5TLY6ulmBzGvyOWf7TScJPjY/OKwaMrDBGYZGc4wHEw3sWg5i3UvKA5c07YL2+S/I+BwnxW3Sxh0TcXokxu6iM2n3juVXG7IzZYteDSZrb/7mMFmAAGNxxXuw5bLWyvs6lbWoknMTOg9CRpkj4CxAe1v7JuHDqcqH05RFkmYzv8Agqfag6z3bSxvyfTzYL+tFM11vBwA8Fp1U5JwZv08sctSPz/Je6L5jdcAjYRdfS5B2QiIgCIiAIiIAiIgCIiAIiIAiIgC+XusLr6WKbOw4n2BAIhYe/tO1fmnX7TPldfUSg3YH82z5EfRFu0hzvnK9uUDTXkdBPKDZ5bzcfy5Oi091ye5fmZ5soZMTaoGXJNjwy29347it+ukODLMuFg5uyQbmuG5wOX4sNagjsATu2ubtb2jePxbeu9qpo/yrSNLHYEc62R5aei5sXwmK3XhaD271UyF/at6P8npaeH4uJjT2hov7brpIiuYgiIgCIiA/KdiDmlr7FmdVNHnC6+PL8rMAB7l6P6eTzn1PweOpja6+oRuOxwt2cD4rWOkHg9ILYhqw5QnF7EuM0tTaoJblpO1pLT2bD9q7tPYc+12x1iPlCzvtKjkeU5G54DvEZ+1SUxYonu3jC7uLc/arJ8mCouOLnmn9DGSnEg85mfaBtB7s1GKe8ZaAbHFiB7Nisajd5zDsMbT9VVtpIZB2+NxHddUXlmWGyj4P0XqJpE1FFE87ek09rXEKQKD8jhvo1h4yzfx2+wqcLhVrdyVuT0FG/bjfhBERYzIEREAREQBERAEREAREQBERAFhGZJ7gskjrBYcQa0ucbBoJJ6gLkqSGU/y66YxSwUrTlGDK/5TrtYD83Ee8KqWNxOAXT1l0qaqqnqD+tkJb1MHRjH0Q1a2j4r3dY923+/Z7CqXMiRvQ5DFe1tj2jYeD28Px0dqsfkN0XikqaogWFoWWGWI2fIR/wBP2qt6h1m347Ht2PHqvHEfi2xT3kN0lN5RNT5mDmy/qbIHAE34m9vmhETLYupERWMYREQBERAfkyR0bjtf4j7lhmiaLZuA45Edh4LPJRcCsQje3Z94XeaflHEjKPhmxFgc3ATfgTuP3LmzNMbgd17HtXRipMfo4Dx9E9o3L3SFK4ss4WdYjvb5pSUW1ciE4xla+jM7ZRgjkO7ED3Z/apFq/VY2dL02SC3DK7R4KFOJMEQ4yOP1Wj7VLtH5QuI2skDe4x297VaDzGGvFRV/f8Eja63Nu/5YB8LKAaRZcyDiSQrFoIw+nA3hrSOxQSqjvJbi63ibKyV00Y4tppl58lVLzeiqUHa5jnn/ADHuf7iFLFytVyPJYWj0GBnfH0D/AArqrgVPudz0kHeKsERFQsEREAREQBEXhQHqIiAIiIAiIgMMpuQO9Q/la0x5No6QNNnzkRN42dm8jsYHKWsNyTx9yo/ls0xztY2Bp6NMzMbudkAce8Nw+JSQjqyuSM7DeuzTwhovmAMsTcy3rcN4/Ft60NHQ4nXsSG8OtdaZ9gCCf2ZG2yO9kg4fjJUZlQodHPqpixmC4a57nA9EhoyfY5XJLRbeveTDTz6HSMYkcQx0hhmGdum7CHW6nYT2XW/pjV6SHQza9pLHyTtOWVqc3bGbdb7P7CFGNaM6hsrchUwRTC25xbhf34mFEVep+tgi42p2k/KqKmm3viaT8oCzvaCuyrlAiIgCIiA/LLw70W38F4yp3ObhPWtTydw2OKc7I3bmPxuK9FnaPPdtPg3Y523Ga6babnH82Ta4xRO3ccJ6to6lHWzMJ6TbHi3onw2exdvRxF2ND8Wd2XAxNItexGRB3jvUqdyk6eV3OJWMwSiLZgccuBc6/uwqV6uR421DDtJuO0YlENKE+UzHhK8DsabD2AKQ6oV3w7QfSvfwKw05bmavB5V/0l+iJMJh4Oit4KJabbgqT1Pv7bqRwz2jjPqYh3KK6alxzF3ErNFatmrFrRF76jVGKKUerO/wcA/+ZSVQjk2luJxx5l/jE0H3Kbrh4lWqs9BhZXpIIiLAbAREQBERAEREAREQBERAFhqXWHbl96zLA5hL+oDLrJ2/jrUohmGrqmwxPkebNjY5xPU0X+xflfSdc6eWSZ/nSvc833YzcDuFh3K6uWvWFsVL5Iw/C1BBcB6MLTdxdwxEBo7+CpGmixvaOJz7BmfYCqtl4rQ6VHHgjaSHWOZc03LCdmJu8WtuK6Oruh3V9ZHALWcbyvZkDC3NzjwcRZoPFwXOqZgOmMN/RfGfObua9u8jZv7ld/JVqoaOn52Vtqios597XjZ6EXtuetx4KqRZuxtcpujWv0RVxtaMLIMTQN3M2e230F+eNIDFQaPk3tdUwnsa8SNHg8r9SaxRY6Sob60Eo8Y3BflmPPRMZ9XSLgPnUzD/ACqzKIvLkKrMejSwn9FPI3ucGvH8RViqov8AD3L8FWM4SRu8WkfyhW6pQYREQgIiID87TasOHmyA9rbe4rn1OiJWecwkcW9IeG32KauX01YafVMRHd39zZq9Jw81orexW8lGHfjMdvBfNNSODhG7Y49B3qyW6P3KxavRUU/nNs7c9uTh37+w3XA0jQmCOfnLEsjMsbhsfgcLOHAgkAjdfrXXw+Op11Zq0v3OLisBWw7Vnmj+xDNLzY53u9Ygn5Ra3H9a66GrOUzDwIXCY65zzJ967OjnYCCtilq7mviNIWJjWdEHcLG3e7NRisPSXXmrMbB2W9t1x6vzgt230nMp6zLf5OZ8Lowf1sQ+oz+ysVU3qvXYKnRo/ZcD8/GwfYrkXFxsbVL8newEr07cBERaZvBEXhKA9Ra81axvnOAWZjwcwbhRdE2Z9IiKSAiIgCIiAL4dncXt2L7XzZQD8ya9aQNRpCrfixYZXRjPzWxdAD6pPziudo84Q59yCbNaRa4JzJF+4d6/SWm9UaOs/wCIp43n1wC147Hts72rS0Dyf0NI4PjiLntJLXSOMhZf1Qcgeu1+tRYvmRCuTjUB7pG1lazCGkOiicLFzvRkkbuttDTnexOxW8iKxVu5q6V/QS//AJP/AISvynCP/h29ekj9Wlb96/UmssuCkqXerTzHwjcvzBUsw6JoW/G1VVJ3NbHHf2FQwizP8Pm2s7IffIrlVR/4f4bMq3cXRDwa4/zK3EQe4REUkBERAU4/aV4FiMiBy452zoUrFz9bqGWWkkZEwyPuMIBbezui/aeB2dQWeJ62mS9ay06mSSkjHVpqcXFlMvoZIXgTxvjz9Njm+0ixXdpKdrhkbq0m1V8jZw4OAI8CsZoqZ2boIr8Q3Cfq2XYw/VIx++Jw8V0mc/sl+SAMgwgBc3SWTgrQdq9SP2Y4z+y+48HA+9cnSXJ6ZDeGoYep7SPa2/uXTj1LDzVr29zkrpWJpzu1f2OA+qMb6KQbWtDvoyn7lbDtfImkhwFxtVc6Y1Qqw2ENi5zm2uBLHNdtcSLDInbwXL0toupErjzE2Yaf0b/VF93G61OoTjOEZQkt2b3TacoScZxeyLkg1zgfsc3xW1+UsVrkgdpVGQ004/UTfupPuWyyWUWxxSW62PHvC5LnLk7PbhwXFNrQz0SO0Zrhaa1twDK9zvOxQxunGgWDbexeDWF+wBpB4gH3rFKcmZoUorwfFfrG7FiLzmeK3NE69PaQC+44f+FrQ6dgY4SOpYi9u+2XeNikdFrpSSsMU1LDhcdga1o7SLZHrVY+9jJJ8K539Aa4iZwbe9yL32gHeCpoqp0pq0Lw1OimgNLsMjMdg0jMPBedm0G3Upy/SzmxtDrY8IBI2F2/Dfd1rYhUcbqTNOrTUrOC90dieoawdIqPVusTweiwgcSCtSeqvmXG/uXEqq14JLbvA9W9x3bViqV34MtLDrySFmtm7DiPUHLL+VVtsZHcR7woRJrUwGznuYeBxN96yDTodskPiVTvyXky+mjwTeh1rje8NcC2++9x3qQgqqpGl4xxOHOb25BsnYfRd7D7V3NWtbh5kxNgbZ7WEZEOCy0sR4kYa2F8w/BOkXjHXAIzBXq2zRCIiAi3KhV81oqtde14XNHa+zP5lQOtkXNs0bT7DFQte4cH1MjpTfrtZXTyyfCUsFIL3q6uCLLbhxhzj3WuqU1vqxPpKoc3zGyCNnUyFojAH0T4qrLIuXkQpMFC9/xk7j3Na1vvBViKO8n9DzOj6ZtrEsxHteS77VIlYhhERCAiIgKTcRdZAQFoxzcUdUi64x3LG+ZV6JOC5pql6apTYix0TKvW1BXMdULGatCDvCqtvWdmkLKMirX22pUkWJUzTB4rZGnHcSoeKlZBVK2ZkZETBmnncSso0+eKhoqVmbP+PuUZ5DtxJgzTLXec1pPYFgqTTP8AOhid2sH2KNCVetnTuSI7USQthothpoPoNPvWa9OMo4IBw+CZkfBRsTX3o6oI2J3WT2USOSvO91+rYB2AZLBNXgbNvE5lcRsxO9Y5qi2ZKrnbLdtI3qitJ3rSfW4c7271w9KaaDQcwLb1AdJ60yyHodEcdpP3LLClKZSdWFNaltHS2IecHDrsR7VhpJqeISSSUjZ24ScDei643tzA2Xy7FTMFdO2+B7xfgfxZTPVjWJxtHIDja0XOViNl+1ZXRcNdzHGvGp9Ox0YNbYOc+BJbG62Fj3sL239HI5247ePFdmumxsMzc3tsXW9OPYbgbXNyN+AKq/WimayoeGZBwDstgLr3t33Xd1W1pEQaJHWLcr8esdaTpK2aJNKtq4TevJfmoGmmz07WXu5oNs9rb5W7LhSpUhqFr9o6GeQyNlhxuIbISHQi9rkMaMUVznncDiBkrqiqGuaHtcHNcAQ4EFpB2EEZELbp3UdTQrOLm3EyosLphxC1XztGwkHje6tcx2IJyh6QwVRmJ6Oj6SSQDjU1N4oB2gYjbsVLap0JqKmKPaZJGtJ+U7pH3lWTyvU8joXNhxP52o52bKxOFgZE0bsLbeK5fIXoU+WOmms3m2Hmwdpe7K/cL+KgtsX5DGGtDRsaAB2AWC+0RWKBERAEREB+cp6iy1ufK0o9ItlFxkd44Hq4r0zLluDi7Pc7UZqSutjoeUFe+Uda5zZl9c4qkm86oK85xamNfXOZKCDcY9fbpFo419iRAbzHrIyRc0zI6pKkg7bJRkt6KQdS81a1PqKtolLmxQevcOc4A54Gjf1ut2FTeLVSmDQ3mmusLXeA5x63HeVkjRlLUxSrxjoQo1beI9ixPrGDePFTv8k6X4iL6DU/JOl+Ii+g1X9MynqVwV1LpaMekPELB/65HcZ3zF94HbwVlnVGl+Ii+g37k/JOm+Jj+iFPph6r9CuX6YaB5w8Vw63TT5iWQAyOG0NI+059yt9+qNKf1EX0QufV6g0b73haL723a4HqIVoYdLcrUxLa0Kc0poOZ8NyKgy4h8HzIbGG7+njJLtm6y4rdCVA/+vJfsVzSclVGfSqB/mj7WLF+aej+MqP3jP8AtrZWmhqN3d2VOzR9UNlLJ9Fyy6M0ZVslxGmnNwQbRu3kG+zqVp/mopPjKn963+hZG8llL8bVfvh/QjSYjKzuis9P6FqJnMdHTVBdhId8E8bPN2jtXOZqlXHZST/QKuA8mFMP11X+/wD9qfmypvjqv9//ALUSsrCcszuVVBqNpFxFqSUdZsAOs53srv0LqlKynhj8vqmc3G1tmMhDW2GxvORl2EdZuuM3kxpfjav9/wD7V0Y+R+nIB56qzF/+IP8ASpK3OjNq3WgfBaTmv/zaene36rWlcSr0Vp5p6FRTSjjgZGfouZ9q3PzOU3xtT/qHf0rz8zlN8ZUf6h39KC5DtM6H0zJ+n5q3zQPqtXmgNGaVp3EwmBpcLHLFcd4U50VqFT0MhljMpeAWXfKXizrXyItuCk+gwBJmNoKE3NHUl1eSfLHMcLZYW4c79gUuRFKKsIiKSAiIgP/Z" style="border: 1px solid silver;" />
+                    </div>    
+                    <div style="display: inline-block;vertical-align: top;width:  55%">
+                        <h:inputText id="txtPaterno" value="#{examenVirtualB.personaExamen.apellido_paterno}" pp:placeholder="APELLIDO PATERNO" required="#{true}" />
+                        <BR/>
+                        <h:inputText id="txtMaterno" value="#{examenVirtualB.personaExamen.apellido_materno}" pp:placeholder="APELLIDO MATERNO" required="#{true}"/>
+                        <BR/>
+                        <h:inputText id="txtNombres" value="#{examenVirtualB.personaExamen.nombres}" pp:placeholder="NOMBRES" required="#{true}"/>
+                        <BR/>
+                        <h:inputText id="txtDni" value="#{examenVirtualB.personaExamen.dni}" pp:placeholder="D.N.I" maxlength="8" required="#{true}"/>
+                        <BR/>
+                        <h:inputText id="txtTelefono" value="#{examenVirtualB.personaExamen.telefono_fijo}" pp:placeholder="TELEFONO FIJO"/>
+                        <BR/>
+                        <h:inputText id="txtCelular" value="#{examenVirtualB.personaExamen.telefono_celular}" pp:placeholder="TELEFONO CELULAR"/>
+                        <BR/>
+                        <h:inputText id="txtGrado" value="#{examenVirtualB.personaExamen.grado_instruccion}" pp:placeholder="GRADO INSTRUCION"/>
+                        <BR/>
+                        <h:inputText id="txtInstitucion" value="#{examenVirtualB.personaExamen.nombre_institucion}" pp:placeholder="INSTITUCION" required="#{true}"/>
+                        <BR/>
+                        <h:selectOneMenu id="txtCarrera" value="#{examenVirtualB.personaExamen.carerra}" pp:placeholder="CARRERA" required="#{true}">
+                            <f:selectItem itemLabel="ENFERMERIA" itemValue="000005"/>
+                            <f:selectItem itemLabel="MARKETING Y NEGOCIOS INTERNACIONALES" itemValue="000002"/>
+                            <f:selectItem itemLabel="INGENERIA CIVIL" itemValue="000004"/>
+                            <f:selectItem itemLabel="INGENERIA SISTEMAS" itemValue="000001"/>
+                            <f:selectItem itemLabel="DERECHO" itemValue="000003"/>
+                            <f:selectItem itemLabel="OTROS" itemValue="OTROS"/>
+                        </h:selectOneMenu>
+                    </div>
+
+
+
+                    <div style="display: block;text-align: center;padding: 20px 2px">
+                        <h:commandButton id="btn-comenzar" type="button" value="Comenzar">
+                            <f:ajax execute="txtPaterno txtMaterno txtNombres txtDni" render="@form" listener="#{examenVirtualB.comenzar()}" />
+                        </h:commandButton>
+                    </div>
+
+                </div>
+
+            </h:panelGroup>
+
+
+
+            <h:panelGroup layout="block" id="pnExamen" rendered="#{ examenVirtualB.bandera}">
+                <p>
+                    Todas las preguntas de este examen son de alternativa múltiple para las respuestas. El postulante deberá elegir y marcar, la alternativa que considere correcta. El examen es de autocorrección, al termino del examen presione el botón <b>CALIFICAR EXAMEN</b>.
+                </p>
+                
+                
+                
+                <span id="lblHora" >hora</span>
+                <div class="container" style="display: none">
+                    <div id="hour"></div>
+
+                    <div id="minute"></div>
+
+                    <div id="second"></div>
+
+                    <br/>
+
+
+
+
+                </div>
+
+
+
+                <hr/>
+
+                <span id="lblInicio" style="display: none">#{utilB.convertDate(examenVirtualB.tiempoInicio, "yyyy-MM-dd hh:mm:ss")}</span>
+                <br/>
+
+                <span id="lblfinal" style="display: none">#{utilB.convertDate(examenVirtualB.tiempoTermino, "yyyy-MM-dd hh:mm:ss")}</span>
+
+
+             
+                <ui:repeat value="#{examenVirtualB.examGrupoL}" var="grupo" varStatus="itemGrupo">
+
+                      
+                    <ul class="principal">   
+                    <h2 class="grupo">#{grupo.descripcion}</h2>       
+
+               
+                        <h:outputLabel  value="#{grupo.texto}" escape="#{false}" />                  
+                  
+                        
+                        
+                        
+
+                        <div class="grupo-pregunta">
+                            <ui:repeat value="#{examenVirtualB.mostrarPreguntas(1,grupo.grupo)}" var="pregunta" varStatus="itemPregunta">
+                                <ul class="pregrunta">
+
+                                    <li><span  class="pregrunta-titulo">#{(itemPregunta.index + 1)  } -  #{pregunta.descripcion}</span></li>
+                                    <li >
+                                        <h:selectOneRadio id="rbRespuesta" value="#{examenVirtualB.respuesta}" styleClass="respuesta" layout="pageDirection"    >
+                                                         
+                                            <f:selectItems value="#{examenVirtualB.mostrarRespuesta(1, grupo.grupo, pregunta.pregunta)}"  var="respuesta"  itemLabel=" #{respuesta.descripcion} " itemValue="#{respuesta.respuesta}"  />
+                                            
+                                           
+                                            <f:ajax execute="@this"      listener="#{examenVirtualB.validarRespuesta(1, grupo.grupo, pregunta.pregunta, examenVirtualB.respuesta)}"/>
+                                        </h:selectOneRadio>
+
+                                    </li>
+
+
+                                </ul>
+                            </ui:repeat>
+
+                        </div>
+
+
+
+                    </ul>   
+                </ui:repeat>
+
+
+
+
+                <h:commandButton id="btCalifica" type="button" value="CALIFICAR EXAMEN" >
+                    <f:ajax  execute="txtPaterno txtMaterno txtNombres"  render="tbResultado" listener="#{examenVirtualB.calificar()}" />
+                </h:commandButton>
+
+
+
+
+
+
+
+
+
+
+            </h:panelGroup>
+
+
+            <p:dialog header="CALIFICACION :" modal="#{true}" widgetVar="dlgResumen" width="700" height="500" resizable="#{false}" closable="#{true}"  >
+                <p:dataTable id="tbResultado" value="#{examenVirtualB.resumenL}" var="resultado"  >
+
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="TEMA" width="400" />
+                            <p:column colspan="2" headerText="PREGUNTAS" />
+                        </p:row>
+                        <p:row>
+
+
+
+                            <p:column headerText="TOTAL FORMULADAS"  />
+
+                            <p:column headerText="TOTAL CORRECTAS" />
+
+
+                        </p:row>
+
+
+                    </p:columnGroup>
+
+                    <p:column >
+                        #{resultado.tema}
+                    </p:column>
+                    <p:column style="text-align: center">
+                        #{resultado.totalFormuladas}
+                    </p:column>
+
+                    <p:column style="text-align: center">
+                        #{resultado.totalCorrectas}
+                    </p:column>
+
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column  style="text-align:right" footerText="TOTAL" />
+                            <p:column footerText="#{examenVirtualB.totalPreguntas}"  />
+
+                            <p:column footerText="#{examenVirtualB.totalCorrectas}" />
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+
+                <h:commandLink target="_blank" value="IMPRIMIR">
+
+                </h:commandLink>
+
+
+            </p:dialog>
+
+
+        </h:form>
+    </h:body>
+</html>
+

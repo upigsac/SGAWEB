@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+     
+    </h:head>
+    <h:body>
+
+      <ui:composition template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+                AUTORIZACION DE NOTAS.
+            </ui:define>
+              
+      <ui:define name="contenido">
+          
+           <script type="text/javascript">  
+                function cerrarModal(xhr, status, args) {  
+                    if(args.validationFailed || !args.completado) {  
+                        PF('dlg').jq.effect("shake", { times:5 }, 100);  
+                    }   
+                    else {  
+                        PF('dlg').hide();  
+                    }  
+                }  
+            </script>  
+          <style>
+              label{min-width: 150px;display: inline-block;font-weight: bold}
+              select{margin: 2px 0px}
+              table tbody tr td{font-size: 12px; font-weight: bold}
+              #listaAutorizacion{padding: 0px 10px}
+              .old{background-color:  #008000;color: white}
+          </style>
+          
+          <span class="tituto-admin">AUTORIZACION PARA EL REGISTRO DE NOTAS</span>
+     
+          <h:form id="frm_autorizar_nota" prependId="false" >
+                
+         
+                    <label>Carrera : </label>
+                 
+                      <h:selectOneMenu id="cboCarrera" value="#{auto_notaB.seleccionCarrera}" class="largo" required="true">
+                          <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                          <f:selectItems value="#{auto_notaB.listaCarreras}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}"/>
+                          <f:ajax execute="@this" render="cboCurso cboSeccion cboDocente listaAutorizacion" listener="#{auto_notaB.getListaAutorizaciones}"/>                      
+                      </h:selectOneMenu>
+              
+                  
+               <br/>
+                    <label>Curso :</label>
+                 
+                  
+                 
+                      <h:selectOneMenu id="cboCurso" value="#{auto_notaB.seleccionCurso}" class="largo"
+                                       required="true">
+                          <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                          <f:selectItems value="#{auto_notaB.listaCursos}" var="curso" itemLabel="#{curso.curso} - #{curso.descripcion}" itemValue="#{curso.curso}"/>
+                          <f:ajax execute="@this" render="cboSeccion cboDocente listaAutorizacion" listener="#{auto_notaB.getListaAutorizaciones}"/>
+                       
+                      
+                      </h:selectOneMenu>
+                  
+                
+                      <br/>
+                    <label>Seccion :</label>
+                 
+                  
+             
+                      <h:selectOneMenu id="cboSeccion" value="#{auto_notaB.seleccionSeccion}" class="largo" required="true">
+                          <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                          <f:selectItems value="#{auto_notaB.listaSeccion}" var="seccion" itemLabel="#{seccion.descripcion}" itemValue="#{seccion.seccion}"/>
+                          <f:ajax execute="@this" render="cboDocente listaAutorizacion" listener="#{auto_notaB.getListaAutorizaciones}"/>         
+                      </h:selectOneMenu>
+                
+              
+                  <br/>
+                    <label>Docente :</label>
+                 
+                  
+                  
+                      <h:selectOneMenu id="cboDocente" value="#{auto_notaB.seleccionDocente}" class="largo"
+                                       required="true">
+                          <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                          <f:selectItems value="#{auto_notaB.listaDocente}" var="docente" 
+                                         itemLabel="#{docente.get(2)} #{docente.get(0)} #{docente.get(1)}" itemValue="#{docente.get(3)}"/>
+                          <f:ajax execute="@this" render="listaAutorizacion" listener="#{auto_notaB.getListaAutorizaciones}"/>
+                      </h:selectOneMenu>
+                
+                  
+                     <br/>
+                    <label>Tipo Examen :</label>
+                 
+                  
+                 
+                          <h:selectOneMenu id="cboTipoExamen" value="#{auto_notaB.seleccionTipoExamen}">
+                              <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                            <f:selectItems value="#{auto_notaB.listaTipoExamen}" var="examen" itemLabel="#{examen.tipo_examen} - #{examen.descripcion}" 
+                                           itemValue="#{examen.tipo_examen}" />
+                            <f:ajax execute="@this" render="listaAutorizacion" listener="#{auto_notaB.getListaAutorizaciones}"/>
+                          </h:selectOneMenu>
+                 
+                  
+              
+                 
+                            <br/>
+                            <br/>    
+                 
+                  <p:dataTable id="listaAutorizacion" value="#{auto_notaB.listaAutorizaciones}" var="autorizacion" emptyMessage="" >
+                  
+                  <p:column headerText="ID" width="20">  
+                      <h:outputText value="#{autorizacion.get(0)}"/>  
+                  </p:column>  
+                  
+                  <p:column headerText="PERIODO" width="20">  
+                      <h:outputText value="#{autorizacion.get(1)}"/>  
+                  </p:column>  
+                  
+                                    
+                  <p:column headerText="CURSO" width="50">  
+                      <h:outputText value="#{autorizacion.get(4)}"/>  
+                  </p:column>  
+                                    
+                  <p:column headerText="SECCION" width="50">  
+                      <h:outputText value="#{autorizacion.get(5)}"/>  
+                  </p:column>  
+                  
+                  <p:column headerText="PERSONAL" width="150">  
+                      <h:outputText value="#{autorizacion.get(8)}"/>  
+                  </p:column>  
+                  
+                  <p:column headerText="TIPO EXAMEN" width="20">  
+                      <h:outputText value="#{autorizacion.get(9)}"/>  
+                  </p:column>  
+                  
+                  <p:column headerText="ALUMNO" width="20">  
+                      <h:outputText value="#{autorizacion.get(10)}"/>  
+                  </p:column>  
+                  
+                  <p:column headerText="DESDE" width="20">  
+                      <h:outputText value="#{autorizacion.get(11)}">
+                          <f:convertDateTime pattern="dd/MM/yyyy" />
+                      </h:outputText>  
+                  </p:column>  
+                  
+                  <p:column headerText="HASTA" width="20">  
+                      
+                      <h:outputText value="#{autorizacion.get(12)}">
+                          <f:convertDateTime pattern="dd/MM/yyyy" />
+                      </h:outputText>  
+                      
+                      <br/>
+                      
+                      
+                  </p:column>  
+                  
+                  <p:column width="85">
+                    
+                      <p:commandLink id="btnActualizar" oncomplete="dlg.show();"  update=":frmModal :frm_autorizar_nota:listaAutorizacion" 
+                                     value="Actualizar" actionListener="#{auto_notaB.accionEditar(autorizacion)}"
+                                     style="display: inline-block;margin-right: 20px;color: blue"/>  
+                      
+                      <p:commandLink id="btnEliminar" update=":frm_autorizar_nota:listaAutorizacion" 
+                                     actionListener="#{auto_notaB.eliminarAutorizacion(autorizacion)}" value="Eliminar" 
+                                     style="display: inline-block;color: blue"/>
+                      
+                  </p:column>
+                      
+                  <f:facet name="footer">
+                      <p:commandButton oncomplete="dlg.show();" value="Agregar" update=":frmModal :frm_autorizar_nota:listaAutorizacion" 
+                                       actionListener="#{auto_notaB.limpiar}" disabled="#{empty auto_notaB.seleccionDocente}"/>
+                  </f:facet>
+                      
+              </p:dataTable>  
+                            
+           </h:form>
+          
+          
+          
+          
+            <h:form id="frmModal" prependId="false" >   
+              
+
+          
+              <p:dialog id="modal" header="#{auto_notaB.tituloAccion}" widgetVar="dlg"  modal="true" closable="true">      
+                         
+                        <label>Tipo Examen :</label>
+                          <h:selectOneMenu value="#{auto_notaB.tipoExamenA}" required="true">
+                            <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                            <f:selectItems value="#{auto_notaB.listaTipoExamen}" var="examen" itemLabel="#{examen.tipo_examen} - #{examen.descripcion}" 
+                                           itemValue="#{examen.tipo_examen}" />
+                          </h:selectOneMenu>
+                          <br/>
+                          <br/>
+                      
+                        <label>Rango de Fechas</label>
+                       <br/>
+                        <br/>
+                   
+                      
+                         <label>Desde : </label>
+                        <p:calendar value="#{auto_notaB.fechaInicioA}" locale="es" showButtonPanel="true" navigator="true" id="fecha_iniModal"
+                                     required="true" pattern="dd/MM/yyyy">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:calendar>
+                      <br/>
+                            <label>Hasta : </label> 
+                            <p:calendar value="#{auto_notaB.fechaFinA}" locale="es" showButtonPanel="true" navigator="true" id="fecha_finModal" 
+                                        required="true" pattern="dd/MM/yyyy">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:calendar>
+                      
+                 
+                        <br/>
+                      
+                            <p:commandButton value="#{auto_notaB.tituloBoton}" actionListener="#{auto_notaB.grabarActualizar(actionEvent)}" 
+                                            oncomplete="cerrarModal(xhr, status, args)"
+                                            update=":frm_autorizar_nota:listaAutorizacion" 
+                                            disabled="#{auto_notaB.estadoBoton ne 1}" 
+                                            rendered="#{auto_notaB.estadoBoton eq 1}"/>
+                               
+                            <p:commandButton value="#{auto_notaB.tituloBoton}" actionListener="#{auto_notaB.grabarActualizar(actionEvent)}" 
+                                             oncomplete="cerrarModal(xhr, status, args)"
+                                             update=":frm_autorizar_nota:listaAutorizacion" 
+                                             rendered="#{auto_notaB.estadoBoton eq 2}"/>                            
+               
+            </p:dialog>       
+          </h:form>
+      
+      </ui:define>
+          
+      </ui:composition>
+      
+    </h:body>
+</html>
+

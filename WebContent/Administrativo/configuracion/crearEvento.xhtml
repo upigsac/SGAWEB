@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="frmDetalle">
+            IDEVENTO <h:inputText id="txtEvento" value="#{crearEventoB.evento}"   disabled="true"/> <br/>
+            EVENTO <h:inputText id="txtDesEvento"  value="#{crearEventoB.desEvento}"  size="50" /> <br/>
+            INSTITUCION
+            <h:selectOneMenu value="#{crearEventoB.institucion}" >
+                <f:selectItems value="#{institucionB.mostrarInstitucion()}" var="institucion" itemLabel="#{institucion.descripcion}" itemValue="#{institucion.institucion}" />
+            </h:selectOneMenu>
+            <br/>
+            TIPO EVENTO
+            <h:selectOneRadio   value="#{crearEventoB.tipo_evento}"  >                              
+                             <f:selectItem itemValue="01" itemLabel="DIPLOMADO" />
+                             <f:selectItem itemValue="02" itemLabel="CERTIFICADO"/>
+                             <f:selectItem itemValue="03" itemLabel="CONSTANCIA"/>
+                             
+               </h:selectOneRadio>
+            
+            FECHA INCIO <h:inputText   value="#{crearEventoB.fecha_ini}"  />         
+            FECHA FIN  <h:inputText  value="#{crearEventoB.fecha_fin}"  /><br/>
+            HORA PRACTICAS   <h:inputText  value="#{crearEventoB.hora_practica}"  />        
+            HORAS TEORIA  <h:inputText   value="#{crearEventoB.hora_teoria}"  /><br/>
+            LUGAR <h:inputText  value="#{crearEventoB.lugar}"  size="50" /> <br/>
+        </h:form>
+        <h:form>
+            <h:commandButton value="NUEVO"></h:commandButton>
+            <h:commandButton value="EDITA"></h:commandButton>
+            <h:commandButton value="GUARDAR">
+                <f:ajax execute=":frmDetalle:txtDesEvento" render=":frmDetalle:txtEvento" listener="#{crearEventoB.registrarEvento()}" />
+            </h:commandButton>
+            <h:commandButton value="CANCELAR"></h:commandButton>
+            <h:commandButton value="BUSCAR"></h:commandButton>
+        </h:form>
+    </h:body>
+</html>
+

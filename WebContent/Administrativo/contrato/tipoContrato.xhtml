@@ -1,0 +1,174 @@
+<ui:composition   xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"
+                          
+                            template="/Administrativo/plantilla.xhtml">
+              
+            <ui:define name="titulo">
+            
+            
+            </ui:define>
+               <ui:define name="contenido">
+<h:form id="frmTipoContrato" prependId="false" >
+
+
+
+    <div  class="paneles">
+     <h:outputLabel value="Tipo Personal" />
+	 <h:selectOneMenu id="cbTipoPersonal"  value="#{tipoContratoB.tipoPersonal}" >
+	 
+	
+	 <f:selectItem  itemLabel="Administrativo" itemValue="3" />
+	 <f:selectItem  itemLabel="Docente" itemValue="4" />
+	 
+	 <f:ajax execute="@this " render="tbTipoContratoPersonal" listener="#{tipoContratoB.mostrarTipoContratoPersonal}" />
+	 </h:selectOneMenu>    
+    </div>
+    
+
+
+<div class="paneles">
+	 <h:commandLink  id="btNuevoTCP" styleClass="boton-normal"  >
+	 <i class="fa fa-file-o" />
+	Nuevo
+	<f:ajax execute="@this" render="cbTipoPersonalCP cbTipoContratoCP :frmTipoContrato:txtSeccion1 :frmTipoContrato:txtSeccion2" listener="#{tipoContratoB.nuevoTipoContratoPersona}" />
+	</h:commandLink>
+
+
+</div>
+	 
+
+ 
+ <p:dataTable id="tbTipoContratoPersonal" value="#{tipoContratoB.tipoContratoPersonalL}" var="itemTipoContratoPersonal" rowIndexVar="status" emptyMessage="Sin registro" >
+ 
+ <p:column  headerText="N." width="10" >
+#{status +1 }
+	
+</p:column>
+<p:column headerText="CONTRATO">
+#{itemTipoContratoPersonal.descripcion}
+
+</p:column>
+<p:column width="40" >
+	<h:commandLink title="Editar">
+	<i class="fa fa-pencil"  style="color: green"  />
+	<f:ajax execute="@this" render=":frmTipoContrato:cbTipoPersonalCP :frmTipoContrato:cbTipoContratoCP :frmTipoContrato:txtSeccion1 :frmTipoContrato:txtSeccion2" listener="#{tipoContratoB.editarTipoContratoPersona(itemTipoContratoPersonal)}"  />
+	</h:commandLink>
+	
+	<h:commandLink title="Eliminar" onclick="return confirmacion(this,'¿ Esta seguro de Eliminar ?');" >
+	<i class="fa fa-times" style="color: red" />
+	
+	<f:ajax execute="@this" render="tbTipoContratoPersonal " listener="#{tipoContratoB.eliminarTipoContratoPersona(itemTipoContratoPersonal)}"  />
+	</h:commandLink>
+</p:column>
+
+ </p:dataTable>
+
+
+
+
+<div class="paneles">
+<h:outputLabel value="Codigo" />
+<h:inputText id="txtCodigo" value="#{tipoContratoB.tipoContrato.tipoContrato}" disabled="true" /><br />
+<h:outputLabel value="Tipo Contrato" />
+<h:inputText id="txtDescripcion" value="#{tipoContratoB.tipoContrato.descripcion}" size="150" disabled="#{not tipoContratoB.bandera}" /><br />
+<h:outputLabel value="Abreviatura" />
+<h:inputText id="txtAbreviatura" value="#{tipoContratoB.tipoContrato.abreviatura}" disabled="#{not tipoContratoB.bandera}" />
+</div>
+
+<div class="paneles">
+<h:commandLink  id="btNuevo" styleClass="boton-normal" disabled="#{ tipoContratoB.bandera}">
+Nuevo
+<f:ajax execute="@this" render="btNuevo btEditar btGuardar btCancelar txtCodigo txtDescripcion txtAbreviatura" listener="#{tipoContratoB.nuevoTipoContrato}" />
+</h:commandLink>
+<h:commandLink id="btEditar" styleClass="boton-normal" disabled="#{ tipoContratoB.bandera}">
+Editar
+<f:ajax execute="@this" render="btNuevo btEditar btGuardar btCancelar txtDescripcion txtAbreviatura" listener="#{tipoContratoB.editarTipoContrato}" />
+</h:commandLink>
+<h:commandLink id="btGuardar" styleClass="boton-normal" disabled="#{not tipoContratoB.bandera}">
+Guardar
+<f:ajax execute="@this txtDescripcion txtAbreviatura" render="btNuevo btEditar btGuardar btCancelar txtCodigo txtDescripcion txtAbreviatura tbTipoContrato" listener="#{tipoContratoB.insertarTipoContrato}" />
+</h:commandLink>
+<h:commandLink  id="btCancelar" styleClass="boton-normal" disabled="#{not tipoContratoB.bandera}">
+Cancelar
+<f:ajax execute="@this" render="btNuevo btEditar btGuardar btCancelar txtCodigo txtDescripcion txtAbreviatura" listener="#{tipoContratoB.cancelarTipoContrato}" />
+</h:commandLink>
+</div>
+
+<p:dataTable id="tbTipoContrato"  value="#{tipoContratoB.tipoContratoL}"  var="itemTipoContrato"  rowIndexVar="status" rowKey="#{itemTipoContrato.tipoContrato}" selectionMode="single" selection="#{tipoContratoB.tipoContrato}" >
+<p:ajax event="rowSelect"  update="txtCodigo txtDescripcion txtAbreviatura" />
+<p:column  headerText="N." width="10" >
+#{status +1 }
+
+</p:column>
+<p:column headerText="CONTRATO">
+#{itemTipoContrato.descripcion}
+
+</p:column>
+
+<p:column width="50">
+<h:commandLink>
+Eliminar
+<f:ajax execute="@this" render="tbTipoContrato" listener="#{tipoContratoB.eliminarTipoContrato(itemTipoContrato)}" />
+</h:commandLink>
+
+</p:column>
+
+</p:dataTable>
+
+
+<p:dialog  header="TIPO CONTRATO PERSONA" widgetVar="dlgTipoContratoPersona" width="700" modal="true" height="630" resizable="false" closeOnEscape="true" >
+
+ <h:outputLabel value="Tipo Personal" />
+ <br />
+  <h:selectOneMenu id="cbTipoPersonalCP"  value="#{tipoContratoB.tipoContratoPersonal.tipoPersona}" style="#{ component.valid ? '' : 'border-color:red;'}" required="true" disabled="#{not tipoContratoB.banderaTipoPersonal}" >
+ <f:selectItem  itemLabel="--Seleccion--" />
+ <f:selectItem  itemLabel="Docente" itemValue="4" />
+ <f:selectItem  itemLabel="Administrativo" itemValue="3" />
+ <f:ajax execute="@this" render="cbTipoContratoCP" listener="#{tipoContratoB.seleccionaTipoPersonal}" />
+ </h:selectOneMenu> 
+
+<br />
+<h:outputLabel value="Tipo Contrato" /><br />
+<h:selectOneMenu id="cbTipoContratoCP" value="#{tipoContratoB.tipoContratoPersonal.tipoContrato}" style="#{ component.valid ? '' : 'border-color:red;'}" required="true" disabled="#{not tipoContratoB.banderaTipoPersonal}" >
+<f:selectItem  itemLabel="--Seleccion--" />
+<f:selectItems value="#{tipoContratoB.tipoContratoL}" var="item" itemLabel="#{item.descripcion}" itemValue="#{item.tipoContrato}" itemDisabled="#{item.estadoRegistro eq 1}" />
+</h:selectOneMenu><br />
+
+<p:editor id="txtSeccion1" value="#{tipoContratoB.tipoContratoPersonal.seccion1}"  controls="bold italic underline | font size style color highlight | 
+		bullets numbering | alignleft center alignright justify | 
+		undo redo |  copy cut paste pastetext |  outdent indent | removeformat" />
+		
+<p:editor id="txtSeccion2" value="#{tipoContratoB.tipoContratoPersonal.seccion2}"  controls="bold italic underline | font size style color highlight | 
+		bullets numbering | alignleft center alignright justify | 
+		undo redo |  copy cut paste pastetext |  outdent indent | removeformat" />
+
+        
+           <f:facet name="footer">
+         
+                <div style="display: block;text-align: right;">
+                <h:commandLink id="btGuardarTCP" styleClass="boton-normal" >
+					GUARDAR
+				<f:ajax execute="@this cbTipoPersonalCP cbTipoContratoCP txtSeccion1 txtSeccion2" render=":frmTipoContrato:tbTipoContratoPersonal cbTipoPersonalCP cbTipoContratoCP"  listener="#{tipoContratoB.insertarTipoContratoPersona}" />
+				</h:commandLink>
+                
+                
+                <h:commandLink styleClass="boton-rojo" onclick="dlgTipoContratoPersona.hide()">
+                    CANCELAR
+                    <f:ajax execute="@this" render="cbTipoPersonalCP cbTipoContratoCP" resetValues="true"  />
+                </h:commandLink>
+                
+                
+                
+                </div>
+                
+            </f:facet>
+</p:dialog>
+
+
+</h:form>
+
+</ui:define>
+</ui:composition>

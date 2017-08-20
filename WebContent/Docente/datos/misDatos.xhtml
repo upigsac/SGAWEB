@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+     
+    </h:head>
+    
+    <h:body>
+   
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Docente/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                DATOS PERSONALES.
+                
+            </ui:define>    
+            
+        
+        <ui:define name="contenido"> 
+            <style>
+                #frmPerfil\:pnDatos{padding: 8px}
+                #frmPerfil\:pnDatos label{display: inline-block;width: 150px}
+                #frmPerfil\:pnDatos textArea{resize: none;width: 350px;height: 100px}
+                #frmPerfil\:rbSexo{display: inline-block;vertical-align: top;border: 1px solid silver;padding: 2px;margin: 2px}
+                #frmPerfil\:txtFecha_input{box-shadow: none;width: 180px;border-radius: 1px;font-size: 1em}
+                #frmPerfil\:pnDatos input,#frmPerfil\:pnDatos select{padding: 5px;margin: 2px}
+                #frmPerfil\:pnDatos select{min-width: 190px}
+                #frmPerfil\:pnBotonera{border: 1px solid silver;padding: 15px;margin-top: 10px}
+                #frmPerfil\:pnBotonera input{padding: 8px;width: 100px;margin: 2px;background-color: #0088CE;border: none;color: white;border-radius: 2px;opacity: 1;cursor: pointer}
+                #frmPerfil\:pnBotonera input:disabled{cursor: default;opacity: 0.5}
+            </style>
+            <span class="tituto-docente"> DATOS GENERALES </span>
+              
+            
+            <h:form id="frmPerfil" >
+       
+                
+                
+                
+        
+            
+            
+            
+                <h:panelGroup id="pnDatos" layout="block">
+                    
+                    <div style="border: 1px solid silver;display: block;padding: 10px">
+                        <div style="display: inline-block;width: 60%;vertical-align: top">
+                            <h:outputLabel value="CODIGO "/>
+                            <h:inputText value="#{usuarioB.personal.cPersonal}" disabled="#{true}" style="color: red;font-weight: bold;text-align: center;font-size: 0.8em;width: 80px"/><br/>
+                            
+                            
+                             <h:outputLabel value="Apellido Paterno: "/>
+                            <h:inputText value="#{usuarioB.persona.paterno}" disabled="#{true}"/><br/>
+
+                            <h:outputLabel value="Apellido Materno: "/>
+                            <h:inputText value="#{usuarioB.persona.materno}" disabled="#{true}"/><br/>
+
+
+                            <h:outputLabel value="Nombres: "/>
+                            <h:inputText value="#{usuarioB.persona.nombres}" disabled="#{true}" style="width: 300px" /><br/>
+
+                            
+                            <h:outputLabel value="Tipo Documento: "/>
+                            <h:selectOneMenu value="#{usuarioB.persona.tipodocumento}" disabled="#{true}">
+                                <f:selectItem itemLabel="D.N.I" itemValue="1" />
+                            </h:selectOneMenu>
+                            <br/>
+                            <h:outputLabel value="Numero Documento: "/>
+                            <h:inputText value="#{usuarioB.persona.numero_documento}" disabled="#{true}"/><br/>
+                            
+                            
+                            <h:outputLabel  value="Fecha Nacimento: "/>
+                            <p:calendar id="txtFecha" value="#{usuarioB.persona.fecha_nacimiento}" disabled="#{not personaB.bandera }" pattern="dd-MM-yyyy" maxdate="#{utilB.fechaHoy()}"/>
+                            <br/>
+                            
+                            <h:outputLabel value="Sexo: "/>
+
+                            <h:selectOneRadio id="rbSexo" value="#{usuarioB.persona.sexo}" disabled="#{not personaB.bandera }">
+                                <f:selectItem itemLabel="Masculino" itemValue="1" />
+                                <f:selectItem itemLabel="Femenino" itemValue="2" />
+                            </h:selectOneRadio>
+                            <br/>
+                            
+                            
+                            
+
+                            <h:outputLabel  value="Telefono Fijo: "/>
+                            <h:inputText id="txtTelefono" value="#{usuarioB.persona.telefono}" disabled="#{not personaB.bandera }"/><br/>
+
+                            <h:outputLabel  value="Telefono Celular: "/>
+                            <h:inputText id="txtCelular" value="#{usuarioB.persona.celular}" disabled="#{not personaB.bandera }"/><br/>
+
+                            <h:outputLabel  value="E-mail: "/>
+                            <h:inputText id="txtEmail1" value="#{usuarioB.persona.emailP}" disabled="#{not personaB.bandera }" style="width: 300px"/><br/>
+
+                            <h:outputLabel  value="E-mail 2: "/>
+                            <h:inputText id="txtEmail2" value="#{usuarioB.persona.emailS}" disabled="#{not personaB.bandera }" style="width: 300px"/><br/>
+
+
+                        </div>
+                        <div style="display: inline-block;text-align: center;width: 38%">
+                            #{datosDocenteB.mostrarMapa('15','01','04')}
+                            
+                            <p:gmap id="gmap" center="#{datosDocenteB.ubigeoDistrito.latitud}, #{datosDocenteB.ubigeoDistrito.longitud}" zoom="11" disableDefaultUI="true"  type="HYBRID"  model="#{datosDocenteB.draggableModel}" style="width:100%;height:450px"></p:gmap>
+                        </div>
+                       
+                
+                 
+                    </div>
+
+                
+                 
+                 <div style="border: 1px solid silver;display: block;padding: 10px;margin: 10px 0px">
+                 <h2>Ubigeo</h2>
+                 <hr/><br/>
+                        <h:outputLabel value="Departamento: "/>
+                        <h:selectOneMenu value="Lima" disabled="#{true}">
+                            <f:selectItem itemLabel="Lima" itemValue="Lima" />
+                        </h:selectOneMenu>
+                        <br/>
+                        <h:outputLabel value="Provincia: " />
+                        <h:selectOneMenu value="Lima" disabled="#{true}">
+                            <f:selectItem itemLabel="Lima" itemValue="Lima" />
+                        </h:selectOneMenu>
+                         <br/>
+                        <h:outputLabel value="Distrito.: "/>
+                    
+                        <h:selectOneMenu id="cboDistrito" value="#{usuarioB.persona.ubigeoDistrito}" disabled="#{not personaB.bandera }">
+                            <f:selectItem itemLabel="Seleccionar" />
+                            <f:selectItems value="#{ubigeoDistritoB.mostrarDistrito('15', '01')}" var="distrito" itemLabel="#{distrito.descripcion}" itemValue="#{distrito.distrito}" />
+                        </h:selectOneMenu>
+                        <br/>
+                        <h:outputLabel style="vertical-align: top" value="Direccion: "/>
+                        <h:inputTextarea id="txtDireccion" value="#{usuarioB.persona.direccion_ubigeo}" disabled="#{not personaB.bandera }"/>
+                 </div>
+               
+                </h:panelGroup>
+                
+                
+                
+               
+                
+                
+                
+                
+                <h:panelGroup id="pnBotonera" layout="block">
+                    
+                    
+                    
+                    
+                    <h:commandButton value="Editar" disabled="#{personaB.bandera}">
+                        <f:ajax execute="@this" render="txtFecha rbSexo txtTelefono txtCelular txtEmail1 txtEmail2 cboDistrito txtDireccion pnBotonera" listener="#{personaB.editarPersona()}" />
+                    </h:commandButton>
+                    
+                    <h:commandButton  value="Guardar"  onclick="if(!confirm('Desea Guardar?'))  return false" disabled="#{not personaB.bandera}" >
+                        <f:ajax execute=":frmPerfil:pnDatos" render=":frmPerfil:pnDatos pnBotonera" listener="#{personaB.insertarPersona(usuarioB.persona)}" />
+                    </h:commandButton>
+                        
+                    
+                    
+                    <h:commandButton value="Cancelar" disabled="#{not personaB.bandera}">
+                        <f:ajax execute="@this" render="txtFecha rbSexo txtTelefono txtCelular txtEmail1 txtEmail2 cboDistrito txtDireccion pnBotonera"  listener="#{personaB.cancelarPersona()}" />
+                    </h:commandButton>
+                    
+                </h:panelGroup>
+               
+        </h:form>
+
+            
+            
+        </ui:define>
+            
+        </ui:composition>
+    </h:body>
+</html>
+

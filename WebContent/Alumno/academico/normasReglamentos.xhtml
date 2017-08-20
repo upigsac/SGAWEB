@@ -1,0 +1,119 @@
+
+        
+        
+        
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Historial Academico
+            </ui:define>
+            
+            <ui:define name="contenido">
+              <style>
+            .sub-titulo{font-weight: bold}
+            .slider{border: 1px solid silver;width: 80%;height: 170px;margin-bottom: 30px;margin-left: 20px  }
+            .slider >a{width: 4%;display: inline-block;height: 100%;vertical-align: top;border: 1px dashed}
+            .slider div{display: inline-block;width: 90%;height: 100%;overflow: hidden}
+            .slider div ul{list-style: none;width: 300%;height: 100%;margin: 0px;padding: 5px 0px }
+            .slider div ul li{background-size: 50%;background: center; background-repeat: no-repeat ; display: inline-block;vertical-align: top;height: 94%;text-align: center;width: 200px}
+            .slider div ul li b{color: white;display: block;height: 100%;background-color: rgba(0,0,0,0.5);transition: all 1s}
+            .slider div ul li:hover b{cursor: pointer;background-color: rgba(255,255,255,0);color: black;transition: all 1s }
+        </style>
+        
+        
+        <script>
+            $(document).ready(function(){
+               
+               contG=0;
+               totalG=$("#slider-guia ul li").size();
+               indiceG=1;
+               
+               $(".despla-Guia").click(function(e){
+                    e.preventDefault();
+                   
+                   if(totalG >indiceG ){
+                       
+                       contG-=205;
+                        indiceG++;     
+                   }else{
+                       contG=0;
+                        indiceG=1;     
+                   }
+                   $("#slider-guia ul").css({"margin-left":+contG+"px",transition:"all 1s"});
+               });
+            });
+            
+            
+        </script>
+      
+        
+                <span class="tituloCuerpo"> GUIAS NORMAS Y REGLAMENTOS </span>
+                
+                
+                
+            
+        <span class="sub-titulo" > GUIAS  </span>
+        
+        
+        <div class="slider">
+            <a class="despla-Guia" href="#" />
+            
+            <div id="slider-guia">
+                <ul>
+                <ui:repeat value="#{archivosB.mostrarCarpeta('GUIA','ALUMNO')}" var="guias" >
+                    <a href="https://docs.google.com/viewer?url=www.upig.edu.pe:8000/SGAWEB/faces/Alumno/pdf/#{guias.url}" target="_blank">
+                        <li style="background-image: url('#{guias.portada}') "><b>#{guias.titulo}</b></li>
+                    </a>
+                </ui:repeat>
+                </ul>
+            
+                
+            </div>
+            
+            <a class="despla-Guia" href="#" />
+        </div>
+        
+        <span class="sub-titulo" > NORMAS - REGLAMENTOS</span>
+        <div class="slider">
+            <a href="#" />
+            
+            <div id="slider-reglamento">
+                <ul>
+                <ui:repeat value="#{archivosB.mostrarCarpeta('REGLAMENTO','ALUMNO')}" var="reglamentos" >
+                    <a href="https://docs.google.com/viewer?url=www.upig.edu.pe:8000/SGAWEB/faces/Alumno/pdf/#{reglamentos.url}" target="_blank">
+                        <li style="background-image: url('#{reglamentos.portada}"><b>#{reglamentos.titulo}</b></li>
+                    </a>
+                </ui:repeat>
+                </ul>
+            
+                
+            </div>
+            
+            <a href="#" />
+        </div>
+        
+        <span class="sub-titulo" > FORMATOS  </span>
+        <div class="slider">
+            
+              <a href="#" />
+            
+            <div id="slider-formatos">
+                <ul>
+                <ui:repeat value="#{archivosB.mostrarCarpeta('FORMATO','ALUMNO')}" var="formato" >
+                    <a href="https://docs.google.com/viewer?url=www.upig.edu.pe:8000/SGAWEB/faces/Alumno/pdf/#{formato.url}" target="_blank">
+                        <li style="background-image: url('#{formato.portada}')"><b>#{formato.titulo}</b></li>
+                    </a>
+                </ui:repeat>
+                </ul>            
+            </div>
+            
+            <a href="#" />
+            
+        </div>
+        
+        </ui:define>
+        </ui:composition>
+

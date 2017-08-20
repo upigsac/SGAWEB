@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+                <ui:composition  template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+               BANDEJA DE ENTRADA 
+            </ui:define>
+            
+            
+            
+                    <ui:define name="contenido">
+        <style>
+            .cambio table thead,.cambio table tbody{font-size: 0.7em}
+            .cambio .ui-datatable-odd{background-color: white}
+            .cambio .ui-state-highlight{background: #2182C2!important}
+            .cambio .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+            
+                    .paneles{border: 1px solid ;border-color: silver;box-shadow: 0 1px 0 0 rgba(56,61,72,0.09);padding: 5px;margin: 10px 2px}
+                    .paneles h3{background-color: #2182C2;color: #fff;padding: 2px 5px;margin-bottom: 10px}
+                    .paneles .sub-texto{display: inline-block;vertical-align: top;min-width: 120px;text-align: right;padding: 6px 10px;font-family: helvetica;font-size: 0.8em;text-transform: uppercase;color: #546986;font-weight: bold;}
+                    .paneles select{min-width: 100px}
+                    .paneles input,.paneles textArea,.paneles select{padding: 5px 2px;margin: 1px 0px;border: 1px solid silver;border-radius: 1px;transition: all 0.3s}
+                    .paneles input:disabled,.paneles textArea:disabled{background: #ECF0F1;border: 1px solid #ccc;color: #999}
+                    .paneles input:focus,.paneles textArea:focus{border:1px solid #6fa6df;box-shadow:0 1px 4px rgba(0,0,0,.1) inset,0px 1px 2px rgba(246,250,253,.1)}
+                    .paneles textArea{resize: none;padding: 3px}
+            
+        </style>
+        <h:form>
+             <span class="tituto-admin">MESA DE PARTE</span>
+            <h:panelGroup layout="block" id="pnFiltro" styleClass="paneles">
+                <h3>FILTRO DE BUSQUEDA</h3>
+                <h:outputLabel value="Inicio" class="sub-texto" />
+                <p:calendar id="txtfechaIncio" value="#{mesaParteB.fechaInicio}" pattern="dd-MM-yyyy"  size="10"/>
+                <i class="fa fa-calendar-o"/>  
+                <h:outputLabel value="Final" class="sub-texto" />
+                <p:calendar id="txtfechaFinal" value="#{mesaParteB.fechaFinal}" pattern="dd-MM-yyyy" size="10"/>
+                <i class="fa fa-calendar-o"/>  
+                <br/>
+                
+                <h:outputLabel value="Oficinas" class="sub-texto" />
+                <h:selectOneMenu value="#{mesaParteB.filtroOficina}">
+                    <f:selectItem itemLabel="TODOS" itemValue="%" />
+                    <f:selectItems value="#{oficinaB.mostrarOficina(1)}" var="oficina" itemValue="#{oficina.oficina}" itemLabel="#{oficina.descripcion}"  itemDisabled="#{oficina.estado_registro eq 0}" />
+                    <f:ajax execute="@this txtfechaIncio txtfechaFinal" render="tbDetalle " listener="#{mesaParteB.mostarFiltro()}" />
+                </h:selectOneMenu>
+                  
+                
+                <br/>
+                <h:inputText value="#{mesaParteB.busPersonaEmpresa}" pt:placeholder="BUSCAR PERSONA " >
+                    <f:ajax event="keyup" render="tbDetalle" listener="#{mesaParteB.mostarFiltro()}" />
+                </h:inputText>
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnDetalle">
+                
+                <p:dataTable id="tbDetalle" value="#{mesaParteB.detalleTramiteL}" var="itemDetalle" rowIndexVar="status" styleClass="cambio" >
+                    <p:column headerText="Nr." width="10">
+                        #{status +1}
+                    </p:column>
+                    <p:column headerText="Expediente" width="80">
+                        <B>#{itemDetalle.expediente}</B>
+                    </p:column>
+                    <p:column headerText="Tramite">
+                        #{itemDetalle.desTipoTramite}
+                        <BR/>
+                        #{itemDetalle.desTramite}
+                    </p:column>
+                    <p:column headerText="Nombres">
+                        <h:graphicImage value="SVerImagenAlumno?alumno=#{itemDetalle.persona}" width="50px" height="50px" style="display: inline-block"  />
+                        <div style="display: inline-block;vertical-align: top">
+                            #{itemDetalle.desPersona}
+                            <br/>
+                            #{itemDetalle.fechaEntrega} - #{itemDetalle.fechaFin}
+                        </div>
+                       
+                    </p:column>
+                    
+                    <p:column headerText="fecha de Tramite" width="80">
+                        #{itemDetalle.fechaIngreso}
+                        <BR/>
+                        #{itemDetalle.horaIngreso}
+                    </p:column>
+                    
+                    <p:column headerText="Oficina Actual" width="100">
+                        #{itemDetalle.desOficinaActual}
+                    </p:column>
+                    <p:column headerText="Estado tramite" width="50">
+                        #{itemDetalle.desEstadoTramite}
+                    </p:column>
+                    
+                    <p:column headerText="Estado tramite" width="50">
+                        #{itemDetalle.numeroDias}
+                        <p:commandLink>
+                            <f:ajax execute="@this" />
+                            <i />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+                    </ui:define>
+                </ui:composition>
+    </h:body>
+</html>
+

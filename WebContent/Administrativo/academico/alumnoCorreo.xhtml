@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    Alumno por Periodo
+                </ui:define>
+                
+            <ui:define name="contenido">
+                <style>
+                    #tbDetalle{font-size: 0.8em}
+                </style>
+              <h:form id="frmCorreo" prependId="false">
+                  <span class="tituto-admin">LISTADO ESTUDIANTE #{usuarioB.periodoS} </span>
+            <div style="margin: 20px 0px">
+            CARRERA
+            <h:selectOneMenu value="#{carreraB.seleccion}" >
+                
+                <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(usuarioB.institucionS)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}" />
+                <f:ajax execute="@this"   render="tbDetalle"  />
+            </h:selectOneMenu>
+            </div>
+            <p:dataTable id="tbDetalle" value="#{personaB.mostrarAlumnoPeriodoCarrera(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion)}" var="detalle" rowIndexVar="status" >
+                   <f:facet name="header">                             
+                            <h:commandLink  value="LISTADO DE ESTUDIANTES" >
+                                <img src="../../resources/imagenes/excel.png" width="36"/>
+                                <p:dataExporter type="xls" target="tbDetalle" fileName="CORREO_ESTUDIANTES"/>
+                            </h:commandLink>
+                        </f:facet>
+                  <p:column >
+                      <f:facet name="header">
+                          <h:outputLabel value="N-" />
+                      </f:facet>
+                      <h:outputLabel value="#{status+1}" /> 
+                </p:column>
+                
+                <p:column >
+                     <f:facet name="header">
+                          <h:outputLabel value="PERSONA" />
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.paterno} #{detalle.materno} #{detalle.nombres}" /> 
+                </p:column>
+                
+                <p:column >
+                    <f:facet name="header">
+                          <h:outputLabel value="DOCUMENTO"/>
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.numero_documento} " /> 
+                </p:column>
+                <p:column >
+                    <f:facet name="header">
+                          <h:outputLabel value="TELEFONO"/>
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.telefono}" /> 
+                </p:column>
+                <p:column >
+                     <f:facet name="header">
+                          <h:outputLabel value="CELULAR"/>
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.celular}" /> 
+                </p:column>
+                <p:column >
+                    <f:facet name="header">
+                          <h:outputLabel value="CORREO"/>
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.emailP}" /> 
+                </p:column>
+                <p:column headerText="CORREO COORPORATIVO">
+                    <f:facet name="header">
+                          <h:outputLabel value="CORREO COORPORATIVO"/>
+                      </f:facet>
+                    <h:outputLabel value="#{detalle.emailS}" />  
+                </p:column>
+            </p:dataTable>
+        </h:form>
+         </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

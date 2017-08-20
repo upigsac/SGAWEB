@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Reporte de Tramites</title>
+        </h:head>
+        <h:body>
+            <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                            template="/Alumno/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    TRAMITE DOCUMENTARIO
+                </ui:define>
+
+                <ui:define name="contenido">
+
+                    <style>
+                        .rowAprobado{background: lightgreen;}
+                        .rowRechazado{background: lightcoral;}
+                        .rowProceso{background: lightblue;}
+                        .gridModal{border-width: 0px;border-style: hidden;}
+                    </style>
+
+                    <span class="tituloCuerpo">Tramites Documentarios</span>
+
+                    <!--#{usuarioB.persona.persona}-->
+
+                    <h:form id="frmReporteTram" prependId="false">
+
+                        <p:dataTable id="dttramitesdoc" widgetVar="TabTramites" var="tram" value="#{documentos.tabtramitesalumnos}" emptyMessage="No existen documentos"
+                                     filteredValue="#{documentos.filtertramites}" 
+                                     rowStyleClass="#{tram.estaregistro eq 53 ? 'rowAprobado' : tram.estaregistro eq 54 ? 'rowRechazado' : tram.estaregistro eq 55 ? 'rowProceso' : ''}">
+
+                            <p:column filterBy="#{tram.nroexpediente}" headerText="Nro. Exp" filterMatchMode="contains">
+                                <p:outputLabel value="#{tram.nroexpediente}"/>
+                            </p:column>
+                            <!--
+                            <p:column headerText="Documento">                                
+                                <p:outputLabel value="#{tram.documento}"/>
+                            </p:column>
+                            -->
+                            <p:column filterBy="#{tram.descoficina}" headerText="Oficina" filterMatchMode="contains" >
+                                <p:outputLabel value="#{tram.descoficina}"/>
+                            </p:column>
+                            <p:column filterBy="#{tram.ddocumento}" headerText="Asunto" filterMatchMode="contains" >
+                                <p:outputLabel value="#{tram.ddocumento}"/>
+                            </p:column>
+                            <!--
+                            <p:column headerText="OBS.">                                
+                                <p:outputLabel value="#{tram.asunto}"/>
+                            </p:column>
+                            -->
+                            <!--
+                            <p:column filterBy="#{tram.creacion_fecha}" headerText="Ultimo Mov." filterMatchMode="contains">
+                                <p:outputLabel value="#{tram.fecha}"/>
+                            </p:column>
+                            -->
+                            <p:column headerText="Plazo de Entrega&#10;(DIAS)" styleClass="romperPalabra">                                
+                                <p:outputLabel value="#{tram.tiempo_estimado}"/>
+                            </p:column>
+                            <p:column headerText="Estado">
+                                <p:outputLabel value="#{tram.estregistro}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandLink value="Ver Detalles" update=":viewdocument :frmReporteTram:dttramitesdoc" oncomplete="PF('DlgFrmTramView').show()" actionListener="#{documentos.verificaalumno(tram)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--         DIALOG EXPEDIENTE VISTO                               -->
+                    <p:dialog id="DialogViewTramite" widgetVar="DlgFrmTramView" header="DETALLE DE TRAMITE" modal="true" hideEffect="fold" resizable="false" closable="true" draggable="false" maximizable="false" minimizable="false" > 
+
+                        <h:form id="viewdocument" prependId="false">
+
+                            <p:panelGrid styleClass="gridModal">
+                                <p:row> 
+                                    <p:column>
+                                        <p:outputLabel value="Documento N°" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{documentos.vdocumento}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Expediente Nro" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{documentos.vnroexp}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Descripcion" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{documentos.vddocumento}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Observacion" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{documentos.vobservacion}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>                           
+                                    <p:column>
+                                        <p:outputLabel value="Dirigido a" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{documentos.vdesofi}" id="txtviewpers"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Tiempo Estimado de Emisión" styleClass="texto"/>
+                                    </p:column>
+                                    <p:column rendered="#{documentos.txtemision}">
+                                        <p:outputLabel value="#{documentos.vtiempo_emision}"/>
+                                    </p:column>
+                                    <p:column rendered="#{documentos.lnkcert}">
+                                        <h:commandLink target="_blank" value="Imprimir Certificacion" actionListener="#{documentos.imprimeconstancia(documentos.vnroexp,documentos.vtconstancia)}" style="text-decoration: underline;"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </ui:define>
+            </ui:composition>
+        </h:body>
+    </f:view>
+</html>

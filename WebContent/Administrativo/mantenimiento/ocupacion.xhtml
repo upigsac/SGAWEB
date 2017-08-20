@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+         <style>
+            #frmOcupacion\:pnDatos label{display: inline-block;width: 130px}
+            #frmOcupacion\:pnDatos input{margin: 1px;padding: 3px}
+            #frmOcupacion\:pnBotonera{margin: 15px 5px}
+            #frmOcupacion\:pnBotonera input{margin: 1px;padding: 8px;width: 80px}
+        </style>
+        <h:form id="frmOcupacion">
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="OCUPACION" />
+                <h:inputText value="#{ocupacionB.ocupacion.ocupacion}" disabled="#{true}" style="width: 100px" /><br/>
+
+                <h:outputLabel value="DESCRIPCION" />
+                <h:inputText value="#{ocupacionB.ocupacion.descripcion}" disabled="#{not ocupacionB.bandera}" style="width: 350px" /><br/>
+            
+                <h:outputLabel value="ABREVIATURA" />
+                <h:inputText value="#{ocupacionB.ocupacion.abreviatura}" disabled="#{not ocupacionB.bandera}" /><br/>
+
+                <h:outputLabel value="ESTADO" />
+            </h:panelGroup>
+         
+            <h:panelGroup layout="block" id="pnBotonera" >
+               <h:commandButton value="Nuevo" disabled="#{ocupacionB.bandera}" >
+                   <f:ajax execute="@this" render=":frmOcupacion:pnDatos pnBotonera" listener="#{ocupacionB.nuevo()}"  />
+                </h:commandButton>
+                <h:commandButton value="Guardar" disabled="#{not ocupacionB.bandera}">
+                    <f:ajax  execute=":frmOcupacion:pnDatos" render=":frmOcupacion:pnDatos pnBotonera" listener="#{ocupacionB.guardar()}" />
+                </h:commandButton>
+                <h:commandButton value="Cancelar" disabled="#{not ocupacionB.bandera}">
+                    <f:ajax execute="@this" render=":frmOcupacion:pnDatos pnBotonera" listener="#{ocupacionB.cancelar()}"  />
+                </h:commandButton>
+                
+                <h:commandButton value="Editar" disabled="#{(cargoB.bandera )  }">
+                    <f:ajax execute="@this"  render=":frmOcupacion:pnDatos pnBotonera" listener="#{ocupacionB.editar()}" />
+                </h:commandButton>
+            </h:panelGroup>
+           
+                    
+            <p:dataTable value="#{ocupacionB.ocupacionL}" var="detalleOcupacion" selectionMode="single" rowKey="#{detalleOcupacion.ocupacion}" selection="#{ocupacionB.ocupacion}" disabledSelection="#{ocupacionB.bandera}" >
+                     <p:ajax event="rowSelect"  update="@form" /> 
+                <p:column headerText="OCUPACION" >
+                    #{detalleOcupacion.ocupacion}
+                </p:column>
+                <p:column headerText="DESCRIPCION" >
+                    #{detalleOcupacion.descripcion}
+                </p:column>
+                <p:column headerText="ABREVIATURA" >
+                    #{detalleOcupacion.abreviatura}
+                </p:column>
+                <p:column headerText="ESTADO" >
+                    #{detalleOcupacion.estadoRegistro}
+                </p:column>
+            </p:dataTable>        
+                    
+        </h:form>
+    </h:body>
+</html>
+

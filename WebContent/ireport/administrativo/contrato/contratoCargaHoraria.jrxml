@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contratoCargaHoraria" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cdf05f91-e23a-4cc1-814c-20905a36cff7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PERSONAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT I.CPERSONAL,A.PERSONAL,I.PERSONA,J.APELLIDO_PATERNO +' '+ J.APELLIDO_MATERNO +' '+ J.NOMBRES AS DESPERSONA
+,A.INSTITUCION,B.DESCRIPCION DESINSTITUCION,A.PERIODO,C.DESCRIPCION DESPERIODO,
+A.CARRERA,D.ABREVIATURA DESCARRERA,A.MALLA,A.CURSO,E.DESCRIPCION DESCURSO,K.FORMULA
+,A.SECCION,G.DESCRIPCION DESSECCION,F.TURNO,H.DESCRIPCION DESTURNO,AA.DIA,DI.SF_DIA_SEMANA(AA.DIA)
+DESDIA,AA.HOR_ING,AA.HOR_SAL,AA.AULA,AA.FECHA_INICIO,AA.FECHA_FIN,DI.FECHA_LETRA(1,L.FECHA_INICIO,L.FECHA_FIN)FECHACONTRATO
+FROM DI.PER_CONTRATO_CURSOS A LEFT JOIN
+DI.REGISTRO_DOCENTE_TM AA
+
+ON AA.INSTITUCION=A.INSTITUCION AND AA.PERIODO=A.PERIODO AND AA.CARRERA=A.CARRERA AND AA.MALLA=A.MALLA AND AA.CURSO=A.CURSO 	AND AA.SECCION=A.SECCION AND AA.PERSONAL=A.PERSONAL
+,UPA.SYS_INSTITUCION B,UPA.ACA_PERIODOS C,UPA.ACA_CARRERAS D,UPA.ACA_CURSOS E,SIGU.HOR_PERIODO_SECCION F,SIGU.HOR_SECCION G,UPA.ACA_TURNOS H,SIGU.PER_PERSONAL I,UPA.DAT_PERSONAS J,SIGU.HOR_CURSO_PERIODO k
+,DI.PER_CONTRATO L
+WHERE A.CONTRATO LIKE $P{CONTRATO} AND  A.PERSONAL LIKE $P{PERSONAL}
+AND B.INSTITUCION=A.INSTITUCION
+AND C.INSTITUCION=A.INSTITUCION AND C.PERIODO=A.PERIODO
+AND D.CARRERA=A.CARRERA
+AND E.CURSO=A.CURSO
+AND F.INSTITUCION=A.INSTITUCION AND F.PERIODO=A.PERIODO AND F.CARRERA=A.CARRERA AND F.SECCION=A.SECCION
+AND G.INSTITUCION=A.INSTITUCION AND G.SECCION=A.SECCION
+AND H.TURNO=F.TURNO
+AND I.PERSONAL=A.PERSONAL
+AND J.PERSONA=I.PERSONA
+AND K.INSTITUCION=A.INSTITUCION AND K.PERIODO=A.PERIODO AND K.CARRERA=A.CARRERA AND K.MALLA=A.MALLA AND K.CURSO=A.CURSO
+AND L.ITEM=A.CONTRATO AND L.PERSONAL=A.PERSONAL
+ORDER BY A.PERSONAL,A.CURSO,A.SECCION,DIA]]>
+	</queryString>
+	<field name="CPERSONAL" class="java.lang.String"/>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="DESPERSONA" class="java.lang.String"/>
+	<field name="INSTITUCION" class="java.lang.Integer"/>
+	<field name="DESINSTITUCION" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="MALLA" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="FORMULA" class="java.lang.Short"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="DESSECCION" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.Short"/>
+	<field name="DESTURNO" class="java.lang.String"/>
+	<field name="DIA" class="java.lang.Short"/>
+	<field name="DESDIA" class="java.lang.String"/>
+	<field name="HOR_ING" class="java.sql.Time"/>
+	<field name="HOR_SAL" class="java.sql.Time"/>
+	<field name="AULA" class="java.lang.String"/>
+	<field name="FECHA_INICIO" class="java.sql.Date"/>
+	<field name="FECHA_FIN" class="java.sql.Date"/>
+	<field name="FECHACONTRATO" class="java.lang.String"/>
+	<group name="PERSONAL" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{PERSONAL}]]></groupExpression>
+		<groupHeader>
+			<band height="86">
+				<textField>
+					<reportElement uuid="77d916cd-2c9d-4543-a2ac-e16961cbee25" x="28" y="10" width="522" height="43"/>
+					<textElement markup="html"/>
+					<textFieldExpression><![CDATA['Yo '+ $F{DESPERSONA} +' con codigo de personal <b>'+$F{CPERSONAL} +'</b> tengo la siguiente carga electiva, desde '+$F{FECHACONTRATO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="10135fe4-c33c-4e0a-9a63-afdabaa7f23b" mode="Opaque" x="332" y="66" width="58" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SECCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="79a93ef6-0e70-40f1-8d40-b9604f6c308e" mode="Opaque" x="390" y="66" width="37" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TURNO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="60bad3ad-b1cf-48b5-830b-92210f1a4822" mode="Opaque" x="452" y="66" width="39" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[INICIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="cc7029da-e1a2-49c6-941b-34bebc669800" mode="Opaque" x="491" y="66" width="41" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[FINAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="03671c80-d17d-45a9-9f12-f78aa6ec070d" mode="Opaque" x="28" y="66" width="67" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ESCUELA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="5d31f924-8394-4597-b36e-35fe46977c5c" mode="Opaque" x="144" y="66" width="188" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ASIGNATURA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="775addd0-5c8c-4204-9b77-88ffafccdec1" mode="Opaque" x="532" y="66" width="19" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[INV.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="037d1c83-ad65-41c4-80a4-916936cffda5" mode="Opaque" x="95" y="66" width="49" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="dd2cabe5-3f7b-4044-bbc3-91c1999190a7" mode="Opaque" x="427" y="66" width="25" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AULA]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="57" splitType="Stretch">
+			<image>
+				<reportElement uuid="3c786d0a-bc33-4b84-b7e0-f6d978128063" x="6" y="0" width="47" height="50"/>
+				<imageExpression><![CDATA["D:\\logo_upig.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement uuid="58d9be6a-85e2-4c5e-9476-06db68b38044" x="6" y="54" width="544" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="38a01f81-3b99-4ca2-b64c-53110a2e7138" x="6" y="0" width="544" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARGA HORARIA DOCENTE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement uuid="fd7d639a-4a63-40c3-8373-f086140b3dbd" x="28" y="0" width="67" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCARRERA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f962e594-0168-4c42-9822-05506915b459" x="332" y="0" width="58" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESSECCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e6d24a3f-ee31-4f97-8933-d165de1a133a" x="390" y="0" width="37" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESTURNO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a" isBlankWhenNull="true">
+				<reportElement uuid="8bce1da6-8375-4a9f-9358-28780ba755c9" x="452" y="0" width="39" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HOR_ING}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a" isBlankWhenNull="true">
+				<reportElement uuid="b711e213-e701-4216-9bfb-448c447b5809" x="491" y="0" width="41" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HOR_SAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="216e045b-4892-4b57-9ca2-8a1278f36c5d" x="144" y="0" width="188" height="15"/>
+				<box leftPadding="4" rightPadding="4">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCURSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="af77371a-33e3-4151-83b7-aae608e1ec7c" x="532" y="0" width="19" height="15" forecolor="#000000"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{FORMULA}==10 ? 'x' : '' )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="221e9b52-1635-477a-be38-58794379228d" x="95" y="0" width="49" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESDIA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="00fceaa2-3d8f-4b0c-b972-e4d199f2043a" x="427" y="0" width="25" height="15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AULA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

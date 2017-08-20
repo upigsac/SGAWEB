@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <h:head>
+ 
+    </h:head>
+    <h:body>
+        
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                CAMBIAR DATOS
+                
+            </ui:define>    
+       
+             <ui:define name="contenido">
+        
+                 <h:form id="formReporte" target="_blank">
+           periodo 
+            <h:selectOneMenu  id="cboPeriodoIni"  value="#{periodoB.seleccionReporte}" > 
+                <f:selectItem itemLabel="--seleccione--"/>
+            <f:selectItems value="#{periodoB.listaperiodo}" var="lista" itemValue="#{lista.periodo}" itemLabel="#{lista.desPeriodo}"/>
+            <f:ajax execute="cboPeriodoIni "  render="cboPersonalPeriodo"  listener="#{personaB.buscarPersonalPeriodo}"/>
+            </h:selectOneMenu>
+           <br/>
+
+           personal
+           <h:selectOneMenu id="cboPersonalPeriodo" value="#{cursoB.seleccionReporte}">                           
+               <f:selectItem itemLabel="--seleccione--"/>
+               
+           <f:selectItems value="#{personaB.personalPeriodoL}" var="lista2" itemValue="#{personalB.buscarPersonalCodigo(lista2.persona).personal}" itemLabel="#{lista2.nombres}"/>
+           <f:ajax execute="cboPersonalPeriodo "  render="cboCursosPeriodo"  listener="#{cursoB.cursosPersonalPeriodo}"/>
+           </h:selectOneMenu>
+
+            <br/>
+
+            curso
+            <h:selectOneMenu  id="cboCursosPeriodo"  >   
+                <f:selectItem itemLabel="--seleccione--"/>
+                 <f:selectItems value="#{cursoB.cursoL}" var="lista3" itemValue="#{lista3.curso}" itemLabel="#{lista3.descripcion}"/>
+                 <f:ajax  execute="cboCursosPeriodo " render="cboSeccionPeriodo" listener="#{seccionB.cargarSeccionPeriodo}"/>
+            </h:selectOneMenu>
+            <br/>
+
+            seccion
+            <h:selectOneMenu  id="cboSeccionPeriodo"  >   
+                <f:selectItem itemLabel="--seleccione--"/>
+                <f:selectItems value="#{seccionB.seccionL}" var="lista4" itemValue="#{lista4.seccion}" itemLabel="#{lista4.descripcion}"/>
+            </h:selectOneMenu>
+
+            <br/>
+            <!--<h:commandButton value="mostrar" action="reporte.jsp"/>-->
+               <a href="reporte.jsp?tipo=1" target="_blank">mostrar</a>
+            
+           </h:form>
+          </ui:define>
+         </ui:composition>
+    </h:body>
+</html>
+

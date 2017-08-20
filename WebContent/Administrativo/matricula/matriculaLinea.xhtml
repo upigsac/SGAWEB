@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                MATRICULA
+            </ui:define>
+
+            <ui:define name="contenido">
+
+
+
+
+                <style>
+                    #pnResumen{width: 75% ;border: 1px solid silver;display: inline-block}
+                    #pnResumen label{width: 270px;display: block}
+                    #pnResumen ul{list-style: none;border: 1px solid silver;margin: 0px;padding: 0px;height: 15px}
+                    #pnResumen ul li{display: inline-block;}
+                    #pnResumen ul li:first-child {font-weight: bold;width: 30% ;border-left: none}
+                    #pnResumen ul li:nth-child(2){width: 20%}
+                    #pnResumen ul li:nth-child(3){width: 15%}
+                    #pnResumen ul li:nth-child(4){width: 20%}
+                    #pnResumen ul li:nth-child(5){width: 5%}
+                    #pnResumen ul li {border-left:    1px solid silver}
+
+
+                  
+                 
+                 
+                  
+                  
+                </style>
+
+                <script>
+
+
+
+
+
+
+                </script>
+
+                
+                #{matriculaB.load(usuarioB.institucionS, usuarioB.periodoS)}
+                <h:form id="frmDatos" prependId="false">
+
+
+                    <span class="tituto-admin">MATRICULA </span>
+
+                    <div class="paneles " >
+                    <img  class="column "  style="width: 140px;height: 140px;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{matriculaB.foto}" />
+                    	<div class="column">
+                    	
+                        
+                        <h:outputLabel  value="Codigo" />
+                        
+                        
+                         <h:inputText value="#{matriculaB.codigo}" id="txtCodigo" maxlength="10"  >
+                            <f:ajax event="change" execute="@this" render="@form " listener="#{matriculaB.busqueda}"  onevent="onevent"/>
+                        </h:inputText>
+                        
+                        <br/>
+                        <h:outputLabel  value="Alumno" />
+                        
+                        <h:inputText value="#{matriculaB.alumno}" id="txtAlumno" size="50" readonly="true"/>
+                        
+                             <br />
+						<h:outputLabel  value="Malla " />
+                        <h:inputText  value="#{matriculaB.alumnoCarrera.malla}" id="txtMalla" size="8" readonly="true"/>
+                        
+                        
+                        <br/>              
+                        <h:outputLabel  value="Carrera" />
+                        <h:selectOneMenu value="#{matriculaB.carrera}" style="width: 80%" >                    
+                            <f:selectItems value="#{matriculaB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion}" itemValue="#{itemCarrera.carrera}" />
+                            <f:ajax execute="@this"/>
+                        </h:selectOneMenu>
+
+                        <br/>
+
+                        <h:outputLabel  value="Facultad" /> 
+                        
+                        <h:inputText id="txtFacultad" value="#{matriculaB.facultad.descripcion}"  size="50" readonly="true"/>
+                       
+                    	</div>
+                        
+               
+
+
+
+
+
+                    <div class="column" style="width: 50%" >
+                        
+
+						<h:panelGroup  id="pnResumen" layout="block" >
+						
+						
+								
+                    
+
+                           
+                             <h:outputLabel id="lblEstadoMatricula" value="#{matriculaB.estadoRegistro.descripcion}"   style="display: block;color: white;width:100%; text-align: center;background-color:#{matriculaB.estadoRegistro.estado eq 1 ? 'white':matriculaB.estadoRegistro.estado eq 5 ? 'green':'red'} "/>
+                            
+
+                            
+                            <ul>
+                                <li>Registros</li>
+                                <li>Cursos</li>
+                                <li>....</li>
+                                <li>Creditos</li>
+                                <li>...</li>
+                            </ul>
+                         
+                       
+                            <ul>
+                                <li></li>
+                                <li>Final</li>
+                                <li>....</li>
+                                <li>Total</li>
+                                <li>...</li>
+                            </ul>
+
+
+                            <ul>
+                                <li>Referecial</li>
+                                <li>Seccion</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.seccion_referencial}</li>
+                                <li>Ciclo</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.nivel_referencial}</li>
+                            </ul>
+
+
+                            <ul>
+                                <li >Promedio</li>
+                                <li>Semestral</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.promedio_semestral}</li>
+                                <li>Ponderado</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.promedio_ponderado}</li>
+                            </ul>
+
+
+                            <ul>
+                                <li >Ultima Matricula</li>
+                                <li>Perido</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.periodo}</li>
+                                <li>Cur. Matri.</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.cursos_matriculados}</li>
+                            </ul>
+
+                            <ul>
+                                <li> </li>
+                                <li>Seccion</li>
+                                <li>#{matriculaB.alumnoUltimoPeriodo.seccion_referencial}</li>
+                                <li>Cur. Des.</li>
+                                <li>#{(matriculaB.alumnoUltimoPeriodo.cursos_matriculados - matriculaB.alumnoUltimoPeriodo.cursos_aprobados) }</li>
+                            </ul>
+
+                 
+                        
+                        </h:panelGroup>
+                    </div>
+                         </div>
+                    <div class="paneles">
+                         <h:commandLink  styleClass="boton-normal"     >
+	                         <i class="fa fa-search" />
+	                         Buscar
+	                         <f:ajax execute="@this"    listener="#{matriculaB.limpiarBusqueda}"  />
+                         </h:commandLink>
+                         <ui:param name="param1"  value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},ALUMNO,,#{matriculaB.codigo}" />
+                         <h:commandLink  id="btImprimir" target="_blank" disabled="#{empty matriculaB.codigo?true:matriculaB.estadoRegistro.estado ne 5}"  styleClass="boton-normal"   actionListener="#{utilB.imprimirIreports('alumno/matricula/fichaMatricula', 1,fn:split(param1,','))}"        >
+		                        <i class="fa fa-print" />
+		                         Imprimir		                         
+		                 
+                         </h:commandLink>
+                              
+                    
+                    
+                    
+                         
+                        <h:commandLink id="btnInsertaCursos"  styleClass="boton-normal"  disabled="#{empty matriculaB.codigo?true:matriculaB.estadoRegistro.estado eq 5?true:matriculaB.bandera}" >
+                        <i class="fa fa-plus" />
+                        		Registrar Cursos
+                           <f:ajax execute="@this" render="@this pnDetalle btCursoPermitido btCursoRegistrado btRegistrarMatricula" onevent="onevent"  listener="#{matriculaB.insertarCursos}" />
+
+                        </h:commandLink> 
+                            <h:commandLink id="btRegistrarMatricula" styleClass="boton-normal" disabled="#{empty matriculaB.codigo?true:matriculaB.estadoRegistro.estado eq 5?true:not matriculaB.bandera?true:matriculaB.listaMatricula.size() eq 0}"   onclick="return confirmacion(this,'¿ Esta seguro de Matricular?');"   >
+                             <i class="fa fa-plus" />
+                                                     
+                                        Registrar Matricula
+                            <f:ajax execute="@this"  render="@this dtmatricula btnInsertaCursos btImprimir btEstadoMatricula pnResumen"  listener="#{matriculaB.insertarMatricula}"  />
+                            </h:commandLink>
+                 </div>
+
+  <div class="column" style="width: 85%" >
+                <h:panelGroup  id="pnDetalle" layout="block" styleClass="paneles">
+                
+          
+                  
+                       
+
+                            <p:dataTable id="dtmatricula" value="#{matriculaB.listaMatricula}" var="matricula" rendered="#{matriculaB.bandera}"  emptyMessage="" rowIndexVar="status" >
+                                <f:facet name="header">                            
+                                    <h3>MATRICULA </h3>
+
+                                </f:facet>
+                                <p:column headerText="N" width="10">
+                                    #{status +1 }
+
+                                </p:column>
+
+                                <p:column headerText="Codigo" width="60">
+                                    #{matricula.get(0)}
+
+                                </p:column>
+
+                                <p:column headerText="Asignatura">
+                                    #{matricula.get(1)}
+
+                                </p:column>
+
+                                <p:column headerText="Seccion" width="100">
+                                    #{matricula.get(8)}
+                                    
+                                </p:column>
+
+                             
+
+                                <p:column headerText="Credito"  width="40">
+                                    #{matricula.get(3)}
+
+                                </p:column>
+
+                                <p:column headerText="Conv." width="50">
+                                    #{matricula.get(4)}
+
+                                </p:column>
+
+                                <p:column headerText="Veces" width="50">
+                                    #{matricula.get(6)}
+
+                                </p:column>
+
+                                <p:column headerText="Vacan." style="color:green" width="40">
+                                    #{matricula.get(5)}
+
+                                </p:column>
+
+                                <p:column width="70" rendered="#{(matriculaB.estadoRegistro.estado ne 5) and (matriculaB.estadoRegistro.estado ne 4)  }">
+
+                                   
+									<h:commandLink style="color:red">
+									<i class="fa fa-times" />
+									Eliminar
+									<f:ajax   execute="@this" render="dtmatricula :frmDatos:btRegistrarMatricula :frmDatos:lblEstadoMatricula"  onevent="onevent" listener="#{matriculaB.elimina(matricula.get(0))}" />
+									</h:commandLink>
+                                </p:column>
+
+                               
+
+                            </p:dataTable>
+
+
+
+
+                            <p:dataTable id="dtCurso" value="#{matriculaB.listacursos}" var="cursos"   rowKey="#{cursos.curso}" editable="true"  editMode="cell"  rendered="#{ not matriculaB.bandera}" rowIndexVar="status">
+
+                                <p:ajax event="cellEdit" listener="#{matriculaB.onCellEdit}"  /> 
+                                <f:facet name="header">                            
+                                    <h3>CURSOS PERMITIDOS</h3>                    
+                                </f:facet>
+                                <p:column headerText="N" width="10">
+                                    #{status +1}
+                                </p:column>
+                                
+                                <p:column headerText="Codigo" width="50">
+                                    #{cursos.curso}
+                                </p:column>
+
+                                <p:column headerText="Asignatura">
+                                    #{cursos.descurso}
+                                </p:column>
+
+
+                                <p:column headerText="Seccion"  >
+                                    <p:cellEditor  >  
+                                        <f:facet name="output">
+                                            <h:outputText value="#{empty cursos.seccion?'':cursos.seccion.substring(0,cursos.seccion.length()-4)}"  />
+                                        </f:facet>  
+                                        <f:facet name="input"   >
+
+
+                                            <h:selectOneMenu rendered="#{matriculaB.estadoRegistro.estado ne 5}" value="#{cursos.seccion}" style="width:100%"   onfocus="$('#dtCurso\\:btnInsertaCursos').attr('disabled', true)" onblur="$('#dtCurso\\:btnInsertaCursos').attr('disabled', false)"  >  
+                                                <f:selectItem itemLabel="VACIO" itemValue="" />
+                                                <f:selectItems value="#{matriculaB.mostrarSeccionCurso(cursos.curso)}" var="seccion" itemLabel="#{seccion.descripcion}" itemValue="#{seccion.seccion}" itemDisabled="#{seccion.estadoRegistro eq 33}"  />  
+                                                <f:ajax execute="@this"  render="dtCurso" listener="#{matriculaB.grupo(cursos)}"  />
+                                            </h:selectOneMenu>
+
+                                        </f:facet>  
+                                    </p:cellEditor>  
+
+                                </p:column>
+
+
+
+                                <p:column headerText="Creditos" width="40">
+                                    #{cursos.creditos}
+                                </p:column>
+
+                            </p:dataTable>
+               
+             
+    </h:panelGroup> 
+       </div>
+
+                    <div class="column" style="border: 1px solid silver;width: 14%" >
+                    <span class="tituto-admin" style="padding: 2px;font-size: 1.2em">Acceso </span>
+                  
+                            
+
+
+                            <h:commandLink id="btCursoPermitido" styleClass="boton-normal"  style="width:98%;padding:5px 0px" disabled="#{empty matriculaB.codigo?true:not matriculaB.bandera}"  >
+                            
+                            <i class="fa fa-address-book-o" /><br />
+                            	CURSOS PERMITIDOS
+                                <f:ajax execute="@this" render="@this pnDetalle btCursoRegistrado btnInsertaCursos btRegistrarMatricula"   onevent="onevent" listener="#{matriculaB.mostrarCursosAlumno}" />
+
+
+
+                            </h:commandLink>
+                            <h:commandLink id="btCursoRegistrado" styleClass="boton-normal" style="width:98%;padding:5px 0px"   disabled="#{empty matriculaB.codigo?true:matriculaB.bandera}">
+                            	<i class="fa fa-address-card" /><br />
+                            	
+                            	CURSOS REGISTRADOS
+                                <f:ajax execute="@this " render="@this pnDetalle btCursoPermitido btnInsertaCursos btRegistrarMatricula"  onevent="onevent" listener="#{matriculaB.mostrarMatriculaAlumno}" />
+
+                            </h:commandLink>
+
+
+                            <h:commandLink id="btEstadoMatricula" styleClass="boton-normal" style="width:98%;padding:5px 0px"  onclick="return confirmacion(this,'¿ Esta Seguro de cambiar de Estado?');"  disabled="#{(matriculaB.estadoRegistro.estado ne 5) and (matriculaB.estadoRegistro.estado ne 4)}"  >
+                                <i class="fa fa-magic" /><br />
+								ESTADO DE MATRICULA
+                                <f:ajax execute="@this"  render="@this dtmatricula btRegistrarMatricula btImprimir lblEstadoMatricula" listener="#{matriculaB.insertarMatricula(14)}"  />
+
+                            </h:commandLink>
+
+                            <h:commandLink id="btPensiones" styleClass="boton-normal" style="width:98%;padding:5px 0px"  onclick="if (!confirm('¿Esta seguro de Generar las Pensiones?'))   return false;" disabled="true" >
+                            <i class="fa fa-credit-card" /><br />
+                                GENERAR PENSIONES
+                                <f:ajax execute="@this"  listener="#{matriculaB.insertarPensiones}"  />
+
+                            </h:commandLink>
+
+                  
+
+
+                    </div>
+              
+
+</h:form>
+                     
+
+              
+
+
+                <h:form id='frmModal'>
+                    <p:dialog widgetVar="msgModal" header="BUSQUEDA ALUMNO" width="650px" modal="true" closeOnEscape="true" resizable="false" >
+						<div class="paneles" >
+						
+						<label>A. PATERNO</label>  
+                        <h:inputText value="#{matriculaB.bpaterno}">
+                        <f:ajax  execute="@this" render="dtBusqueda"  listener="#{matriculaB.busquedaAlumno}" />
+                        </h:inputText>
+                        <br/>
+                        <label>A. MATERNO</label> 
+                        <h:inputText value="#{matriculaB.bmaterno}">
+                        <f:ajax  execute="@this" render="dtBusqueda"  listener="#{matriculaB.busquedaAlumno}" />
+                        </h:inputText>
+                        <br/>
+                        <label>NOMBRES</label> 
+                        <h:inputText value="#{matriculaB.bnombre}" >
+                        <f:ajax  execute="@this" render="dtBusqueda"  listener="#{matriculaB.busquedaAlumno}" />
+                        </h:inputText>
+						
+						
+						</div>
+                                                
+
+                    
+
+                        <p:dataTable id="dtBusqueda" value="#{matriculaB.listaAlumno}" var="alumno"    rowKey="#{alumno.persona}"  selection="#{matriculaB.seleccionBusqueda}"  selectionMode="single"  scrollable="true" scrollHeight="300" rowIndexVar="status" >
+                            <p:ajax event="rowSelect"  update=":frmDatos pnDetalle "   listener="#{matriculaB.onRowSelect}"  oncomplete="msgModal.hide()"  /> 
+
+
+							<p:column headerText="N" width="10">
+                                #{status+1}
+                            </p:column >
+                            <p:column headerText="CODIGO" width="100">
+                                #{alumno.persona}
+                            </p:column >
+                            <p:column headerText="DATOS">
+                                #{alumno.paterno} #{alumno.materno} #{alumno.nombres}
+                            </p:column>
+
+
+                           
+
+                        </p:dataTable>
+                        
+                             <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                           
+                            
+                            
+                            
+                             <h:commandLink  styleClass="boton-rojo"   onclick="msgModal.hide()"  >
+                             	CANCELAR
+                                <f:ajax execute="@this"  />
+                            </h:commandLink> 
+                            </div>
+                        </f:facet>
+
+                    </p:dialog>
+
+                </h:form>
+
+
+               
+
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+
+
+
+</html>
+

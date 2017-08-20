@@ -1,0 +1,569 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:ht="http://java.sun.com/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      
+      xmlns:p="http://primefaces.org/ui">
+    
+    
+      <f:metadata>
+            <f:viewParam name="tipoU" value="#{usuarioB.tipo}" />
+            <f:event type="preRenderView" listener="#{usuarioB.inicioUsuario()}" />
+            
+     </f:metadata>
+    
+    <h:head>
+        <title>..::.. INTRANET UPIG ..::..</title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />        
+        <link   type="text/css" media="(max-width: 800px)"  rel="stylesheet" href="/SGAWEB/resources/css/responsivo.css" />
+    </h:head>
+    <style>
+        
+        *{padding: 0px ;margin: 0px;list-style: none;font-family: arial;text-decoration: none}             
+        html{overflow: hidden;}   
+        .colum {display: inline-block;vertical-align: top;}
+        .index-cabecera{display: block;vertical-align: top;min-height: 20px;padding: 5px;background-color: #004788;color: white}
+        .index-cabecera .index-cabecera-logo{padding: 0px 10px}
+        .index-cabecera div h2{font-family: tahoma!important}
+        .index-cuerpo{display: block;height: 93.5%;background: url("http://www.upig.edu.pe/intranet/imagenes/indice/portales-web.jpg")no-repeat center center;background-size: 100% 100%; ;}
+        .index-cuerpo .index-cuerpo-columDerecha{width: 70%;height: 90%;position: relative}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro{width: 350px;height: 80px;position: absolute;top:  100px;left: 150px}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro div{}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro div span{;color: white;line-height: 50px }
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro >div{height: 100%;color: white;text-align: center;}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro >div:nth-child(1){width: 80px;font-weight: bold;line-height: 50px}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro >div:nth-child(2){width: 180px;margin-left: -4px}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro >div:nth-child(2) div{display: block;height: 50%}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-cuadro >div:nth-child(2) div span{display: inline-block;height: 100%;width: 50%}        
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-Bienvenida{display: block;width: 550px;min-height: 80px;position: absolute;top: 50px;left: 20px;text-align: center}
+        .index-cuerpo .index-cuerpo-columDerecha .index-cuerpo-columDerecha-Bienvenida p{width: 100%;width: 450px;margin: 0 auto;font-size: 1.2em;text-align: left;text-align: justify;}
+        .index-cuerpo .index-cuerpo-columIzquierda{width: 28%;height: 90%;padding: 0px 0px}                
+        
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login,.index-cuerpo .index-cuerpo-columIzquierda .index-login-aviso{border: 4px solid rgb(150,46,46);width: 280px;border-radius: 10px;overflow: hidden }
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login input{border-radius: 2px ; border: 1px solid silver;padding: 5px;width: 100%}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cabecera,.index-cuerpo .index-cuerpo-columIzquierda .index-login-aviso .index-login-aviso-cabecera {display: block;text-align: center;padding: 5px;background-color: rgb(150,46,46);color: white; font-weight: bold}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo,.index-cuerpo .index-cuerpo-columIzquierda .index-login-aviso .index-login-aviso-cuerpo{padding: 20px 10px  ;background-color: white;height: 100% }
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-botonera{margin: 5px 0px;padding: 5px}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-botonera a{background-color: rgb(150,46,46);padding: 5px;border-radius: 5px;color: white;font-weight: bold;margin: 5px 2px}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo label{text-transform: capitalize}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo p{font-size: 0.8em;}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-perfil{display: block;margin: 10px 0px;}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-perfil input{opacity: 0 }
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-perfil input:checked + label{background-color: rgb(150,46,46);color: white}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login .index-login-cuerpo .index-login-cuerpo-perfil label{cursor: pointer;display: block;border: 1px solid silver;margin: -12px -3px 0px 0px;padding: 8px 5px}
+        .index-cuerpo-columIzquierda-bloque{display: block;margin: 20% auto;width: 300px }
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login{height: 320px;}
+        .index-cuerpo .index-cuerpo-columIzquierda .index-login-aviso{height: 120px;margin: 20px 0px }
+        .subBotonera a{display: inline-block;border: 1px solid;padding: 5px ;margin: 1px;border-radius: 4px;color: white }
+        
+        .index-pie{display: block;bottom: 10px}
+        .index-pie .index-pie-redes ul{margin-left: 20px}
+        .index-pie .index-pie-redes ul li {display: inline-block;vertical-align: top;text-align: center;font-size: 1.4em;cursor: pointer;transition: all 0.5s}
+        .index-pie .index-pie-redes ul li a{display: block;height: 40px;width: 40px;border-radius: 50%;background-color: white;color: #656464;}
+        .index-pie .index-pie-redes ul li i{line-height: 40px;}
+        .index-pie .index-pie-redes ul li:hover:nth-child(1) a{background-color: #019EE3;color: white}
+        .index-pie .index-pie-redes ul li:hover:nth-child(2) a{background-color: #0069B3;color: white}
+        .index-pie .index-pie-redes ul li:hover:nth-child(3) a{background-color: white;color: red}
+        .index-pie .index-pie-redes ul li:hover:nth-child(4) a{background-color: #008000;color: white}
+        .index-pie .index-pie-redes ul li:hover:nth-child(5) a{background-color: red;color: white}
+        
+        .notify{ width: 250px;padding: 10px 5px;border-radius: 5px;color: white}
+        .error{background-color: red}
+        .correcto{background-color: #008000}
+         
+         
+         
+          @keyframes bienvenida{
+                        0%{transform: translate3d(0px, -100px, 0px);opacity: 0;}
+                        5%{transform: translate3d(0px, 0px, 0px);opacity: 1;}
+                        50%{}
+                        75%{}
+                        95%{opacity: 1;}
+                        100%{opacity: 0; }
+                    }
+                    @-moz-keyframes bienvenida{
+                          0%{transform: translate3d(0px, -100px, 0px);opacity: 0;}
+                        5%{transform: translate3d(0px, 0px, 0px);opacity: 1;}
+                        50%{}
+                        75%{}
+                        100%{opacity: 0;}
+                    }
+            //.index-cuerpo-columDerecha-Bienvenida b {animation: bienvenida 20s infinite linear; }
+            .index-chat{position: absolute;width: 300px;height: 100%;right: 5px;bottom: 1px;transition: all 0.5s}
+            .index-chat.minimizar{height: 60px;width: 60px;background-color: red; border-radius: 50%;overflow: hidden;border: 2px solid #0088CE;bottom: 10px;right: 10px}
+            .index-chat.minimizar .index-chat-cabecera a{font-weight: bold;position: absolute;top: 1px;left: 30px}
+            .index-chat.minimizar .index-chat-cabecera{background-color:  #019EE3}
+            .index-chat .index-chat-cabecera{display: block;padding: 10px 0px;text-align: center;background-color: white}
+            .index-chat .index-chat-cuerpo{display: block;width: 100%;background: #FAFAFB;height: 92%;}
+            .index-chat .index-chat-cuerpo >div{display: block;width: 100%;}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-server{height: 20%}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-texto{height: 75%;overflow: auto;padding: 0px 5px}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-server ul{display: block;text-align: center;padding: 10px}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-server ul li{display: inline-block;}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-server ul li img{height: 60px;width:  60px;border: 1px solid silver;border-radius: 50%}
+            .index-chat .index-chat-pie{display: block;background-color: white;height: 30px;}            
+            .index-chat .index-chat-pie input:focus{outline: none} 
+            .index-chat .index-chat-pie input{border: none;width: 200px;height: 100%;padding: 0px 5px}
+            .index-chat .index-chat-pie a{display: block;color: silver;border-radius: 2px;height: 100%;width: 35px;text-align: center;}
+            .index-chat .index-chat-pie a i{;line-height: 30px}
+            .index-chat .index-chat-cuerpo .index-chat-cuerpo-server .server-inactivo{-webkit-filter: grayscale(100%);filter: grayscale(100%);}
+            .globo{display: block;margin:  10px 2px;}
+            .globo p{border-radius: 5px;max-width: 200px;background-color: #008000;color: white;padding: 8px 4px}
+            
+            
+            
+            
+            @-webkit-keyframes derecha{
+                        0%{transform: rotate(-0deg);}                        
+                        50%{transform: rotate(-80deg);}                       
+                        100%{transform: rotate(-0deg);}
+            }
+                    @-moz-keyframes derecha{
+                         0%{transform: rotate(-0deg);}                        
+                        50%{transform: rotate(-80deg);}                       
+                        100%{transform: rotate(-0deg);}
+           }
+           
+           @-webkit-keyframes izquierda{
+                        0%{transform: rotate(0deg);}                        
+                        50%{transform: rotate(80deg);}                       
+                        100%{transform: rotate(0deg);}
+            }
+
+
+		.alerta-derecha{-webkit-animation: derecha 5s infinite linear;-moz-animation: derecha 5s infinite linear}
+		.alerta-izquierda{-webkit-animation: izquierda 5s infinite linear;-moz-animation: izquierda 5s infinite linear}
+		
+		.luz{border-radius: 20px 20px 0px 0px;z-index: 99;width: 0px;position: absolute;bottom: -10px;transform-origin: 0% 2000px;border-right: 40px solid transparent;border-left: 40px solid transparent;border-top: 2000px solid rgba(255,15,15,0.7);}
+		.luz-izquierda{left: -60px;}
+		.luz-derecha{right: -60px}
+	    
+	    
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("#txtUsuario").focus();
+            
+            $(".index-chat-cabecera a").click(function(event){
+                event.preventDefault();                
+                $(".index-chat").toggleClass("minimizar");
+                $(this).children("i").toggleClass("fa-times");
+                $(this).children("i").toggleClass("fa-comment");
+                
+            });
+            
+         
+            
+        });
+        function notificacion(msg,speed,fadeSpeed,type){
+                            $('.notify').remove();
+
+                  if (typeof fade != "undefined"){
+                  clearTimeout(fade);
+                  }
+                  $('body').append('<div class="notify '+type+'" style="display:none;position:fixed;right:10px"><p>'+msg+'</p></div>');
+
+                  notifyHeight = $('.notify').outerHeight();
+
+                  $('.notify').css('top',-notifyHeight).animate({top:10,opacity:'toggle'},speed);
+
+                  fade = setTimeout(function(){
+
+                  $('.notify').animate({top:notifyHeight+10,opacity:'toggle'}, speed);
+
+                  }, fadeSpeed);
+        }
+        
+    
+        
+    </script>
+    
+    <h:body>
+    <!-- 
+    <b class="alerta-izquierda luz luz-izquierda" />
+        <b class="alerta-derecha luz luz-derecha" />
+     -->
+        
+   		
+        
+        <div class="index-cabecera">
+            <div style="display: block;text-align: center">
+                <div class="colum index-cabecera-logo" >
+                    <img src="http://www.upig.edu.pe/intranet/imagenes/indice/logotipo.png" style="width: 50px;height: 50px" />
+                </div>
+                <div class="colum" >
+                    <h2>UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h2>
+                    <span>"Excelencia Académica para un Mundo Globalizado"</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="index-cuerpo">
+            <div class="index-cuerpo-columDerecha colum">
+                <div class="index-cuerpo-columDerecha-cuadro">
+                    <div class="colum">
+                        <span style="background-color: rgb(47,50,78);display: block;height: 100%;font-weight: bold;font-size: 1.6em;line-height: 80px">UPIG</span>
+                    </div>
+                    
+                    <div class="colum">
+                        <div >
+                            <span style="background-color: rgb(232,37,131)">Innova</span><span style="background-color: rgb(160,42,125)">Participa</span>
+                        </div>
+                        <div >
+                            <span style="background-color: rgb(164,199,54)">Crea</span><span style="background-color: rgb(240,127,72)">Integra</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="index-cuerpo-columDerecha-Bienvenida">
+                    <div style="position: relative">
+                        <b style="font-size: 2.0em;display: block" >BIENVENIDO AL CAMPUS VIRTUAL</b>
+                        <p  style="display: none">Al ingresar a la Intranet Ud. podrá acceder a una serie de servicios personales e institucionales con la finalidad de estar siempre informado de los acontecimientos académicos de nuestra universidad.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="index-cuerpo-columIzquierda colum">
+                <div class="index-cuerpo-columIzquierda-bloque">
+                    <div class="index-login">
+                    <div class="index-login-cabecera">
+                        ENTRAR
+                        
+                    </div>
+                    <div class="index-login-cuerpo">
+                        <h:form id="frmAcceso" prependId="#{false}" ht:autocomplete="off"  >
+                            <h:outputLabel value="nombre de usuario" />#{usuarioB.usu} -#{usuarioB.pass}
+                            <br/>
+                            
+                            
+                            
+                            <h:inputText id="txtUsuario" value="#{usuarioB.usu}" required="true" />
+                            
+                            
+                            <br/>
+                            
+                            <h:outputLabel value="contraseña" />
+                            
+                            
+                            <br/>
+                            <h:inputSecret id="txtClave" value="#{usuarioB.pass}" required="true" />
+                            <br/>
+                            <div class="index-login-cuerpo-perfil">
+                            
+                               
+                                <h:selectOneRadio  id="rbPerfil" value="#{usuarioB.tipo}"   >                              
+                                        <f:selectItem itemValue="1" itemLabel="Alumno" />
+                                        <f:selectItem itemValue="2" itemLabel="Docente"/>
+                                        <f:selectItem itemValue="3" itemLabel="Padre"/>
+                                        <f:selectItem itemValue="4" itemLabel="Admin."/>                                       
+                                    </h:selectOneRadio>
+                            </div>
+                            
+                            
+                            <div class="index-login-cuerpo-botonera" style="display: block;text-align: right">
+                            
+                            
+                                <h:commandLink >
+                                    <i class="fa fa-hand-pointer-o"  />
+                                    Entrar
+                                    <f:ajax excute=":frmAcceso:txtUsuario ::txtClave :frmAcceso:rbPerfil" render=" txtUsuario txtClave "  listener="#{usuarioB.validarUsuarios}" />                                    
+                                    
+                                </h:commandLink>
+                                
+                                
+                                <h:commandButton style="display: none">
+                                    <f:ajax execute="txtUsuario txtClave rbPerfil" render=" txtUsuario txtClave "  listener="#{usuarioB.validarUsuarios}"/>
+                                </h:commandButton>
+                            </div>
+                            
+                            
+                            
+                            <div style="font-size: 0.9em;text-align: justify">
+                                <span style="color: red;">
+                                    <h:commandLink onclick="dlgRecupera.show()">
+                                        ¿Olvido su contraseña..?    
+                                        <f:ajax execute="@this txtUsuario" render=":frmRecuperacion:txtUsuarioR" />
+                                    </h:commandLink>
+                                    
+                                    </span>
+                                <p >Comuníquese con sistemas@upig.edu.pe si no ha podido obtener una nueva contraseña de acceso.</p>
+                            </div>
+                            
+                            
+                            
+                          
+                        </h:form>
+                    </div>
+                </div>
+                
+                
+                <div class="index-login-aviso">
+                    <div class="index-login-aviso-cabecera">
+                        AVISOS
+                    </div>
+                    <div>
+                        <ul class="index-login-aviso-cuerpo">
+                            <li><i class="fa fa-question-circle" aria-hidden="true" /><span>Preguntas Frecuentes</span> </li>
+                            <li><i class="fa fa-question-circle" aria-hidden="true" /><span>Problemas para entrar</span></li>
+                            <li><i class="fa fa-info-circle" aria-hidden="true" /><span>Contactar Soporte Técnico</span></li>
+                    </ul>
+                    </div>
+                    
+                </div>
+                    <div class="index-login-aviso">
+                    <div class="index-login-aviso-cabecera">
+                        PAGOS VIRTUALES
+                    </div>
+                    <div>
+                        <ul class="index-login-aviso-cuerpo">
+                            
+                            <li><a href="http://www.scotiabank.com.pe/Personas/Default" title="" target="_BLANK" style="color: red" ><i class="fa fa-cloud" /><span>Scotiabank</span></a></li>
+                    </ul>
+                    </div>
+                    
+                </div>
+                    
+                    
+                </div>
+                
+                
+                
+            </div>
+            
+            
+            <div class="index-pie">
+            <div class="index-pie-redes">
+                <ul>
+                    <li>
+                        <a href="https://twitter.com/upig_edu" target="_blank">
+                        <i class="fa fa-twitter" aria-hidden="true" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/upig.edu.pe/?__mref=message_bubble" target="_blank">
+                        <i class="fa fa-facebook" aria-hidden="true" />
+                        </a>
+                        
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/user/videosupig" target="_blank">
+                            <i class="fa fa-youtube-play" aria-hidden="true" />
+                        </a>
+                        
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-whatsapp" aria-hidden="true" />
+                        </a>
+                        
+                    </li>
+                    <li>
+                        <a href="https://plus.google.com/u/0/111709963720508980777">
+                            <i class="fa fa-google-plus" aria-hidden="true" />
+                        </a>
+                        
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+            
+         <!--
+            <h:form  id="frmChatSoporte" prependId="false" ht:autocomplete="on">
+                <div class="index-chat minimizar" >
+                <div class="index-chat-cabecera">
+                    
+                    CHAT..
+                    <a href="#">
+                        <i class="fa fa-times" style="color: red" aria-hidden="true" />
+                    </a>
+                    
+                </div>
+                <div class="index-chat-cuerpo">
+                    <div class="index-chat-cuerpo-server">
+                        <b>SOPORTE</b>
+                        <ul>
+                            <li>
+                                <h:commandLink>
+                                    <img class="server-inactivo" src="SVerImagenAlumno?alumno=00000000000000017162" />
+                                    <f:ajax execute="@this" />
+                                    <br/>
+                                    Anderson
+                                </h:commandLink>
+                                
+                                
+                            </li>
+                            <li>
+                                <h:commandLink>
+                                <img src="SVerImagenAlumno?alumno=00000000000000004490" />
+                                  <br/>
+                                    Jhosep
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                              
+                            </li>
+                            <li> 
+                                <h:commandLink>
+                                <img class="server-inactivo" src="SVerImagenAlumno?alumno=00000000000000005086" />
+                                <br/>
+                                Alvaro
+                                   <f:ajax execute="@this" />
+                                </h:commandLink>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="index-chat-cuerpo-texto" >
+                        
+                    </div>
+                </div>
+                    
+                <div class="index-chat-pie">
+                    <div class="colum">
+                        <h:inputText id="txtUsuarioChat" value="{chatView.username}" ps:placeholder="USUARIO" />
+                    </div>
+                    <div class="colum">
+                        <h:commandLink>
+                            <i class="fa fa-paper-plane" aria-hidden="true" />
+                            <f:ajax execute="@this txtUsuarioChat" listener="{chatView.login()}" />
+                        </h:commandLink>
+                    </div>
+                   
+                    
+                    
+                </div>
+                     <div class="index-chat-pie">
+                         <h:selectOneMenu id="cboServer" value="{chatView.privateUser}" >
+                             <f:selectItem itemLabel="Seleccionar " />
+                             <f:selectItems value="{chatUsers.users}" var="usuario" itemValue="{usuario}"  itemLabel="{usuario}" />
+                             <f:ajax execute="@this" />
+                         </h:selectOneMenu>
+                    <div class="colum">
+                        <h:inputText id="txtMensajeChat" value="{chatView.privateMessage}" ps:placeholder="Enviar Mensaje" />
+                    </div>
+                    <div class="colum">
+                        <h:commandLink>
+                            <i class="fa fa-paper-plane" aria-hidden="true" />
+                            <f:ajax execute="@this txtMensajeChat cboServer" listener="{chatView.sendPrivate()}" />
+                        </h:commandLink>
+                    </div>
+                   
+                    
+                    
+                </div>
+                
+            </div>
+              
+            </h:form>
+         -->
+        </div>
+        
+        <h:form id="frmRecuperacion" prependId="#{false}"  >
+            <p:dialog widgetVar="dlgRecupera" header="RECUPERACION DE CONTRASEÑA" modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">
+                <div style="display: block;width: 100%">
+                    <div class="colum">
+                        <i class="fa fa-unlock" aria-hidden="true" style="font-size: 6.0em" />
+                    </div>  
+                    <div class="colum">
+                        <h:outputLabel value="USUARIO" />
+                        <br/>
+                        <h:inputText id="txtUsuarioR" value="#{usuarioB.usu}" required="#{true}" />
+                        <div style="display: none">
+                            <h:outputLabel value="CAPCHA" />
+                            <h:commandLink>
+                                <i class="fa fa-refresh" aria-hidden="true" />
+                                <f:ajax execute="@this" render="txtCapcha" listener="#{usuarioB.generarCapcha()}" />
+                            </h:commandLink>
+                            <br/>
+                            <h:outputLabel id="txtCapcha" value="#{usuarioB.capcha}" />
+                            <br/>
+                            <h:inputText value="#{usuarioB.capchaS}" />
+                        </div>
+                        
+                        
+                    </div>
+                </div>   
+                
+              
+              <f:facet name="footer">
+                  <div class="subBotonera" style="display: block;text-align: right">
+                      <h:commandLink style="background-color: #0069B3">
+                          <i class="fa fa-paper-plane" aria-hidden="true" />
+                          ACEPTAR
+                          
+                          <f:ajax execute="@this txtUsuarioR" listener="#{usuarioB.recuperarContraseña()}" />
+                      </h:commandLink>
+                      <h:commandLink style="background-color: red" onclick="dlgRecupera.hide()">
+                          <i class="fa fa-sign-in" aria-hidden="true" />
+                          SALIR
+                          
+                          <f:ajax execute="@this"  />
+                      </h:commandLink>
+                  </div>                  
+              </f:facet>
+          </p:dialog>
+        </h:form>
+        <!--
+       
+       <p:socket onMessage="handleMessage" channel="/{room}" autoConnect="false" widgetVar='subscriber' >
+           <p:ajax event="message" />
+       </p:socket>
+        
+        
+         <p:socket onMessage="notificacion" channel="/notify" >
+                <p:ajax event="message" update="frmChatSoporte:cboServer" />
+         </p:socket>
+ -->
+        <script type="text/javascript">
+            
+          /*    
+            function handleMessage(message) {
+                
+                  var chatContent = $(PrimeFaces.escapeClientId('form:public')),
+        text = (message.user) ? message.user + ':' + message.text: message.text;
+ 
+        chatContent.append(text + '<br />');
+ 
+        //keep scroll
+        chatContent.scrollTop(chatContent.height());
+
+        if(message.updateList) {
+            alert("actualiza");
+             updateList();
+        }else{
+            alert("no actualiza");
+        }
+      
+   ;
+                
+              
+                
+                 
+                 console .log("cliente");
+                 console.log( message.text);
+                
+                text = (message.user) ? message.user + ':' + message.text: message.text;
+                
+                $(".index-chat-cuerpo-texto").append('<div class="globo"><p>'+text+'</p></div>');
+                 
+                $(".index-chat-cuerpo-texto").scrollTop(50000);
+             
+        
+            }
+            
+            function notificacion(facesmessage) {
+                console.log("notificar");
+            }
+            
+             */
+           
+        </script>
+        
+    </h:body>
+</html>
+

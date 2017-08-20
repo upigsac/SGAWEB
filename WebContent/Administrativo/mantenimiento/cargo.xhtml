@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <style>
+            #frmCargo\:pnDatos label{display: inline-block;width: 130px}
+            #frmCargo\:pnDatos input{margin: 1px;padding: 3px}
+            #frmCargo\:pnBotonera{margin: 15px 5px}
+            #frmCargo\:pnBotonera input{margin: 1px;padding: 8px;width: 80px}
+        </style>
+        <h:form id="frmCargo">
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="CARGO" />
+                <h:inputText value="#{cargoB.cargo.cargo}" disabled="#{true}" style="width: 100px" /><br/>
+
+                <h:outputLabel value="DESCRIPCION" />
+                <h:inputText value="#{cargoB.cargo.descripcion}" disabled="#{not cargoB.bandera}" style="width: 350px" /><br/>
+            
+                <h:outputLabel value="ABREVIATURA" />
+                <h:inputText value="#{cargoB.cargo.abreviatura}" disabled="#{not cargoB.bandera}" /><br/>
+
+                <h:outputLabel value="ESTADO" />
+            </h:panelGroup>
+         
+            <h:panelGroup layout="block" id="pnBotonera" >
+               <h:commandButton value="Nuevo" disabled="#{cargoB.bandera}" >
+                   <f:ajax execute="@this" render=":frmCargo:pnDatos pnBotonera" listener="#{cargoB.nuevo()}"  />
+                </h:commandButton>
+                <h:commandButton value="Guardar" disabled="#{not cargoB.bandera}">
+                    <f:ajax  execute=":frmCargo:pnDatos" render=":frmCargo:pnDatos pnBotonera" listener="#{cargoB.guardar()}" />
+                </h:commandButton>
+                <h:commandButton value="Cancelar" disabled="#{not cargoB.bandera}">
+                    <f:ajax execute="@this" render=":frmCargo:pnDatos pnBotonera" listener="#{cargoB.cancelar()}"  />
+                </h:commandButton>
+                
+                <h:commandButton value="Editar" disabled="#{(cargoB.bandera )  }">
+                    <f:ajax execute="@this"  render=":frmCargo:pnDatos pnBotonera" listener="#{cargoB.editar()}" />
+                </h:commandButton>
+            </h:panelGroup>
+           
+                    
+            <p:dataTable value="#{cargoB.cargoL}" var="detalleCargo" selectionMode="single" rowKey="#{detalleCargo.cargo}" selection="#{cargoB.cargo}" disabledSelection="#{cargoB.bandera}" >
+                     <p:ajax event="rowSelect"  update="@form" /> 
+                <p:column headerText="CARGO" >
+                    #{detalleCargo.cargo}
+                </p:column>
+                <p:column headerText="DESCRIPCION" >
+                    #{detalleCargo.descripcion}
+                </p:column>
+                <p:column headerText="ABREVIATURA" >
+                    #{detalleCargo.abreviatura}
+                </p:column>
+                <p:column headerText="ESTADO" >
+                    #{detalleCargo.estadoRegistro}
+                </p:column>
+            </p:dataTable>        
+                    
+        </h:form>
+        
+    </h:body>
+</html>
+

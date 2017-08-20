@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandLink >
+                Conectar
+                <f:ajax execute="@this" listener="#{chatSoporteTecnicoB.conectarServer()}" />
+            </h:commandLink>
+            
+            <p:inputText value="#{chatView.username}" />
+            <p:commandButton value="Login" actionListener="#{chatView.login}" icon="ui-icon-person" />
+        </h:form>
+        
+        
+        
+        <p:socket onMessage="handleMessage" channel="/{room}" autoConnect="false" widgetVar='subscriber' />
+ 
+<script type="text/javascript">
+    function handleMessage(message) {
+        
+        var chatContent = $(PrimeFaces.escapeClientId('form:public')),
+        text = (message.user) ? message.user + ':' + message.text: message.text;
+ 
+        chatContent.append(text + '<br />');
+ 
+        //keep scroll
+        chatContent.scrollTop(chatContent.height());
+ 
+        if(message.updateList) {
+            updateList();
+        }
+        alert("se conecto " + message.user);
+    }
+</script>
+    </h:body>
+</html>
+

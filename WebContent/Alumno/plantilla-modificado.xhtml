@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
+    <h:head>
+
+        <meta charset="utf-8"/>     
+        <script  type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.js"></script>
+        
+
+        
+        
+        <script>
+
+
+            $(document).ready(function() {
+
+
+
+                                var bandera=true;
+				$('#btMenu').click(function(e){
+					e.preventDefault();
+					if(bandera){
+						$('.MenuPrincipal').addClass('ocultar');
+						$('.MenuPrincipal').removeClass('mostrar');
+                                                 $("#wrapper-section").animate({"width": "97%"}, 400);
+					}else{
+						$('.MenuPrincipal').addClass('mostrar');
+						$('.MenuPrincipal').removeClass('ocultar');	
+                                                $("#wrapper-section").animate({"width": "79%"}, 400);
+                                                
+					}
+					bandera=!bandera;
+					
+				});
+
+            });
+
+
+         
+            
+
+        </script>
+
+        
+
+        <title>
+
+            <ui:insert name="titulo">
+
+            </ui:insert> 
+
+        </title>
+    </h:head>
+
+
+
+    <h:body >
+
+  <style type="text/css">
+
+
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot?macfii');
+	src:url('fonts/icomoon.eot?#iefixmacfii') format('embedded-opentype'),
+		url('fonts/icomoon.woff?macfii') format('woff'),
+		url('fonts/icomoon.ttf?macfii') format('truetype'),
+		url('fonts/icomoon.svg?macfii#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+
+	body{border: 3px solid green;min-height: 100%}
+
+
+	.MenuPrincipal a{color: white;text-decoration: none;}
+	.MenuPrincipal ul{list-style: none;padding: 0px;}
+	.MenuPrincipal ul li{display: block;min-height:30px;position: relative;overflow: hidden;;background-color:#2290C9;transition:all 0.3s }
+	.MenuPrincipal ul li img{height:35px;position:relative;}
+	.MenuPrincipal ul li a{position: absolute;display:inline-block;height:100%;width:150px;padding-left:10px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+	
+	.MenuPrincipal{border: 1px solid red;min-height: 100%;background-color: #2290C9;display: inline-block;vertical-align: top;	}
+
+	.mostrar ul li:hover{background-color: #196C96;transition:all 0.3s}
+	.ocultar .menu-Padre >li:hover{width:200px;overflow: visible;}
+ 	.menu-Padre >li{border-bottom: 1px solid #196C96}
+	.ocultar ul li:hover .menu-Hijo {display: block;position:absolute;width:100%;}
+	
+	.menu-hijo{}
+	.menu-hijo li{margin-left: 45px;}
+	.ocultar{width: 45px ;transition:all 0.5s;}
+	.ocultar .menu-Hijo{display: none;}
+	.mostrar{width: 24%;transition:all 0.5s;}
+	.menu-Hijo li:hover{border-left:4px solid red;}
+
+	.icon-menu:before{content:"\e9bd";}
+	.icon-menu{display:block;width:100%;font-size:1.5em;}
+	.icon-menu:hover{color: red}
+
+
+
+	.cuerpo{border: 2px solid yellow;width: 100%;min-height: 100%}
+	.areaTrabajo{border: 1px solid red;display: inline-block;width: 75%;min-height: 100%}
+	.cabecera{display: block;height: 100px}
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+				var bandera=true;
+				$('#btMenu').click(function(e){
+					e.preventDefault();
+					if(bandera){
+						$('.MenuPrincipal').addClass('ocultar');
+						$('.MenuPrincipal').removeClass('mostrar');	
+					}else{
+						$('.MenuPrincipal').addClass('mostrar');
+						$('.MenuPrincipal').removeClass('ocultar');	
+					}
+					bandera=!bandera;
+					
+				});
+		});
+
+	</script>
+<div class='cabecera'>
+
+</div>	
+<div class='cuerpo'>
+
+<div  class='mostrar MenuPrincipal'>
+	<a id='btMenu' href="#" class='icon-menu' ></a>
+	 <ul class="menu-Padre">
+                        <ui:repeat value="#{menuB.lista}" var="item" > 
+
+                            <li>
+                                <img src="/SGAWEB/resources/imagenes/iconos/#{item.imgMod}"  />
+                                <a href="#{item.url}" title="" target=""  >#{item.nombre}</a>
+
+                                <ul class="menu-Hijo">
+                                    
+                                    <ui:repeat value="#{menuB.getParametro(13,item.getmPadre())}" var="hijo">
+                                        <li>
+                                            <img src="/SGAWEB/resources/imagenes/iconos/#{hijo.imgMod}" />
+                                            <a  href="/SGAWEB/faces/Alumno/#{hijo.url}"  title="#{hijo.nombre}" class="menu-s-a">#{hijo.nombre}</a>
+                                         
+                                        </li>
+                                        <!--ver redireccion-->
+                                    </ui:repeat>
+                                </ul>
+                            </li>
+
+                        </ui:repeat>
+                    </ul>
+</div>
+<div class='areaTrabajo'>
+    <ui:insert name="contenido">
+                                <ui:include src="https://www.google.com.pe">
+                                    
+                                </ui:include>
+                            </ui:insert> 
+</div>
+</div>
+
+
+
+    </h:body>
+</html>
+

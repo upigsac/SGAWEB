@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>AUTORIZACION DE DOCUMENTO</title>
+         <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+    </h:head>
+    <h:body>
+          <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                SISTEMA DE UPIG
+            </ui:define>
+
+              <ui:define name="contenido">
+        <style>
+           
+            #frmAutorizacionDocumento\:pnBotonera,#frmAutorizacionDocumento\:pnDatos{border: 1px solid silver;padding: 10px;margin: 5px}
+            #frmAutorizacionDocumento\:pnBotonera input{padding: 6px;min-width: 80px;}
+            #frmAutorizacionDocumento\:pnDatos select,#frmAutorizacionDocumento\:pnDatos input{padding: 4px;box-shadow: none;border-radius: 0px;font-size: 0.9em}
+            .subBotonera input,.button{margin: 2px ;padding: 2px;border: none;min-width: 30px;height: 30px;border-radius: 2px;cursor: pointer;color: white!important;vertical-align: top;display: inline-block}
+            .subBotonera input:disabled{opacity: 0.4;cursor: default}
+            .temaAdmin table thead,.temaAdmin table tbody{font-size: 0.7em}
+            .temaAdmin .ui-datatable-odd{background-color: white}
+            .temaAdmin .ui-state-highlight{background: #2182C2!important}
+            .temaAdmin .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+         
+        </style>
+         <span class="tituto-admin">AUTORIZACIÒN DE  DOCUMENTO</span>
+        <h:form id="frmAutorizacionDocumento">
+            
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="FECHA DE SOLICITUD: " />
+             <br/>
+              <h:outputLabel value="De:" />
+                <p:calendar id="dpFechaInicio" value="#{autorizaDocumentoB.fechaInicio}" pattern="dd-MM-yyyy" size="8" />
+                    
+                
+                <h:outputLabel value="Hasta:" />
+                <p:calendar id="dpFechaFin" value="#{autorizaDocumentoB.fechaFin}" pattern="dd-MM-yyyy" maxdate="#{utilB.fechaHoy()}" size="8" />
+                    
+                
+                <br/>
+               <h:outputLabel value="TIPO AUTORIZACIÒN: " />
+          <br/>
+            
+            
+            
+          <h:selectOneMenu  id="cbTipoActorizacion" value="#{autorizaDocumentoB.tipoAutorizacionS}"  >
+                <f:selectItems value="#{tipoAutorizacionB.mostrarTipoAutorizacion()}" var="tipoAutorizacion" itemValue="#{tipoAutorizacion.tipoAutorizacion}" itemLabel="#{tipoAutorizacion.descripcion}"/>
+                <f:ajax execute="@this"   />
+            </h:selectOneMenu>
+            </h:panelGroup>
+             
+          
+            <h:panelGroup layout="block" id="pnBotonera">
+                <h:commandButton value="Mostar" >
+                    <f:ajax execute="dpFechaFin dpFechaInicio cbTipoActorizacion" render="tbDetalle" listener="#{autorizaDocumentoB.mostrarAutorizaciones('0000000006', autorizaDocumentoB.tipoAutorizacionS,autorizaDocumentoB.fechaInicio,autorizaDocumentoB.fechaFin)}" />
+                </h:commandButton>
+            </h:panelGroup>
+            
+            <p:dataTable id="tbDetalle" value="#{autorizaDocumentoB.personaAutorizacionL}" var="lista" rowIndexVar="status" styleClass="temaAdmin" >
+                <p:column headerText="Nro." width="20">
+                    #{status +1}
+                </p:column>
+            
+                <p:column headerText="Persona:">
+                    <div style="display: block;width: 100%;height: 100%">
+                        <h:graphicImage value="SVerImagenAlumno?alumno=#{lista.persona}" width="60" height="60" style="display: inline-block" />
+                        <div style="display: inline-block;vertical-align: top">
+                            <h:outputLabel value="#{personaB.mostrarPersona(lista.persona).nombreCompletos()}" style="font-weight: bold" /> 
+                            <br/>                          
+                            Tel:#{personaB.persona.telefono}
+                            <br/>
+                            cel:#{personaB.persona.celular}
+                            <br/>
+                            e-mail:#{personaB.persona.emailP}
+                        </div>
+                    </div>
+                </p:column>
+                <p:column headerText="Fecha" width="100">
+                    #{lista.autorizacion_fecha}
+                </p:column>
+              <p:column headerText="Observaciòn" width="200">
+                    #{lista.autorizacion_observacion}
+                </p:column>
+                <p:column headerText="Numero Documento" width="100">
+                    <h:outputLabel value="#{lista.documento}" style="color: #0088CE;font-weight: bold;font-size: 1.8em" /> 
+                </p:column>
+                
+                <p:column headerText="Numero Resoluciòn" width="100">
+                   
+                    <h:inputText id="txtResolucion" value="#{lista.resolucion}" rendered="#{empty lista.documento ?false:empty lista.resolucion}" />
+                    <h:outputLabel style="color: red;font-weight: bold;font-size: 1.5em" value="#{lista.resolucion}" rendered="#{not empty lista.resolucion}" />
+                    
+                </p:column>
+              
+                <p:column headerText="" width="80">
+                    <div class="subBotonera">                       
+                       
+                        <p:commandLink title="AUTORIZAR"   type="button"   onclick="if (!confirm('¿Esta seguro?')) return false;" disabled="#{not empty lista.resolucion}" styleClass="fa fa-thumbs-up fa-2x  button" style="background-color: #0088CE">
+                        
+                            <f:ajax execute="@this txtResolucion" render="tbDetalle" listener="#{autorizaDocumentoB.autorizar(lista,lista.resolucion)}"/>
+                        </p:commandLink>
+    
+                        <p:commandLink title="RECHAZAR" value="" disabled="#{not empty lista.documento}" styleClass="fa fa-thumbs-o-down fa-2x  button" style="background-color: red">
+                            <f:ajax execute="@this" render="tbDetalle" listener="#{autorizaDocumentoB.rechazar(lista)}" />
+                        </p:commandLink>
+                    </div>
+                    
+                </p:column>
+                
+            </p:dataTable>
+        </h:form>
+        </ui:define>
+          </ui:composition>          
+    </h:body>
+    
+</html>
+

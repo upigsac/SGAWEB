@@ -1,0 +1,57 @@
+ <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                GRUPOS INVESTIGACION
+            </ui:define>
+        <ui:define name="contenido">
+                 
+         <span class="tituloCuerpo"> GRUPOS </span>
+        #{workshopB.load(usuarioB.institucionS,usuarioB.periodoS,usuarioB.usu)}
+        
+        
+        <ui:repeat value="#{workshopB.grupoTemaAlumnoL}" var="itemGrupo">
+            <div class="paneles" >
+              
+                <div class="column" >
+                <b>MODALIDAD</b>  
+                    #{itemGrupo.invCursoSeccionGrupo.modalidad}<br/>
+                    <b>TEMA</b>
+                    #{itemGrupo.invCursoSeccionGrupo.tema}<br/>
+                    
+                    <b>FECHA PONENTE</b> 
+                    #{itemGrupo.invCursoSeccionGrupo.fechaPonente}         <br/>           
+                    <b>FECHA ASISTENTE</b>#{itemGrupo.invCursoSeccionGrupo.fechaAsistente}<br />
+                    <b>HORA INICIO</b>
+                    #{itemGrupo.invCursoSeccionGrupo.horaInicio}<br />
+                </div>
+            
+                
+            
+            <div style="display: block">
+                
+          
+            <ui:repeat value="#{itemGrupo.alumnoPersonaL}" var="itemGrupoAlumno">
+                <div class="paneles column">
+                    <div class="column" >
+                        <img src="SVerImagenAlumno?alumno=#{itemGrupoAlumno.persona.persona}" style="width: 70px;height: 70px" />
+                        
+                    </div>
+                    <div  class="column" style="width: 180px;padding: 5px">
+                        
+                        <b>#{itemGrupoAlumno.invAlumnoCursoSeccionGrupo.alumno}</b>
+                        <br/>
+                        
+                        #{itemGrupoAlumno.persona.paterno} #{itemGrupoAlumno.persona.materno} #{itemGrupoAlumno.persona.nombres}
+                    </div>
+                    
+                </div>
+                
+            </ui:repeat>
+              </div>
+            </div>
+        </ui:repeat>
+</ui:define>
+                 </ui:composition>

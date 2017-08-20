@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pp="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        
+    </h:head>
+    <h:body>
+        <style>
+            
+            *{padding: 0px;margin: 0px}
+            *:focus{outline:0px;}
+            body{margin: 0px ;padding: 0px;background-color: #3A69A1}
+            .principal{max-width: 950px;display: block;margin: 5px auto;background-color: white;}
+            #frmPostulante\:pnBusqueda{display: block;padding: 30px 0px;text-align: center}
+            
+            #frmPostulante\:pnResutado{padding: 20px;border: 1px solid silver;width: 600px;display: block;margin: 20px auto}
+            #frmPostulante\:pnResutado label{font-weight: bold;color: #3A69A1}
+            #cabecera{border: 1px solid silver;width: 100%;text-align: center;background-color: #3A69A1;padding: 10px 0px}
+            #cabecera h3{font-size: 2.0em;font-family: "tahoma"; color: white}
+            .imgFoto{width: 180px;height: 200px;display: inline-block;vertical-align: top;border: 1px solid silver;margin: 0px 10px}
+            #lblLema{color: yellow;font-size: 1.5em}
+            .lblDatos{margin-left:  15px;padding: 10px;display: inline-block; }
+        </style>
+        <h:form id="frmPostulante"  >
+            
+            
+            
+            
+            <div class="principal">
+                <div id="cabecera">
+                    <div style="display: inline-block;vertical-align: top;width: 8%">
+                        <img src="http://www.upig.edu.pe/images/LOGOWEBUPIG5N.png" style="width: 90%;height: 100px;" />
+                    </div>
+                    
+                    <div style="display: inline-block;vertical-align: top;width: 85%" >
+                        <h3>UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h3>
+                        <span id="lblLema">"Excelecia Academica para un Mundo Globalizado"</span>
+                    </div>
+                    
+                </div>
+                
+                <h:panelGroup layout="block" id="pnBusqueda">
+                    <h2>Resultados del Examen de Admisión 2016 - II</h2>
+                    <br/>
+                    
+                    <h:outputLabel value="POSTULANTE" style="width: 200px;display: inline-block;line-height: 35px"/>
+                    <div style="border: 1px solid silver;width: 200px;display: inline-block;vertical-align: top;height: 30px;border-radius: 4px;font-weight: bold">
+                        <h:inputText id="txtBusqueda" style="padding: 5px 2px;border: none" maxlength="10" value="#{resultadoPostulanteB.busPostulante}"  pp:placeholder="Codigo ò DNI"   onblur="valorIncorecto(this,20)" />
+                            
+                        
+                        <h:commandLink id="lblBuscar"  >
+                    <i class="fa fa-search" />
+                    <f:ajax execute="@this txtBusqueda" render="@form" listener="#{resultadoPostulanteB.consultar}" />
+                    <h:commandButton style="display: none">
+                           <f:ajax  execute="txtBusqueda" render="@form" listener="#{resultadoPostulanteB.consultar}" />
+                    </h:commandButton>
+                </h:commandLink>
+                        
+                    </div>
+                    
+                        
+                    
+                    
+               
+                
+                    
+               
+                    
+               
+            </h:panelGroup>
+                <h:panelGroup layout="block" id="pnResutado" rendered="#{resultadoPostulanteB.bandera}">
+                
+                <h:graphicImage class="imgFoto" value="SVerImagenAlumno?alumno=#{resultadoPostulanteB.postulante.persona}"  />
+                <div style="display: inline-block;vertical-align: top">
+                    <h:outputLabel  value="POSTULANTE"/>
+                    <br/>
+                    <h:outputText class="lblDatos" value="#{resultadoPostulanteB.postulante.postulante}" />
+                    <br/>                    
+                    <h:outputLabel  value="APELLIDOS Y NOMBRES"/>
+                    <br/>
+                    <h:outputText class="lblDatos" value="#{resultadoPostulanteB.postulante.desPersona}" />
+                    <br/>
+                    <h:outputLabel  value="CARRERA PROFESIONAL"/>
+                    <br/>
+                    <h:outputText class="lblDatos" value="#{resultadoPostulanteB.postulante.desCarrera}" />
+                    <br/>
+                    <h:outputLabel value="RESULTADO"/>
+                    <br/>
+                    <b style="font-size: 1.7em;color: #008000"><h:outputText class="lblDatos"    value="#{resultadoPostulanteB.postulante.desEstado}" /></b>                    
+                </div>
+                <hr/>
+                <br/>
+                <br/>
+               
+                <div style="display: block;text-align: center">
+                    <img src="http://www.upig.edu.pe/images/ingreso.jpg" style="height:260px;width:550px;" />
+                </div>
+                    
+                <br/>
+                             
+                               
+            </h:panelGroup>
+            </div>
+            
+        </h:form>
+    </h:body>
+</html>
+

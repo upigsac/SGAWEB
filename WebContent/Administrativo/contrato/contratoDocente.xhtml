@@ -1,0 +1,106 @@
+<ui:composition   xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"
+                          
+                            template="/Administrativo/plantilla.xhtml">
+              
+            <ui:define name="titulo">
+            
+            
+            </ui:define>
+               <ui:define name="contenido">
+               
+    
+        <h:form id="frmContratoDocente" >
+            
+            <div class="paneles" >
+                <h:outputLabel value="INSTITUCION" />
+            <h:selectOneMenu id="cbInstitucion" value="#{contratoDocenteB.institucion}">
+                <f:selectItems value="#{institucionB.mostrarInstitucion()}" var="institucion" itemLabel="#{institucion.descripcion}" itemValue="#{institucion.institucion}" />                
+                <f:ajax execute="@this" render="cbPeriodo cbDocente" />
+            </h:selectOneMenu>
+            
+            <br />
+            
+            
+            <h:outputLabel value="PERIODO"   />
+            <h:selectOneMenu id="cbPeriodo" value="#{contratoDocenteB.periodo}">
+                <f:selectItem itemLabel="--Seleccionar--" />
+                <f:selectItems value="#{periodoB.mostrarPeriodo(contratoDocenteB.institucion)}" var="itemPeriodo" itemLabel="#{itemPeriodo.desPeriodo}" itemValue="#{itemPeriodo.periodo}" />
+                <f:ajax execute="@this" render="cbDocente" />
+            </h:selectOneMenu>
+            <br />
+            
+            
+            <h:outputLabel value="DOCENTE"   />
+            <h:selectOneMenu id="cbDocente" value="#{contratoDocenteB.persona}" required="true">
+                <f:selectItem itemLabel="--Seleccionar--" />
+                <f:selectItems value="#{personaB.mostrarPersonaDocenteContrato(contratoDocenteB.institucion, contratoDocenteB.periodo)}" var="itemPersona" itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" itemValue="#{itemPersona.persona}" />
+                <f:ajax execute="@this" render=":frmContratoDocente:tbCursoDocente" listener="#{contratoDocenteB.mostrarCursoSeccionDocente}" />
+            </h:selectOneMenu>
+            </div>
+            
+            
+            
+            <p:dataTable id="tbCursoDocente" value="#{contratoDocenteB.contratoCursoL}" var="itemCursoSeccionDocente" style="font-size: 0.9em">
+                <f:facet name="header">
+                    LISTADO DE CURSO 
+                </f:facet>
+                <p:column headerText="CARRERA" width="150">
+                    
+                     #{carreraB.mostrarCarreraCodigo(itemCursoSeccionDocente.cursoSeccionDocente.carrera).abreviatura}
+                    
+                </p:column>
+                
+                 <p:column headerText="CURSO">
+                    #{itemCursoSeccionDocente.cursoSeccionDocente.curso} - #{cursoB.mostrarCurso(itemCursoSeccionDocente.cursoSeccionDocente.curso).descripcion}
+                </p:column>
+                
+                <p:column headerText="SECCION" width="120" style="text-align: center">
+                    
+                    #{seccionB.mostrarSeccion(itemCursoSeccionDocente.cursoSeccionDocente.institucion,itemCursoSeccionDocente.cursoSeccionDocente.seccion).descripcion}
+                </p:column>
+                
+                <p:column headerText="FECHA INICIO" width="100" style="text-align: center">
+                    <h:outputLabel value="#{itemCursoSeccionDocente.personalContratoCurso.fechaInicio}" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro ne 59}" />
+                    <p:calendar value="#{itemCursoSeccionDocente.personalContratoCurso.fechaInicio}" pattern="dd-MM-yyyy"  mask="true" size="8" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro eq 59}">
+                        <p:ajax event="dateSelect" process="@this" />
+                    </p:calendar>
+                </p:column>
+                  <p:column headerText="FECHA FINAL" width="100" style="text-align: center">
+                      <h:outputLabel value="#{itemCursoSeccionDocente.personalContratoCurso.fechaFinal}" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro ne 59}" />
+                      <p:calendar value="#{itemCursoSeccionDocente.personalContratoCurso.fechaFinal}" pattern="dd-MM-yyyy"  mask="true" size="8" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro eq 59}">
+                        <p:ajax event="dateSelect" process="@this" />
+                    </p:calendar>
+                      
+                      
+                </p:column>
+                
+                  <p:column headerText="OBSERVACION" width="250" style="text-align: center">
+                      <h:outputLabel value="#{itemCursoSeccionDocente.personalContratoCurso.observacion}" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro ne 59}" />
+                      <h:inputTextarea value="#{itemCursoSeccionDocente.personalContratoCurso.observacion}"  style="display: block;width: 100%;height: 100%" rendered="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro eq 59}">
+                          <f:ajax  execute="@this" />
+                    </h:inputTextarea>
+                      
+                      
+                </p:column>
+                
+                <p:column  width="100" style="text-align: center">
+                     
+                    <h:commandLink value="#{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro eq 59?'sin contrato':'contratado'}" style="border: 1px solid silver;padding: 5px;margin: 5px 0px;background-color: #{itemCursoSeccionDocente.cursoSeccionDocente.estadoRegistro eq 59?'red':'green'};color: white">
+                         <f:ajax execute="@this" render="tbCursoDocente" listener="#{contratoDocenteB.guardar(itemCursoSeccionDocente)}" />
+                         
+                     </h:commandLink>
+                     
+                     
+                    
+                </p:column>
+                
+                
+            </p:dataTable>
+            
+        </h:form>
+</ui:define>
+</ui:composition>

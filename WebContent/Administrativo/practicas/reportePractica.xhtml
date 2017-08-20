@@ -1,0 +1,63 @@
+
+<ui:composition
+
+	template="/Administrativo/plantilla.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:define name="titulo">
+</ui:define>
+<ui:define name="contenido">
+<span class="tituto-admin">REPORTE ALUMNO PRACTICA </span>
+<h:form prependId="false">
+
+<div class="paneles">
+
+<h:outputLabel value="Estado" />
+	
+	<h:selectOneMenu id="cbEstado" value="#{reportePracticaB.estado}" >
+	<f:selectItem itemLabel="TODOS" itemValue="%" />
+	<f:selectItem itemLabel="ACTIVO" itemValue="1" />
+	<f:selectItem itemLabel="APROBADO" itemValue="53" />
+	<f:ajax  render="cbCarrera" execute="@this" listener="#{reportePracticaB.mostrarCarrera}" />
+	</h:selectOneMenu>
+	<br />
+
+	<h:outputLabel value="Carrera" />
+	<h:selectOneMenu id="cbCarrera" value="#{reportePracticaB.carrera}">
+	<f:selectItem itemLabel="TODOS" itemValue="%" />
+	<f:selectItems value="#{reportePracticaB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion}" itemValue="#{itemCarrera.carrera}" />
+	<f:ajax execute="@this" render="cbPersona" listener="#{reportePracticaB.mostrarPersona}" /> 
+	</h:selectOneMenu>
+
+	
+	<br />
+	
+	
+	
+	
+	
+	<h:outputLabel value="Alumno" />
+	
+	<h:selectOneMenu id="cbPersona" value="#{reportePracticaB.persona}" >
+	<f:selectItem itemLabel="TODOS" itemValue="%" />
+	<f:selectItems value="#{reportePracticaB.personaL}" var="itemPersona" itemValue="#{itemPersona.persona}"  itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" />
+	</h:selectOneMenu>
+</div>
+<div class="paneles">
+<ui:param name="param" value="INSTITUCION,1,CARRERA,#{reportePracticaB.carrera},PERSONA,#{reportePracticaB.persona},ESTADO,#{reportePracticaB.estado}" />
+<h:commandLink styleClass="boton-normal" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/practica/reportePractica', 1,fn:split(param,','))}">
+<i class="fa fa-print" />
+Imprimir
+
+</h:commandLink>
+</div>
+
+
+</h:form>
+</ui:define>
+
+</ui:composition>
+

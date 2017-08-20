@@ -1,0 +1,59 @@
+<ui:composition template="/Administrativo/plantilla.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	>
+      <ui:define name="titulo">
+               REGISTRO DE EVALUACIÓN
+            </ui:define>
+              
+              <ui:define name="contenido">
+              
+              
+<h:form id="frmMatriculaAula" prependId="false">
+  <span class="tituto-admin">MATRICULADO VS AULA </span>
+#{matriculaAulaAdminB.load(usuarioB.institucionS,usuarioB.periodoS)}
+<div class="paneles">
+<h:outputLabel value="Carrera" />
+<h:selectOneMenu value="#{matriculaAulaAdminB.carrera}" id="cbCarrera" >
+<f:selectItem  itemLabel="TODOS" itemValue="%"  />
+<f:selectItems value="#{matriculaAulaAdminB.carreraL}" var="itemCarrera" itemValue="#{itemCarrera.carrera}" itemLabel="#{itemCarrera.descripcion}" />
+<f:ajax execute="@this" render="cbNivel" listener="#{matriculaAulaAdminB.mostrarCiclo}" />  
+</h:selectOneMenu>
+<br />
+
+<h:outputLabel value="Nivel" />
+<h:selectOneMenu value="#{matriculaAulaAdminB.ciclo}"  id="cbNivel">
+<f:selectItem  itemLabel="TODOS" itemValue="%"  />
+<f:selectItems value="#{matriculaAulaAdminB.cicloL}" var="itemCiclo" itemValue="#{itemCiclo.ciclo}" itemLabel="#{itemCiclo.descripcion}" /> 
+</h:selectOneMenu>
+<br />
+
+
+<h:outputLabel value="Turno" />
+<h:selectOneMenu value="#{matriculaAulaAdminB.turno}"  id="cbTurno">
+<f:selectItem  itemLabel="TODOS" itemValue="%"  />
+<f:selectItems value="#{matriculaAulaAdminB.turnoL}" var="itemTurno" itemValue="#{itemTurno.turno}" itemLabel="#{itemTurno.descripcion}" /> 
+</h:selectOneMenu>
+
+</div>
+<div class="paneles">
+<ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{matriculaAulaAdminB.carrera},MALLA,%,NIVEL,#{matriculaAulaAdminB.ciclo},TURNO,#{matriculaAulaAdminB.turno}" />
+      <h:commandLink   target="_black" title="VISTA DE IMPRESION" styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/matricula/matriculadoAula', 1,fn:split(param1,','))}"       >
+
+                          <i class="fa fa-print" />
+                              IMPRESION
+                          </h:commandLink>
+                            
+</div>
+
+
+</h:form>
+              
+              </ui:define>
+    
+    
+    </ui:composition>
+

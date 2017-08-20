@@ -1,0 +1,139 @@
+<ui:composition   xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"
+                          
+                            template="/Administrativo/plantilla.xhtml">
+              
+            <ui:define name="titulo">
+            
+            
+            </ui:define>
+               <ui:define name="contenido">
+               
+               <style>
+   a{text-decoration: none;}
+   .img{position: relative;padding: 0;overflow: hidden;}
+   .img:HOVER .img-dato{bottom: 0}
+   .img-dato{position: absolute;bottom: -90px;text-align:center;display: block;width: 100%;background-color: rgba(0,0,0,0.5);color: white;height: 100%;transition:all 0.5s }
+   
+   </style>
+
+    <script>
+$(document).ready(function(){
+	
+	
+});
+   function readURL(input) {
+	
+       if (input.files &amp;&amp; input.files[0]) {
+           var reader = new FileReader();
+           $('#lblPeso').text(input.files[0].size );           
+           $('#lblNombre').text(input.files[0].name );
+           $('#lblTipo').text(input.files[0].type );
+           
+           reader.onload = function (e) {
+               $('#blah').attr('src', e.target.result);
+           }
+           
+           reader.readAsDataURL(input.files[0]);
+       }
+   }
+   
+   $("body").on("change","#btExaminar",function (){    
+      
+	   readURL(this);
+ }); 
+
+   
+   </script>
+
+
+<h:form id="frmImagenPersona" prependId="false" >
+
+
+<div class="paneles">
+<h:outputLabel value="Tipo persona" />
+<h:selectOneMenu value="#{imagenPersonaB.tipoPersona}" >
+	<f:selectItems value="#{imagenPersonaB.tipoPersonaL}" var="itemTipoPersona"  itemLabel="#{itemTipoPersona.descripcion}" itemValue="#{itemTipoPersona.tipoPersona}" />
+	<f:ajax execute="@this" render="pnImagenPersona" listener="#{imagenPersonaB.mostrarPersona}" />
+</h:selectOneMenu>
+
+</div>
+
+<h:panelGroup layout="block" id="pnImagenPersona"  >
+
+
+<ui:repeat var="itemPersona" value="#{imagenPersonaB.personaL}" >
+
+<div class="paneles column img" >
+<img  src="SVerImagenAlumno?alumno=#{itemPersona.persona}" style="height: 100px;width: 100px"  />
+<div class="img-dato" >
+#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}
+<br />
+	<h:commandLink onclick="dlgImagenPersona.show()">
+		<i class="fa fa-pencil" />
+		<f:ajax execute="@this" listener="#{imagenPersonaB.nuevaImagen(itemPersona.persona)}" />
+	</h:commandLink>
+	
+	<h:commandLink title="ELiminar" rendered="false" >
+		<i class="fa fa-times" style="color:red"  />
+		<f:ajax execute="@this" render=":frmImagenPersona:pnImagenPersona" listener="#{imagenPersonaB.eliminarImagen(itemPersona.persona)}" />
+	</h:commandLink>
+</div>
+
+<div>
+
+</div>
+</div>
+	
+
+</ui:repeat>
+</h:panelGroup>
+</h:form>
+ <h:form enctype="multipart/form-data" prependId="false">
+<p:dialog widgetVar="dlgImagenPersona" header="..: Subir imagen :.." modal="true" width="500" resizable="false" closeOnEscape="true">
+<div class="panales">
+
+      			<div class="column" style="border: 1px solid silver;width: 250px;height: 250px;overflow: auto;">
+      			
+      			<img id="blah" src="" />
+      			</div>
+      			<div class="column" style="width: 200px">
+      			<h:outputLabel value="Peso" /><br />
+      			<b id="lblPeso" /><br />
+      			<h:outputLabel value="Tipo" /><br />
+      			<b id="lblTipo" /><br />
+      			<h:outputLabel value="Nombre" /><br />
+      			<b id="lblNombre" />
+      			</div>
+
+
+</div>
+       			
+       
+		       	<p:fileUpload id="btExaminar" value="#{imagenPersonaB.file}" mode="simple" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+		        	
+		   <f:facet name="footer" >
+                            <div style="display: block;text-align: right">
+                            
+                            
+			                <h:commandLink  styleClass="boton-verde" action="#{imagenPersonaB.insertarImagen}">
+			                ACEPTAR 
+			                
+			                </h:commandLink>
+
+                                <h:commandLink styleClass="boton-rojo" onclick="dlgImagenPersona.hide()">
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                            
+                        </f:facet>
+        
+				</p:dialog>
+                </h:form>               
+ </ui:define>
+</ui:composition>
+

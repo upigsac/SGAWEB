@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:view contentType="text/html">
+        <h:head>
+
+            <style type="text/css">
+
+                .ui-panelgrid tr, .ui-panelgrid td {
+                    border:0 !important;
+                }
+            </style>
+        </h:head>
+        <h:body>
+            <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    Alumno por Periodo
+                </ui:define>
+                
+                <ui:define name="contenido">
+                    <h:form id="frmalumnos">
+                        <p:growl id="growl" showDetail="false" life="5000"/>
+                        <p:panel header="Informacion del Alumno" style="width: 70%; margin-left: auto; margin-right: auto; margin-top: auto;">
+                            <p:panelGrid style="width: 70%; margin-left: auto; margin-right: auto; margin-top: auto;">
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Codigo :" />        
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="cboalumno" value="#{alumnoBean.alumno}" style="width: 300px;">
+                                            <p:ajax event="change" process="@form" update="dtalumnos" listener="#{alumnoBean.acttableperiodo}"/>
+                                            <f:selectItems value="#{alumnoBean.selectalumno}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Alumno :"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel id="lblnomalumno" value="#{alumnoBean.nombre}"/>        
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton image="cssbotonbsqd" oncomplete="PF('DialogFrmPersonas').show();" style="margin-left: 8px;" />
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panelGrid  style="width: 100%; margin-left: auto; margin-right: auto; margin-top: auto;">
+                            <p:row>
+                                <p:column><p:outputLabel value="Periodo :" style="float: right;"/></p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{alumnoBean.perido}">
+                                        <f:selectItems value="#{alumnoBean.selectperiodo}"/>
+                                        <p:ajax event="change" process="@form" update="dtalumnos" listener="#{alumnoBean.acttableperiodo}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column><p:outputLabel value="Institucion :" style="float: right;"/></p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{alumnoBean.institucion}" style="width: 455px; font-size:85%;">
+                                        <p:ajax event="change" process="@form" update="dtalumnos" listener="#{alumnoBean.acttableperiodo}"/>
+                                        <f:selectItems value="#{alumnoBean.selectinstitucion}"/>
+                                    </p:selectOneMenu>
+                                    <p:column>
+                                        <p:commandButton value="Guardar Cambios" style="height: 92%; vertical-align: 34%; margin-left: 1%;" actionListener="#{alumnoBean.updalumnoperiodo}" update="frmalumnos"/>
+                                    </p:column>
+                                </p:column>
+
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:remoteCommand name="pruebaactu" update="dtalumnos"/>
+                                    <p:dataTable id="dtalumnos" value="#{alumnoBean.tabalumnosxperiodo}" style="font-size: 70%;" var="alum" rows="20"
+                                                 emptyMessage="No hay Registros" editable="true" editMode="cell" scrollable="true" scrollHeight="500">
+
+                                        <p:ajax event="cellEdit" listener="#{alumnoBean.onCellEdit}" process="@this" oncomplete="pruebaactu()"/>
+                                        <p:column style="width: 7%; text-align: center;">
+                                            <f:facet name="header"><p:outputLabel value="Carrera"/></f:facet>
+                                            <p:outputLabel value="#{alum.carrera}"/>
+                                        </p:column>
+
+                                        <p:column style="width: 7%; text-align: center;">
+                                            <f:facet name="header"><p:outputLabel value="Seccion"/></f:facet>
+                                            <p:outputLabel value="#{alum.seccion}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Ciclo" style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.nivel_ref}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.nivel_ref}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cursos Mat." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.curso_mat}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.curso_mat}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cursos Aprov." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.curso_aprov}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.curso_aprov}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cursos Conv." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.curso_conv}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.curso_conv}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+
+                                        <p:column headerText="Cursos Ret." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.curso_ret}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.curso_ret}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+
+                                        <p:column headerText="Cred. Mat." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.creditos_mat}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.creditos_mat}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cred. Aprov." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.creditos_aprov}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.creditos_aprov}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cred. Conv." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.creditos_conv}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.creditos_conv}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+
+                                        <p:column headerText="Cred. Ret." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.creditos_ret}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.creditos_ret}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+
+                                        <p:column headerText="Prom. Sem." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.promedio}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.promedio}" size="3"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="P. Pond." style="width: 6%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.promedio_pon}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.promedio_pon}" size="3"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Cat." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.categoria}"/></f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{alum.categoria}" style="width: 100%;">
+                                                        <f:selectItems value="#{alumnoBean.selectcategoria}"/>
+                                                    </p:selectOneMenu>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Dscto." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.dscto}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.dscto}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Monto Base." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.monto_base}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.monto_base}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Monto Pago" style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.monto_pago}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{alum.monto_pago}" size="2"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Reg." style="width: 7%; text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{alum.registro}"/></f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{alum.estado_registro}" style="width: 100%;">
+                                                        <f:selectItems value="#{alumnoBean.selectestado_registro}"/>
+                                                    </p:selectOneMenu>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </p:column>
+                            </p:row> 
+
+
+
+                        </p:panelGrid>
+                    </h:form>
+
+                    <!--         BUSQUEDA DE PERSONAS              -->
+                    <p:dialog id="DialogPersonas" width="60%" widgetVar="DialogFrmPersonas" modal="true" 
+                              showEffect="explode" hideEffect="fade" resizable="false">
+                        <h:form id="busqueda">
+                            <h:panelGrid id="pnlbusqueda" columns="2">
+                                <h:outputText value="Apellido Paterno :"/>
+                                <p:inputText style="width: 100%;" value="#{alumnoBean.apepat}" id="paterno" maxlength="20" />
+                                <h:outputText value="Apellido Materno :" />
+                                <p:inputText style="width: 100%;" value="#{alumnoBean.apemat}" id="materno" maxlength="20"/>
+                                <h:outputText value="Nombres :" style="float: right;"/>
+                                <p:inputText style="width: 100%" value="#{alumnoBean.nomper}" id="nombres"/>
+                                <p:commandButton value="  B U S C A R  "  id="btnbuscar"  update=":form:dtpersonas"  actionListener="#{alumnoBean.nombresconcepto}"/>
+                            </h:panelGrid>
+                        </h:form>
+
+                        <h:form id="form" >
+                            <p:dataTable var="data" id="dtpersonas" styleClass="tamaño" value="#{alumnoBean.tabpersonas}"  
+                                         rows="100" scrollable="true"   rowKey="#{data.persona}" selectionMode="single"  scrollHeight="250"  selection="#{alumnoBean.persona}" 
+                                         emptyMessage="No hay registros">                  
+
+                                <p:ajax event="rowSelect" listener="#{alumnoBean.onRowSelectPeriodo}"  update=":frmalumnos"
+                                        process="@this"  oncomplete="PF('DialogFrmPersonas').hide();"/>
+
+                                <p:columns value="#{alumnoBean.colpersonas}"  var="column" columnIndexVar="colIndex">
+                                    <f:facet name="header">
+                                        <h:outputText value=" #{column.header}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{data[column.property]}" styleClass="selecttr"/>
+                                </p:columns> 
+                            </p:dataTable>
+                        </h:form>
+                    </p:dialog>
+                    <!--                          FIN DE BUSQUEDA                                                                                                     -->                  
+                </ui:define>
+            </ui:composition>
+        </h:body>
+    </f:view>
+</html>
+
+
+
+

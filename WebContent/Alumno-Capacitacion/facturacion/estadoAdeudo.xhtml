@@ -1,0 +1,27 @@
+
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Estado de No Adeudo
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                                
+                <span class="tituloCuerpo"> ESTADO DE NO ADEUDO </span>
+              
+            <h:form id="formReporte"  >
+                    
+                    <ui:param name="param2" value="@LSALUMNO,#{usuarioB.persona.persona},@LSPERIODO,%" />                                
+                    <h:commandLink class="linkpdf" value="ESTADO DE NO ADEUDO" target="_blank" actionListener="#{utilB.imprimir_crystal('\\Alumno\\facturacion\\reporte\\', 'estnoadeu', 0, fn:split(param2,','))}"   />                                              
+            </h:form>
+                
+            </ui:define>
+            
+        </ui:composition>
+

@@ -1,0 +1,28 @@
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Estado de Cuenta
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                                
+                <span class="tituloCuerpo"> ESTADO DE CUENTA </span>
+              
+                <h:form id="formReporte" >
+                              
+                <ui:param name="param" value="@CODIGOS,#{usuarioB.persona.persona},@LDESPER,#{usuarioB.alumnoPeriodoL[usuarioB.alumnoPeriodoL.size()-1].periodo},@LHASPER,#{usuarioB.alumnoPeriodoL[0].periodo}" />    
+                <h:commandLink class="linkpdf"  value="ESTADO DE CUENTA " target="_blank" actionListener="#{utilB.imprimir_crystal('\\Alumno\\facturacion\\reporte\\', 'eclupig', 0, fn:split(param,','))}"   />
+                
+            </h:form>
+                
+            </ui:define>
+            
+</ui:composition>
+

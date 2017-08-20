@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+        <meta charset="utf-8"/>     
+        <script  type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.js"></script>
+        <script  type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>     
+        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <script src="#{utilB.ruta}/SGAWEB/resources/js/modal.js"></script>
+
+        <link href="/SGAWEB/resources/css/styles.css" type="text/css" rel="stylesheet"/>        
+        <link href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet"/>
+        <link rel="icon" href="#{utilB.ruta}/SGAWEB/resources/imagenes/mundo.png"></link>
+
+        <script>
+
+
+            $(document).ready(function() {
+
+
+
+                                var bandera=true;
+				$('#btMenu').click(function(e){
+					e.preventDefault();
+					if(bandera){
+						$('.MenuPrincipal').addClass('ocultar');
+						$('.MenuPrincipal').removeClass('mostrar');
+                                                 $("#wrapper-section").animate({"width": "97%"}, 400);
+					}else{
+						$('.MenuPrincipal').addClass('mostrar');
+						$('.MenuPrincipal').removeClass('ocultar');	
+                                                $("#wrapper-section").animate({"width": "79%"}, 400);
+                                                
+					}
+					bandera=!bandera;
+					
+				});
+
+
+
+
+            
+
+                $(".mensajeS").css("opacity", 0).animate({"opacity": 1}, 2000, function() {
+                    $(this).animate({"opacity": 0}, 4000);
+                });
+
+                
+               
+                
+
+                $('#icon-config').click(function() {
+                    $("#conf-persona-ventana").slideToggle("fast");
+
+                });
+
+               
+               
+
+
+             
+
+
+            });
+
+
+         
+            
+
+        </script>
+
+        <style>
+          
+            .titulo{color: #0073AA;text-transform: uppercase;font-weight: bold;font-size: 18px;margin:  20px ;display: block}
+            .columna{display: inline-block;width: 130px;margin-left: 50px;}
+            .icon-menu:before{content:"\e9bd";}
+            .icon-menu:n{display:block;width:97%;font-size:1.8em;text-align: right}
+            
+        </style>
+
+        <title>
+
+            <ui:insert name="titulo">
+
+            </ui:insert> 
+
+        </title>
+    </h:head>
+
+
+
+    <h:body >
+
+  
+
+        <div id="wrapper">
+
+
+            <ui:insert name="cabecera">
+                
+                
+      
+                <div class="wrapper-header sm-header-a">
+                    <header class="header">
+                        <div class="header-hgroup inlineblock">
+                            <img src="../../resources/imagenes/logo_upig.png"  width="80" height="80"   class=" inlineblock"/>
+                            <div class="inlineblock lema">
+                                <h1  >UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h1>
+                                <h3  >"Excelencia Académica para un Mundo Globalizado"</h3>
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="header-person inlineblock" >
+                            <div class="header-person-det inlineblock">
+                                <!-- <span id="reloj"> </span>-->
+                                <span class=" span" id="nomPerson">#{usuarioB.persona.nombreCompletos()}</span>
+                                <span class="font20 span" style="color:yellow">#{carreraB.mostrarCarreraPersonal(usuarioB.institucionS,usuarioB.usuarios.usuario).descripcion}</span>                         
+                                <span  id="userPerson" >#{usuarioB.usuarios.usuario} </span>
+                                <ul class="subOpciones" style="display: none">
+                                    <li ><a href="#" class="icon-user"></a></li>
+                                    <ul>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                    </ul>
+                                    
+                                    <li ><a href="#" class="icon-bubble2"></a></li>
+                                    <ul>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                    </ul>
+                                    <li ><a href="#" class="icon-wrench"></a></li>
+                                    <li ><a href="#" class="icon-power-cord"></a></li>
+                                </ul>
+                                <span class="conf-persona span " id="icon-config"></span>
+
+                                
+                                
+                              
+                                <h:form>
+
+                                    <div id="conf-persona-ventana" class="sm-header">
+                                        <div class="triangulo"/>
+
+                                        <img src="SVerImagen" width="100" height="130"/>
+
+                                        <ul id="conf-personal">
+
+                                            <li><h:link value="Mi Perfil" class="button font20" outcome="/Alumno-Capacitacion/misDatos.xhtml?faces-redirect=true"/></li>
+
+                                            <li>
+
+                                                <h:link value="Cambiar Clave" class="button font20" outcome="/Alumno-Capacitacion/CambiarClave.xhtml?faces-redirect=true"/>
+                                            </li>
+
+                                            <li><h:commandLink value="Ayuda" class="button font20"   /></li>
+
+                                            <li><h:commandButton value="Cerrar Sesion" class="button font20" action="#{usuarioB.cerrarSesion}" /></li>
+
+                                        </ul>    
+                                    </div>
+                                </h:form>
+                            </div>
+                            <div class="header-person-img inlineblock" >
+
+                                <img src="SVerImagen" class="img-person" />
+     
+                            </div>
+                          
+                        </div>
+                    </header> 
+                </div>
+
+            </ui:insert>
+
+            <!--   </header> -->
+
+            <div  id="wrapper-nav-section" >
+                <!--             MENU DE LA PAGINA                     -->
+                <nav id="main" class="inlineblock MenuPrincipal mostrar" >
+                    <div id="opc-inst-period" class="sm-background-a">
+
+                        <!--***************************************************************************************-->
+
+                        
+                        <a id="btMenu" href="#" class='icon-menu' ></a>
+                        <label id="vistaListaInstitutos" class="color-c font20" style="margin-left: 5px;">Institución: </label>
+
+
+                        <h:form id="datosInstitucion" prependId="false">
+                            <h:selectOneMenu value="#{usuarioB.institucionS}">
+                                <f:selectItems value="#{institucionB.mostrarInstitucionAlumno(usuarioB.usuarios.usuario)}" var="institucion" itemLabel="#{institucion.descripcion}" itemValue="#{institucion.institucion}" />
+                                <f:ajax execute="@this" render=":frmPeriodo:cmbPeriodo" />
+                            </h:selectOneMenu>
+                            
+
+                        </h:form>
+
+                        <label class="color-c font20" style="margin-left: 5px;">Periodo: </label>
+
+                        <h:form id="frmPeriodo">
+
+                            
+                            <h:selectOneMenu value="#{usuarioB.periodoS}" id="cmbPeriodo" >                                                          
+
+                                <f:selectItems value="#{periodoB.mostrarPeriodoAlumno(usuarioB.institucionS, usuarioB.usu)}" var="periodo" itemValue="#{periodo.periodo}" itemLabel="#{periodo.desPeriodo}" />
+                                <p:ajax process="@this" update="@this :pnAreaTrabajo" />
+                            </h:selectOneMenu>
+                        </h:form>
+
+                    </div>
+
+                    <ul class="menu-Padre">
+                        <ui:repeat value="#{menuB.lista}" var="item" > 
+
+                            <li>
+                                <img src="#{item.imgMod}"  />
+                                <a href="#{item.url}" title="" target=""  >#{item.nombre}</a>
+
+                                <ul class="menu-Hijo">
+                                    
+                                    <ui:repeat value="#{menuB.getParametro(13,item.getmPadre())}" var="hijo">
+                                        <li>
+                                            <img src="#{hijo.imgMod}" />
+                                            <a  href="/SGAWEB/faces/Alumno-Capacitacion/#{hijo.url}"  title="#{hijo.nombre}" class="menu-s-a">#{hijo.nombre}</a>
+                                         
+                                        </li>
+                                        <!--ver redireccion-->
+                                    </ui:repeat>
+                                </ul>
+                            </li>
+
+                        </ui:repeat>
+                    </ul>
+                </nav>
+
+                <section class="inlineblock" id="wrapper-section"  >
+                    <article class="contenido" >   
+                        <h:panelGroup layout="block" id="pnAreaTrabajo" >
+
+                            <ui:insert name="contenido">
+                                <ui:include src="">
+                                    
+                                </ui:include>
+                            </ui:insert>         
+                        </h:panelGroup>
+
+                    </article>
+                </section>
+
+            </div>
+           
+        </div>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="declaracion_jurada" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fae7c5f1-89ca-4540-8660-150ff7ffea01">
+	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="336"/>
+	<parameter name="PERSONA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *from  UPA.DAT_PERSONAS WHERE PERSONA=$P{PERSONA}]]>
+	</queryString>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="APELLIDO_PATERNO" class="java.lang.String"/>
+	<field name="APELLIDO_MATERNO" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="DIRECCION_UBIGEO" class="java.lang.String"/>
+	<field name="TIPO_TRANSITO" class="java.lang.Short"/>
+	<field name="DIRECCION_RECIDENCIA" class="java.lang.String"/>
+	<field name="DIRECCION_REFERENCIA" class="java.lang.String"/>
+	<field name="DIRECCION_UBIGEO_PROC" class="java.lang.String"/>
+	<field name="TIPO_TRANSITO_PROC" class="java.lang.Short"/>
+	<field name="DIRECCION_RECIDENCIA_PROC" class="java.lang.String"/>
+	<field name="DIRECCION_REFERENCIA_PROC" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="TELEFONO_CELULAR" class="java.lang.String"/>
+	<field name="EMAIL_PRINCIPAL" class="java.lang.String"/>
+	<field name="EMAIL_OPCIONAL" class="java.lang.String"/>
+	<field name="NACIMIENTO_FECHA" class="java.sql.Timestamp"/>
+	<field name="NACIMIENTO_UBIGEO" class="java.lang.String"/>
+	<field name="SEXO" class="java.lang.Short"/>
+	<field name="GRUPO_SANGINEO" class="java.lang.Integer"/>
+	<field name="ESTADO_CIVIL" class="java.lang.Short"/>
+	<field name="PAIS" class="java.lang.Short"/>
+	<field name="TELEFONO_EMERGENCIA_01" class="java.lang.String"/>
+	<field name="TELEFONO_EMERGENCIA_02" class="java.lang.String"/>
+	<field name="TELEFONO_EMERGENCIA_03" class="java.lang.String"/>
+	<field name="TELEFONO_EMERGENCIA_04" class="java.lang.String"/>
+	<field name="TRABAJA" class="java.lang.Short"/>
+	<field name="PROFESION" class="java.lang.Short"/>
+	<field name="OCUPACION" class="java.lang.Short"/>
+	<field name="CENTRO_TRABAJO" class="java.lang.String"/>
+	<field name="TIEMPO_SERVICIO" class="java.lang.String"/>
+	<field name="CONDICION_LABORAL" class="java.lang.Short"/>
+	<field name="TIPO_CONTRATO" class="java.lang.Short"/>
+	<field name="DEDICACION" class="java.lang.Short"/>
+	<field name="TELEFONO_TRABAJO" class="java.lang.String"/>
+	<field name="TIPO_VIVIENDA" class="java.lang.Short"/>
+	<field name="SITUACION_VIVIENDA" class="java.lang.Short"/>
+	<field name="SERVICIO_AGUA" class="java.lang.Boolean"/>
+	<field name="SERVICIO_DESAGUE" class="java.lang.Boolean"/>
+	<field name="SERVICIO_LUZ" class="java.lang.Boolean"/>
+	<field name="SERVICIO_APUBLICO" class="java.lang.Boolean"/>
+	<field name="NUMERO_PISOS" class="java.lang.Short"/>
+	<field name="NUMERO_DORMITORIOS" class="java.lang.Short"/>
+	<field name="MATERIAL_CONSTRUCCION" class="java.lang.String"/>
+	<field name="VIVIENDA_CUENTA" class="java.lang.String"/>
+	<field name="MOVILIDAD" class="java.lang.String"/>
+	<field name="ENFERMEDAD_CRONICA" class="java.lang.Boolean"/>
+	<field name="ENFERMEDAD_DESCRIPCION" class="java.lang.String"/>
+	<field name="NIVEL_EDUCATIVO" class="java.lang.Short"/>
+	<field name="TIPO_DOCUMENTO" class="java.lang.Short"/>
+	<field name="NRO_DOCUMENTO" class="java.lang.String"/>
+	<field name="ESTADO_REGISTRO" class="java.lang.Short"/>
+	<field name="ESTADO_HUELLA" class="java.lang.String"/>
+	<field name="CREACION_USUARIO" class="java.lang.String"/>
+	<field name="CREACION_ESTACION" class="java.lang.String"/>
+	<field name="CREACION_FECHA" class="java.sql.Timestamp"/>
+	<field name="CONTROL_USUARIO" class="java.lang.String"/>
+	<field name="CONTROL_ESTACION" class="java.lang.String"/>
+	<field name="CONTROL_FECHA" class="java.sql.Timestamp"/>
+	<field name="CONTROL_PASO" class="java.lang.Short"/>
+	<field name="CARGO_DESEMPEÑA" class="java.lang.String"/>
+	<field name="INSTITUCION_GRADO" class="java.lang.String"/>
+	<field name="ANIO_GRADO" class="java.lang.String"/>
+	<field name="MENSION_GRADO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<image>
+				<reportElement uuid="18c4401e-4fcf-4a75-8fa6-ec11a8c74b7d" x="13" y="0" width="44" height="41"/>
+				<imageExpression><![CDATA["D:\\logo_upig.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement uuid="b364d93c-4c5f-416d-9d91-9946e81767f4" x="9" y="45" width="522" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="47">
+			<staticText>
+				<reportElement uuid="40b70f46-ddf7-47a0-9b6c-781e33c47f70" x="26" y="0" width="497" height="29" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="20" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[DECLARACIÓN JURADA ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="566" splitType="Stretch">
+			<textField pattern="&apos;Lima, &apos; EEEEE dd MMMMM yyyy">
+				<reportElement uuid="9520c033-33e4-4f54-ad0a-33b98ef6d1f9" x="273" y="257" width="250" height="37"/>
+				<box rightPadding="0"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aad988dc-9c89-4010-a3b4-0aea8171555a" x="192" y="358" width="191" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APELLIDO_PATERNO}+' '+$F{APELLIDO_MATERNO} +', '+ $F{NOMBRES}
++'<br/>D.N.I: ' + $F{NRO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e1da1e66-d8d6-4979-8e14-083f9e76e45a" x="192" y="355" width="191" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="4349e8d0-49fe-4900-b6a1-46332705cc8e" x="30" y="26" width="493" height="231"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA['<b>YO, '+$F{APELLIDO_PATERNO}+' '+$F{APELLIDO_MATERNO} +', '+ $F{NOMBRES}+ ', identificado (a) con DNI N° '+$F{NRO_DOCUMENTO}+'</b> DECLARO BAJO JURAMENTO que: '
++'<BR/><BR/>     1.-   Gozo de buena salud física y mental.'
++'<BR/><BR/>     2.-   No tengo antecedentes  judiciales ni penales.'
++'<BR/><BR/>     3.-   No tengo incompatibilidad legal ni laboral para ejercer la docencia universitaria.'
++'<BR/><BR/>     4.-   No he sido destituido por sanción administrativa.'
++'<BR/><BR/>     5.-   Cumpliré las disposiciones normativas de la universidad Peruana de Integración Global.'
++'<BR/><BR/>En caso de resultar falsa la información que proporciono, declaro haber incurrido en el delito de Falsa Declaración en Procedimiento Administrativo conforme el Artículo 411° del Código Penal y  Delito Contra la Fe Pública -  Título XIX del Código Penal, conforme establece el artículo 32° de la Ley N° 27444 – Ley de Procedimiento Administrativo General.'
+]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

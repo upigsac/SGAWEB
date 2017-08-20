@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+        
+ 
+    </h:head>
+
+  
+        
+    <h:body>
+
+        <style>
+            .lista-opciones{display: inline-block;width: 70%;vertical-align: top}
+            .lista-jurados{display: inline-block;width: 25%;}
+            .lista-jurados ul{list-style: none;border: 1px solid;margin: 0PX 0PX;width: 100%}
+            .lista-jurados ul li{display: inline-block;padding: 2px 10px}
+        </style>
+                
+              
+                
+                <span class="tituto-docente">REGISTRO DE EVALUACION </span>
+                
+                
+                <h:form id="frmNotas" style="padding: 10px 20px" target="_black"> 
+                    
+                    
+                    <div class='lista-opciones'>
+                    <span>CARRERA</span> 
+                    <h:selectOneMenu value="#{registroEvaluacionB.seleccionCarrera}" id="cboCarrera"  >
+                        <f:selectItem itemLabel="SELECCIONE" itemValue=""/>
+                        <f:selectItems value="#{registroEvaluacionB.listaCarrera}" var="carrera" itemValue="#{carrera.carrera}"   itemLabel="#{carrera.descripcion}" />
+                        <f:ajax execute="@this" render="cboCurso" listener="#{registroEvaluacionB.mostrarCursos()}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <span>CURSO</span> 
+                    <h:selectOneMenu value="#{registroEvaluacionB.seleccionCurso}" id="cboCurso" >
+                    <f:selectItem itemLabel="SELECCIONE" itemValue=""/>
+                    <f:selectItems value="#{registroEvaluacionB.listaCurso}" var="cursos" itemValue="#{cursos.curso}"   itemLabel="#{cursos.descripcion}" />
+                    <f:ajax execute="@this" render="cboSeccion" listener="#{registroEvaluacionB.mostrarSeccion()}" />
+                
+                    </h:selectOneMenu>
+
+                    <br/>
+
+                    <span>SECCION</span> 
+                    <h:selectOneMenu value="#{registroEvaluacionB.seleccionSeccion}" id="cboSeccion"     >
+                    <f:selectItem itemLabel="SELECCIONE" itemValue=""/>
+                    <f:selectItems value="#{registroEvaluacionB.listaSeccion}" var="seccion" itemValue="#{seccion.seccion}"   itemLabel="#{seccion.descripcion}" />
+                    <f:ajax execute="@this" render="tbDetalle" listener="#{registroEvaluacionB.mostrarListaAlumnos}" />
+                    </h:selectOneMenu>
+                    
+                    </div>
+                    <div class="lista-jurados">
+                        <ul >
+                            <li> TIPO </li>
+                            <li> JURADO</li>
+                            <li> </li>
+                        </ul>
+                       
+                    
+                        <ul >
+                            <li> C</li>
+                            <li> TORRES HUAMAN MARIA</li>
+                            <li><h:commandLink value="..."/> </li>
+                        </ul>
+                        <ul >
+                            <li> D</li>
+                            <li> ALIGA PIZARRO DIEGO</li>
+                            <li><h:commandLink value="..."/> </li>
+                        </ul>
+                        <ul >
+                            <li> E</li>
+                            <li> ZAPATA QUISPE RONALD</li>
+                            <li><h:commandLink value="..."/> </li>
+                        </ul>
+                    </div>
+                      <br/><br/><br/>
+                    <p:dataTable  value="#{registroEvaluacionB.listaDetalle}" var="detalle" id="tbDetalle" editable="true" editMode="cell"  >
+                        
+                        <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="GRUPO">
+                            
+                        </p:column>
+                            
+                        <p:column rowspan="2" headerText="ALUMNO" >
+                      
+                        </p:column>
+                            <p:column rowspan="2" headerText="NOMBRES" width="20%" >
+                      
+                        </p:column>
+                        <p:column  colspan="5" headerText="RELEVANCIA">
+                        </p:column>
+                            <p:column rowspan="2" headerText="PRO.">
+                      
+                        </p:column>
+                            <p:column  colspan="5" headerText="METODOLOGIA">
+                        </p:column>
+                            <p:column rowspan="2" headerText="PROM.">
+                      
+                        </p:column>
+                            <p:column  colspan="5" headerText="ANÁLISIS CONTENIDO">
+                        </p:column>
+                            <p:column rowspan="2" headerText="PROM.">
+                      
+                        </p:column>
+                            <p:column  colspan="5" headerText="PRESENTACIÓN TRABAJOS">
+                        </p:column>
+                            <p:column rowspan="2" headerText="PROM.">
+                      
+                        </p:column>
+                        </p:row>    
+                            <p:row>
+                              <p:column  headerText="A" >
+                                  
+                                </p:column>
+                                <p:column headerText="B">
+
+                                </p:column>
+                                <p:column headerText="C">
+
+                                </p:column>
+                                <p:column headerText="D">
+
+                                </p:column>
+                                <p:column headerText="E">
+
+                                </p:column>                                
+
+                                      <p:column  headerText="A">
+
+                                </p:column>
+                                <p:column headerText="B">
+
+                                </p:column>
+                                <p:column headerText="C">
+
+                                </p:column>
+                                <p:column headerText="D">
+
+                                </p:column>
+                                <p:column headerText="E">
+
+                                </p:column>                                
+
+                                 <p:column  headerText="A">
+
+                                </p:column>
+                                <p:column headerText="B">
+
+                                </p:column>
+                                <p:column headerText="C">
+
+                                </p:column>
+                                <p:column headerText="D">
+
+                                </p:column>
+                                <p:column headerText="E">
+
+                                </p:column>                                
+
+                                      <p:column  headerText="A">
+
+                                </p:column>
+                                <p:column headerText="B">
+
+                                </p:column>
+                                <p:column headerText="C">
+
+                                </p:column>
+                                <p:column headerText="D">
+
+                                </p:column>
+<p:column headerText="E">
+
+                                </p:column>                                
+                                
+                                
+                            </p:row>   
+                         </p:columnGroup>
+                        
+                        
+                        
+                        
+                        <p:ajax event="cellEdit" listener="#{registroEvaluacionB.onCellEdit}"  /> 
+                        
+                        
+                        <p:column >
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    #{detalle.grupo}
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{detalle.grupo}" id="cboSeccion">
+                                        <f:selectItem itemLabel="GRUPO 1"  itemValue="1" />
+                                        <f:selectItem itemLabel="GRUPO 2"  itemValue="2" />
+                                        <f:selectItem itemLabel="GRUPO 3"  itemValue="3" />
+                                        <f:selectItem itemLabel="GRUPO 4"  itemValue="4" />                                        
+                                    </h:selectOneMenu>                                    
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                            
+                        <p:column  >
+                            #{detalle.codAlumno}
+                        </p:column>
+                        <p:column >
+                            #{detalle.alumno}
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.ra}" size="1" maxlength="2" onkeypress="return soloNumeros(event)" >
+                                
+                                <f:ajax execute="@this" listener="#{registroEvaluacionB.ingresoNota(detalle.codAlumno,'ra',detalle.ra)}"  />
+                            </h:inputText>
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.rb}" size="1" >
+                                <f:ajax execute="@this" listener="#{registroEvaluacionB.ingresoNota(detalle.codAlumno,'rb',detalle.rb)}"  />
+                            </h:inputText>
+                        </p:column>                        
+                        <p:column>
+                            <h:inputText value="0" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="0" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="0" size="1" />
+                        </p:column>
+                        <p:column>
+                            
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.ma}" size="1" >
+                                <f:ajax execute="@this" listener="#{registroEvaluacionB.ingresoNota(detalle.codAlumno,'ma',detalle.ma)}"  />
+                            </h:inputText>
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.mb}" size="1" >
+                                <f:ajax execute="@this" listener="#{registroEvaluacionB.ingresoNota(detalle.codAlumno,'mb',detalle.ma)}"  />
+                            </h:inputText>
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            
+                        </p:column>
+                         <p:column>
+                            <h:inputText value="#{detalle.aa}" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.ab}" size="1" />
+                        </p:column>                        
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.pa}" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{detalle.pb}" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="01" size="1" />
+                        </p:column>
+                        <p:column>
+                            
+                        </p:column>
+                        
+                     
+                        
+                    </p:dataTable>
+            </h:form> 
+                
+                
+           
+                
+                 
+            
+
+              
+          
+    </h:body>
+</html>
+

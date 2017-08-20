@@ -1,0 +1,493 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        
+         
+    </h:head>
+    <h:body>
+
+        <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                SISTEMA DE UPIG
+            </ui:define>
+
+            <ui:define name="contenido">
+
+                <style scope="true">         
+                    
+                    #frmCuentaPersona\:pnBotonera{border: 1px solid silver;padding: 10px;margin: 5px}
+                    #frmDecuentoMora\:pnBotonera{border: 1px solid silver;padding: 10px;margin: 5px;text-align: right   }
+                    #frmDecuentoMora label{display: inline-block;width: 160px}
+                    #frmDecuentoMora input[type='text']{width: 100px;padding: 2px}
+                    #frmDecuentoMora\:pnBotonera input{min-width: 80px;padding: 10px 10px;margin: 2px;cursor: pointer}
+                    #frmCuentaPersona\:pnBotonera input{min-width: 80px;padding: 10px 10px;margin: 2px;cursor: pointer;background-color: #428bca;border: none;color: white;transition: all 0.2s}
+                    #frmCuentaPersona\:pnBotonera input:disabled{cursor: default;opacity: 0.5}
+                    #frmCuentaPersona\:pnBotonera input:hover{background-color: #3276b1}
+                    #frmCuentaPersona\:pnBotonera a{min-width: 80px;padding: 10px 10px;margin: 2px;cursor: pointer;background-color: #428bca;border: none;color: white;transition: all 0.2s}
+                    #frmCuentaPersona\:pnBotonera a:disabled{cursor: default;opacity: 0.5}
+                    #frmCuentaPersona\:pnBotonera a:hover{background-color: #3276b1}
+                    #frmCuentaPersona\:pnPersona input[type="text"]{padding: 3px 2px}
+                    #pnDetalle_ec,#pnFraccion{padding: 5px;}#pnFraccion > div{padding: 5px;}
+                    #frmFraciones\:pnBotonera{padding: 5px;margin: 5px;border: 1px solid silver}
+                    #frmFraciones\:pnBotonera input{padding: 5px;margin: 2px;}
+                    #frmCuentaPersona\:rbEstadoConcepto{text-align: center}
+                    #frmCuentaPersona\:rbEstadoConcepto tbody tr td{padding: 2px 3px;max-width: 75px ;vertical-align: top}
+                    #frmAutorizacion\:pnBotonera{border: 1px solid silver ;margin: 10px 0px ;padding: 10px 20px;text-align: right}
+                    #frmAutorizacion\:pnBotonera input{margin: 2px;padding: 5px}
+                    
+                    .bloque1{width: 90%;}
+                    .bloque2{width: 5%;}
+                    .foto_persona{width: 150px;height: 100%;margin: 0px 5px 0px 0px;text-align: center}
+                    
+                    .dato_persona label,.detalle_cuenta > label{display: block;}                   
+
+
+                    .ui-datatable .ui-state-hover{background-color: inherit;}
+                    
+                    #pnDetalle_ec textarea{resize: none;}
+                   
+                   
+                   
+                    
+                    .temaAdmin table thead,.temaAdmin table tbody,.temaAdmin table tfoot{font-size: 0.7em}
+                    .temaAdmin .ui-datatable-odd{background-color: white}
+                    .temaAdmin .ui-state-highlight{background: #2182C2!important}
+                    .temaAdmin .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+                </style>
+                
+               
+                
+                <span class="tituto-admin">ESTADO DE CUENTA</span>
+                
+                <h:panelGroup layout="block" id="pnMensaje" style="position: fixed;right: 5px;top: 5px;min-width: 150px;min-height: 50px;background-color: rgba(50,50,50,0.8) ;padding: 20px 10px;font-family:arial;text-align: center;border-radius:  7px 0px 0px 7px;display: none">
+                    <h:outputLabel value="TOTAL" style="color: white" />
+                    <br/>
+                    <h:outputLabel id="lblTotalSelecionado" value="#{cpB.totalSeleccionado}" style="font-weight: bold;font-size: 2.0em;color: red; " />
+                </h:panelGroup>
+
+                <h:form id="frmCuentaPersona"  >
+                    <div style="border:1px solid silver;margin: 5px">
+                            
+                        
+                        
+
+                            <h:panelGroup id="pnPersona" layout="block" styleClass="dato_persona inlineblock" style="padding: 5px;width: 58%">
+
+                                <div class="foto_persona inlineblock" >
+                                    <img  style="width: 130px;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{cpB.seleccionPersona.persona}" />
+                                </div>
+                                <div class="dato_persona inlineblock w75">
+
+                                    <div class="inlineblock w50">
+                                            
+                                        
+                                        <h:outputLabel for="txtCodigoPersona" value="CODIGO" />
+                                        <h:inputText id="txtCodigoPersona" value="#{cpB.seleccionPersona.persona}" disabled="#{cpB.banderaBotonera}" pt:placeholder='Ingrese Codigo'>
+                                            <f:ajax event="change" execute="@this"  render=":frmCuentaPersona :frmBusquedaPersona" listener="#{cpB.buscarCodigoPersona()}" />
+                                        </h:inputText>
+
+                                        
+                                        <h:outputLabel for="nombre" value="PERSONA" />
+                                        <h:inputText id="nombre" value="#{cpB.seleccionPersona.nombreCompletos()}" disabled="#{true}" />
+                                        <h:outputLabel for="txtEmail" value="E-MAIL" />
+                                        <h:inputText id="txtEmail" value="#{cpB.seleccionPersona.emailP}" disabled="#{true}" />
+
+                                    </div>
+                                    <div class="inlineblock w50" style="padding: 0px 0px 0px 5px;">
+                                        <label for="institucion">INSTITUCION</label>
+                                        <h:selectOneMenu id="institucion" value="#{cpB.filtroInstitucion}" style="width: 200px">                                    
+                                            <f:selectItems value="#{cpB.listadoInstitucionesPersona}" var="inst" itemLabel="#{inst.abrev_inst} - #{inst.cod_alumno}" itemValue="#{inst.institucion}"/>
+                                            <p:ajax update=":frmCuentaPersona:tbDetalle" listener="#{cpB.institucionesPersona}"/>
+                                        </h:selectOneMenu>
+
+                                        <div>
+                                            <div class="inlineblock">
+                                                <label for="periodo">PERIODO</label>
+                                                <h:selectOneMenu id="periodo" value="#{cpB.filtroPeriodo}" disabled="#{empty cpB.listadoPeriodosPersona}">  
+                                                    <f:selectItem itemValue="#{null}" itemDisabled="true"/>
+                                                    <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                                                    <f:selectItems value="#{cpB.listadoPeriodosPersona}" var="per" itemLabel="#{per.desPeriodo}" itemValue="#{per.periodo}"/>
+                                                    <p:ajax update=":frmCuentaPersona:tbDetalle" listener="#{cpB.carrerasPersonaEC}"/>
+                                                </h:selectOneMenu>
+                                                
+                                                
+                                            </div>
+                                            <div class="inlineblock">
+                                                <label for="periodo">CARRERA</label>
+                                                <h:selectOneMenu id="carrera" value="#{cpB.filtroCarrera}" disabled="#{empty cpB.listadoPeriodosPersona}">  
+                                                    <f:selectItem itemValue="#{null}" itemDisabled="true"/>
+                                                    <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                                                    <f:selectItems value="#{cpB.listadoCarrerasPersona}" var="car" itemLabel="#{car.abreviatura}" itemValue="#{car.carrera}"/>
+                                                    <p:ajax update=":frmCuentaPersona" listener="#{cpB.ecXpersona}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <br/>
+                                                <h:outputLabel value="Concepto" />
+                                                <h:selectOneMenu value="%">
+                                                    <f:selectItem itemLabel="TODOS" itemValue="%" />
+                                                </h:selectOneMenu>
+                                            
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+                             <hr/>
+                                        <h:selectOneRadio id="rbEstadoConcepto" value="#{cpB.filtroEstado}" >
+                                                    <f:selectItem itemLabel="TODOS" itemValue="%" />
+                                                    <f:selectItem itemLabel="PENDIENTE" itemValue="27"/>
+                                                    <f:selectItem itemLabel="CANCELADO" itemValue="28"/>
+                                                    <f:selectItem itemLabel="ANULADO" itemValue="24"/>
+                                                    <f:selectItem itemLabel="BORRADO LOGICO" itemValue="02"/>
+                                                    <f:selectItem itemLabel="FRACCIONADO" itemValue="70"/>
+                                                    <f:ajax execute="@this" render=":frmCuentaPersona" listener="#{cpB.ecXpersona}" />
+                                        </h:selectOneRadio>
+                            </h:panelGroup>
+                        <h:panelGroup layout="block" id="pnDetalleAutorizacion" style="display: inline-block;border: 1px solid silver;width: 40%;height: 200px">
+                            
+                            
+                        </h:panelGroup>
+                        
+                       
+                        
+                        
+                        
+                    </div>
+                   
+                    
+                         <h:panelGroup id="pnBotonera" layout="block" class="botonera ">
+                             <h:commandButton value="BUSQUEDA" type="button" onclick="dlgBusquedaPersona.show();" disabled="#{cpB.banderaBotonera}"  styleClass="fa fa-angellist" />
+                             
+                          
+                            <h:commandButton id="btCancelar" type="button"  value="CANCELAR" disabled="#{not cpB.banderaBotonera}" >
+                                <f:ajax execute="@this" render="pnBotonera tbDetalle txtCodigoPersona " listener="#{cpB.cancelar()}" />
+                            </h:commandButton>
+                            <h:commandButton  id="btAceptar" type="button" value="ACEPTAR" disabled="#{not cpB.banderaBotonera}">
+                                <f:ajax execute="@this" render=":frmFraciones txtCodigoPersona :frmAutorizacion :frmDecuentoMora tbDetalle pnBotonera" listener="#{cpB.gestionarAccion()}" />                                
+                            </h:commandButton>
+                            
+                            <h:commandButton type="button" value="FRACCIONAR"  disabled="#{ cpB.banderaBotonera}">
+                                <f:ajax execute="@this" render="frmCuentaPersona:tbDetalle:lblMensaje pnBotonera tbDetalle txtCodigoPersona" listener="#{cpB.inicioFraccion()}" />
+                            </h:commandButton>
+                            
+                            <h:commandButton type="button" value="CONDONACION DE DEUDA" disabled="#{ cpB.banderaBotonera}" >
+                                <f:ajax execute="@this" render="frmCuentaPersona:tbDetalle:lblMensaje pnBotonera tbDetalle txtCodigoPersona"  listener="#{cpB.inicioCondonacion()}" />
+                            </h:commandButton>
+                             
+                             <h:commandButton type="button" value="DESGLOZAR" disabled="#{ cpB.banderaBotonera}" >
+                                <f:ajax execute="@this" render="frmCuentaPersona:tbDetalle:lblMensaje pnBotonera tbDetalle txtCodigoPersona"  listener="#{cpB.inicioDeglozar()}" />
+                            </h:commandButton>
+                             
+                             
+                            <h:commandButton type="button" value="DESCUENTO MORA" disabled="#{ cpB.banderaBotonera}" >
+                                <f:ajax execute="@this" render="frmCuentaPersona:tbDetalle:lblMensaje pnBotonera tbDetalle txtCodigoPersona"  listener="#{cpB.inicioDescuentoMora()}" />
+                            </h:commandButton>
+                             
+                        </h:panelGroup>
+                    
+                    
+                    
+                        <p:dataTable id="tbDetalle" value="#{cpB.listadoCP}" var="cpp" rowKey="#{cpp}" 
+                                     
+                                     styleClass="temaAdmin"       rowIndexVar="status"    disabledSelection="#{cpB.banderaBotonera?cpB.validaSeleccion(cpp):true}"                           
+                                     selectionMode="multiple" selection="#{cpB.seleccionCP}"  emptyMessage="NO SE ENCONTRARON RESULTADOS">
+
+                            <p:ajax event="rowSelect" listener="#{cpB.onRowSelect}" update="lblTotalSelecionado" />
+                            <p:ajax event="rowUnselect" listener="#{cpB.onRowUnselect}" update="lblTotalSelecionado" />
+                            <f:facet name="header">
+                                <h:outputLabel id="lblMensaje" escape="#{true}" value="#{cpB.mensaje}" />
+                            </f:facet>                        
+                            <p:column headerText="Nr."  width="15">
+                                #{status+1  }
+                            </p:column>
+                         
+                         
+                            <p:column headerText="Periodo"  width="45">
+                                #{cpp.periodo_desc}
+                            </p:column>
+                            <p:column headerText="Carreras" width="80">
+                                #{cpp.carrera_desc}
+                            </p:column>                    
+                            <p:column headerText="Concepto">
+                                #{cpp.concepto_desc}                        
+                            </p:column>  
+                            
+                            <p:column headerText="Cuota" width="30">
+                                #{cpp.num_cuota}-#{cpp.num_parte}
+                            </p:column>
+                            <p:column headerText="Fecha Vencimiento"  width="70">
+                                <h:outputFormat styleClass="" value="#{cpp.fecha_venc}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputFormat>
+                            </p:column>
+                            
+                            <p:column headerText="Monto Base" width="50">
+                                #{cpp.monto_base}
+                            </p:column>
+                            <p:column headerText="Monto Parte" width="50">
+                                #{cpp.monto_parte}
+                            </p:column>
+                            <p:column headerText="Monto Desc." width="50">     
+                                <h:outputLabel value="#{cpp.monto_desc}" style="#{cpp.monto_desc.doubleValue() ne 0 ?'color:green;font-weight: bold':''}" />
+                                    
+                            </p:column>
+                            <p:column headerText="Desc. Adicional" width="50" >
+                                #{cpp.monto_desc_adic}
+                            </p:column>
+                            <p:column headerText="Monto Interes" width="50">
+                               
+                                <h:outputLabel title="#{cpp.monto_interes.doubleValue() ne 0?('Total Dias ').concat(utilB.dateIff(cpp.fecha_venc, utilB.fechaHoy(),3)):''}" value="#{cpp.monto_interes }" style="#{cpp.monto_interes.doubleValue() ne 0 ?'color:red;font-weight: bold':''}" />
+                                
+                            </p:column>
+                            <p:column headerText="Monto Total" width="50">
+                                <h:outputLabel value="#{cpp.monto_total}" style="font-weight: bold" />
+                                
+                            </p:column>
+                            <p:column headerText="Tipo Comprobante" width="60">
+                                #{cpp.tipo_comp_desc}
+                            </p:column>
+                            <p:column headerText="Numero Comprobante" width="80" >
+                                #{cpp.num_comp}
+                            </p:column>
+                           
+                            <p:column headerText="Estado." width="60">
+                                #{cpp.estado_registro_desc}
+                            </p:column>
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="6" footerText="TOTALES" />
+                                    <p:column  footerText="#{cpB.totalMontoBase}"  />                                   
+                                    <p:column  footerText="#{cpB.totalMontoParte}"  />                                   
+                                    <p:column  colspan="2" />                                    
+                                    <p:column  footerText="#{cpB.totalMontoInteres}"  />
+                                    <p:column  footerText="#{cpB.totalMontoTotal}"  />
+                               </p:row>
+                                <p:row>
+                                    <p:column  colspan="6"  footerText="TOTAL DEUDA"/>                                    
+                                    <p:column  colspan="6"  >
+                                        <f:facet name="footer">
+                                            <h:outputLabel style="color: red;font-weight: bold;font-size: 2.0em" value=" #{cpB.totalMontoTotal -cpB.totalPagado  }" />
+                                        </f:facet>
+                                    </p:column>
+                                </p:row>
+                            </p:columnGroup>                 
+                        </p:dataTable>
+
+                    </h:form>
+
+               
+
+                
+
+                <p:dialog widgetVar="dlgBusquedaPersona" header="BUSQUEDA DE PERSONA.:."  modal="#{true}" resizable="#{false}" closeOnEscape="#{true}" height="600px"  width="750" styleClass="excepcion">
+
+                    <h:form id="frmBusquedaPersona" pt:autocomplete="off" prependId="false" styleClass="excepcion">
+                        <label for="bsq_ape_pat">A. PATERNO</label>  
+                        <h:inputText id="bsq_ape_pat" value="#{cpB.ape_pat}">
+                            <f:ajax event="keyup" render="dtBusquedaPersona" listener="#{cpB.busquedaPersona}"/>
+                        </h:inputText>
+                        <br/>
+                        <label for="bsq_ape_mat">A. MATERNO</label> 
+                        <h:inputText id="bsq_ape_mat" value="#{cpB.ape_mat}">
+                            <f:ajax event="keyup" render="dtBusquedaPersona" listener="#{cpB.busquedaPersona}"/>
+                        </h:inputText>
+                        <br/>
+                        <label for="bsq_nombres">NOMBRES</label> 
+                        <h:inputText id="bsq_nombres" value="#{cpB.nombres}">
+                            <f:ajax event="keyup" render="dtBusquedaPersona" listener="#{cpB.busquedaPersona}"/>
+                        </h:inputText>
+                        <br/><br/>
+
+                        <p:dataTable id="dtBusquedaPersona" value="#{cpB.listadoPersona}" var="alumno" rowKey="#{alumno.persona}" rows="20" selection="#{cpB.seleccionPersona}" selectionMode="single" scrollable="#{true}" scrollHeight="440" rowIndexVar="status">
+
+                            <p:ajax event="rowSelect"  update=":frmCuentaPersona :frmBusquedaPersona" listener="#{cpB.institucionesPersona}" oncomplete="PF('dlgBusquedaPersona').hide()"/> 
+                            <p:column headerText="Nro" width="20">
+                                #{status +1}
+                            </p:column>
+                            <p:column headerText="CODIGO" width="200">
+                                #{alumno.persona}
+                            </p:column>
+                            <p:column headerText="DATOS" styleClass="excepcion">                        
+                                #{alumno.nombreCompletos()}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                </p:dialog>
+
+                <!---->
+
+                <p:dialog widgetVar="dlgAutorizacion" header="AUTORIZACION" closable="true" draggable="true" modal="true" resizable="false" showHeader="true" width="450">
+
+                    <p:ajax event="close"  update=":frmAutorizacion"/>
+
+                    <h:form id="frmAutorizacion"   styleClass="excepcion">
+                            <h:outputLabel value="Tipo Autorizacion" />         <br/> 
+                            <h:selectOneMenu  value="#{cpB.personaAutorizacion.tipo_autorizacion}" disabled="#{true}" >
+                                <f:selectItems value="#{tipoAutorizacionB.mostrarTipoAutorizacion()}" var="tipoAutorizacion" itemValue="#{tipoAutorizacion.tipoAutorizacion}" itemLabel="#{tipoAutorizacion.descripcion}"/>
+                            </h:selectOneMenu>
+                                  <br/> 
+                       
+                        <h:outputLabel value="Fraccionamiento" />
+                        <br/>
+                        <h:selectOneMenu id="dlg_cbopersonal_2" value="#{cpB.personaAutorizacion.autorizacion_personal}">
+                                <f:selectItems value="#{cpB.listadoPersonal}" var="pe" itemValue="#{pe.personal}" itemLabel="#{pe.nombres}"/>
+                         </h:selectOneMenu>
+                            <br/>
+                            <h:outputLabel value="Expediente" />
+                            <h:inputText value="#{cpB.personaAutorizacion.expediente}" size="5" />
+                            
+                            <h:outputLabel value="F.U.T"  />
+                            <h:inputText value="#{cpB.personaAutorizacion.fut}" size="5" />
+                            <br/>
+                             <h:outputLabel value ="Fecha"  />
+                             
+                             <p:calendar id="dlg_datefecha_2" value="#{cpB.personaAutorizacion.autorizacion_fecha}" size="9" placeholder="dd/MM/yyyy" pattern="dd/MM/yyyy"   readonlyInput="true" styleClass="reset_pf_input" required="#{true}"/>
+                                    
+                            <br/>
+                       
+                        <h:outputLabel value="OBSERVACION:" />
+                        <br/>
+                        <h:inputTextarea  value="#{cpB.personaAutorizacion.autorizacion_observacion}"   style="resize: none;height: 80px;width: 400px"/>
+                        
+                        
+                        
+                        
+                        <h:panelGroup layout="block" id="pnBotonera">
+                            <h:commandButton value="ACEPTAR" >
+                                <f:ajax execute="@form :frmCuentaPersona" render="@form :frmCuentaPersona"  listener="#{cpB.registrarEdicionEC}" />                        
+                            </h:commandButton>
+                            <h:commandButton type="button" value="CANCELAR" onclick="PF('dlgAutorizacion').hide();"/>
+                        </h:panelGroup>
+                            
+                        
+                    </h:form>
+
+                </p:dialog>
+                
+                
+                 
+                <p:dialog header="GENERAR FRACCIONES MULTIPLES" widgetVar="dlgFracionesMultiples" width="600px" height="500px" closeOnEscape="#{true}" modal="#{true}" resizable="#{false}">
+                    <h:form id="frmFraciones">
+                        <div style="border: 1px solid silver">
+                            <div style="display: inline-block;vertical-align: top">
+                                <h:outputLabel value="MONTO TOTAL :" />
+                                <h:outputLabel id="lblMontoTotal" value="#{cpB.pagomontoTotal}" style="color: #004788" />
+                            </div>
+                            <div style="display: inline-block;vertical-align: top">
+                                <h:outputLabel value="MONTO CUOTA:" />
+                                <h:outputLabel id="lblMontoCuota" value="#{cpB.pagoxCuota}" style="color: #004788" />
+                            </div>
+                        </div>
+                                
+                                <h:outputLabel value="NUMERO DE CUOTAS" />
+                                <h:inputText id="txtNumeroCuotas" value="#{cpB.numeroCuotas}" size="2" required="#{true}" />
+
+                                <br/>
+                                <h:outputLabel value="FECHA 1ER PAGO" />
+                                <p:calendar id="txtFechaInicio" value="#{cpB.fechaInicio}" pattern="dd-MM-yyyy" required="#{true}" />
+                                <br/>
+                                
+                        <h:panelGroup layout="block" id="pnBotonera">
+                            <h:commandButton type="button" value="CALCULAR">
+                                <f:ajax execute="@this txtNumeroCuotas txtFechaInicio" render="lblMontoCuota lblMontoTotal :frmFraciones:tbPestanas:tbFechaDetalle" listener="#{cpB.generarCuotas()}" />
+                            </h:commandButton>
+                            
+                            
+                            <h:commandButton type="button" value="ACEPTAR" onclick="dlgAutorizacion.show()">
+                                <f:ajax execute="@this " render=":frmAutorizacion" listener="#{cpB.nuevoAutorizacion()}"  />
+                            </h:commandButton>
+                            
+                        </h:panelGroup>
+                        <p:tabView id="tbPestanas">
+                            <p:tab title="CONCEPTOS DESGREGADOS">
+                                   <p:dataTable id="tbDetalle" value="#{cpB.temporalCP}" var="listaFracciones"  rowIndexVar="status" scrollable="#{true}" scrollHeight="200" styleClass="temaAdmin" > 
+                                        <p:column headerText="Nro." width="15">
+                                            #{status +1 }                                
+                                        </p:column>
+                                       <p:column headerText="ITEM">
+                                            #{listaFracciones.item}
+                                        </p:column>
+                                        <p:column headerText="CONCEPTO">
+                                            #{listaFracciones.concepto_desc}
+                                        </p:column>
+                                        <p:column headerText="MONTO BASE">
+                                            #{listaFracciones.monto_base}                                
+                                        </p:column>
+                                    </p:dataTable>
+                            </p:tab>
+                            
+                            <p:tab title="FECHA DE CUOTAS">
+                                <p:dataTable id="tbFechaDetalle" value="#{cpB.fechaxCuota}" var="listaFecha" rowIndexVar="status" styleClass="temaAdmin"  scrollable="#{true}" scrollHeight="200" >
+                            <p:column headerText="Numero Cuota" width="50">
+                                #{status +1}
+                            </p:column>
+                            <p:column headerText="Monto Pago">
+                                #{cpB.pagoxCuota}
+                            </p:column>
+                            <p:column headerText="Fecha">
+                                <p:calendar value="#{listaFecha}" pattern="dd-MM-yyyy"  />
+                            </p:column>
+                        </p:dataTable>
+                            </p:tab>
+                        </p:tabView>                        
+                    </h:form>
+                </p:dialog>
+
+                
+                <p:dialog header="DESCUENTO MORA" widgetVar="dlgDescuentoMora" width="500" height="250" modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">
+                    <h:form id="frmDecuentoMora">
+                      
+                            <h:outputLabel value="Descuento" />
+                            
+                            <h:selectOneMenu value="#{cpB.porcentajeDescuentoMora}">
+                                <f:selectItem itemLabel="SELECCIONAR" />
+                                <f:selectItem itemLabel="25%" itemValue="25"/>
+                                <f:selectItem itemLabel="50%" itemValue="50"/>
+                                <f:selectItem itemLabel="80%" itemValue="80"/>
+                                <f:selectItem itemLabel="100%" itemValue="100"/>
+                                <f:ajax  execute="@this" render="txtDescuentoMora txtDescuentoMoraItem" listener="#{cpB.calcularPorcentaje(cpB.porcentajeDescuentoMora)}" />
+                            </h:selectOneMenu>
+                             <br/>
+                            <h:outputLabel value="Monto Total" />
+                            <h:inputText value="#{cpB.totalSeleccionado}" readonly="#{true}" />
+                            <br/>
+                            
+                            
+                           
+                            
+                            <h:outputLabel value="Total Descuento:" />
+                            <h:inputText id="txtDescuentoMora" value="#{cpB.totalDescuentoMora}" readonly="#{true}" />
+                            <br/>
+                            <h:outputLabel value="Total x Concepto :" />
+                            <h:inputText id="txtDescuentoMoraItem" value="#{cpB.totalDescuentoMoraItem}" readonly="#{true}" />
+                            
+                            <h:panelGroup layout="block" id="pnBotonera">
+                                <h:commandButton type="button" value="Aceptar" onclick="dlgAutorizacion.show()">
+                                    <f:ajax execute="@this" render=":frmAutorizacion" listener="#{cpB.nuevoAutorizacionMora()}" />
+                                </h:commandButton>
+                            
+                                <h:commandButton type="button" value="Cancelar" onclick="dlgDescuentoMora.hide()">
+                                    <f:ajax execute="@this" />
+                                </h:commandButton>
+                                
+                            </h:panelGroup>
+                            
+                   
+                    </h:form>
+                </p:dialog>
+               
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

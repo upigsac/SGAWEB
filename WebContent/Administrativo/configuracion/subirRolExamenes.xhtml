@@ -1,0 +1,150 @@
+
+        <ui:composition 
+        xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+        
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+              <ui:define name="titulo">
+                
+                SUBIDA DE ROL DE EXAMENES
+                
+            </ui:define>  
+            <ui:define name="contenido">
+                   <script>
+                
+                 
+                  
+                      
+                 
+                      
+                      function valida(){
+                          
+                          console.log($("#btExaminar").val());
+                          if ($("#nombreArchivo").val().length>0 &amp;&amp; $("#btExaminar").val().length>0){
+                            $("#btSubir").removeAttr("disabled");    
+                          }else{
+                              $("#btSubir").attr("disabled","disabled");
+                          }
+                          
+                      }
+                  </script> 
+                <style>
+                     .SubidaArchivo label{display: inline-block;width: 160px;margin: 10px 4px}                     
+                     .SubidaArchivo {margin-bottom: 20px}
+                     
+                </style>
+                    
+                
+                
+                <span class="tituto-admin"> SUBIR ROL DE EXAMENES   </span>
+                     <div class="paneles">                     
+                         <h:form id="frmSubirRolExamenes" prependId="false"  >
+                      
+                      #{rolExamenB.refrescarInstitucionPeriodo(usuarioB.institucionS,usuarioB.periodoS)}
+                        <label>CARRERA</label>
+                        <h:selectOneMenu value="#{rolExamenB.rolExamen.carrera}" id="cboCarrera">
+                            <f:selectItem itemLabel="SELECCIONE"/>
+                            <f:selectItems value="#{rolExamenB.carreraL}" var="itemCarrera" itemValue="#{itemCarrera.carrera}" itemLabel="#{itemCarrera.descripcion}"/>
+                                <f:ajax  execute="@this" render=":frmArchivos:tbarchivos" listener="#{rolExamenB.buscarArchivosCarpeta}"/>
+                        </h:selectOneMenu>
+                                                
+                        <br/>
+
+                        <label>TIPO EXAMEN</label>
+                        <h:selectOneMenu value="#{rolExamenB.rolExamen.tipoExamen}" id="cboExamen" >
+                            <f:selectItem itemLabel="SELECCIONE"/>
+                            <f:selectItem itemLabel="PRACTICA I" itemValue="practica1"/>
+                            <f:selectItem itemLabel="PRACTICA II" itemValue="practica2"/>
+                            <f:selectItem itemLabel="EXAMEN PARCIAL" itemValue="examen_parcial"/>
+                            <f:selectItem itemLabel="EXAMEN FINAL" itemValue="examen_final"/>
+                            <f:selectItem itemLabel="EXAMEN SUSTITUTORIO" itemValue="sustitutorios"/>
+                            
+                            <f:ajax execute="@this"  render=":frmArchivos:tbarchivos" listener="#{rolExamenB.buscarArchivosCarpeta}"/>
+                        </h:selectOneMenu>
+                                                
+                        <br/>
+                        <label>GRUPO</label>
+                        <h:selectOneMenu value="#{rolExamenB.rolExamen.vencimiento}">
+                        	<f:selectItem itemLabel="SELECCIONE"/>
+                            <f:selectItems value="#{rolExamenB.vencimientoL}" var="itemVencimiento" itemLabel="#{itemVencimiento.descripcion}" itemValue="#{itemVencimiento.vencimiento}" />
+                            <f:ajax execute="@this"  render=":frmArchivos:tbarchivos" listener="#{rolExamenB.buscarArchivosCarpeta}"/>
+                        </h:selectOneMenu>
+                        
+                        
+                    
+                    </h:form  >
+                    
+                      </div>
+                    <h:form id="frmSubidaArchivo" enctype="multipart/form-data" prependId="false"  >
+                        <script>
+                            
+                              $(document).ready(function(){
+                                $("#btSubir").attr("disabled","disabled");
+                                    $("input:file").change(function (){
+                                     valida();
+                                 }); 
+                            });
+                        </script>
+                            <label>NOMBRE DEL EXAMEN:</label>
+                        <h:inputText id="nombreArchivo" value="#{rolExamenB.rolExamen.archivo}"  style="#{ component.valid ? '' : 'border-color:red;'}"   size="50" required="true" onkeyup="valida()">
+                            
+                        </h:inputText>
+                        <p:fileUpload id="btExaminar" mode="simple" value="#{rolExamenB.archivoPF}"   />
+                        <br />
+                        <div class="paneles">
+                        <h:commandLink id="btSubir" value="SUBIR ARCHIVO"  styleClass="boton-normal"  actionListener="#{rolExamenB.insertarArchivo}"  >
+                            <f:ajax execute="@form" render="@form :frmArchivos:tbarchivos " />
+                        </h:commandLink>
+                        </div>
+                    </h:form>
+                     
+                    
+                    <h:form id="frmArchivos">
+                    
+                        <p:dataTable value="#{rolExamenB.rolExamenL}" id="tbarchivos" var="itemRolExamen"  emptyMessage="#{rolExamenB.mensajeTabla}" rowIndexVar="status">
+                     <p:column headerText="Nr." width="10">                           
+                                #{status+1}
+                            </p:column>
+                           
+                            <p:column headerText="NOMBRE ARCHIVO" >                           
+                                <h:outputLabel  value="#{itemRolExamen.archivo}"/>
+                            </p:column>
+                            
+                            <p:column  width="80">
+
+                                <h:commandLink   >
+                                <i class="fa fa-times" />
+                                	Eliminar
+                                	<f:ajax execute="@this" render="tbarchivos" listener="#{rolExamenB.eliminar(itemRolExamen)}" />
+                                </h:commandLink>
+                                <br/>
+                                <h:commandLink  actionListener="#{rolExamenB.descargarArchivo(itemRolExamen)}">
+                                <i class="fa fa-cloud-download" />
+                                	Ver
+                                </h:commandLink>
+                            </p:column>
+
+                            
+                            <f:facet name="footer" >                            
+                                <p:commandButton   icon="ui-icon-refresh"   >
+                                    <f:ajax render="tbarchivos" execute="@this" listener="#{rolExamenB.buscarArchivosCarpeta}" />
+                                </p:commandButton> 
+
+                                
+
+                            </f:facet>
+                            
+                        </p:dataTable>
+                              
+                        </h:form>
+           
+                
+                
+            </ui:define>
+            
+        </ui:composition>
+
+

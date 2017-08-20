@@ -1,0 +1,227 @@
+<ui:composition   xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"
+                            template="/Docente/plantilla.xhtml">
+              
+            <ui:define name="titulo">
+                   ...: REGISTRO DE NOTAS :...
+            </ui:define>    
+              <ui:define name="contenido">
+        <style>
+            .ficha-curso-principal{display: inline-block;vertical-align: top;border: 1px solid silver;border-radius: 0px 0px 5px 5px;height: 170px;width: 200px;margin: 1px;}
+            .ficha-curso-principal:HOVER{background: #EEEEEE}
+            .ficha-curso-principal-cabecera{display: block;border: 1px solid;background-color: #0088CE;color: white;text-align: center;height: 35px}
+            .ficha-curso-principal-cabecera b{line-height:35px }
+            .ficha-curso-principal-cuerpo{display: block;width: 100%;height: 85px;padding: 2px 5px;}
+            .ficha-curso-principal-cuerpo label{text-indent: 10px;overflow: hidden;white-space:nowrap;text-overflow: ellipsis;display: block;text-transform: capitalize;}
+            .ficha-curso-principal-cuerpo span{color: black;}
+            .ficha-curso-principal-secundario{display: block;padding: 4px}
+            .ficha-curso-principal-secundario span{width: 20px;height: 20px;display: inline-block;vertical-align: top;border-radius: 50%;border: 1px solid;text-align: center}
+            .aprobado{color: #0073AA}
+            .desaprobado{color: red}
+            .select{border-color: red;background: #EEEEEE}
+            .bloqueo:before{content: "";position: absolute;top: 0;left: 0;display: block;width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);z-index: 1}
+            .ui-datatable-odd{background-color: white}
+            #frmRegistroNota\:tbNota_data tr:hover{background-color: #EEEEEE;}
+            .ui-datatable thead th{overflow: visible!important}
+            .ui-datatable-tablewrapper{overflow: visible!important}
+            
+            .tooltip {position: relative;display: inline-block;    border-bottom: 1px dotted black;}            
+            
+            .tooltip .tooltiptextUp {visibility: hidden;width: 120px;background-color: black;color: #fff;text-align: center;border-radius: 6px;padding: 5px 0;position: absolute;z-index: 1;bottom: 150%;left: 50%;margin-left: -60px;}
+            .tooltip .tooltiptextUp::after {content: "";position: absolute;top: 100%;left: 50%;margin-left: -5px;border-width: 5px;border-style: solid;border-color: black transparent transparent transparent;}
+            .tooltip .tooltiptextDown {visibility: hidden;width: 120px;background-color: black;color: #fff;text-align: center;border-radius: 6px;padding: 5px 0;position: absolute;z-index: 1;top:150%;left: 50%;    margin-left: -60px;}
+            .tooltip .tooltiptextDown::after {content: "";position: absolute;bottom: 100%;left: 50%;margin-left: -5px;border-width: 5px;border-style: solid;border-color: transparent transparent black transparent;}
+            .tooltipDown:hover {background-color: silver;transition: all 0.5s;}            
+            .tooltip:hover .tooltiptextDown,.tooltip:hover .tooltiptextUp {visibility: visible;    }
+           	.foto-alumno{display: inline-block;vertical-align: top;width: 40px;height: 40px;border-radius:50%;border: 2px solid }
+
+
+
+        </style>
+        
+        <script>
+            $(document).ready(function(){
+            	
+           
+              $(document).on("keydown", ".cajaIngreso", function(event) {
+                       
+                    if (event.keyCode === 13 || event.keyCode===40 ) {
+                        console.log("abajo");
+                        var fila=$(this).closest("tr").index()+1;
+                        console.log(fila);
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").children("input").focus();
+                      
+                    }else if (event.keyCode===38 ) { 
+                        console.log("Arriba");
+                        var fila=$(this).closest("tr").index()-1;
+                         var colum=$(this).closest("td").index();
+                         $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").children("input").focus();
+                      
+                    }else if (event.keyCode===37 ) { 
+                        console.log("Izqierda");
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()-1;
+                         $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").children("input").focus();;
+                      
+                    }
+                    else if (event.keyCode===39 ) { 
+                        console.log("Derecha");
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()+1;
+                         $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").children("input").focus();
+                      
+                    }
+                    
+                });
+                
+            });
+        </script>
+        
+        <h:form id="frmRegistroNota">
+            <span class="tituto-docente">INGRESO DE NOTAS </span>
+            
+            <div class="pnPersonaCurso " style="display: block;border: 1px solid silver;margin: 10px 0px;padding: 5px;min-width: 100px;position: relative">
+                <h:panelGroup layout="block" id="pnCursosPersonal">
+                    <ui:repeat value="#{registroNotaDocenteB.cursoPrincipalSecundarioL}" var="itemCursoPrincipal">
+                        <div class="ficha-curso-principal #{registroNotaDocenteB.cursoPrincipalSecundario eq itemCursoPrincipal?'select':''} " >
+                            <h:commandLink>   
+                                <div style="border-bottom: 1px solid silver;">
+                                     <div class="ficha-curso-principal-cabecera" >
+                                           <b>
+                                           	#{itemCursoPrincipal.carrera.abreviatura}
+                                           </b> 
+
+                                      </div>
+                                    <div class="ficha-curso-principal-cuerpo" >
+                                       
+                                        <span style="display: block">Curso:</span>
+                                        <label title="#{itemCursoPrincipal.cursos.curso} - #{itemCursoPrincipal.cursos.descripcion}" >#{itemCursoPrincipal.cursos.descripcion.toLowerCase()}</label>
+                                        <span style="display: block">Seccion:</span>
+                                         <label>#{itemCursoPrincipal.seccion.descripcion}</label>
+                                      </div>
+                                </div>
+                                
+                                
+                               
+                                <div class="ficha-curso-principal-secundario" style="position: relative">
+                                    <ui:repeat value="#{itemCursoPrincipal.cursoSeccionDocenteSecundarioL}" var="itemCursoSecundario" varStatus="index">
+                                        <span class="tooltip " > #{index.index+1}
+                                            <div class="tooltiptextDown">
+                                            
+                                                    #{itemCursoSecundario.carrera.abreviatura}<br/>
+                                                    #{itemCursoSecundario.curso.descripcion}<br/>
+                                                   
+                                                    #{itemCursoSecundario.seccion.descripcion}<br/>
+                                                
+                                            
+                                        </div>
+                                        </span> 
+                                    </ui:repeat>
+                                </div>
+                                <f:ajax execute="@this" render=":frmRegistroNota:tbNota :frmRegistroNota:pnCursosPersonal" resetValues="true" onevent="onevent"  listener="#{registroNotaDocenteB.seleccionCursoSeccion(itemCursoPrincipal)}" />
+                            </h:commandLink>
+                        </div>
+
+                    </ui:repeat> 
+                </h:panelGroup>
+             </div>
+            
+            
+            <p:dataTable id="tbNota" value="#{registroNotaDocenteB.alumnoCursoSeccionPersonaL}" var="itemAlumnoCursoSeccion" rowIndexVar="status" styleClass="tbNota" emptyMessage="NO HAY ALUMNOS REGISTRADOS EN EL CURSO" reflow="true" style="font-size: 0.8em">
+                <p:column headerText="NR." width="20">
+                    #{status +1 }
+                </p:column>
+                <f:facet name="header">
+                    <div style="position: relative;height:40px">
+                        <h2>REGISTRO DE NOTA</h2>                    
+                        <div style="display: inline-block;position: absolute;right: 0;top: 0;font-size:1.2em">
+                            <h:commandLink title="Atras" rendered="#{registroNotaDocenteB.tipoExamenPadre ne null}">                                
+                                
+                            <i class="fa fa-reply"  />
+                             <br/>
+                              Atras
+                            <f:ajax execute="@this" render=":frmRegistroNota:tbNota" listener="#{registroNotaDocenteB.atras}" />
+                        </h:commandLink>
+                            <h:commandLink title="Actualizar" rendered="false">
+                                
+                            <i class="fa fa-refresh"  />
+                              Actualizar
+                              <f:ajax execute="@this"  render=":frmRegistroNota:tbNota"  listener="#{registroNotaDocenteB.actualizar()}"/>
+                        </h:commandLink>    
+                        </div>
+                    </div>                    
+                    
+                </f:facet>
+                <p:column headerText="ALUMNO">
+                    
+                    <img  src="SVerImagenAlumno?alumno=#{itemAlumnoCursoSeccion.persona.persona}" class="foto-alumno" title="#{itemAlumnoCursoSeccion.carrera.descripcion}"  style="border-color:#{itemAlumnoCursoSeccion.carrera.color}" />
+                    <div style="display: inline-block;vertical-align: top;padding: 5px 5px" data-alumno="#{itemAlumnoCursoSeccion.alumnoCursoSeccion.carrera}-#{itemAlumnoCursoSeccion.alumnoCursoSeccion.malla} - #{itemAlumnoCursoSeccion.alumnoCursoSeccion.seccion} - #{itemAlumnoCursoSeccion.alumnoCursoSeccion.curso} - #{itemAlumnoCursoSeccion.alumnoCursoSeccion.periodo}">
+                        <b style="font-size: 1.3em">#{itemAlumnoCursoSeccion.alumnoCursoSeccion.alumno}</b><BR/>                       
+                        #{itemAlumnoCursoSeccion.persona.paterno} #{itemAlumnoCursoSeccion.persona.materno} #{itemAlumnoCursoSeccion.persona.nombres}<br/>                        
+                    </div>
+                    
+                </p:column>
+                <p:columns value="#{registroNotaDocenteB.cabeceraNotaL}" var="itemFormulaExamen" width="50" style="text-align: center"  >
+                  <f:facet name="header">
+                      <div class="tooltip" style="display: block;width: 100%">
+                          <h:outputLabel    rendered="#{not itemFormulaExamen.formulaExamen.lectura}" title="#{itemFormulaExamen.tipoExamen.tipo_examen}" >
+                          #{itemFormulaExamen.tipoExamen.deslinea1}<br/>
+                          #{itemFormulaExamen.tipoExamen.deslinea2}
+                          
+                        </h:outputLabel>
+
+                        <h:commandLink rendered="#{ itemFormulaExamen.formulaExamen.lectura}"  style="color: blue;;display: block" title="#{itemFormulaExamen.tipoExamen.tipo_examen}" >
+                          #{itemFormulaExamen.tipoExamen.deslinea1}<br/>
+                          #{itemFormulaExamen.tipoExamen.deslinea2}                        
+                          <f:ajax execute="@this" render=":frmRegistroNota:tbNota" listener="#{registroNotaDocenteB.mostrarNotaHijo(itemFormulaExamen.tipoExamen.tipo_examen)}" />
+                        </h:commandLink>  
+                          
+                          <div class="tooltiptextUp" style="display: #{empty itemFormulaExamen.semanaExamen.fechaInicio  ?'none':'block'} " >
+                               
+                              Fecha Ini: <br/>
+                              
+                              #{itemFormulaExamen.semanaExamen.fechaInicio} 
+                         <br/>
+                              Fecha Fin:<br/>
+                            
+                               #{itemFormulaExamen.semanaExamen.fechaFinal}
+                          </div>
+                      </div>
+                             
+                    </f:facet>                    
+                    <h:outputLabel value="#{itemAlumnoCursoSeccion.alumnoCursoNotaL[itemFormulaExamen.tipoExamen.tipo_examen].notaT}" styleClass="#{itemAlumnoCursoSeccion.alumnoCursoNotaL[itemFormulaExamen.tipoExamen.tipo_examen].nota gt 10?'aprobado':'desaprobado' }  "  style="font-size: #{itemFormulaExamen.tipoExamen.tipo_examen eq 'PROF'?'1.6em':'1.0em'}" rendered="#{not itemFormulaExamen.validaEdicion}" />
+                    
+                    <p:inputText value="#{itemAlumnoCursoSeccion.alumnoCursoNotaL[itemFormulaExamen.tipoExamen.tipo_examen].notaT}" maxlength="2"  style="display: block;width: 100%;text-align: center" styleClass="cajaIngreso" disabled="#{itemAlumnoCursoSeccion.alumnoCursoSeccion.estadoRegistro ne 1 }" rendered="#{itemFormulaExamen.validaEdicion}"  onkeypress="return soloNumeros(event)"  >
+                        <f:attribute name="numeroMaximo" value="#{itemFormulaExamen.formulaExamen.numeroMaximo}" />
+                        <f:attribute name="numeroMinimo" value="#{itemFormulaExamen.formulaExamen.numeroMinimo}" />
+                        <f:validator validatorId="notaValida"  />                        
+                        <f:ajax execute="@this" render="@this"  listener="#{registroNotaDocenteB.insertarNota(itemAlumnoCursoSeccion.alumnoCursoNotaL[itemFormulaExamen.tipoExamen.tipo_examen],status +1)}"  />
+                    </p:inputText>
+                    
+
+                    
+                </p:columns>
+                <p:column  width="20">
+                    #{itemAlumnoCursoSeccion.alumnoCursoSeccion.estadoRegistro}
+                </p:column>
+             
+                <f:facet name="footer">
+                    <span title="#{registroNotaDocenteB.cursoPrincipalSecundario.formula.formula}">
+                        Formula : #{registroNotaDocenteB.cursoPrincipalSecundario.formula.des_formula}
+                    </span>
+                   
+                </f:facet>
+                
+                
+            </p:dataTable>
+            
+            
+        </h:form>
+</ui:define>
+</ui:composition>
+
+

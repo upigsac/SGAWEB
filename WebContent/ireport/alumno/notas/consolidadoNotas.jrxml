@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consolidadoNotas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bcbc075b-8bdf-4c6a-aed7-ca6037aa4875">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="118"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Administrador\\Desktop\\real UPIG\\SGAWEB\\web\\ireport\\alumno\\notas\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  DISTINCT A.INSTITUCION,A.PERIODO,E.DESCRIPCION DESPERIODO,A.CARRERA,D.ABREVIATURA DESCARRERA,A.ALUMNO,G.APELLIDO_PATERNO +' '+ G.APELLIDO_MATERNO +' '+ G.NOMBRES DESALUMNO,C.FORMULA,C.DES_FORMULA FROM
+SIGU.ACA_ALUMNO_CURSO_SECCION  A ,SIGU.HOR_CURSO_PERIODO B,SIGU.HOR_FORMULA C ,UPA.ACA_CARRERAS D,UPA.ACA_PERIODOS E,SIGU.ACA_ALUMNO F,UPA.DAT_PERSONAS G
+WHERE A.INSTITUCION LIKE $P{INSTITUCION} AND A.PERIODO=$P{PERIODO} AND A.ALUMNO LIKE $P{ALUMNO}
+AND B.INSTITUCION = A.INSTITUCION AND B.PERIODO=A.PERIODO AND B.CARRERA=A.CARRERA AND B.MALLA=A.MALLA AND B.CURSO=A.CURSO
+AND C.FORMULA=B.FORMULA
+AND D.CARRERA=A.CARRERA
+AND E.PERIODO=A.PERIODO
+AND F.INSTITUCION=A.INSTITUCION AND F.ALUMNO=A.ALUMNO
+AND G.PERSONA=F.PERSONA]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Short"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="DESALUMNO" class="java.lang.String"/>
+	<field name="FORMULA" class="java.lang.Short"/>
+	<field name="DES_FORMULA" class="java.lang.String"/>
+	<pageHeader>
+		<band height="122" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0a52bfa1-f8b8-4b5e-86e3-f6497bf26a7e" x="0" y="79" width="802" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[CONSOLIDADO DE NOTAS]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" isUsingCache="true">
+				<reportElement uuid="58dd3863-39b3-4f2c-ae92-bf6d557780c1" x="0" y="1" width="802" height="77"/>
+				<imageExpression><![CDATA["D:\\BANNER DE FORMATOS PDF1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="159">
+			<staticText>
+				<reportElement uuid="52bcc29b-0afd-4d7d-832c-3b6d1a38ab97" x="22" y="76" width="178" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTUDIANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a22e0bc7-d9ef-439a-bb5f-cde9537cfdaa" x="21" y="53" width="58" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="49c0ab87-f402-4af9-812b-6aa70eb02dad" x="80" y="55" width="120" height="20"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="13667b8f-7598-4544-8afe-4bf4a31f5189" x="22" y="98" width="178" height="40"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESALUMNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="75bfd884-6c56-4269-8080-538dbb3ca1fe" x="20" y="9" width="59" height="20"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERIODO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="22eaddf0-d80e-4eaf-bcd1-ed6c27a0d43d" x="80" y="9" width="121" height="20"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESPERIODO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9d9ef9a-518b-417d-977e-fd352b1dc548" x="21" y="32" width="58" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARRERA]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="99a0b54d-f61f-4dda-8026-5b3d1a8239b9" x="80" y="32" width="121" height="20"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCARRERA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="565e9618-2903-4fca-8b43-97064eac970b" x="14" y="4" width="1" height="134"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b704cff4-b4f9-4d60-8d18-3f32e236cc6e" x="16" y="3" width="185" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="4a81aea1-758f-4096-a33e-187cd5d4717f" x="16" y="30" width="184" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="71d37460-c4b2-4a4e-ba2d-8877a2004651" x="16" y="75" width="184" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="261a8c1a-823b-4da9-821c-b588a74245c8" x="16" y="53" width="184" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="4504855b-db70-490d-add9-6495c516bd9a" x="16" y="97" width="184" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="9319b40a-3701-4451-8575-1ded9a9a2759" x="79" y="5" width="1" height="70"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<subreport>
+				<reportElement uuid="ec0f4dd0-8bdb-45e6-9971-cba1ff11f3a1" x="14" y="3" width="404" height="135"/>
+				<subreportParameter name="formula">
+					<subreportParameterExpression><![CDATA[$F{FORMULA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="periodo">
+					<subreportParameterExpression><![CDATA[$F{PERIODO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="alumno">
+					<subreportParameterExpression><![CDATA[$F{ALUMNO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="institucion">
+					<subreportParameterExpression><![CDATA[$F{INSTITUCION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["C:\\Users\\Administrador\\Desktop\\IREPORT\\consolidadoNotas_subreport2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="54">
+			<staticText>
+				<reportElement uuid="def039c4-27dc-4924-9624-879fcf671412" x="15" y="0" width="771" height="31"/>
+				<textElement/>
+				<text><![CDATA[Fuente:    Actas finales de cada semestre académico, que obra en archivos de la oficina de Asuntos Académicos y Secretaría General.
+Nota:        Este documento es indispensable para la matricula del siguiente periodo.]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="0db019fd-3f0f-4aa0-bdd1-8450e73d6a74" x="495" y="34" width="307" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement uuid="697edd86-28a9-4ede-b712-c3f8499dcae9" x="100" y="0" width="462" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DES_FORMULA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1bbe253b-e8bb-4cef-a990-ed01531d5caa" x="15" y="0" width="86" height="20"/>
+				<textElement/>
+				<text><![CDATA[FORMULA =]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

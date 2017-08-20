@@ -1,0 +1,42 @@
+@CHARSET "ISO-8859-1";
+*{list-style: none;text-decoration: none;}
+	html{padding: 0;margin: 0;height: 100%}
+	body{padding: 0;margin: 0;height: 100%;;background-color: #eeeeee;}
+	a{color: black;}
+	
+	#cabecera{display: block;background-color: #41a7fb;padding: 5px 2px}
+	#cabecera #logoTipo{display: inline-block;min-width: 700px}
+	#cabecera #logoTipo div,#cabecera #logoTipo img{display: inline-block;vertical-align: top;text-align: center;}
+	#cabecera #logoTipo div b{display: block;font-size: 1.6em;font-family: tahoma;color: white;}
+	#cabecera #logoTipo div span{display: block;font-size: 1.2em;font-family: tahoma;color: yellow;font-weight: bold;}
+	#cuerpo{display: block;height: 85%}
+	#menu{display: inline-block;;width: 15%;height: 100%;background-color: white;vertical-align: top;box-shadow:0px 1px 2px silver}
+	#menu #usuario{border-bottom: 1px solid silver;display: block;}
+	#menu #usuario img{display: inline-block;width: 60px;height: 60px; border-radius:50%;border: 1px solid silver}
+	#menu #usuario #usuario-datos{display: inline-block;vertical-align: top;}
+	#menu #usuario #usuario-datos b{display: block;}
+	#menu ul{padding: 0;margin: 0}
+	#menu ul li{position: relative;}
+	#menu ul li a{display: block;padding: 6px 10px;}
+	#menu ul li a:HOVER{background-color: #f9f7f7;}
+	#menu ul li span{display: block;padding: 8px 2px;border-bottom: 1px solid silver}
+	#area{display: inline-block;;width: 84%;height: 100%;padding: 10px 2px}
+	#menu ul li a.seleccion{background: red;color: white}
+	.seleccion:BEFORE{content:'';border-left: 14px solid transparent;border-top: 14px solid transparent;border-right: 14px solid #eeeeee;border-bottom: 14px solid transparent;position: absolute;right: -2px;bottom: 1px;}
+	
+	
+	.panel{background-color: white;}
+	.colum{display: inline-block;vertical-align: top}
+	.ficha{margin:5px;min-width: 300px;min-height: 200px;border-radius:4px;box-shadow:0 1px 5px 0 rgba(0,0,0,.3);transition:all .3s ease 0s}
+	.ficha-cabecera{display: block;height: 150px}
+	.ficha-dato{display: block;border-top: 1px solid silver;min-height: 50px;padding: 5px 10px}
+	.ficha-dato b{display: block;}
+	
+	.ficha:HOVER {-moz-box-shadow: 0 1px 15px 0 rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 1px 15px 0 rgba(0,0,0,.5);
+    box-shadow: 0 1px 15px 0 rgba(0,0,0,.5);
+    -moz-transform: translate3D(0,-5px,0);
+    -webkit-transform: translate3D(0,-5px,0);
+    transform: translate3D(0,-5px,0);
+    position: relative;
+    z-index: 3;}

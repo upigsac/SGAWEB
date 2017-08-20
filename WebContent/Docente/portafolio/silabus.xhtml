@@ -1,0 +1,120 @@
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"                       
+                        xmlns:p="http://primefaces.org/ui"
+                        template="/Docente/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                   ADMINISTRAR SILABO
+                </ui:define>
+                
+    <ui:define name="contenido">
+        <style>
+            .gria-admin{font-size: 0.8em}            
+            .gria-admin tbody .ui-datatable-odd{background: white!important}
+            .botones{padding: 5px}
+            span.botones {color: silver}
+            a.botones {color: #0088CE}
+            .subLabel{display: inline-block;min-width: 80px}
+        </style>
+        <script>
+            function subirArchivo(){
+               
+                $("#btExaminar").click();
+             
+            }
+            $("body").on("change","#btExaminar",function (){    
+                   
+                   $("#btSubir").click();
+             }); 
+        </script>
+     
+            
+          <span class="tituto-docente">ADMINISTRAR SILABO  </span>    
+        <h:form id="frmSubir" enctype="multipart/form-data" prependId="#{false}" style="display: none" >           
+                     
+                
+                <p:fileUpload id="btExaminar" styleClass="subirArchivo" mode="simple" value="#{administrarSilabusB.uploadedFile}"  />   
+                <h:commandButton id="btSubir" value="Subir" actionListener="#{administrarSilabusB.save(usuarioB.personal.personal)}">
+                    <f:ajax execute="btExaminar" render="@form :frmAdministraSilabu"/>
+                </h:commandButton>
+         
+                     
+         </h:form>
+        <h:form id="frmAdministraSilabu"  prependId="#{false}" >
+       
+           
+            
+            <p:dataTable id="tbDetalle" value="#{administrarSilabusB.mostrarSilabus(1,usuarioB.periodoS,usuarioB.personal.personal)}" var="itemSilabu" rowIndexVar="status" styleClass="gria-admin" >
+                <p:column headerText="Nro." width="20">
+                    #{status+1}
+                </p:column>
+                <p:column headerText="CARERRA" width="120">
+                    #{itemSilabu.desCarrera}
+                </p:column>
+                <p:column headerText="SECCION" width="100" style="text-align: center">
+                    #{itemSilabu.desSeccion}
+                </p:column>
+                <p:column headerText="FECHA INICIO" width="80" style="text-align: center">
+                    #{itemSilabu.fechaInicio}
+                </p:column>
+                <p:column headerText="FECHA FINAL" width="80" style="text-align: center">
+                    #{itemSilabu.fechaFinal}
+                </p:column>
+                <p:column headerText="CURSO">
+                    <b>#{itemSilabu.curso}</b> <br/>
+                    #{itemSilabu.desCurso}
+                </p:column>
+                
+                <p:column headerText="PERSONAL">
+                    <div>
+                        <div style="display: block;">
+                            <div style="display: inline-block;vertical-align: top;">
+                            
+                            <i class="#{utilB.classIcono(itemSilabu.formato)}" style="width: 80px;height: 80px;font-size: 5.0em;text-align:  center" />
+                            </div>
+                            <div style="display: inline-block;vertical-align: top;">
+                                <b>#{itemSilabu.desPersona}</b><br/>
+                                Archivo:#{itemSilabu.silabu}<br/>
+                                Tamaño:#{itemSilabu.peso}<br/>
+                                Formato:#{itemSilabu.formato}
+                            </div>
+                        </div>
+                        
+                        <div style="display: block;border: 1px solid silver;padding: 6px">
+                            <h:commandLink type="button" onclick="subirArchivo()" disabled="#{itemSilabu.silabu ne null}" styleClass="botones" >
+                               <i class="fa fa-cloud-upload"/>
+                               SUBIR
+                               <f:ajax execute="@this" render="@this" listener="#{administrarSilabusB.seleccionar(itemSilabu)}" />
+                           </h:commandLink>
+                            <h:commandLink disabled="#{itemSilabu.silabu eq null}" styleClass="botones" onclick="if (!confirm('¿Esta seguro de Borrar?')) return false;" >
+                               <i class="fa fa-eraser"/>
+                               BORRAR
+                               <f:ajax execute="@this" render="tbDetalle" listener="#{administrarSilabusB.eliminar(itemSilabu,usuarioB.personal.personal)}" />
+                           </h:commandLink>
+                  
+                            <h:commandLink actionListener="#{administrarSilabusB.prepDownload(itemSilabu.ruta.concat('\\').concat(itemSilabu.silabu))}" disabled="#{itemSilabu.silabu eq null}" styleClass="botones">
+                               <i class="fa fa-cloud-download"/>
+                               DESCARGAR
+                               <p:fileDownload value="#{administrarSilabusB.download}" />
+                           </h:commandLink>
+                            <h:commandLink actionListener="#{administrarSilabusB.descargar(itemSilabu)}" disabled="#{itemSilabu.silabu eq null}" rendered="#{false}" styleClass="botones">
+                               <i class="fa fa-globe"/>
+                               VER ONLINE
+                               
+                           </h:commandLink>
+                          
+                        </div>
+                    </div>
+                </p:column>
+                
+            </p:dataTable>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>
+        
+            
+

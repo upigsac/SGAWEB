@@ -1,0 +1,77 @@
+<ui:composition
+			xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+			xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+			xmlns:h="http://xmlns.jcp.org/jsf/html"
+			xmlns:f="http://xmlns.jcp.org/jsf/core"
+ 			template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+               REGISTRO DE EVALUACIÓN
+            </ui:define>
+              
+              <ui:define name="contenido">
+              	<h:form prependId="false">
+			#{administrarActaB.refrescar(usuarioB.institucionS, usuarioB.periodoS)}
+			<span class="tituto-admin">ACTAS </span>
+	<div class="paneles">
+		<h:outputLabel  value="DOCENTE" />
+		<h:selectOneMenu id="cbPersona" value="#{administrarActaB.persona}" >
+		<f:selectItem itemLabel="Seleccionar" />
+		<f:selectItems value="#{administrarActaB.personaL}" var="itemPersona" itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" itemValue="#{itemPersona.persona}" />
+		<f:ajax  execute="@this" render="cbCarrera btImprimir" listener="#{administrarActaB.mostrarCarrera}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel  value="CARRERA" />
+		<f:selectItem itemLabel="Seleccionar" />
+		<h:selectOneMenu id="cbCarrera" value="#{administrarActaB.carrera}" >
+			<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{administrarActaB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion} " itemValue="#{itemCarrera.carrera}" />
+			<f:ajax  execute="@this" render="cbSeccion btImprimir" listener="#{administrarActaB.mostrarSeccion}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel  value="SECION" />
+		<h:selectOneMenu id="cbSeccion" value="#{administrarActaB.seccion}" >
+		<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{administrarActaB.seccionL}" var="itemSeccion" itemLabel="#{itemSeccion.descripcion}" itemValue="#{itemSeccion.seccion}" />
+			<f:ajax execute="@this" render="cbCurso btImprimir" listener="#{administrarActaB.mostrarCurso}" />
+		</h:selectOneMenu>		
+		<br />		
+		<h:outputLabel  value="CURSO" />
+		<h:selectOneMenu id="cbCurso" value="#{administrarActaB.curso}">
+			<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{administrarActaB.cursoL}" var="itemCurso"   itemLabel="#{itemCurso.curso} - #{itemCurso.descripcion}" itemValue="#{itemCurso.curso}" />
+			<f:ajax execute="@this" render="cbTipoNota btImprimir" listener="#{administrarActaB.mostrarTipoExamen}" />
+		</h:selectOneMenu>
+		
+		<br />
+		
+		<h:outputLabel  value="TIPO NOTA" />
+		<h:selectOneMenu id="cbTipoNota" value="#{administrarActaB.tipoExamen}" >
+			<f:selectItem itemLabel="Seleccionar" />
+			<f:selectItems value="#{administrarActaB.tipoExamenL}" var="itemTipoExamen" itemLabel="#{itemTipoExamen.descripcion}" itemValue="#{itemTipoExamen.tipo_examen}" />
+			<f:ajax execute="@this" render="btImprimir" />
+		</h:selectOneMenu>
+	
+	</div>
+	<div class="paneles">
+	<ui:param name="param1" value="INSTITUCION,1,PERIODO,#{administrarActaB.periodo},CARRERA,#{administrarActaB.carrera},CURSO,#{administrarActaB.curso},SECCION,#{administrarActaB.seccion},TIPOEXAMEN,#{administrarActaB.tipoExamen},USUARIO,#{usuarioB.usu}" />
+	<h:commandLink id="btImprimir" disabled="#{empty administrarActaB.tipoExamen}" title="Imprimir"  styleClass="boton-normal" target="_blank"  actionListener="#{utilB.imprimirIreports('notas/actaAlumnoTipoExamen', 1,fn:split(param1,','))}">
+	<i class="fa fa-print" />
+		IMPRIMIR
+	</h:commandLink>
+	
+	</div>
+	<div class="paneles">
+	<ui:param name="param2" value="@LSTIPOEX,#{administrarActaB.tipoExamen},@LSPERSON,#{administrarActaB.persona},@LSCARRER,#{administrarActaB.carrera},@LSCURSOS,#{administrarActaB.curso}" />
+	<h:commandLink id="btImprimir" disabled="#{empty administrarActaB.tipoExamen}" title="Imprimir"  styleClass="boton-normal" target="_blank"  actionListener="#{utilB.imprimirIreports('notas/ACTA_20162', 1,fn:split(param2,','))}">
+	<i class="fa fa-print" />
+		IMPRIMIR
+	</h:commandLink>
+	</div>
+	</h:form>
+              
+              
+              </ui:define>
+              </ui:composition>
+              

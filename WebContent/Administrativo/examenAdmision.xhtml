@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Facelet Title</title>
+        <script type="text/javascript" src="/SGAWEB/resources/js/modal.js"></script>
+    </h:head>
+    <h:body>
+        <style>
+            body{font-family: 'Tahoma'}
+            #frmAdmision label.titulo{float: left;text-align: left;width: 8em;font-size: 1em;}
+            #frmAdmision table input[type="text"]{text-align: center;width: 15%;display: block;margin: 0 auto;}
+            #tbDetalle_head{font-size: 0.8em;height: 20px}
+            #tope {position: fixed;background:#fff;opacity:0.6;filter:alpha(opacity=60);left:0px;top:0px;width:100%;height:100%;z-index:1000;text-align:center;display: none;}
+            input[type="button"],input[type="submit"],input[type="number"],select{padding: 5px;}
+            input[type="number"]{width: 50px;}
+            input[type="button"],input[type="submit"]{padding: 10px;font-weight: bold;background: #1E79FF;color: white;border: 1.5px solid blue;cursor: pointer;}
+            .botonera{display: block;text-align: center;}
+            
+            .titulo-principal{background-color: #022C52;color: white;display: block;border-bottom: 5px solid #DF4914;padding: 5px 10px;text-align: center;font-weight: bold;font-size: 28px;margin: 5px 2px;}            
+
+            #frmAdmision table thead tr th{font-size: 0.8em;padding: 5px;margin: 0px;}
+            #frmAdmision table thead tr th span.ui-column-title{font-weight: bold;}
+            #frmAdmision table tbody tr td{font-size: 0.8em;padding: 5px;margin: 0px;text-align: center;}
+            #frmAdmision table thead tr th.ui-state-default{background: #D8D8D8;border: 1px solid;} 
+        </style>
+
+        <script>
+            function onevent(e) {
+                if (e.status === 'begin') {
+                    document.getElementById('tope').style.display = 'block';
+                }
+                if (e.status === 'success') {
+                }
+                if (e.status === 'complete') {
+                    document.getElementById('tope').style.display = 'none';
+                }
+            }
+        </script>
+
+        <header>
+            <img src="http://www.upig.edu.pe/java/documentos/banner.jpg" width="100%" height="130px"/>
+        </header>
+        
+       
+        
+        <div id="tope" style="z-index: 10000">
+            <div id="cargando">
+                <img src="https://www.turbus.cl/wtbus/images/cargando.gif"/>
+            </div>
+        </div>
+
+        <h:form id="frmAdmision" prependId="false">
+            <h:outputLabel value="FACULTAD" for="cbofacultad" class="titulo"/>            
+            <h:selectOneMenu id="cbofacultad" value="#{examenAdmisionB.facultad}">
+                <f:selectItems value="#{facultadB.mostrarFacultad(1)}"  var="facultad" itemLabel="#{facultad.descripcion}" itemValue="#{facultad.falcutad}"/>
+                <f:ajax execute="@this"  render="cbocarrera" />
+            </h:selectOneMenu>
+            <br/>
+            <h:outputLabel value="CARRERA" for="cbocarrera" class="titulo"/>
+            <h:selectOneMenu id="cbocarrera" value="#{examenAdmisionB.carrera}">
+                <f:selectItem itemLabel="-- SELECCIONAR --" />
+                <f:selectItems value="#{carreraB.mostrarCarreraFacultad(1,examenAdmisionB.facultad)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}"/>
+                <f:ajax execute="@this"  render="tbDetalle" />
+            </h:selectOneMenu>
+
+            <br/>
+            <br/>
+
+            <p:dataTable id="tbDetalle" value="#{examenAdmisionB.mostrarPostulantes(1,'20142',examenAdmisionB.carrera)}" var="detalle" rowIndexVar="status" emptyMessage="">
+                <p:column width="1%">
+                    <h:outputLabel value="#{status+1}" style="font-weight: bold;"/>
+                </p:column>
+                <p:column headerText="CODIGO" width="1">
+                    <h:outputLabel value="#{detalle.alumno}"/>
+                </p:column>
+                <p:column headerText="POSTULANTE" width="100">
+                    <h:outputLabel value="#{detalle.postulante}" style="font-weight: bold;"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="APTITUD ACADEMICA 1 &lt;br/> 1 - 10 &lt;br/> max. 10"/>
+                    </f:facet>
+                    <!-- pt:type="number" pt:min="1" pt:max="10"-->
+                    <h:inputText value="#{detalle.aptitud_1}" size="5" maxlength="2" onkeypress="return soloNumeros(event)"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="APTITUD ACADEMICA 2 &lt;br/> 11 - 25 &lt;br/> max. 15" />
+                    </f:facet>
+                    <!--pt:type="number" pt:min="1" pt:max="15"-->
+                    <h:inputText value="#{detalle.aptitud_2}" size="5" maxlength="2" onkeypress="return soloNumeros(event)"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="MODULO &lt;br/> 26 - 45 &lt;br/> max. 20" />
+                    </f:facet>
+                    <!--pt:type="number" pt:min="1" pt:max="20"-->
+                    <h:inputText value="#{detalle.grupo_1}" size="5" maxlength="2" onkeypress="return soloNumeros(event)"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="MODULO &lt;br/> 46 - 65 &lt;br/> max. 20" />
+                    </f:facet>
+                    <!--pt:type="number" pt:min="1" pt:max="20"-->
+                    <h:inputText value="#{detalle.grupo_2}" size="5" maxlength="2" onkeypress="return soloNumeros(event)"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="MODULO &lt;br/> 66 - 95 &lt;br/> max. 30" />
+                    </f:facet>
+                    <!--pt:type="number" pt:min="1" pt:max="30"-->
+                    <h:inputText value="#{detalle.grupo_3}" size="5" maxlength="2"  onkeypress="return soloNumeros(event)"/>
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel escape="false" value="CULTURA GENERAL &lt;br/> 96 - 100 &lt;br/> max. 5" />
+                    </f:facet>
+                    <!--pt:type="number" pt:min="1" pt:max="5"-->
+                    <h:inputText value="#{detalle.culturaGeneral}" size="5" maxlength="1" onkeypress="return soloNumeros(event)"/>
+                </p:column>
+               
+
+            </p:dataTable>
+
+            <br/><br/>
+            <div class="botonera">
+                <h:commandButton value="REGISTRAR PUNTUACION" onclick="if (!confirm('¿ESTA SEGURO DE INGRESAR?'))
+                            return false;">
+                    <f:ajax onevent="onevent" execute="@form" render="tbDetalle" listener="#{examenAdmisionB.ingresar(1,20142,examenAdmisionB.carrera)}" />
+                </h:commandButton> 
+            </div>
+        </h:form>
+
+
+    </h:body>
+</html>
+

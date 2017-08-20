@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contratoDocente" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74254ed4-2d00-4a82-8400-46b7c43af238">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PERSONAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIPOCONTRATO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIPOPERSONA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL [DI].[SP_FORMATO_CONTRATOS] ($P{TIPOPERSONA},$P{PERSONAL},$P{CONTRATO},$P{TIPOCONTRATO})}]]>
+	</queryString>
+	<field name="DESTIPOCONTRATO" class="java.lang.String"/>
+	<field name="CADENA1" class="java.lang.String"/>
+	<field name="CADENA2" class="java.lang.String"/>
+	<field name="desPersona" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="49" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement uuid="4b676016-9384-4258-b18b-bd3e891dc247" x="9" y="0" width="46" height="44"/>
+				<imageExpression><![CDATA["D:\\logo_upig.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement uuid="9fa7e23b-d8c6-4d32-88d3-0b1ced4c2938" x="10" y="47" width="534" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement uuid="2a2993ae-aec9-4387-a9e7-c5427c652b6a" x="9" y="0" width="535" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESTIPOCONTRATO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="35">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="3fda6a00-90dc-46a4-98a0-1369b372b9fb" x="7" y="15" width="537" height="20"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$F{CADENA1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="198" splitType="Stretch">
+			<textField pattern="&apos;Firmado en la ciudad de Lima, &apos; dd MMMMM yyyy">
+				<reportElement uuid="98bf5e17-0e1b-43b9-8edd-a96198f5a69e" x="10" y="30" width="534" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="aec78f2c-7fc6-4e2a-8516-fa148e0e0edd" x="43" y="135" width="202" height="48"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Mg. SARA LUZ CANALES AGUILAR
+GERENTE GENERAL
+UPIG
+]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="72dc81af-a01f-4e5b-b7d9-c84325453bcb" x="36" y="128" width="221" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="3068b0d8-5157-4676-8e7a-a2b116b695b4" x="293" y="128" width="221" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="dc6f6737-b71e-4ba3-9f50-15499c99a470" x="297" y="138" width="217" height="45"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA[$F{desPersona}
++ '<br/>DOCENTE']]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

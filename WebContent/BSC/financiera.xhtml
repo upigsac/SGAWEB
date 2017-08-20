@@ -1,0 +1,115 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        template="index.xhtml"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:p="http://primefaces.org/ui">      
+      
+      
+               <ui:define name="titulo">
+                FINACIERA
+            </ui:define>
+        
+          <ui:define name="cuerpo" >
+               <style>
+                    
+                    .panel{display: inline-block;vertical-align: top;outline: 1px solid;min-height: 800px}
+                    textarea{resize: none;display: block;height: 200px;width: 90%;margin: 2px 5px}
+                    .menu-padre{border: 1px solid}
+                    .menu-hijo{padding-left: 20px}
+                </style>
+                
+            <h:form id="frmPerpestiva">       
+           <div style="display: block;background-color: white">
+              
+            <div class="panel" style="width: 20%">
+                
+                    <h:outputLabel value="Objetivos Estrategicos" />
+                 <br/>
+                 <ui:repeat value="#{bscPerpestivaB.objectivoIndicadoresL}" var="itemObjectivo">
+                     <ul class="menu-padre">
+                         <li>
+                             <i class="fa fa-circle" style="color: ##{itemObjectivo.bscObjetivo.color}" />
+                             #{itemObjectivo.bscObjetivo.descripcion}
+                         </li>
+                         <ul class="menu-hijo">
+                             <ui:repeat value="#{itemObjectivo.bscIndicadorL}" var="itemIndicador">
+                                <li>
+                                    <h:commandLink>
+                                        <i class="fa fa-circle" style="color: ##{itemIndicador.color}" />
+                                        #{itemIndicador.descripcion}
+                                        <f:ajax execute="@this" render=":frmPerpestiva:pnCentro :frmPerpestiva:txtAnalisis :frmPerpestiva:txtRecomendacion" listener="#{bscPerpestivaB.seleccionIndicador(itemObjectivo.bscObjetivo, itemIndicador)}" />
+                                    </h:commandLink>                                   
+                                
+                                </li>
+                            </ui:repeat>
+                         </ul>
+                     
+                     </ul>
+                     
+                 </ui:repeat>
+            </div>
+               <h:panelGroup layout="block" id="pnCentro" style="width: 58%" styleClass="panel">
+                    <i class="fa fa-bar-chart"/>
+                <h:outputLabel value="Graficos" />
+                <div style="display: block;min-height: 350px;border: 1px solid silver">
+                    <h4 style="text-align: center;display: block">#{bscPerpestivaB.bscIndicadorS.descripcion}</h4>
+                    <p:chart type="bar" model="#{bscPerpestivaB.barModel}" responsive="#{true}"  rendered="#{not empty bscPerpestivaB.perpestivaObjectivoIndicadorDetalleL}"/>
+                    <h:outputLabel value="NO SE ENCONTRARON DATOS" style="display: block;width: 100%;font-size: 3.0em;color: silver;text-align: center;line-height: 250px" rendered="#{ empty bscPerpestivaB.perpestivaObjectivoIndicadorDetalleL}" />
+                </div>
+                <p:dataTable value="#{bscPerpestivaB.perpestivaObjectivoIndicadorDetalleL}" var="itemIndicador" emptyMessage="" >
+                    <p:column headerText="Mes">
+                        <i class="fa fa-circle" style="color: ##{itemIndicador.color}" />
+                        #{utilB.listaMeses[itemIndicador.mes-1]}
+                    </p:column>
+                    <p:column headerText="Actual" width="50px">
+                        #{itemIndicador.actual}
+                    </p:column>
+                    <p:column headerText="Meta">
+                        #{itemIndicador.meta}
+                    </p:column>
+                    <p:column headerText="A %">
+                        #{itemIndicador.porcentaje}%
+                    </p:column>
+                </p:dataTable>
+               </h:panelGroup>
+            
+            <div class="panel" style="width: 20% ;position: relative">
+                <i class="fa fa-list-alt" />
+                <h:outputLabel value="Analisis de Rendimiento" />
+                <br/>
+                <h:inputTextarea id="txtAnalisis" value="#{bscPerpestivaB.bscPerpestivaObjetivo.analisis}" disabled="#{not bscPerpestivaB.bandera}"  />
+                <br/>
+                <i class="fa fa-list-alt" />
+                <h:outputLabel value="Recomendaciones" />
+                <br/>
+                <h:inputTextarea id="txtRecomendacion" value="#{bscPerpestivaB.bscPerpestivaObjetivo.recomendacion}" disabled="#{not bscPerpestivaB.bandera}"  />
+                <br/>
+                <i class="fa fa-list-alt" />
+                <h:outputLabel value="Iniciativa Estrategicas" />
+                <br/>
+                <h:panelGroup layout="block" id="pnBotonora" style="display: block;width: 100%;border: 1px solid silver;position: absolute;bottom: 5px">
+                    <h:commandLink disabled="#{not bscPerpestivaB.bandera}" >
+                    GUARDAR
+                    <f:ajax execute="txtAnalisis txtRecomendacion" render="pnBotonora txtAnalisis txtRecomendacion" listener="#{bscPerpestivaB.insertarPerpestivaObjetivo()}" />
+                </h:commandLink>
+                    <h:commandLink disabled="#{bscPerpestivaB.bandera}" >
+                    EDITAR
+                    <f:ajax  render="pnBotonora txtAnalisis txtRecomendacion" listener="#{bscPerpestivaB.editarPerpestivaObjetivo()}" />
+                </h:commandLink>
+                    <h:commandLink  disabled="#{not bscPerpestivaB.bandera}">
+                    CANCELAR
+                    <f:ajax render="pnBotonora txtAnalisis txtRecomendacion" listener="#{bscPerpestivaB.cancelarPerpestivaObjetivo()}" />
+                </h:commandLink>
+                </h:panelGroup>
+                
+            </div>
+                   
+        </div>
+                
+                </h:form>
+            </ui:define>             
+      
+  </ui:composition>
+        
+            

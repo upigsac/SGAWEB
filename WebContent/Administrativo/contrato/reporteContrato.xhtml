@@ -1,0 +1,47 @@
+<ui:composition   xmlns="http://www.w3.org/1999/xhtml"
+                            xmlns:h="http://xmlns.jcp.org/jsf/html"
+                            xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                            xmlns:f="http://xmlns.jcp.org/jsf/core"
+                            xmlns:p="http://primefaces.org/ui"                          
+                            template="/Administrativo/plantilla.xhtml">
+              
+<ui:define name="titulo">
+            </ui:define>
+               <ui:define name="contenido">
+               
+<h:form id="frmReporteContrato" prependId="false">
+#{reporteContratoB.load(usuarioB.institucionS,usuarioB.periodoS)}
+<div class="paneles">
+<h:outputLabel value="carrera" />
+<h:selectOneMenu value="#{reporteContratoB.carrera}">
+<f:selectItem itemLabel="Todos" itemValue="-1" />
+<f:selectItems value="#{reporteContratoB.carreraL}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion}" itemValue="#{itemCarrera.carrera}" />
+<f:ajax  execute="@this" render="cbPersona"  listener="#{reporteContratoB.mostrarPersona}" />
+</h:selectOneMenu>
+<br />
+<h:outputLabel value="personal" />
+<h:selectOneMenu id="cbPersona" value="#{reporteContratoB.persona}">
+<f:selectItem itemLabel="Todos" itemValue="-1" />
+<f:selectItems value="#{reporteContratoB.personaL}" var="itemPersona" itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" itemValue="#{itemPersona.persona}" />
+<f:ajax  execute="@this"  />
+</h:selectOneMenu>
+
+</div>
+
+<div class="paneles">
+<h:commandLink value="Vista Previa" styleClass="boton-normal"  >
+<f:ajax execute="@this" render="pnReporte" />
+</h:commandLink>
+<h:commandLink value="Exportar" styleClass="boton-normal"  disabled="true" >
+
+<f:ajax execute="@this" />
+</h:commandLink>
+</div>
+<h:panelGroup layout="block" id="pnReporte" >
+<iframe src="SReporte?reporte=administrativo\contrato\plantillaDocente&amp;param=institucion,#{usuarioB.institucionS},periodo,#{usuarioB.periodoS},carrera,#{reporteContratoB.carrera},persona,#{reporteContratoB.persona}" style="display: block;width: 100%;height: 800px;border: none;" />
+</h:panelGroup>
+
+
+</h:form>
+</ui:define>
+</ui:composition>

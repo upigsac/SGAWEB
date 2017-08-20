@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+<title>..: MODULO PADRE</title>
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+<style>
+	.column{display: inline-block;vertical-align: top;}
+
+</style>
+</h:head>
+<h:body>
+	<h:form id="frmPersonaParentesco" prependId="false">
+	
+	
+		<div>
+			
+			<h:graphicImage styleClass="column" value="SVerImagenAlumno?alumno=#{personaParentescoB.persona.persona}"  id="imgFoto"  width="80"  height="80" />
+			<div class="column">
+				<h:outputLabel value="PERSONAL" />
+				<h:inputText id="txtPersona" value="#{personaParentescoB.persona.persona}" />
+				<br />
+				<h:outputLabel value="TELEFONO" />
+				<h:inputText id="txtTelefono" value="#{personaParentescoB.persona.telefono}" />
+			
+			</div>
+			
+		</div>
+		
+		
+		<div>
+		<h:commandLink title="Nuevo"   >
+			Nuevo
+		<f:ajax execute="@this" render="cbParentesco"  listener="#{personaParentescoB.nuevo}"  /> 
+		</h:commandLink>
+		<h:commandLink onclick="dlgBusqueda.show()">
+			Busqueda
+		<f:ajax execute="@this"  />
+		</h:commandLink>
+		
+		
+		</div>
+		
+		<p:dataTable id="tbParentesco" value="#{personaParentescoB.personaParentescoL}" var="itemPersonaParentesco" >
+		
+		
+		<p:column headerText="PERSONA">
+		#{itemPersonaParentesco.personaParentesco}
+		</p:column>
+		<p:column headerText="PARENTESCO">
+		#{itemPersonaParentesco.parentesco}
+		
+		</p:column>
+		<p:column width="100" >
+		
+		<h:commandLink title="Editar" >
+		
+			<f:ajax execute="@this" /> 
+		</h:commandLink>
+		
+		
+		<h:commandLink title="Eliminar" >
+			<i class="fa fa-times" />
+			
+			<f:ajax execute="@this" render="tbParentesco" listener="#{personaParentescoB.eliminar(itemPersonaParentesco)}" /> 
+		</h:commandLink>
+		
+		
+		</p:column>
+		
+		</p:dataTable>
+		
+		
+		
+		<p:dialog widgetVar="dlgBusqueda" width="650px"  header="BUSQUEDA DE PERSONA"  closeOnEscape="true" resizable="false" modal="true">
+           
+                <label for="txtbus_paterno">PATERNO</label>
+                <h:inputText id="txtbus_paterno" value="#{personaParentescoB.busPaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText><br/>
+                <label for="txtbus_materno">MATERNO</label>
+                <h:inputText id="txtbus_materno" value="#{personaParentescoB.busMaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda" listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText><br/>
+                <label for="txtbus_nombres">NOMBRES</label>
+                <h:inputText id="txtbus_nombres" value="#{personaParentescoB.busNombres}" >
+                    <f:ajax execute="@this" render="tbBusqueda "  listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText>
+          
+                <p:dataTable id="tbBusqueda"  value="#{personaParentescoB.personaL}" var="itemPersona" selection="#{personaParentescoB.persona}" selectionMode="single" scrollable="true" scrollHeight="350" rowKey="#{itemPersona.persona}" emptyMessage="No hay resultados"   rowIndexVar="status"  >
+                    <p:ajax event="rowSelect" update="imgFoto txtPersona txtTelefono tbParentesco" listener="#{personaParentescoB.seleccionBusqueda}"  oncomplete="dlgBusqueda.hide()"  /> 
+                    <p:column headerText="Nro"  width="10"  >
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="PERSONAL"  >
+                        #{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}
+                    </p:column>
+                </p:dataTable>
+              
+           
+              <f:facet name="footer">
+                        <div style="display: block;text-align: right">
+                            <h:commandLink onclick="dlgBusqueda.hide()">
+                            CANCELAR
+                            <f:ajax execute="@this" />
+                        </h:commandLink>
+                        </div>
+                        
+                    </f:facet>
+        </p:dialog>
+		
+		
+		
+		
+		
+		<p:dialog  header="Parentesco" width="500" widgetVar="dlgParentesco" modal="true" resizable="false" closeOnEscape="true" >
+		<h:graphicImage styleClass="column" value="SVerImagenAlumno?alumno=#{personaParentescoB.personaParentesco.personaParentesco}"  id="imgFotoParentesco"  width="80"  height="80" />
+		<h:outputLabel value="Persona"  />
+		<h:inputText id="txtpersonaParentesco" value="#{personaParentescoB.personaParentesco.personaParentesco}"  /> 
+		<h:commandLink title="Busqueda" onclick="dlgBusquedaParentesco.show()">
+		
+		<i class="fa fa-search" />
+		<f:ajax execute="@this"  />
+		</h:commandLink>
+		<br /> 
+		<h:outputLabel value="Nombres" />
+		<h:inputText id="txtDatos" value="#{personaParentescoB.personaP.paterno} #{personaParentescoB.personaP.materno} #{personaParentescoB.personaP.nombres}" />
+		
+			<h:outputLabel value="Parenteso"  />
+			<h:selectOneMenu id="cbParentesco" value="#{personaParentescoB.personaParentesco.parentesco}">
+				<f:selectItems value="#{personaParentescoB.parentescoL}" var="itemParentesco" itemLabel="#{itemParentesco.descripcion}" itemValue="#{itemParentesco.parentesco}"  /> 
+			
+			</h:selectOneMenu>
+		<br />	
+		<h:outputLabel value="Observacion"  />
+		<br />	
+		<h:inputTextarea id="txtObservacion" value="#{personaParentescoB.personaParentesco.observacion}">
+		
+		</h:inputTextarea>	
+		<f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="@this  cbParentesco txtpersonaParentesco txtObservacion" render="tbParentesco" listener="#{personaParentescoB.insertar}"  />
+                                </h:commandLink>
+                                <h:commandLink onclick="dlgParentesco.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+        </f:facet>	
+		
+		</p:dialog>
+		
+		
+		
+		<p:dialog widgetVar="dlgBusquedaParentesco" width="650px"  header="BUSQUEDA DE PERSONA"  closeOnEscape="true" resizable="false" modal="true">
+           
+                <label for="txtbus_paterno">PATERNO</label>
+                <h:inputText  value="#{personaParentescoB.busPaterno}" >
+                    <f:ajax execute="@this" render="tbBusquedaParentesco" listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText><br/>
+                <label for="txtbus_materno">MATERNO</label>
+                <h:inputText  value="#{personaParentescoB.busMaterno}" >
+                    <f:ajax execute="@this" render="tbBusquedaParentesco" listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText><br/>
+                <label for="txtbus_nombres">NOMBRES</label>
+                <h:inputText value="#{personaParentescoB.busNombres}" >
+                    <f:ajax execute="@this" render="tbBusquedaParentesco "  listener="#{personaParentescoB.filtroPersona}" />
+                </h:inputText>
+          
+                <p:dataTable id="tbBusquedaParentesco"  value="#{personaParentescoB.personaL}" var="itemPersona" selection="#{personaParentescoB.personaP}" selectionMode="single" scrollable="true" scrollHeight="350" rowKey="#{itemPersona.persona}" emptyMessage="No hay resultados"   rowIndexVar="status"  >
+                    <p:ajax event="rowSelect" update="txtpersonaParentesco imgFotoParentesco txtDatos"  listener="#{personaParentescoB.seleccionParentesco}"  oncomplete="dlgBusquedaParentesco.hide()"  /> 
+                    <p:column headerText="Nro"  width="10"  >
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="PERSONAL"  >
+                        #{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}
+                    </p:column>
+
+                
+                    
+                </p:dataTable>
+              
+           
+              <f:facet name="footer">
+                        <div style="display: block;text-align: right">
+                            <h:commandLink onclick="dlgBusquedaParentesco.hide()">
+                            CANCELAR
+                            <f:ajax execute="@this" />
+                        </h:commandLink>
+                        </div>
+                        
+                    </f:facet>
+        </p:dialog>
+	
+	</h:form>
+
+
+</h:body>
+</html>

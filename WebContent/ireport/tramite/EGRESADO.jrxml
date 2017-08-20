@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EGRESADO" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b40bfedb-73c4-4009-8862-b0adb7607811">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="@ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="@NRO_EXPEDIENTE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL DI.RPT_CONT_EGRESADO(1,$P{@ALUMNO},$P{@NRO_EXPEDIENTE})}]]>
+	</queryString>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="FACULTADES" class="java.lang.String"/>
+	<field name="EXPIDE" class="java.lang.String"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="IMAGEN_LOGO1" class="java.lang.Object"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="FOTO" class="java.lang.Object"/>
+	<field name="DECANO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f95a9039-fdc2-4cf3-a74f-699193b55d44" x="51" y="0" width="453" height="21"/>
+				<textElement>
+					<font fontName="Arial" size="18"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="33ce0127-052d-4caa-826b-dfcae5d7b90c" x="145" y="21" width="265" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCIÓN Nº 099 – 2007 – CONAFU]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="76" splitType="Stretch">
+			<image>
+				<reportElement uuid="9d89810a-9128-49b0-b6e8-b768a526ad8c" x="208" y="0" width="132" height="76"/>
+				<imageExpression><![CDATA[JRImageRenderer.getInstance((byte []) $F{IMAGEN_LOGO1})]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="50561268-a0de-4b78-ab9e-8c9af20479bb" x="87" y="19" width="380" height="31"/>
+				<textElement>
+					<font fontName="Arial" size="26"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA DE EGRESADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="860ec362-87be-4ed3-8bfb-67f01da1cfd3" x="151" y="50" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5be38d9e-a6b3-4ef0-ad40-d21917057be4" x="251" y="50" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[/DCIS/UPIG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="96f162e7-4365-4dd2-bb5c-a9960f5192da" x="51" y="76" width="227" height="20"/>
+				<textElement>
+					<font fontName="Century" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[El Decano de la Facultad de:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="11327047-f9dd-4d51-942a-8e0ff56fe28f" x="278" y="76" width="227" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACULTADES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="280">
+			<staticText>
+				<reportElement uuid="bef24f5f-0729-4d2b-b687-ef3a4f529428" x="24" y="24" width="184" height="20"/>
+				<textElement>
+					<font fontName="Century" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Expide la presente a:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5d9d72c5-6a24-41ae-bcba-2f1b705f101f" x="71" y="58" width="412" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPIDE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="53dc9214-73e2-469a-90ef-42a601c6a2f9" x="24" y="95" width="100" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Con código Nro]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="33d934b4-87db-4e9f-bf98-3993f528ab33" x="214" y="115" width="127" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c73fa056-0e3f-4b3a-9e1e-8f38b5762074" x="24" y="135" width="354" height="20"/>
+				<textElement/>
+				<text><![CDATA[Ha concluido satisfactoriamente sus estudios en la facultad de:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="3c74e0ba-fb0d-4f48-b47b-2f54193ad361" x="121" y="155" width="313" height="20"/>
+				<textElement>
+					<font fontName="Century" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACULTADES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="582e1b23-f776-478d-97f1-e101f877bbb5" x="24" y="190" width="184" height="20"/>
+				<textElement>
+					<font fontName="Century" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Carrera Profesional de:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2b54db96-00cf-47cd-9886-bd0ffe0d672c" x="68" y="226" width="418" height="20"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Century" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CARRERA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f5fa5252-0863-4817-aeea-aa2740338eef" x="0" y="267" width="555" height="13"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[aprobando los 200 créditos segun plan de estudios, asi consta en los archivos en esta dependencia.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="130">
+			<image>
+				<reportElement uuid="bcbf2303-f0e4-4eb2-a879-623fdcb8ec01" x="24" y="2" width="115" height="128"/>
+				<imageExpression><![CDATA[JRImageRenderer.getInstance((byte []) $F{FOTO})]]></imageExpression>
+			</image>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="62ca7705-7327-4565-bdaa-977c85da11c5" x="389" y="18" width="166" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="50">
+			<line>
+				<reportElement uuid="2384c5c6-fe32-43d8-b25e-b84ac72d7ef5" x="139" y="9" width="340" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="38eaa19b-8c2c-4c3a-9423-42dc420bc530" x="136" y="10" width="283" height="20"/>
+				<textElement>
+					<font fontName="Century" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DECANO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c5e2fe17-b1d3-440b-9340-93bf74c848fe" x="310" y="30" width="143" height="20"/>
+				<textElement>
+					<font fontName="Century" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACULTADES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1ad2308b-6246-495d-9172-75b6be1d3a58" x="139" y="30" width="171" height="20"/>
+				<textElement>
+					<font fontName="Century" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[El Decano de la Facultad de:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

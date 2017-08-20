@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                DOCENTE SIN NOTA
+            </ui:define>
+
+
+
+            <ui:define name="contenido">
+
+                <style>
+                    #tbDetalle_data{font-size: 0.7em}
+                    #frmSinNota .label{display: inline-block;width: 120px}
+                    #frmSinNota input[type='submit']{padding: 10px;cursor: pointer;width: 45% }
+                    #frmSinNota #cbNivel tr td{text-align: center;padding:0px 5px;}
+                    #frmSinNota #cbNivel tr td label{display: block;font-weight: bold}
+                    #frmSinNota #tbDetalle_head{font-size: 0.8em}
+                </style>
+                <span class="tituto-admin">DOCENTE SIN NOTA </span>
+                <h:form id="frmSinNota" prependId="false">
+
+                    <h:outputLabel class="label" value="CARRERA:" />
+                    <h:selectOneMenu id="cbCarrera" value="#{docenteSinNotaB.carrera}" >                
+                        <f:selectItem itemValue="%" itemLabel="TODOS" />
+                        <f:selectItems  value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="carrera" itemLabel="#{carrera.descripcion}" itemValue="#{carrera.carrera}"/>
+                        <f:ajax execute="@this" render="cbDocente" />
+                    </h:selectOneMenu>
+                    <br/>
+
+                    <h:outputLabel class="label" value="DOCENTE:" />
+                    <h:selectOneMenu id="cbDocente" value="#{docenteSinNotaB.personal}"   >                
+                        <f:selectItem  itemLabel="TODOS" itemValue="%"  />
+                        
+                        <f:selectItems value="#{personaB.mostrarPersonalxCarrera(usuarioB.institucionS, usuarioB.periodoS, docenteSinNotaB.carrera)}" var="docente" itemValue="#{personalB.buscarPersonalCodigo(docente.persona).personal}" itemLabel="#{docente.nombreCompletos()}" />
+                        <f:ajax execute="@this" />
+                    </h:selectOneMenu>
+                    <br/>
+
+
+
+                    <br/>
+                    <h:outputLabel class="label" value="CICLO :" />
+                    
+                    <h:selectManyCheckbox  style="display: inline-block;vertical-align: top" id="cbNivel" value="#{docenteSinNotaB.nivelSeleccionadosL}"    >
+                        <f:selectItem itemLabel="I" itemValue="1"   />                
+                        <f:selectItem itemLabel="II" itemValue="2" />                
+                        <f:selectItem itemLabel="III" itemValue="3" />                
+                        <f:selectItem itemLabel="IV" itemValue="4" />                
+                        <f:selectItem itemLabel="V" itemValue="5" />                
+                        <f:selectItem itemLabel="VI" itemValue="6" />                
+                        <f:selectItem itemLabel="VII" itemValue="7" />                
+                        <f:selectItem itemLabel="VIII" itemValue="8" />                
+                        <f:selectItem itemLabel="IX" itemValue="9" />                
+                        <f:selectItem itemLabel="X" itemValue="10" />                
+                        <f:ajax execute="@this" render="btMostrar" />
+                    </h:selectManyCheckbox> 
+
+                    <div>
+                        <div style="display: inline-block;width: 78%;border: 1px solid;vertical-align: top">
+                            <p:dataTable id="tbDetalle" value="#{docenteSinNotaB.detalleL}" var="detalle" rowIndexVar="index">
+                                <f:facet name="header">
+
+                                    <h:commandLink  value="LISTADO DE DOCENTES" >
+                                        <img src="../../resources/imagenes/excel.png" width="36"/>
+                                        <p:dataExporter type="xls" target="tbDetalle" fileName="REPORTE_DOCENTES_SIN_NOTA"/>
+                                    </h:commandLink>
+                                </f:facet>
+                                <p:column>
+                                    <p:rowToggler   />
+                                </p:column>
+                                <p:column headerText="N" width="2">
+                                    <h:outputLabel value="#{index+1}"/>
+                                </p:column>
+                                <p:column headerText="MALLA">
+                                    
+                                    <h:outputLabel value="#{detalle.malla}" />
+
+                                </p:column>
+                                
+                                <p:column headerText="Carrrera">
+                                    
+                                    <h:outputLabel value="#{carreraB.mostrarCarreraCodigo(detalle.carrera).descripcion}" />
+
+                                </p:column>
+                                <p:column headerText="Asignatura">                                    
+                                    <h:outputLabel value="#{cursoB.mostrarCurso(detalle.curso).descripcion}" />
+                                </p:column>
+                                <p:column headerText="Turno">
+                                    <h:outputLabel value="#{turnoB.mostrarTurno(1,usuarioB.periodoS,detalle.seccion).descripcion}" />
+                                            
+
+                                </p:column>
+
+
+                                <p:column headerText="Seccion">
+                                    <h:outputLabel value="#{detalle.seccion}" />
+
+                                </p:column>
+                                <p:column headerText="Ciclo">
+                                    
+                                    <h:outputLabel value="#{utilB.listaCiclos[detalle.ciclo - 1]}" />
+
+                                </p:column>
+                                <p:column headerText="Examen">
+                                    
+                                    <h:outputLabel value="#{detalle.tipoExamen}-#{tipoExamenB.mostrarTipoExamen(detalle.tipoExamen).descripcion}" />
+
+                                </p:column>
+                                <p:column headerText="Personal" >
+                                    <h:outputLabel value="#{detalle.personal}" />
+
+                                </p:column>
+                                <p:column headerText="Tolal Alumnos" >
+                                    <h:outputLabel value="#{detalle.totalAlumno}" />
+
+                                </p:column>
+                                
+                                
+                                <p:rowExpansion>
+                                    <p:dataTable value="#{alumnoB.mostrarAlumno(1, detalle.periodo, detalle.malla, detalle.carrera, detalle.seccion, detalle.curso, detalle.tipoExamen)}" var="subDetalle" rowIndexVar="statusSub" >
+                                        <p:column headerText="Nº">
+                                            #{statusSub + 1 }
+                                        </p:column>
+                                        <p:column headerText="ALUMNO">
+                                            #{subDetalle.alumno}
+                                        </p:column>
+
+
+                                        <p:column headerText="NOMBRES">
+
+                                            #{personaB.mostrarPersona(subDetalle.persona).nombreCompletos()}
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                        </div>
+                        <div style="display: inline-block;width: 20%;border: 1px solid">
+                            <span class="tituto-admin">TIPOS DE NOTAS</span>
+                            <h:selectManyCheckbox id="ckTipoExamen"  value="#{docenteSinNotaB.examenSeleccionadosL}"   layout="pageDirection">
+                                <f:selectItems value="#{docenteSinNotaB.mostrarTipoExamen()}" var="tipoExamen" itemLabel="#{tipoExamen.tipo_examen} - #{tipoExamen.descripcion}" itemValue="#{tipoExamen.tipo_examen}" />                
+                                <f:ajax execute="@this" render="btMostrar"/>
+                            </h:selectManyCheckbox> 
+                            <div style="display: block;width: 100%;border: 1px solid;text-align: center;padding:  10px 0px">
+                                <h:commandButton id="btMostrar" value="MOSTRAR." disabled="#{(docenteSinNotaB.nivelSeleccionadosL.size() le 0)  }"  >                        
+                                    <f:ajax execute="@this ckTipoExamen cbCarrera cbNivel" render="tbDetalle" listener="#{docenteSinNotaB.mostrarDetalle(1,usuarioB.periodoS,docenteSinNotaB.carrera,docenteSinNotaB.personal)}" onevent="onevent" />
+                                </h:commandButton>
+                                <h:commandButton value="VER FECHAS" onclick="dlgFechas.show()" >
+                                    <f:ajax execute="ckTipoExamen" render="pnDetalleFecha"  listener="#{semanaExamenesB.mostrarListaExamenes(1, usuarioB.periodoS, docenteSinNotaB.examenSeleccionadosL)}"/>
+                                </h:commandButton>
+                            </div>   
+
+                        </div>
+
+                    </div>
+
+                    <p:dialog header="FECHAS DE EXAMENES" widgetVar="dlgFechas" height="500" width="500" resizable="false" modal="true">
+                        <h:panelGroup id="pnDetalleFecha" layout="block" style="border: 1px solid;display: block;width: 100%">
+                            <ui:repeat   value="#{semanaExamenesB.semanaExamenesL}" var="fechas">
+                                <div style="border: 1px solid;display: block;width: 100%">
+                                    <div style="display: inline-block;width: 20%;text-align: center;font-size: 3.5em">
+                                        <h:outputLabel value="#{fechas.tipo_Examen}" />
+                                    </div>
+                                    <div style="display: inline-block;width: 78%;vertical-align: top;padding: 5px  0px">
+                                        <h:outputLabel style="color: #0069B3;" value="#{tipoExamenB.mostrarTipoExamen(fechas.tipo_Examen).descripcion}"/>                        <BR/>
+                                        FECHA INCIO:#{fechas.fecha_inicio}<BR/>
+                                        FECHA FIN:#{fechas.fecha_fin}<BR/>  
+                                        SUSP.CLASES:#{fechas.suspension eq true?'SI':'NO'}<BR/>
+                                        GRUPO:#{fechas.grupo}<BR/>
+                                    </div>
+
+                                </div>
+                            </ui:repeat>
+                        </h:panelGroup>
+
+                    </p:dialog>
+                </h:form>
+
+
+                <script>
+                    function onevent(e) {
+
+                        if (e.status === 'begin') {
+                            document.getElementById('tope').style.display = 'block';
+                        }
+                        if (e.status === 'success') {
+
+
+                        }
+                        if (e.status === 'complete') {
+
+                            document.getElementById('tope').style.display = 'none';
+                        }
+                    }
+
+                </script>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

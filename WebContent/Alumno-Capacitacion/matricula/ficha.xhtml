@@ -1,0 +1,120 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:p="http://primefaces.org/ui"
+                        template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            CURSOS MATRICULADOS
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                <style>
+                    #pnDetalle label{width: 120px;display: inline-block}
+                    #pnDetalle input{width: 200px;padding: 3px;margin-bottom: 2px}
+                    
+                       .cambio .ui-datatable-odd{background-color: white}
+                    .cambio .ui-state-highlight{background: #2182C2!important;color: white}
+                    .cambio .ui-state-hover{box-shadow: none;background: #E4E4E4!important;}
+                    .cambio .ui-widget-content td{border:  2px solid #1A5B9D}
+                    .cambio tbody,.cambio thead{font-size: 0.8em}
+                    .cambio tbody tr:hover{background:silver }
+                    .cambio thead th{background: #1A5B9D;height: 30px;color: white;font-weight: bold}
+                    
+                </style>
+                <span class="tituloCuerpo"> CURSOS MATRICULADOS </span>
+                
+                <h:form id="frmFichaMatricula"   >  
+
+            
+                   
+                    <div style="position: relative;border: 1px solid silver;height: 50px;text-align: center;padding: 5px;">
+                        
+                        <b style="font-size: 2.4em">FICHA DE MATRICULA - #{periodoB.mostrarPeriodo(usuarioB.institucionS,usuarioB.periodoS).desPeriodo}</b>
+                                 <ui:param name="param2" value="@LITIPSQL,8,@LIINSTIT,#{usuarioB.institucionS},@LSPERIOD,#{usuarioB.periodoS},@LSFACULT,%,@LSCARRER,%,@LSCURSOS,%,@LSSECCIO,%,@LSGRUPOS,%,@LSPERSON,%,@LSALUMNO,#{usuarioB.usu},@LSNIVELE,%,@LSTURNOS,%,@LSESTADO,1" />
+                                 <h:commandLink style="position: absolute;right: 5px;padding-top:  32px;background: url('http://www.upig.edu.pe/intranet/alumno/bononera/imprimi.png')no-repeat center top " value="IMPRIMIR"  target="_blank" actionListener="#{utilB.imprimir_crystal('\\alumno\\matricula\\reporte\\','apyr0043', 0, fn:split(param2,','))}" />
+                    </div>
+                    <p:dataTable id="tbFicha" value="#{fichaMatriculaB.mostrarMatricula(usuarioB.institucionS, usuarioB.periodoS, usuarioB.usu)}" var="cursoMatriculados" rowIndexVar="status" selectionMode="single" selection="#{fichaMatriculaB.detalle}" rowKey="#{cursoMatriculados.curso}" widgetVar="datatable" styleClass="cambio"   >
+                       
+                        <p:ajax event="rowSelect" listener="#{fichaMatriculaB.onRowSelect}" update=":frmFichaMatricula:pnDetalle"  />
+                        <p:column headerText="Nro." width="10">
+                             #{status +1 }
+                         </p:column>
+                         <p:column headerText="Codigo" width="80">
+                             #{cursoMatriculados.curso}
+                         </p:column>
+                         <p:column headerText="Asigantura">
+                             #{cursoMatriculados.desCurso}
+                         </p:column>                         
+                  
+                         <p:column headerText="Turno" width="80">
+                             #{turnoB.mostrarTurno(cursoMatriculados.turno).descripcion}
+                             
+                         </p:column>
+                         <p:column headerText="Seccion" width="80">
+                             #{cursoMatriculados.seccion}
+                         </p:column>
+                       
+                        <p:column headerText="Creditos" style="text-align: center" width="50">
+                             #{cursoMatriculados.creditos}
+                         </p:column>    
+                         
+                         <p:column headerText="Fecha Inicio" width="100">
+                             #{cursoMatriculados.fechaInicio}
+                         </p:column>
+                         <p:column headerText="Fecha Fin" width="100">
+                             #{cursoMatriculados.fechaFin}                            
+                         </p:column>
+                   
+                     </p:dataTable>
+                        
+                
+                    <h:panelGroup id="pnDetalle" layout="block" style="border: 1px solid silver;width: 99%;min-height: 200px;margin: 10px 0px;padding: 4px" >
+                        <h3 style="border: 1px solid silver;padding: 5px;text-align: center;margin-bottom: 20px">DETALLE DOCENTE</h3>
+                        <div style="display: inline-block;vertical-align: top;border: 1PX solid">
+                            <img  style="width: 150px;height: 170px;vertical-align: top;display: inline-block" src="SVerImagenAlumno?alumno=#{fichaMatriculaB.persona.persona}" />
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;margin: 15px">
+                            <h:outputLabel value="#{fichaMatriculaB.persona.nombreCompletos()}" style="width: 500px;font-weight: bold;font-size: 1.8em" />
+                         <br/>
+                         <h:outputLabel value="E-MAIL:" />                       
+                         
+                         
+                         <br/>
+                        
+                         
+                         
+                         <h:outputLabel value="HORAS TEORIA:" />
+                         
+                         
+                         <h:outputLabel value="HORAS PRACTICAS:" />
+                         
+                         <h:commandLink rendered="#{false}" value="ver Silabus">
+                             
+                         </h:commandLink>
+                         
+                        </div>
+                       
+                         
+                         
+                     </h:panelGroup>
+                     </h:form>
+           
+        
+                
+                 <script>
+                     $(document).ready(function(){
+                             
+                            datatable.selectRow(0);
+                            
+                     });
+                        
+                            
+                        </script>
+            </ui:define>
+            
+        </ui:composition>
+

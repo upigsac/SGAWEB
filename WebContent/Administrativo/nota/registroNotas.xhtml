@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+          <ui:composition template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+               REGISTRO DE EVALUACIÓN
+            </ui:define>
+              
+              <ui:define name="contenido">
+                  <style>
+                   
+                    .texto_a{display: inline-block;min-width: 80px;font-size: 0.9em;font-family: calibri,Arial Narrow;text-align: left;padding: 4px 10px 4px}
+                    .texto_a:after{content: " :"}
+                    input[type="text"]{border: 1px solid silver;font-size: 1em;padding:  2px 4px}
+                    select{border: 1px solid silver;padding:  5px 2px;min-width: 200px;margin: 1px 0px}
+                    input[type="submit"]{border: none;font-size: 1.1em;margin: 5px 0px;padding:  5px 10px;cursor: pointer;color: white;background-image:-moz-linear-gradient(center top , #4D8FFD, #4787ED)}
+                    .ui-datatable-odd{background: white}
+                    
+                </style>
+              
+                <h:form>
+           
+                                                                                                                  
+            
+             <span class="tituto-admin">REGISTRO DE NOTAS -  #{institucionB.mostrarInstitucionCodigo(usuarioB.institucionS).descripcion}</span>
+                   #{admin_notaB.refrescarInstitucionPeriodo(usuarioB.institucionS,usuarioB.periodoS)}
+                      <span class="texto_a"> DOCENTE </span>
+                    <h:selectOneMenu value="#{admin_notaB.seleccionDocente}" class="carreras" id="cboDocente" required="true" >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaDocentePeriodoI}" var="docente" itemValue="#{docente.persona}" itemLabel="#{docente.paterno} #{docente.materno} #{docente.nombres}" />
+                        <f:ajax execute="@this" render="cboCarrera" listener="#{admin_notaB.mostrarCarreraDocenteTitulacion()}" />
+                    </h:selectOneMenu>    
+                        
+                    <br/>
+                    <span class="texto_a"> CARRERA </span>
+                    
+                    <h:selectOneMenu value="#{admin_notaB.seleccionCarrera}" class="carreras" id="cboCarrera" required="true" >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaCarreraDocente}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+                        <f:ajax execute="@this" render="cboSeccion" listener="#{admin_notaB.mostrarSeccionDocente}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <span class="texto_a"> SECCION </span>
+                    
+                    <h:selectOneMenu value="#{admin_notaB.seleccionSeccion}" id="cboSeccion" required="true" class="cboSeccion"     >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaSeccionDocente}" var="seccion" itemValue="#{seccion.seccion}" itemLabel="#{seccion.descripcion}" />
+                        <f:ajax execute="@this" render="cboCurso "  listener="#{admin_notaB.mostrarCursosDocente}" />
+                    </h:selectOneMenu>
+
+                    <br/>
+
+                   
+                     <span class="texto_a"> CURSO </span>
+                    <h:selectOneMenu value="#{admin_notaB.seleccionCurso}" id="cboCurso" required="true">
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaCursoDocente}" var="curso" itemValue="#{curso.curso}" itemLabel="#{curso.curso} - #{curso.descripcion}"/>
+                        <f:ajax execute="@this"   render="botonera"   listener="#{registroNotasB.mostrarCursoPeriodo(usuarioB.institucionS, admin_notaB.periodo, admin_notaB.seleccionCarrera, admin_notaB.seleccionCurso)}" />
+                    </h:selectOneMenu>
+                    <br/><br/>
+                    
+                    <ui:param name="param2" value="@INSTITUCION,#{usuarioB.institucionS},@PERIODO,#{admin_notaB.periodo},@CARRERA,#{admin_notaB.seleccionCarrera},@CURSO,#{admin_notaB.seleccionCurso},@SECCION,#{admin_notaB.seleccionSeccion}" />
+                
+                <h:panelGroup id="botonera" layout="_block">
+                    <!-- <h:commandLink  class="linkpdf" value="VISTA DE IMPRESION TITULACION" target="_blank" actionListener="{utilB.imprimir_crystal('\\Administrativo\\nota\\reporte\\', 'SGAWEB0020', 0, fn:split(param2,','))}" rendered="{admin_notaB.institucion eq 11 or admin_notaB.institucion eq 6}"  /> -->
+                    <h:commandLink  class="linkpdf" value="VISTA DE IMPRESION EXTRACURRICULAR" target="_blank" actionListener="#{utilB.imprimir_crystal('\\Administrativo\\nota\\reporte\\', 'SGAWEB0002', 0, fn:split(param2,','))}" rendered="#{registroNotasB.cursoPerido.formula eq 16}"  />
+                    <h:commandLink class="linkpdf" value="VISTA DE IMPRESION TITULACION" target="_blank" actionListener="#{utilB.imprimir_crystal('\\Administrativo\\nota\\reporte\\', 'SGAWEB0003', 0, fn:split(param2,','))}" rendered="#{registroNotasB.cursoPerido.formula eq 14}"  />
+                    <h:commandLink class="linkpdf" value="VISTA DE IMPRESION PRACTICAS PROF." target="_blank" actionListener="#{utilB.imprimir_crystal('\\Administrativo\\nota\\reporte\\', 'SGAWEB0001', 0, fn:split(param2,','))}" rendered="#{registroNotasB.cursoPerido.formula eq 12}"  />
+                    <h:commandLink class="linkpdf" value="VISTA DE IMPRESION TALLERES" target="_blank" actionListener="#{utilB.imprimir_crystal('\\Administrativo\\nota\\reporte\\', 'SGAWEB0004', 0, fn:split(param2,','))}" rendered="#{registroNotasB.cursoPerido.formula eq 13}"  />
+                </h:panelGroup>
+        </h:form>
+              </ui:define>
+          </ui:composition>
+    </h:body>
+</html>
+

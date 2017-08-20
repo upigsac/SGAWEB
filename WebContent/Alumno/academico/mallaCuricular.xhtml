@@ -1,0 +1,124 @@
+        <ui:composition
+        			  xmlns:ui="http://java.sun.com/jsf/facelets"
+                      xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core"
+				      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+				      template="/Alumno/plantilla.xhtml"
+				      xmlns:p="http://primefaces.org/ui">
+            
+            <ui:define name="titulo">
+            Malla Curricular..
+            </ui:define>
+            
+            <ui:define name="contenido">
+            
+    <script>
+    
+    $(document).ready(function(){
+   
+    	   $( "body" ).on("mouseenter",".ficha-curso",function() {
+    		   
+    		   var curso=$(this).attr("data-curso");
+    		   $( ".curso-requi b" ).each(function( index ) {
+    			   
+    			   if(curso==$( this ).text()){
+    				 $( this ).parent().parent().addClass("ficha-curso-select");   
+    			   }
+    		   });
+          	 
+          	 $(this).addClass("ficha-curso-select");
+            
+          });
+          
+          $( "body").on("mouseleave",".ficha-curso",function() {
+            
+           
+            $(".ficha-curso").removeClass("ficha-curso-select");
+           
+            
+          });
+    });
+    
+    </script>
+        <style>
+         
+            
+            .ciclos{display: inline-block;vertical-align: top;border: 1px solid red;min-height: 500px;width:  130px}
+            .ficha-curso{height:120px;overflow:hidden;border-radius: 2px;display: block;margin: 8px 0px;padding: 5px;position:relative;transition:all 0.5s}
+            .ficha-curso:HOVER .ficha-curso-aprobado{bottom: -80px}
+            .ficha-curso-aprobado{color:white;text-align:center;position: absolute;bottom:-110px ;left: 0;background-color: rgba(0,0,0,0.5);width: 100%;height: 100%;transition:all 0.5s}
+            .ficha-curso ul{text-align: center;}
+            .ficha-curso ul li{display:inline-block;  vertical-align:top;}
+            .ficha-curso ul li span{display: block;font-size: 1.2em}
+            .electivo{background-color:  orange}
+            .obligatorio{}
+            .actividad{background-color: green}
+            .ficha-curso-select{background-color: rgb(196, 217, 232);}
+        </style>
+
+        <h:form id="frmMalla" prependId="false">
+        #{mallaCurricularB.load(usuarioB.institucionS,usuarioB.alumnoCarrera.carrera,usuarioB.alumnoCarrera.malla,usuarioB.alumnoCarrera.alumno)}
+          <span class="tituloCuerpo"> Malla Curricular </span>
+        <div class="paneles">
+        	<b style="background-color: orange;display: inline-block;vertical-align:top;height: 20px;width: 20px" />
+        	<b  >Electivo</b>
+        	<b style="background-color: green;display: inline-block;vertical-align:top;height: 20px;width: 20px" />
+        	<b  >Actividad</b>
+        
+        </div>
+        <div class="paneles">
+            <ui:repeat value="#{mallaCurricularB.detalleMallaCurricularL}" var="itemCiclo">
+                <div class="column paneles" style="width: 9%">
+                
+                    <h3 style="display: block;text-align: center;background-color: #0069b3;color:white"> CICLO #{utilB.listaCiclos[itemCiclo.cicloCarrera.ciclo -1]}</h3> 
+                    
+                        <ui:repeat value="#{itemCiclo.detalleMallaCursoL}" var="itemCurso">
+                       
+                                <div class="paneles  ficha-curso  #{itemCurso.horMallaCurricularCursoAct.tipoCurso eq 1?'obligatorio':itemCurso.horMallaCurricularCursoAct.tipoCurso eq 2?'electivo':'actividad'}" data-curso="#{itemCurso.curso.curso}"  >
+                                
+                                
+                                <div class="ficha-curso-aprobado" style="display: #{itemCurso.alumnoCursoSeccion.promedio ne 0 ?'block':'none'}" >
+                                          <i class="fa fa-check" style="font-size: 1.5em;color: #0069b3;display: block; text-align: right;" /> 
+                                   
+                                          Promedio:#{itemCurso.alumnoCursoSeccion.promedio}
+                      
+                                </div>
+                                
+                                
+                                <div style="display: block;text-align: center;">
+                                #{itemCurso.curso.curso} <br />
+                                #{itemCurso.curso.descripcion}
+                                </div>
+
+                                    
+                             		
+                                    <ul>
+                                    <li>CREDI. <span>#{itemCurso.horMallaCurricularCursoAct.creditos}</span></li>
+                                    <li>TEOR. <span>#{itemCurso.horMallaCurricularCursoAct.horasTeoria}</span></li>
+                                    <li>PRACT. <span>#{itemCurso.horMallaCurricularCursoAct.horasPracticas}</span></li>
+                                    </ul>
+                                    	
+                                    <hr />
+                                    <div class="curso-requi">
+                                    <ui:repeat var="itemRequisito" value="#{itemCurso.horMallaCurricularCursoReqL}">
+                                    
+                                    	<b>#{itemRequisito.cursoRequisito}</b>
+                                    
+                                    
+                                    
+                                    
+                                    </ui:repeat>
+                                    </div>
+                                </div>
+                        
+                    </ui:repeat>
+         		</div> 
+            </ui:repeat>
+        </div>
+        
+           
+        </h:form>
+</ui:define>
+            </ui:composition>

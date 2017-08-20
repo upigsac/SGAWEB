@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>RESULTADO DE ENCUESTA DOCENTE</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                REGISTRO DE EVALUACIÓN
+            </ui:define>
+
+            <ui:define name="contenido">
+
+                <style>
+                    #frmResultadoEncuesta\:pnDatos label{display: inline-block;width: 150px;}
+                    #frmResultadoEncuesta\:pnDatos input[type="text"]{padding: 3px;margin: 2px}
+                    #frmResultadoEncuesta\:tbResumen_head,#frmResultadoEncuesta\:pnDetalle table thead tr th{font-size: 0.8em}
+                    #frmResultadoEncuesta table tbody{font-size: 0.8em}
+                    #frmResultadoEncuesta\:pnDetalle{margin: 20px 0px;}
+                    #frmResultadoEncuesta .grupo{border: 1px solid silver;text-align: center;padding: 5px;margin: 20px 0px;font-weight: bold;font-size: 1.5em}
+                    #frmResultadoEncuesta .grupo ul{display: inline-block;vertical-align: top}
+                    #frmResultadoEncuesta .pregunta{margin-left: 20px;color: #3b5998;font-weight: bold;font-size: 13px;font-family: tahoma;margin-bottom: 5px}
+                    #frmResultadoEncuesta .respuesta{margin-left: 40px}
+                    #frmResultadoEncuesta .preguntaRespuesta{display: inline-block;vertical-align: top;margin-bottom: 20px}
+
+                </style>
+                <span class="tituto-admin">RESULTADO DE ENCUESTA DOCENTE - PERIODO #{usuarioB.periodoS}</span>
+                <h:form id="frmResultadoEncuesta">
+                    <h:panelGroup layout="block" id="pnDatos"  >
+                        <div style="border: 1px solid silver;margin: 20px 0px">
+
+
+                            <div style="display: inline-block;width: 85%">
+                             
+                                <h:outputLabel value="DOCENTE" />
+
+                                <h:inputText id="txtPersonal" value="#{personalB.personal.personal}" >
+                                    <f:ajax event="change" execute="@this" render="@form" listener="#{resultadoEncuetaDocenteB.mostrarResultadoDetalle(1,usuarioB.periodoS,personalB.personal.personal)}" />
+                                </h:inputText>
+                                <h:commandButton type="button" value=".." onclick="dlgBusqueda.show()" />
+                                <br/>
+                                <h:outputLabel value="APELLIDOS" />
+                                <h:inputText value="#{personaB.persona.nombreCompletos()}" style="width: 250px" disabled="true" />
+                                <br/>
+                                <h:outputLabel value="TELEFONO" />
+                                <h:inputText value="#{personaB.persona.telefono}" disabled="true"/>
+
+                                <br/>
+                                <h:outputLabel value="E-MAIL" />
+                                <h:inputText value="#{personaB.persona.emailP}" disabled="true"/>
+                            </div>
+                            <div style="display: inline-block;vertical-align: top;width: 10.5%;text-align: center;font-weight: bold;">
+                                <img src="SVerImagenAlumno?alumno=#{personaB.persona.persona}" width="150" height="150" style="display: block" />
+                                <span>#{personaB.persona.persona}</span>
+                            </div>
+                        </div>
+                        <p:dataTable id="tbResumen" value="#{resultadoEncuetaDocenteB.resumenEncuestaL}" var="resumen" selectionMode="single" selection="#{resultadoEncuetaDocenteB.resumenEncuestaS}" rowKey="#{resumen.curso}"  >
+                            <f:facet name="header">
+                                <h:commandLink value="ACTUALIZAR LISTADO" style="text-decoration: underline;">
+                                    <f:ajax execute="@this" render="tbResumen" listener="#{resultadoEncuetaDocenteB.mostrarResultadoDetalle(1,usuarioB.periodoS,personalB.personal.personal)}" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:ajax event="rowSelect"  update=":frmResultadoEncuesta:pnDetalle" />
+                            <p:column headerText="CARRERA">
+                                #{carreraB.mostrarCarreraCodigo(resumen.carrera).descripcion}
+                                
+                            </p:column>
+                            <p:column headerText="SECCION">
+                                #{resumen.seccion}
+                            </p:column>
+                            <p:column headerText="CURSO">
+                               #{resumen.curso}-#{cursoB.mostrarCurso(resumen.curso).descripcion}
+                                
+                            </p:column>
+
+                            <p:column headerText="NUMERO DE ALUMNOS DEL AULA">
+                                #{resumen.numeroAula}
+                            </p:column>
+
+                            <p:column headerText="NUMERO DE ALUMNOS ENCUESTADO">
+                                #{resumen.numeroAlumno}
+                            </p:column>
+                            <p:column headerText="MAYOR PUNTAJE">
+                                105
+                            </p:column>
+                            <p:column headerText="PUNTAJE TOTAL MAXIMO">
+                                #{resumen.totalMaximo}
+                            </p:column>
+
+                            <p:column headerText="PUNTAJE TOTAL OBTENIDO">
+                                #{resumen.totalObtenido}
+                            </p:column>
+                            <p:column headerText="PUNTOS DEL CURSO">
+
+                            </p:column>
+
+                            <p:column headerText="NIVEL CALIFICADOR">
+
+                            </p:column>
+
+                            <p:column headerText="NIVEL DE DESEMPEÑO">
+
+                            </p:column>
+
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="6" style="text-align:right" footerText="Puntaje Final:" />
+                                    <p:column footerText="#{resultadoEncuetaDocenteB.sumaTotalCurso()}" />
+                                    <p:column footerText="" /><!--25.-->
+                                    <p:column footerText="" /><!--excelente-->
+
+
+                                </p:row>
+                            </p:columnGroup>
+
+                        </p:dataTable>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup layout="block" id="pnDetalle"  >
+
+
+
+
+                        <ui:repeat value="#{encuestaDocenteB.mostrarEncuestaGrupo(10)}" var="grupo" >
+                            <ul >
+                                <li class="grupo">#{grupo.grupo} - #{grupo.descripcion}</li> 
+
+                                <ui:repeat value="#{encuestaDocenteB.mostrarEncuestaGrupoPregunta(grupo.encuesta,grupo.grupo)}" var="pregunta">
+
+
+                                    <ul class="preguntaRespuesta">
+
+                                        <li class="pregunta">#{pregunta.orden} - #{encuestaDocenteB.mostrarPregunta(pregunta.pregunta).descricion}</li>
+                                        <li class="respuesta">                            
+                                            #{resultadoEncuetaDocenteB.mostrarDetallePregunta(1,usuarioB.periodoS,resultadoEncuetaDocenteB.resumenEncuestaS.carrera,'200702',resultadoEncuetaDocenteB.resumenEncuestaS.curso,resultadoEncuetaDocenteB.resumenEncuestaS.seccion,10,grupo.grupo,pregunta.pregunta)}
+                                            <p:dataTable id="tbDetallePrenguta" value="#{resultadoEncuetaDocenteB.detallePrengutaL}" var="detalle" style="width: 500px">
+                                                <p:column headerText="RESPUESTA">
+                                                    #{detalle.desRespuesta}
+                                                </p:column>
+
+                                                <p:column headerText="ALUMNOS">
+                                                    #{detalle.alumno}
+                                                </p:column>
+
+                                                <p:column headerText="PORCENTUAL">
+                                                    #{detalle.porcetaje}%
+                                                </p:column>
+                                                <p:columnGroup type="footer">
+                                                    <p:row>
+                                                        <p:column  style="text-align:right" footerText="TOTAL:" />                                    
+                                                        <p:column footerText="#{resultadoEncuetaDocenteB.suma()}" />
+                                                    </p:row>
+                                                </p:columnGroup>
+                                            </p:dataTable>
+
+                                        </li>
+
+
+                                    </ul>
+
+
+                                </ui:repeat>
+
+                            </ul>
+                        </ui:repeat>
+
+
+                    </h:panelGroup>
+
+
+                </h:form>
+                <p:dialog widgetVar="dlgBusqueda" header="BUSQUEDA DE PERSONAL DOCENTE" height="500" width="600" modal="true">
+                    <h:form>
+                        <label for="txtbus_paterno">PATERNO</label>
+                        <h:inputText id="txtbus_paterno" value="#{personaB.busPaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_materno">MATERNO</label>
+                        <h:inputText id="txtbus_materno" value="#{personaB.busMaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_nombres">NOMBRES</label>
+                        <h:inputText id="txtbus_nombres" value="#{personaB.busNombres}" >
+                            <f:ajax execute="@this" render="tbBusqueda " />
+                        </h:inputText>
+                        <br/><br/>
+                        <p:dataTable id="tbBusqueda" value="#{personaB.filtroPersona(personaB.busPaterno, personaB.busMaterno, personaB.busNombres)}" var="detalle" selection="#{personaB.persona}" selectionMode="single" rowKey="#{detalle.persona}" emptyMessage="No hay resultados">
+                            <p:ajax event="rowSelect"   update=":frmResultadoEncuesta:pnDatos" listener="#{personalB.onRowSelect}"    oncomplete="dlgBusqueda.hide()"  /> 
+                            <p:column headerText="PERSONAL" >
+                                #{detalle.nombreCompletos()}
+                            </p:column>
+                            <p:column headerText="TELEFONO" >
+                                #{detalle.telefono}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+
+</html>
+

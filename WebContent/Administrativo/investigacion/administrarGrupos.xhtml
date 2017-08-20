@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+            <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+    </h:head>
+    <h:body>
+        
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                ADMINISTRAR GRUPOS
+            </ui:define>
+             
+                         
+             <ui:define name="contenido">
+                 <style>
+                     .botones{display: inline-block;vertical-align: top;padding: 5px;background-color: #0088CE;color: white;margin: 2px;min-width: 80px;text-align: center}
+                     .botones-material{display: inline-block;width: 30px;height: 30px;border-radius: 50%;background-color: #0069b3}
+                     .texto{display: inline-block;vertical-align: top;width: 120px}
+                     .subTitulo{display: block;padding: 5px;background-color: #0088CE;color: white;text-align: center}
+                     #frmAdministrarGrupos\:subBotonera{border: 1px solid silver;padding: 10px;text-align: right}
+                     #frmAdministrarGrupos\:subBotonera input{margin-left: 2px;padding: 5px;cursor: pointer;min-width: 80px}
+                    
+                 </style>
+                 <span class="tituto-admin">ADMINISTRAR GRUPOS</span>
+                <h:form id="frmAdministrarGrupos">
+            <h:panelGroup layout="block" id="pnFiltro" class="paneles">
+                <h:outputLabel  value="CARRERA" class="texto"/>
+                <h:selectOneMenu id="cbCarrera" value="#{administrarGrupoB.carreraS}">
+                    <f:selectItem itemLabel="--Seleccionar--" />
+                   
+                    <f:selectItems value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="carrera" itemValue="#{carrera.carrera}"  itemLabel="#{carrera.abreviatura}" />
+                    <f:ajax execute="@this" render="cbCurso" />
+                </h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="CURSO" class="texto"/>
+                <h:selectOneMenu id="cbCurso" value="#{administrarGrupoB.cursoS}">
+                    <f:selectItem itemLabel="--Seleccionar--" />
+                    <f:selectItems value="#{cursoB.mostrarCursoInvestigacion(usuarioB.institucionS, usuarioB.periodoS, administrarGrupoB.carreraS)}" var="curso" itemValue="#{curso.curso}"  itemLabel="#{curso.curso.concat(' - ').concat( curso.descripcion)}" />
+                    <f:ajax execute="@this" render="cbSeccion" />
+                </h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="SECCION" class="texto"/>
+                <h:selectOneMenu id="cbSeccion" value="#{administrarGrupoB.seccionS}">
+                    <f:selectItem itemLabel="--Seleccionar--" />
+                    <f:selectItems value="#{seccionB.mostrarListaSeccion(usuarioB.institucionS, usuarioB.periodoS, administrarGrupoB.carreraS,administrarGrupoB.cursoS)}" var="seccion" itemValue="#{seccion.seccion}"  itemLabel="#{seccion.descripcion}" />
+                    <f:ajax execute="@this" render="dgGrupos" listener="#{administrarGrupoB.mostrarListaGrupos()}"   />
+                </h:selectOneMenu>
+                <br/>
+            </h:panelGroup>
+            
+                    <h:panelGroup layout="block" id="pnBotonera" class="paneles">
+                               <h:commandLink  type="button"  class="botones">
+                                   <i class="fa fa-plus" />
+                                   NUEVO
+                                <f:ajax execute="@this" render="pnGrupos" listener="#{administrarGrupoB.nuevoGrupo()}" />
+                            </h:commandLink>
+                        
+                            
+                            <ui:param name="param" value="INSTITUCION,#{administrarGrupoB.cursoSeccionS.institucion},PERIODO,#{administrarGrupoB.cursoSeccionS.periodo},CARRERA,#{administrarGrupoB.cursoSeccionS.carrera},CURSO,#{administrarGrupoB.cursoSeccionS.curso},SECCION,#{administrarGrupoB.cursoSeccionS.seccion},GRUPO,%" />
+                            <h:commandLink  rendered="#{false}"  class="botones"    target="_blank" actionListener="#{utilB.imprimirIreports('investigacion\\registroAuxiliarInvestigacion', 1, fn:split(param,','))}">
+                                
+                                <i class="fa fa-print"/>
+                                IMPRESION
+                            </h:commandLink>
+                            
+                            <h:commandLink rendered="#{false}"  class="botones"     actionListener="#{utilB.imprimirIreports('investigacion\\registroAuxiliarInvestigacion', 2, fn:split(param,','))}">                                
+                                <i class="fa fa-file-excel-o"/>
+                                EXPORTAR
+                            </h:commandLink>
+                            
+                            
+                            <ui:param name="paramCristal" value="@LITIPSQL,1,@LIINSTIT,#{administrarGrupoB.cursoSeccionS.institucion},@LSPERIOD,#{administrarGrupoB.cursoSeccionS.periodo},@LSFACULT,%,@LSCARRER,#{administrarGrupoB.cursoSeccionS.carrera},@LSMALLAS,%,@LSCURSOS,#{administrarGrupoB.cursoSeccionS.curso},@LSSECCIO,#{administrarGrupoB.cursoSeccionS.seccion},@LSGRUPOS,%,@LSPERSON,%,@LSPERNAL,%,@LSALUMNO,%,@LSTIPEXA,%,@LSTURNO,%,@LSESTADO,%,@LSPARAM1,%" />
+                           <h:commandLink class="botones"   target="_blank" actionListener="#{utilB.imprimir_crystal('crystalReport\\administrativo\\', 'SGAWEB0089', 0, fn:split(paramCristal,','))}"   >
+                                <i class="fa fa-print"/>
+                                IMPRESION
+                            </h:commandLink>
+                            
+                        
+                            
+                         
+
+                    </h:panelGroup>
+             
+            
+            <h:panelGroup layout="block" id="pbGrupos">
+                <p:dataGrid id="dgGrupos" value="#{administrarGrupoB.invCursoSeccionGrupoL}" var="itemGrupo" columns="3" rowIndexVar="status">
+                    <f:facet name="header">
+                        LISTADO DE GRUPOS DE INNOVACIÓN
+                        
+                    </f:facet>
+                    <div style="display: block;border: 1px solid silver;height: 200px;text-align: center">
+                        <span style="display: block;display: block;background-color: #0088CE;color: white;padding: 5PX">GRUPO</span>                    
+                        <h:outputLabel value="#{itemGrupo.grupoExamen}" style="font-size: 4.5em;font-weight: bold" />
+                        <br/>
+                        #{itemGrupo.vacanteMaximo} - #{itemGrupo.vacanteActual}
+                        <br/>
+                        <h:outputLabel value="#{itemGrupo.tema}" style="font-size: 0.5em"  />
+                        <br/>
+                        <h:commandLink title="INGRESAR ALUMNOS"  type="button" >
+                            
+                            <i class="fa fa-user-plus" />
+                            <f:ajax execute="@this" render=":frmAdministrarGrupos:pnAlumnos" listener="#{administrarGrupoB.mostrarAlumnos(itemGrupo)}" />
+                        </h:commandLink>
+                       
+                          <h:commandLink   type="button" title="EDITAR GRUPO"  >
+                            <i class="fa fa-pencil"/>
+                            <f:ajax execute="@this" render=":frmAdministrarGrupos:pnGrupos" listener="#{administrarGrupoB.editarGrupo(itemGrupo)}" />
+                        </h:commandLink>
+                        <h:commandLink title="ELIMIAR GRUPO"    type="button" rendered="#{administrarGrupoB.invCursoSeccionGrupoL.size() eq (status+1)}">
+                            <i class="fa fa-trash" />
+                            <f:ajax execute="@this" render="dgGrupos" listener="#{administrarGrupoB.eliminarGrupo(itemGrupo)}" />
+                        </h:commandLink>    
+                    </div>
+                </p:dataGrid>
+            </h:panelGroup>
+            
+            
+             <h:panelGroup layout="block" id="pnGrupos">
+                <p:dialog header="#{administrarGrupoB.invCursoSeccionGrupo.grupoExamen eq -1?'NUEVO':'EDITAR'} GRUPO" widgetVar="dlgGrupo" width="400"  modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">               
+                    <h:outputLabel value="MATRICULADOS" />
+                    <h:inputText value="#{administrarGrupoB.cursoSeccionS.vacantesActuales}" readonly="#{true}" size="3" disabled="#{true}" />
+                    <br/>                    
+                    <h:outputLabel value="ASIGNADOS" />
+                    <h:inputText value="#{administrarGrupoB.totalAsignados}" readonly="#{true}"  size="3" disabled="#{true}"/>
+                    <br/>
+                    <h:outputLabel value="CANTIDAD" />
+                    <h:inputText id="txtMaximoVacante" value="#{administrarGrupoB.invCursoSeccionGrupo.vacanteMaximo}" size="5" maxlength="2" onkeypress="return soloNumeros(event)" />
+                    <br/>
+                    
+                    <h:outputLabel value="TEMA" />
+                    <br/>
+                    <h:inputTextarea id="txtTema" value="#{administrarGrupoB.invCursoSeccionGrupo.tema}"   rows="5" style="resize: none;padding: 5px;width: 95%" />
+                    <h:panelGroup layout="block" id="subBotonera" >  
+                        <h:commandButton type="button" value="Aceptar">
+                            <f:ajax execute="@this txtMaximoVacante txtTema"  listener="#{administrarGrupoB.insertarGrupo()}" />                        
+                        </h:commandButton>
+
+                        <h:commandButton type="button" value="Cancelar" onclick="dlgGrupo.hide()" >
+                            <f:ajax execute="@this"  />
+                        </h:commandButton>
+                </h:panelGroup>
+            </p:dialog>
+             </h:panelGroup>
+                 
+            
+          <p:dialog header="INSERTAR ALUMNO" widgetVar="dlgGrupoAlumnos" width="1050" height="600" modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">
+          <p:ajax event="close" update="dgGrupos" listener="#{administrarGrupoB.mostrarListaGrupos()}" />
+           
+          <h:panelGroup  layout="block" id="pnAlumnos" style="display: block;height: 500px">
+                    
+        
+            <h:panelGroup layout="block" id="pnDerecho" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 44%;height: 100%">
+                <span class="subTitulo">ALUMNOS LIBRES</span>
+                <p:dataGrid id="tbLibres" value="#{administrarGrupoB.alumnoGrupoLibresL}" var="libres" columns="2"  style="height: 450px;overflow: auto"  >
+                    
+                    <h:commandLink type="button" disabled="#{administrarGrupoB.invCursoSeccionGrupoS.vacanteActual ge administrarGrupoB.invCursoSeccionGrupoS.vacanteMaximo}" >
+                        <div style="display: block;width: 100%;height: 100px;border:1px solid silver;position: relative">
+                            <i class="#{libres.alumno eq administrarGrupoB.alumnoGrupoLibresS.alumno ?'fa fa-check':''}  " style="color: #008000;position: absolute;right: 0px;top: 2px;font-size: 1.5em"  />
+                            <div style="display:inline-block;vertical-align: top;">
+                                <h:graphicImage value="SVerImagenAlumno?alumno=#{libres.persona}" style="width: 50px;height: 50px" />
+                            </div>
+                            <div style="display:inline-block;vertical-align: top;font-size: 0.8em;width: 135px">
+                                <b style="display:block">#{libres.alumno}</b>
+                                <span>#{libres.desPersona}</span>
+                            </div>
+                        </div>
+                        <f:setPropertyActionListener value="#{libres}" target="#{administrarGrupoB.alumnoGrupoLibresS}"/>
+                        <f:ajax execute="@this" render="tbLibres" />
+                    </h:commandLink>
+                    
+                    
+                </p:dataGrid>
+                <div >
+                    <h:inputText id="txtBusqueda" value="#{administrarGrupoB.busAlumno}" pt:placeholder="INGRESE NOMBRES">
+                      <f:ajax render="tbLibres" execute="@this" event="keyup" listener="#{administrarGrupoB.filtroAlumnoLibres()}"/>
+                </h:inputText>
+                <i class="fa fa-keyboard-o" />
+                </div>
+                  
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnCentro" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 10%;height: 100%">
+                <div style="display: block;margin-top: 200px;text-align: center">
+                    <h:commandLink type="button" title="PASAR"  >
+                    <i class="fa fa-arrow-right fa-3x" />
+                    <f:ajax execute="@this" render="tbLibres tbAlummoGrupo txtBusqueda" listener="#{administrarGrupoB.pasar()}" />
+                    </h:commandLink>
+                <br/>
+                <h:commandLink type="button" title="REGRESAR"  >
+                    <i class="fa fa-arrow-left fa-3x" />
+                    <f:ajax execute="@this" render="tbLibres tbAlummoGrupo" listener="#{administrarGrupoB.regresar()}"/>
+                </h:commandLink>    
+                </div>
+                
+            </h:panelGroup>
+            
+            <h:panelGroup  layout="block" id="pnIzquierdo" style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 44%;height: 100%">
+                
+                <span class="subTitulo">ALUMNOS DEL GRUPO <b>#{administrarGrupoB.invCursoSeccionGrupoS.grupoExamen}</b></span>
+                <p:dataGrid id="tbAlummoGrupo" value="#{administrarGrupoB.alumnoGrupoL}" var="alumnoGrupo" columns="2" style="height: 450px;overflow: auto">
+                   <h:commandLink type="button">
+                        <div style="display: block;width: 100%;height: 100px;border:1px solid silver;position: relative">
+                            <i class="#{alumnoGrupo.alumno eq administrarGrupoB.alumnoGrupoS.alumno ?'fa fa-check':''}  " style="color: #008000;position: absolute;right: 0px;top: 2px;font-size: 1.5em"  />
+                        <h:graphicImage value="SVerImagenAlumno?alumno=#{alumnoGrupo.persona}" style="width: 30px;height: 30px" />
+                        
+                        #{alumnoGrupo.alumno}
+                        #{alumnoGrupo.desPersona}
+                        #{alumnoGrupo.seccion}
+                       
+                    </div>
+                        <f:setPropertyActionListener value="#{alumnoGrupo}" target="#{administrarGrupoB.alumnoGrupoS}"/>
+                        <f:ajax execute="@this" render="tbAlummoGrupo"  />
+                    </h:commandLink>
+                </p:dataGrid>
+            </h:panelGroup>
+          </h:panelGroup>
+          
+            </p:dialog>
+        </h:form>
+         </ui:define>
+         </ui:composition>
+    </h:body>
+</html>
+

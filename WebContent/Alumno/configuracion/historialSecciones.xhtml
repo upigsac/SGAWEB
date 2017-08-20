@@ -1,0 +1,57 @@
+    <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"     
+      template="/Alumno/plantilla.xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+            
+            <ui:define name="titulo">
+            Historial Sesiones
+            </ui:define>
+            
+            <ui:define name="contenido">
+                
+                <style>
+            .gria-alumno .ui-datatable-odd{background-color: white}
+            .gria-alumno {font-size: 0.8em}
+            .gria-alumno tbody tr:hover{background-color: #f4f4f4}
+            .estado{padding: 2px 8px;border-radius: 4px;color: white}
+        </style>
+        <h:form id="FrmUsuarioHistorial">
+            <span class="tituloCuerpo"> HISTORIAL SESIONES </span>
+            <h:selectOneMenu value="#{usuarioHistorialB.cantidad}">
+                <f:selectItem itemLabel="Ultima 10 sesiones" itemValue="10" />
+                <f:selectItem itemLabel="Ultima 50 sesiones" itemValue="50" />
+                <f:selectItem itemLabel="Ultima 100 sesiones" itemValue="100" />
+                <f:ajax execute="@this" render="detalle" listener="#{usuarioHistorialB.mostrarHistorial}" />
+            </h:selectOneMenu>
+            <p:dataTable id="detalle" value="#{usuarioHistorialB.usuarioHistorialL}" var="registro" rowIndexVar="status" styleClass="gria-alumno">
+                <p:column headerText="Nro." width="20">
+                    #{status+1}
+                </p:column>
+                <p:column headerText="Navegador">
+                    <i class="fa #{registro.navegador eq 'Chrome'?'fa-chrome':registro.navegador eq 'Firefox'?'fa-firefox':registro.navegador eq 'Internet Explorer'?'fa-internet-explorer':registro.navegador eq 'Opera'?'fa-opera':'fa-safari' } " />
+                  
+                    #{registro.navegador}
+                </p:column>
+                <p:column headerText="Direccion IP" width="100">
+                    #{registro.ip}
+                </p:column>
+                <p:column headerText="Pais" width="100" style="text-align: center">
+                    #{registro.pais}
+                </p:column>
+                <p:column headerText="Actividad más reciente" width="200">
+                    #{registro.fecha}
+                </p:column>
+                <p:column headerText="Estado de la sesión" width="100" style="text-align: center">
+                    <h:outputLabel value="#{registro.item eq usuarioB.itemHistorial?'Actual':'Activo'}" styleClass="estado" style="background-color: #{registro.item eq usuarioB.itemHistorial?'#008000':'#0088CE'}" />
+                  
+                    
+                </p:column>
+            </p:dataTable>
+        </h:form>
+                
+            </ui:define>
+        </ui:composition>
+
+

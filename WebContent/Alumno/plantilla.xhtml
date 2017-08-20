@@ -1,0 +1,318 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+     
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+        <meta charset="utf-8"/>     
+       
+        <script  type="text/javascript" src="/SGAWEB/resources/js/printArea.js" />
+        <script src="#{utilB.ruta}/SGAWEB/resources/js/modal.js"></script>
+        <link  type="text/css" href="/SGAWEB/resources/css/alumno/style.css" rel="stylesheet"/>     
+        <link type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+
+        <script>
+        var i=180;
+        function handleMessage(facesmessage) {            
+            facesmessage.severity = 'info';
+            PF('growl').show([facesmessage]);
+            console.log("xxxx");
+		}
+		
+		timedCount();
+		var processTimer;
+		function timedCount() {
+		    
+		    processTimer = setTimeout("timedCount()", 1000);
+		    
+		    if(i==30) {
+		    	 $('body').append('<div class="sesionUsuario" style="display:none;position:fixed;right:10px"><b>0</b></div>');
+            	 $('.sesionUsuario').css('bottom',0).animate({bottom:30,opacity:'toggle'},500);
+            	 
+            	 /*
+            	 fade = setTimeout(function(){
+                 $('.sesionUsuario').animate({bottom:0,opacity:'toggle'}, 500);
+
+                 }, 5000);
+            	 */
+		    }
+		    
+		    
+		    
+		    $(".sesionUsuario b").text(i);
+		    console.log(i);
+		    i--;
+		  }
+		function terminoSesion(){
+		$('#modalSesion').css('display','block');
+		clearTimeout(processTimer);
+		}
+
+
+            $(document).ready(function() {
+
+            	
+            	
+            	 
+                 var bandera=true;
+				$('#btMenu').click(function(e){
+					e.preventDefault();
+					if(bandera){
+						$('.MenuPrincipal').addClass('ocultar');
+						$('.MenuPrincipal').removeClass('mostrar');
+                                                 $("#wrapper-section").animate({"width": "97%"}, 400);
+					}else{
+						$('.MenuPrincipal').addClass('mostrar');
+						$('.MenuPrincipal').removeClass('ocultar');	
+                                                $("#wrapper-section").animate({"width": "79%"}, 400);
+                                                
+					}
+					bandera=!bandera;
+					
+				});
+
+                $(".mensajeS").css("opacity", 0).animate({"opacity": 1}, 2000, function() {
+                    $(this).animate({"opacity": 0}, 4000);
+                });
+                $('#icon-config').click(function() {
+                    $("#conf-persona-ventana").slideToggle("fast");
+
+                });
+                  $(".btResponder").click(function(e){
+                    e.preventDefault();
+                    
+                    $(this).next("div").addClass("mostrar");
+                });
+                  
+               
+                  
+            });
+
+            $( document ).on( "mousemove", function( event ) {
+                
+            	if(30>i){
+            		fade = setTimeout(function(){
+                        $('.sesionUsuario').animate({bottom:0,opacity:'toggle'}, 500);
+
+                        }, 500);
+            	}
+                i=180;
+              //  $('.sesionUsuario').css('bottom',30).animate({bottom:0,opacity:'toggle'},500);
+         });
+        
+     
+            
+       
+        </script>
+
+        <style>
+          .sesionUsuario{background-color:rgba(0,0,0,0.5); width: 60px;height:60px;;border-radius: 5px;color: white;text-align: center;border-radius:50%;border:1px solid red}
+          .sesionUsuario b{font-size: 2.5em;color: red;line-height: 60px}
+            .titulo{color: #0073AA;text-transform: uppercase;font-weight: bold;font-size: 18px;margin:  20px ;display: block}
+            .columna{display: inline-block;width: 130px;margin-left: 50px;}
+            .icon-menu:before{content:"\e9bd";}
+            .icon-menu:n{display:block;width:97%;font-size:1.8em;text-align: right;}
+            .MenuPrincipal-alumno{background-color: silver}
+            
+            .foro{background-color: red;display: block;width: 300px;position: fixed;right: 10px;bottom: 0px;height: 85%;border: 1px solid;}
+            .foro.minimixar{height: 6.5%;}
+            .foro-cabecera{height: 70px;display: block;background-color: #019EE3;position: relative;padding: 0px 5px}
+            .foro-cuerpo{display: block;height: 88%;background-color: silver;overflow:  scroll}
+            .foro-cuerpo:hover{overflow-y:  scroll}
+            .foro-cuerpo-pregunta{position: relative;display: block;min-height: 5px;width: 95%;background-color: white;;margin: 5px 10px;padding: 5px}
+            .foro-cuerpo-pregunta:hover .foro-cuerpo-pregunta-eliminar{display: block}
+            .foro-cuerpo-pregunta-eliminar{position: absolute;top: 5px;right: 15px;display: none}
+            .foro-cuerpo-respuesta-eliminar{position: absolute;top: 0px;right: 5px;display: none}
+            .foro-cuerpo-respuesta{display: block;width: 90%;margin: 0px 0px 10px 15px;}
+            .foro-cuerpo-respuesta-item{position: relative;display: block;margin-bottom: 5px}
+            .foro-cuerpo-respuesta-item:hover{background-color: #A9A9A9}
+            .foro-cuerpo-respuesta-item:hover .foro-cuerpo-respuesta-eliminar{display: block}
+            .burbuja{width: 35px;height: 35px;border-radius: 50%;display: inline-block;vertical-align: top}
+            
+            
+            
+        </style>
+
+		<f:event type="preRenderView" listener="#{usuarioB.verificarSesion}" />
+        <title>
+            
+            <ui:insert name="titulo">
+
+            </ui:insert> 
+
+        </title>
+    </h:head>
+    <h:body  >
+    
+    
+    <p:idleMonitor onactive="console.log('ACTIVO')" onidle="terminoSesion()" timeout="180000">
+               <p:ajax event="active"  listener="#{utilB.eliminarSesiones}"   oncomplete="console.log('limpiar')"  />
+    </p:idleMonitor>
+    
+    
+    
+    <div id="modalSesion" style="display: none;width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);position: fixed ;top: 0;left: 0;font-family:sans-serif;z-index: 1">
+	    <div style="display: block;width: 400px;border-radius:5px;position: absolute;top: 60px;left: 40%;background-color: white;z-index: 2" >
+	    <div style="display: block;background: #007cff;color: white;padding: 5px 2px">
+	    	<b>..: Sesion Caducada :..</b>
+	    </div>
+	    <div style="display: block;padding: 7px 10px">
+		    <div style="display: inline-block;vertical-align: top;">
+		    	<i class="fa fa-clock-o" style="font-size: 5.0em;color: red" />
+		    </div>
+	    
+		    <div style="display: inline-block;vertical-align: top;width: 300px;padding: 15px 2px;text-align: justify;">
+		    	<p>La sesion ha caducado, por favor, pulse sobre el siguiente boton para volver a acceder a la aplicacion.</p>
+		    </div>
+	    </div>
+	    <div style="display: block;border-top: 1px solid silver; text-align: center;">
+	    	<a id="btVover" href="#{facesContext.externalContext.requestContextPath}/faces/index.xhtml"  style="display: inline-block;padding: 8px ;background-color: green;color: white;margin: 4px 2px;border-radius:4px">
+		    	<i class="fa fa-refresh" />		    	
+		    	Volver a la aplicacion.
+	    	</a>
+	    </div>
+	    
+	    
+	    </div>
+    </div>
+    
+    
+    
+    
+    
+    
+        <div id="wrapper">
+            <ui:insert name="cabecera"><div class="wrapper-header sm-header-a">
+                    <header class="header">
+                        <div class="header-hgroup inlineblock">
+                        <a href="/SGAWEB/faces/Alumno/index.xhtml">
+                            
+                            <h:graphicImage  width="80" height="80"   class=" inlineblock" value="SimagenBD?opcion=3&amp;codigo=#{usuarioB.institucionS}"   />
+                        </a>
+                        
+                            <div class="inlineblock lema">
+                                <h1  >UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h1>
+                                <h3  >"Excelencia Académica para un Mundo Globalizado"</h3>
+                            </div>
+                            
+                        </div>
+
+                        <a target="_blank"></a>
+                        <div class="header-person inlineblock" >
+                            <div class="header-person-det inlineblock">
+                                <!-- <span id="reloj"> </span>-->
+                                <span class=" span" id="nomPerson">#{usuarioB.persona.nombreCompletos()}</span>
+                                <span class="font20 span" style="color:yellow">#{carreraB.mostrarCarreraPersonal(usuarioB.institucionS,usuarioB.usuarios.usuario).descripcion}</span>                         
+                                <span  id="userPerson" >#{usuarioB.usuarios.usuario} </span>
+                               
+                                <span class="conf-persona span " id="icon-config" />
+                                <h:form>
+                                    <div id="conf-persona-ventana" class="sm-header">
+                                        <div class="triangulo"/>
+                                        <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" width="100" height="130"/>
+                                        <ul id="conf-personal">
+                                            <li>
+                                                <a href="/SGAWEB/faces/Alumno/misDatos.xhtml" class="button font20">Mi Perfil</a>
+                                            </li>
+                                            <li>
+                                                <a href="/SGAWEB/faces/Alumno/CambiarClave.xhtml" class="button font20" >Cambiar Clave</a>
+                                            </li>
+                                            <li>
+                                                <a href="/SGAWEB/faces/Alumno/Ayuda.xhtml" class="button font20" >Ayuda</a>
+                                            </li>
+                                            <li><h:commandButton value="Cerrar Sesion" class="button font20" action="#{usuarioB.cerrarSesion}" /></li>
+                                        </ul>    
+                                    </div>
+                                </h:form>
+                            </div>
+                            <div class="header-person-img inlineblock" >
+                                <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" class="img-person" />     
+                            </div>                          
+                        </div>
+                    </header> 
+                </div>
+
+            </ui:insert>
+
+            <!--   </header> -->
+
+            <div  id="wrapper-nav-section" >
+                <!--             MENU DE LA PAGINA                     -->
+                <nav id="main" class="inlineblock MenuPrincipal mostrar" >
+                    <div id="opc-inst-period" class="sm-background-a">
+
+                        <!--***************************************************************************************-->
+                        <label id="vistaListaInstitutos" class="color-c font20" style="margin-left: 5px;">Institución: </label>
+                        <h:form id="datosInstitucion" prependId="false">
+                            <h:selectOneMenu value="#{usuarioB.institucionS}">
+                                <f:selectItems value="#{institucionB.mostrarInstitucionAlumno(usuarioB.usuarios.usuario)}" var="institucion" itemLabel="#{institucion.descripcion}" itemValue="#{institucion.institucion}" />
+                                <f:ajax execute="@this" render=":frmPeriodo:cmbPeriodo" listener="#{usuarioB.mostrarAlumnoPeriodo}" />
+                            </h:selectOneMenu>
+                        </h:form>
+                        <label class="color-c font20" style="margin-left: 5px;">Periodo: </label>
+                        <h:form id="frmPeriodo">
+                            <h:selectOneMenu value="#{usuarioB.periodoS}" id="cmbPeriodo" >                                                          
+
+                                <f:selectItems value="#{usuarioB.periodoL}" var="periodo" itemValue="#{periodo.periodo}" itemLabel="#{periodo.desPeriodo}" />
+                                <p:ajax process="@this" update="@this :pnAreaTrabajo" listener="#{usuarioB.periodoSeccionado}" />
+                            </h:selectOneMenu>
+                        </h:form>
+
+                    </div>
+
+                    <ul class="menu-alumno-Padre">
+                        <ui:repeat value="#{usuarioB.menuL}" var="itemPadre" > 
+
+                            <li>
+                               
+                                <a href="#{itemPadre.url}" title="" target=""  >
+                                    <i class="#{itemPadre.classIcono}" />
+                                    #{itemPadre.nombre}
+                                
+                                </a>
+                                
+                                <ul class="menu-alumno-Hijo">                                    
+                                    <ui:repeat value="#{itemPadre.menuL}" var="itemHijo">
+                                        <li>
+                                            
+                                            
+                                            
+                                            <a  href="/SGAWEB/faces/Alumno/#{itemHijo.url}"  title="#{itemHijo.nombre}" class="menu-s-a">
+                                                <i class="#{itemHijo.classIcono}" />
+                                                #{itemHijo.nombre}     
+                                            
+                                            </a>
+                                         
+                                        </li>
+                                        
+                                    </ui:repeat>
+                                </ul>
+                            </li>
+
+                        </ui:repeat>
+                    </ul>
+                </nav>
+
+                <section class="inlineblock" id="wrapper-section"  >
+                    <article class="contenido" >   
+                        <h:panelGroup layout="block" id="pnAreaTrabajo" >
+
+                            <ui:insert name="contenido">
+                         
+                            </ui:insert>         
+                        </h:panelGroup>
+
+                    </article>
+                </section>
+
+            </div>
+           
+        </div>
+            
+    </h:body>
+</html>
+

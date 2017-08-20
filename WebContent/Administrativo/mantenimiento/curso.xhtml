@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>MANTENIMIENTO DE CURSOS</title>
+    </h:head>
+    <h:body onload="#{cursoB.mostrarCursos()}" >
+        
+    
+        <style>
+            .textoA{display: inline-block;width: 120px}
+            .cajaA:disabled{color: rgb(169, 169, 169);background-color: white} 
+            .cajaA{padding: 3px;margin: 1px}
+            .txtCodigo{color: blue;font-weight: bold;font-size: 0.9em}
+            .botonera{border: 1px solid red;margin: 10px;padding: 10px}
+            .botonera input[type="submit"]{padding: 10px;margin: 3px;width:  100px;cursor: pointer}
+            .botonera input[type="submit"]:disabled{cursor: default}
+        </style>
+        <script>
+            function focus(){
+                
+                document.getElementById('txtCodigo').focus();
+            }
+            
+        </script>
+            
+            
+        <span class="tituto-admin">MANTENIMENTO DE CURSOS  </span>
+        
+        <h:form id="frmCurso"   >
+            
+            <h:panelGroup  id="pnDatos">
+                <h:outputLabel class="textoA" value="CURSO" />
+                <h:inputText class="txtCodigo cajaA" id="txtCodigo" value="#{cursoB.curso.curso}" disabled="#{(not empty cursoB.curso.curso)}" /><br />
+                <h:outputLabel class="textoA"  value="DESCRIPCION" />
+                <h:inputText class="cajaA" style="width:  450px" value="#{cursoB.curso.descripcion}" disabled="#{not cursoB.bandera}" /><br />
+
+                <h:outputLabel class="textoA" value="ABREVIATURA" />
+                <h:inputText class="cajaA" value="#{cursoB.curso.abreviatura}" disabled="#{not cursoB.bandera}" /><br />
+                <h:outputLabel class="textoA" value="ESTADO" />
+               
+                <h:selectOneMenu value="#{cursoB.curso.estadoRegistro}" disabled="#{not cursoB.bandera}">
+                    <f:selectItem itemLabel="HABILITADO" itemValue="1"/>
+                    <f:selectItem itemLabel="DESHABILITADO" itemValue="0"/>
+                </h:selectOneMenu>
+            </h:panelGroup>
+            
+            
+            <h:panelGroup class="botonera" id="pnBotonera" layout="block" >
+                
+                <h:commandButton value="NUEVO" disabled="#{cursoB.bandera}"   >
+                    <f:ajax render="pnDatos pnBotonera "  listener="#{cursoB.nuevo()}"    />
+                    
+                </h:commandButton>
+                <h:commandButton value="GUARDAR"   disabled="#{not cursoB.bandera}" onclick="if (!confirm('¿Esta seguro de Ingresar?')) return false;">
+                    
+                    <f:ajax render="pnDatos pnBotonera tbCursos"  execute="pnDatos" listener="#{cursoB.insertar(cursoB.curso)}"  />
+                </h:commandButton>
+                <h:commandButton value="EDITAR"  disabled="#{cursoB.bandera}">
+                    <f:ajax render="pnDatos pnBotonera "  execute="@form" listener="#{cursoB.editar()}"  />
+                </h:commandButton>
+                
+              
+                <h:commandButton value="CANCELAR"  disabled="#{not cursoB.bandera}">
+                    <f:ajax render="pnDatos pnBotonera tbCursos"  listener="#{cursoB.cancelar()}" />
+                </h:commandButton>
+                
+                
+            </h:panelGroup>
+            
+            
+             <div style="text-align: right">
+                        <h:inputText value="#{cursoB.cadena}">
+                            <f:ajax event="keyup" execute="@this" render="tbCursos"  listener="#{cursoB.filtro(cursoB.cadena)}" />
+                        </h:inputText>
+             </div>
+            <p:dataTable id="tbCursos" value="#{cursoB.cursoL}" var="curso" rowIndexVar="status" rowKey="#{curso.curso}" selectionMode="single" selection="#{cursoB.curso}"  disabledSelection="#{cursoB.bandera}" widgetVar="tabla"     >
+         
+                <p:ajax event="rowSelect"  update=":frmCurso:pnDatos "     /> 
+                <p:column headerText="N">
+                    #{status+1}
+                </p:column>
+                
+                
+                <p:column headerText="CODIGO">
+                    #{curso.curso}
+                </p:column>
+                
+                <p:column headerText="DESCRPCION">
+                    #{curso.descripcion}
+                </p:column>
+                <p:column headerText="ABREVIATURA">
+                    #{curso.abreviatura}
+                    
+                </p:column>
+                <p:column headerText="ESTADO">
+                    #{estadoB.mostrarEstadoCodigo(curso.estadoRegistro).descripcion}
+                    
+                </p:column>
+            </p:dataTable>
+            
+        </h:form>
+        
+    </h:body>
+</html>
+
+

@@ -1,0 +1,74 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:jspc="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Notas Actuales
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                
+                <span class="tituloCuerpo"> NOTAS ACTUALES </span>
+                
+                <h:form id="formReporte" target="_blank">
+                   
+            
+            
+            
+      
+            
+             <h:panelGroup layout="block" >
+                                                
+                        <table width="100%">
+                            <th style="background-color:  #506478;color: #DDDDDD;height: 35px;text-shadow: 2px 2px 10px black">PERIODO</th>
+                            <th style="background-color:  #506478;color: #DDDDDD;height: 35px;text-shadow: 2px 2px 10px black"> BOLETA DE NOTAS </th>
+                            <th style="background-color:  #506478;color: #DDDDDD;height: 35px;text-shadow: 2px 2px 10px black">CONSOLIDADO DE NOTAS</th>
+
+                         <ui:repeat value="#{periodoB.periodoL}" var="lista2">
+
+                        <tr >
+                            <td style="border: 1px solid #0073AA;text-align: center;">
+                                #{lista2.desPeriodo}
+                            </td>
+
+                            <td style="text-align: center;border: 1px solid #0073AA;padding-bottom: 15px;">                                
+                            
+                                <ui:param name="param2" value="institucion,1,periodo,#{lista2.periodo},alumno,#{usuarioB.usu}" />
+                                <h:commandLink  style="background: url('/SGAWEB/resources/imagenes/lupa.png') no-repeat; padding-bottom: 18px;padding-right: 30px;"   value="" target="_blank" actionListener="#{utilB.imprimirIreports('alumno/notas/boletaNotas', 1,fn:split(param2,','))}"   />
+                                
+                            </td>
+                            
+                            <td style="text-align: center;border: 1px solid #0073AA;padding-bottom: 15px;"> 
+                                
+                               
+                                <!--
+                                <ui:param name="param2" value="@LITIPSQL,2,@LSINSTIT,1,@LSPERIOD,{lista2.periodo},@LSCARRER,%,@LSCURSOS,%,@LSSECCIO,%,@LSNIVELE,%,@LSTURNOS,%,@LSPARAM1,{usuarioB.usu},@LSPARAM2,%,@LSPARAM3,%,@LSESTADO,%" />
+
+                                <h:commandLink  style="background: url('/SGAWEB/resources/imagenes/lupa.png') no-repeat; padding-bottom: 18px;padding-right: 30px;"   value="" target="_blank" actionListener="{utilB.imprimirIreports('CONSOLIDADO', 1,fn:split(param2,','))}"   />
+                                -->
+                                <ui:param name="param1" value="periodo,#{lista2.periodo},alumno,#{usuarioB.usu}" />
+
+                                <h:commandLink  style="background: url('/SGAWEB/resources/imagenes/lupa.png') no-repeat; padding-bottom: 18px;padding-right: 30px;"   value="" target="_blank" actionListener="#{utilB.imprimirIreports('alumno/notas/consolidadoNotas', 1,fn:split(param1,','))}"   />
+                       
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                    </table>
+                 </h:panelGroup>          
+                    
+                    
+                    
+                        
+                
+            
+                        
+            </h:form>
+            
+            </ui:define>
+            
+        </ui:composition>
+

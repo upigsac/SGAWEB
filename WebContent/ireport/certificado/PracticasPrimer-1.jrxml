@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PracticasPrimer-1" language="groovy" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9dca77be-ea51-46f8-a1f9-6b562dffdaf6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="116"/>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURSO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SECCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ALUMNOS" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL [DI].[SPR_CERTIFICACIONES]($P{INSTITUCION},$P{PERIODO},$P{CURSO},$P{SECCION},$P{ALUMNOS})}]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Short"/>
+	<field name="FACULTAD" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="MALLA" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="ABREVIATURA" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="CREDITOS" class="java.math.BigDecimal"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="FEC_CLASES_INI" class="java.sql.Timestamp"/>
+	<field name="FEC_CLASES_FIN" class="java.sql.Timestamp"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="ESTUDIANTE" class="java.lang.String"/>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="CARGO" class="java.lang.String"/>
+	<group name="ALUMNO">
+		<groupExpression><![CDATA[$F{ALUMNO}]]></groupExpression>
+		<groupHeader>
+			<band height="470">
+				<staticText>
+					<reportElement uuid="73ccc731-6d7a-4730-ab4c-86f4281154d7" x="257" y="123" width="531" height="48"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="36" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CERTIFICADO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="e09ff5f1-301d-4f5d-ad66-02ddedcc63e4" x="257" y="171" width="141" height="27"/>
+					<textElement>
+						<font size="18"/>
+					</textElement>
+					<text><![CDATA[OTORGADO A:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="a5123a01-8ade-4d56-9817-6fc987731392" x="257" y="199" width="531" height="70"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="20" isBold="true"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="4d13faae-170b-43cf-855d-c820bf3f4db3" x="257" y="269" width="368" height="20"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<text><![CDATA[Por su participación en el Curso de Capacitación:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="78a3ef53-234d-453f-ba94-09f8652bbc43" x="257" y="290" width="531" height="52"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="18"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DESCURSO}]]></textFieldExpression>
+				</textField>
+				<textField pattern="&apos;Lima, &apos;  dd &apos;de&apos; MMMMM &apos;del&apos; yyyy">
+					<reportElement uuid="ac0ee86b-19db-4cac-82de-99091e4a9ae5" x="309" y="404" width="467" height="20"/>
+					<textElement textAlignment="Right">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="22c7e57b-9edc-4d99-bbc8-7baa7897b7ee" x="257" y="342" width="531" height="59"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Desarrollado del " + ($F{FEC_CLASES_INI}.getMonth()==$F{FEC_CLASES_FIN}.getMonth() && $F{FEC_CLASES_INI}.getYear()==$F{FEC_CLASES_FIN}.getYear()? new SimpleDateFormat("dd").format( $F{FEC_CLASES_INI})+" al "+new SimpleDateFormat("dd").format( $F{FEC_CLASES_FIN})+" de "+new SimpleDateFormat("MMMMM 'del' yyyy").format( $F{FEC_CLASES_FIN}):new SimpleDateFormat("dd 'de' MMMMM ").format( $F{FEC_CLASES_INI})+" al "+ new SimpleDateFormat("dd 'de' MMMMM 'del' yyyy").format( $F{FEC_CLASES_FIN}))+
+", un total de 20 horas.\nVálido por la realización de Prácticas Pre-Profesionales de Primer Nivel."]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="73" splitType="Stretch">
+			<textField>
+				<reportElement uuid="60d42844-90be-4377-ab33-cdebf20b9221" x="384" y="13" width="307" height="16"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ABREVIATURA} +' '+ $F{PERSONAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="46d319f4-ea1f-4a12-81e1-ca2266ce86fd" x="384" y="29" width="307" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="81c33abf-f129-4821-819d-d9be55d72b67" x="384" y="44" width="307" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UPIG]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

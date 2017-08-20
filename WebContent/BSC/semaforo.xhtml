@@ -1,0 +1,108 @@
+  <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        template="index.xhtml"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:p="http://primefaces.org/ui">      
+      
+      
+            <ui:define name="titulo">
+                SEMAFORO
+            </ui:define>
+        
+      <ui:define name="cuerpo" >
+          <h:form id="frmSemaforo" prependId="false">
+              <div style="display: block;background-color: white;border: 1px solid;padding: 10px">
+                <h:commandLink >
+                    <i class="fa fa-file-o" />
+                    NUEVO
+                    <f:ajax execute="@this" render=":frmSemaforo:txtColor :frmSemaforo:txtDesde :frmSemaforo:txtHasta :frmSemaforo:cboEstado" listener="#{bscSemaforoB.nuevo()}"  />
+                </h:commandLink>
+                <h:commandLink>
+                    <i class="fa fa-refresh" />
+                    ACTUALIZAR
+                    <f:ajax execute="@this" render="tbSemaforo" listener="#{bscDatoB.mostrarDatos()}" />
+                </h:commandLink>
+            </div>
+            
+            <p:dataTable id="tbSemaforo" value="#{bscSemaforoB.bscSemaforoL}" var="itemSemaforo" rowIndexVar="status" > 
+                
+                <p:column headerText="Nr." width="10">
+                    #{status+1}
+                </p:column>
+                
+                <p:column headerText="COLOR DE SEMAFORO">
+                     <b style="display: inline-block;vertical-align: top;width:  50px;height: 30px;background-color:##{itemSemaforo.color};border: 1px solid " />
+                    #{itemSemaforo.descripcion}
+                </p:column>
+                
+             
+                
+                <p:column headerText="DESDE" width="100" style="text-align: center">
+                    <b>#{itemSemaforo.desde}</b>
+                </p:column>
+                
+                <p:column headerText="HASTA" width="100" style="text-align: center">
+                    <b>
+                        #{itemSemaforo.hasta}
+                    </b>
+                    
+                </p:column>
+                <p:column  width="50">
+                    <h:commandLink title="Editar" style="color: green">
+                    <i class="fa fa-pencil" />    
+                    <f:ajax execute="@this" render=":frmSemaforo:plColor :frmSemaforo:txtColor :frmSemaforo:txtDesde :frmSemaforo:txtHasta :frmSemaforo:cboEstado " listener="#{bscSemaforoB.editar(itemSemaforo)}"  />
+                    </h:commandLink>
+                    
+                    <h:commandLink title="Eliminar" style="color: red"  onclick="if (!confirm('¿Esta seguro?')) return false;">
+                        <i class="fa fa-times" />
+                        <f:ajax execute="@this" render="tbSemaforo" listener="#{bscSemaforoB.eliminar(itemSemaforo)}" />
+                    </h:commandLink>
+                    
+                </p:column>
+                
+            </p:dataTable>
+            
+            
+            
+              <p:dialog header="MANTENIMIENTO SEMAFORO" widgetVar="dlSemaforo" modal="true" width="500" resizable="false" closeOnEscape="true">
+                <div class="pnRegistro">
+                    
+                 <p:colorPicker id="plColor" value="#{bscSemaforoB.bscSemaforo.color}" />    
+                 <br/>
+                 <h:outputLabel value="COLOR"/>
+                <h:inputText id="txtColor" value="#{bscSemaforoB.bscSemaforo.descripcion}" />
+                
+                <h:outputLabel value="DESDE"/>
+                <h:inputText id="txtDesde" value="#{bscSemaforoB.bscSemaforo.desde}" />
+                <h:outputLabel value="HASTA"/>
+                <h:inputText id="txtHasta" value="#{bscSemaforoB.bscSemaforo.hasta}" />
+                <h:outputLabel value="ESTADO"/>
+                <h:selectOneMenu id="cboEstado" value="#{bscSemaforoB.bscSemaforo.estadoRegistro}">
+                    <f:selectItem itemLabel="HABILITADO" itemValue="1" />
+                    <f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+                </h:selectOneMenu> 
+                </div>
+               
+                <f:facet name="footer">
+                      <div class="sub-botonera">
+                          <h:commandLink>
+                               <i class="fa fa-check" />
+                              ACEPTAR
+                              <f:ajax execute="@this plColor txtColor txtDesde txtHasta cboEstado" render="@form" listener="#{bscSemaforoB.insertar()}"   />
+                          </h:commandLink>
+                          
+                          <h:commandLink onclick="dlSemaforo.hide()">
+                               <i class="fa fa-reply" />
+                              CANCELAR
+                              <f:ajax execute="@this" />
+                          </h:commandLink>
+                      </div>
+                  </f:facet>
+                
+                
+            </p:dialog>
+        </h:form>
+</ui:define>
+  </ui:composition>
+

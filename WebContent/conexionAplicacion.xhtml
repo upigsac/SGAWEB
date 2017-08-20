@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        <style>
+            .butones{display: inline-block;vertical-align: top;background: #0069b3;color: white;padding: 8px;min-width: 80px;margin: 2px;border-radius: 4px}
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="frmAplicacion">
+            <div style=";width: 780px;margin: 0 auto">
+                <h:panelGroup layout="block" id="pnDatos" style="border: 1px solid silver">
+                
+                <div style="display: inline-block;vertical-align: top;width: 150px">
+                    <img src="" style="border: 1px solid silver;width: 150px;height: 150px" />
+                </div>
+                <div style="display: inline-block;vertical-align: top">
+                    <h:outputLabel value="BASE DATOS" />
+                    <h:inputText id="txtBaseDato" value="#{conexionAplicacionB.baseDato}" />
+                    <br/>
+                    <h:outputLabel value="USUARIO" />
+                    <h:inputText id="txtUsuario" value="#{conexionAplicacionB.usuario}" />
+                    <br/>
+                    <h:outputLabel value="CONTRASEÑA" />
+                    <h:inputText id="txtContraseña" value="#{conexionAplicacionB.contraseña}" />
+                    <br/>
+                </div>
+                
+            </h:panelGroup>
+                <h:panelGroup layout="block" id="pnBotonera" style="text-align: center">
+                <h:commandLink  type="button" class="butones" >
+                    <i class="fa fa-plug"/>
+                    GUARDAR
+                    <f:ajax execute="@this txtBaseDato txtUsuario txtContraseña"  listener="#{conexionAplicacionB.guardar()}" />
+                </h:commandLink>
+                  <h:commandLink  type="button" class="butones" >
+                    <f:ajax execute="@this" />
+                    SALIR
+                </h:commandLink>
+                
+            </h:panelGroup>
+            </div>
+            
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,192 @@
+
+             <ui:composition  template="/Administrativo/plantilla.xhtml"
+             
+             xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
+            
+            <ui:define name="titulo">
+                REPORTE DIARIO  DOCENTE
+            </ui:define>
+                 <ui:define name="contenido">
+        <style>
+                            
+       
+          	 .ui-column-title label{min-width: 5px}
+             .temaAdmin .ui-datatable-odd{background-color: white}
+             .temaAdmin .ui-state-highlight{background: #2182C2!important}
+             .temaAdmin .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+             
+             .temaAdmin table tbody tr:hover{background-color: #EEEEEE;}
+             
+             
+        </style>
+        <span class="tituto-admin">CARGA HORARIA DIARIA DOCENTE</span>
+        <h:form id="frmReporteDiario">
+            <h:panelGroup id="pnDatos" layout="block" styleClass="paneles">
+                <h:outputLabel value="FECHA:" />
+                
+                <p:calendar id="txtFecha" value="#{marcacionDiariaB.fecha}" pattern="dd-MM-yyyy"  />
+                <br/>
+                <h:outputLabel value="CARRERA" />
+                <h:selectOneMenu id="cboCarrera" value="#{marcacionDiariaB.carreraS}">
+                    <f:selectItem itemValue="%" itemLabel="TODOS" />                    
+                    <f:selectItems value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="carrera" itemLabel="#{carrera.abreviatura}" itemValue="#{carrera.carrera}" />
+                    <f:ajax execute="@this" render="cboPersonal slHoras lblHoraInicio" listener="#{marcacionDiariaB.calcularHoras(marcacionDiariaB.turnoS)}" />
+                </h:selectOneMenu>
+                <br/>
+                
+                
+                <h:outputLabel value="TURNO" />
+                <h:selectOneMenu id="cboTurno" value="#{marcacionDiariaB.turnoS}">
+                    <f:selectItem itemValue="%" itemLabel="TODOS" />
+                    <f:selectItem itemValue="1" itemLabel="MAÑANA" />
+                    <f:selectItem itemValue="2" itemLabel="TARDE" />
+                    <f:selectItem itemValue="3" itemLabel="NOCHE" />
+                    <f:ajax execute="@this" render="cboPersonal slHoras lblHoraInicio" listener="#{marcacionDiariaB.calcularHoras(marcacionDiariaB.turnoS)}" />
+                </h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="DOCENTE" />
+                <h:selectOneMenu id="cboPersonal" value="#{personaB.seleccion}"  >
+                    <f:selectItem itemValue="%" itemLabel="TODOS" />
+                    <f:selectItems value="#{personaB.mostrarPersonalTurno('%', usuarioB.periodoS, marcacionDiariaB.turnoS)}" var="personal" itemLabel="#{personal.nombreCompletos()}" itemValue="#{personal.persona}" />
+                </h:selectOneMenu>
+                <br/>
+           
+                <h:outputLabel value="HORAS" />
+                <h:outputText  value="#{ utilB.convertTimes(utilB.dateAdd(utilB.convertDateTime(marcacionDiariaB.turno.horaInicio), marcacionDiariaB.minMinutos))} - #{ utilB.convertTimes(utilB.dateAdd(utilB.convertDateTime(marcacionDiariaB.turno.horaInicio), marcacionDiariaB.maxMinutos))} " id="lblHoraInicio" /> 
+                
+                <h:panelGrid columns="1" style="margin-bottom: 10px" rendered="#{true}">
+                    <h:outputText id="displayRange" value="Minutos #{marcacionDiariaB.horaInicio} and #{marcacionDiariaB.horaFinal}"  />
+                <p:slider id="slHoras" step="5" for="txt6,txt7"  display="displayRange" style="width: 400px" range="true" minValue="0" maxValue="#{marcacionDiariaB.maxMinutos}" displayTemplate="Minutos {min} and {max}" >
+                    <p:ajax event="slideEnd"  update="lblHoraInicio " process="txt6 txt7" />
+                    
+                </p:slider>
+            </h:panelGrid>
+            <h:inputHidden id="txt6" value="#{marcacionDiariaB.minMinutos}" />
+            <h:inputHidden id="txt7" value="#{marcacionDiariaB.maxMinutos}" />
+           
+                
+            </h:panelGroup>
+            <div  class="paneles">
+            
+        
+                <h:commandLink  styleClass="boton-normal" >
+                    <i class="fa fa-eye"/>
+                    Mostrar
+                    <f:ajax execute="txtFecha cboTurno cboPersonal" render="tbDetalle  lblFata lblIncompleta lblCompleta"  listener="#{marcacionDiariaB.mostrarRegistroDiario(usuarioB.periodoS,personaB.seleccion,marcacionDiariaB.carreraS, marcacionDiariaB.turnoS, marcacionDiariaB.fecha,'','')}" onevent="onevent" />
+                </h:commandLink>
+                 <h:commandLink  styleClass="boton-normal" disabled="#{empty marcacionDiariaB.detalleMarcacionDiariaL }">                    
+                    <i class="fa fa-file-excel-o"/>
+                    Exportar
+                    <p:dataExporter  type="xls" target="tbDetalle" fileName="reporte_De_#{utilB.convertDate(marcacionDiariaB.fecha, 'dd-MM-yyyy')}" postProcessor="#{utilB.postProcessXLS}"  />
+                </h:commandLink>
+                
+                
+	                <h:commandLink styleClass="boton-normal" disabled="#{true}">
+	                    <i class="fa fa-envelope-o"/>
+	                    Enviar Correo
+	                    <f:ajax execute="@this" />
+	                </h:commandLink>
+                    </div>
+               
+           
+            
+            <div class="paneles" >
+                <h:commandLink  id="lblFata" value="#{marcacionDiariaB.totalFalta}" title="Falta" styleClass="boton-circulo" style="background-color: red" /> 
+                <h:commandLink id="lblIncompleta" value="#{marcacionDiariaB.totalIncompleta}" title="Incompleta" styleClass="boton-circulo" style="background-color: green"  />
+                <h:commandLink id="lblCompleta" value="#{marcacionDiariaB.totalCompleta}" title="completa" styleClass="boton-circulo" />
+            </div>
+            
+            
+            
+            
+            
+            <p:dataTable id="tbDetalle" value="#{marcacionDiariaB.detalleMarcacionDiariaL}" var="detalle"  rowIndexVar="status" styleClass="temaAdmin"  >
+               <f:facet name="header">
+                        <h:outputLabel value="REPORTE DIARIO " />
+               </f:facet>
+                <p:column style="position: relative" width="15" exportable="#{false}">
+                    <f:facet name="header" >
+                        <h:outputLabel value="Nro." />
+                    </f:facet>
+                    <h:outputLabel value="#{status + 1 }" />
+                    <span style="width: 5px;height: 100%;position: absolute;left: 0px;top: 0px;display: block;background-color: #{detalle.estadoRegistro eq 0 ?'red':detalle.estadoRegistro eq 56?'green':'#0088CE'}"></span> 
+                </p:column>
+                
+                <p:column width="50">
+                    <f:facet name="header">
+                        <h:outputLabel value="Codigo" />
+                    </f:facet>
+                         <h:outputLabel value="#{detalle.cpersonal}" />
+                    
+                </p:column>
+                  <p:column>
+                    <f:facet name="header">
+                        <h:outputLabel value="Docente" />
+                    </f:facet>
+                      <h:outputLabel value="#{detalle.desPersonal}" />
+                    
+                </p:column>
+              
+                <p:column width="45">
+                    <f:facet name="header" >
+                        <h:outputLabel value="Hora Inicio" />
+                    </f:facet>
+                    <h:outputLabel value="#{detalle.horaInicio}" />
+                </p:column>
+                
+                <p:column width="45">
+                    <f:facet name="header">
+                        <h:outputLabel value="Hora Final" />
+                    </f:facet>
+                    <h:outputLabel value="#{detalle.horaFinal}" />
+                </p:column>
+              
+                
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputLabel value="curso" />
+                    </f:facet>
+                    
+                    <h:outputLabel value="#{detalle.curso} - #{detalle.desCurso}" />
+                </p:column>
+                <p:column width="50">
+                    <f:facet name="header" >
+                        <h:outputLabel value="seccion" />
+                    </f:facet>
+                    <h:outputLabel value="#{detalle.seccion}" />
+                </p:column>
+                <p:column width="50">
+                    <f:facet name="header">
+                        <h:outputLabel value="turno" />
+                    </f:facet>
+                    
+                    <h:outputLabel value="#{turnoB.mostrarTurno(detalle.turno).descripcion}" />
+                </p:column>
+                <p:column width="40">
+                    <f:facet name="header">
+                        <h:outputLabel value="aula" />
+                    </f:facet>
+                     <h:outputLabel value="#{detalle.aula}" />
+                </p:column >
+                <p:column width="60">
+                    <f:facet name="header">
+                        <h:outputLabel value="Tipo Clase" />
+                    </f:facet>
+                     
+                    <h:outputLabel value="#{detalle.desTipoClase}" />
+                </p:column>
+ 
+                
+                
+                
+            </p:dataTable>
+        </h:form>
+                     </ui:define>
+        
+             </ui:composition>
+

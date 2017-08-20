@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cronogramaPractica" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49bcadc0-3b15-47a6-91fc-9dfa2f3a4370">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ALUMNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CRONOGRAMA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURSO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT G.TITULO_WEB,G.SUB_TITULO_WEB,E.DESCRIPCION OFICINA,F.APELLIDO_PATERNO+' '+F.APELLIDO_MATERNO+' '+F.NOMBRES TUTOR, B.PERSONA,C.APELLIDO_PATERNO ,C.APELLIDO_MATERNO,C.NOMBRES,A.ALUMNO,A.DIA,A.FECHA,A.HORAINICIO,A.HORAFINAL,A.ACTIVIDAD ,convert(decimal(5,2),DATEDIFF(MI,A.HORAINICIO,A.HORAFINAL)/60 )  TOTALMINUTOS
+FROM
+DI.ACA_ALUMNO_CURSO_PRACTICA_CRONOGRAMA_ACTIVIDAD A, SIGU.ACA_ALUMNO B , UPA.DAT_PERSONAS C,DI.ACA_ALUMNO_CURSO_PRACTICA D,SIGU.PER_OFICINA E,UPA.DAT_PERSONAS F,UPA.SYS_INSTITUCION G
+WHERE A.ALUMNO=$P{ALUMNO} AND A.CRONOGRAMA LIKE $P{CRONOGRAMA} AND A.CURSO LIKE $P{CURSO}
+AND B.INSTITUCION=1 AND B.ALUMNO=A.ALUMNO
+AND C.PERSONA=B.PERSONA
+AND D.ALUMNO=A.ALUMNO AND D.CURSO=A.CURSO
+AND E.INSTITUCION=B.INSTITUCION AND E.OFICINA=D.OFICINA
+AND F.PERSONA=D.TUTOR
+AND G.INSTITUCION=B.INSTITUCION
+ORDER BY A.FECHA]]>
+	</queryString>
+	<field name="TITULO_WEB" class="java.lang.String"/>
+	<field name="SUB_TITULO_WEB" class="java.lang.String"/>
+	<field name="OFICINA" class="java.lang.String"/>
+	<field name="TUTOR" class="java.lang.String"/>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="APELLIDO_PATERNO" class="java.lang.String"/>
+	<field name="APELLIDO_MATERNO" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="DIA" class="java.lang.Integer"/>
+	<field name="FECHA" class="java.sql.Date"/>
+	<field name="HORAINICIO" class="java.sql.Time"/>
+	<field name="HORAFINAL" class="java.sql.Time"/>
+	<field name="ACTIVIDAD" class="java.lang.String"/>
+	<field name="TOTALMINUTOS" class="java.math.BigDecimal"/>
+	<variable name="TOTALMINUTOS_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTALMINUTOS}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<textField>
+				<reportElement uuid="8e4b9812-76c4-49d2-b4e9-03bedfc46e6f" x="9" y="0" width="535" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITULO_WEB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e92aefaa-aa94-4927-9e29-b079bae3ebd1" x="9" y="20" width="535" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUB_TITULO_WEB}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e0aeefe1-e8a9-413a-9db3-336e6586555a" x="2" y="46" width="553" height="1" forecolor="#CCCCCC"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b826339b-71af-4ce0-87d9-4a77291bb96e" x="9" y="95" width="163" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c0ff1633-afac-49c5-a90e-2a1b0f9ce224" x="172" y="95" width="52" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1807cbb3-d6f1-4794-91de-1a739a55359c" x="224" y="95" width="52" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FINAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="55258da0-0f5c-478f-9442-0357327c522d" x="325" y="95" width="219" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0e97cb6-7f04-414f-a2fc-dfacfd122e20" x="276" y="95" width="49" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c4de1899-a96a-4438-a238-8d4dcdb685a1" x="83" y="11" width="100" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b91dd386-2d46-4765-83f3-8a5d3e29d411" x="25" y="11" width="58" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALUMNO]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9b3bf533-8d73-42e1-b609-3e2df3263d18" x="83" y="26" width="356" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APELLIDO_PATERNO}+' '+$F{APELLIDO_MATERNO}+' '+$F{NOMBRES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="be8b41fd-9fc8-4d13-807b-e10507c2f24f" x="25" y="49" width="58" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OFICINA]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b06c3d01-c2c4-4702-a3d6-7eee1c0e9584" x="83" y="49" width="298" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OFICINA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fef681b5-7d2f-41b1-8ec2-ae5d72607c40" x="25" y="64" width="58" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TUTOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="483529c2-5891-4707-b3bf-f6e867d60a82" x="83" y="64" width="298" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TUTOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="70896e73-981e-42fe-b49b-91d8291db194" x="25" y="0" width="147" height="17"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="10029cf8-5fd8-46ff-b557-cdeac7d297d4" x="224" y="0" width="52" height="17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HORAFINAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c6a9e575-46fd-4fb9-95db-753a5d5b2e77" x="325" y="0" width="219" height="17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTIVIDAD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="c199884d-a380-45a3-911d-262919e4934f" x="172" y="0" width="52" height="17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HORAINICIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="cbbe05bc-a2c9-4170-be49-795674d8fe3b" x="276" y="0" width="49" height="17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTALMINUTOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="01d42eaa-09b8-41ff-8198-c48cdb4de569" x="9" y="0" width="16" height="17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="19ed34fa-4252-405f-8d04-f1cf772232ba" x="276" y="0" width="49" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTALMINUTOS_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="85218a08-4712-4e67-b2e6-0288deed2699" x="9" y="0" width="267" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL HORAS]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

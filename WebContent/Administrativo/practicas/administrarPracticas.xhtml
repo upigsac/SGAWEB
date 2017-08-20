@@ -1,0 +1,900 @@
+<ui:composition template="/Administrativo/plantilla.xhtml"
+ 	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+       <ui:define name="titulo">
+                ADMINISTRAR PRACTICAS PROFESIONALES
+            </ui:define>
+             <ui:define name="contenido">
+                
+
+            <script>
+                      
+            function subirArchivo(){
+         
+               
+                $("#btExaminar").click();
+             
+            }
+            $("body").on("change","#btExaminar",function (){    
+                   
+                   $("#btSubir").click();
+             }); 
+            
+            var bandera=false;
+            var idGeneral;
+         
+            function confirmacion(obj,cadena){
+                idGeneral=obj;
+                if(bandera){
+                    $(".modal-fondo").remove();
+                    $(".modal").remove();
+                    bandera=false;
+                    return true;
+                }else{
+                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+                       $('body').append('<div class="modal-fondo"  /> ');
+                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                        }else{
+                        $(".modal-fondo").remove();
+                        $(".modal").remove();
+                   }                    
+                    
+                    return false;
+                }
+                
+            }
+            
+            function valida(estado){
+                bandera=estado;           
+                $(idGeneral).click();            
+            }
+            function seleccionarAlumno(indice,estado){
+            	
+            	if(!estado){
+            		tbBusqueda.unselectAllRows();
+                	tbBusqueda.selectRow(indice);	
+            	}
+            	
+            }
+        </script>
+        <style>
+             
+              
+            	.close{opacity: 0.0;transition: all 0.5s}
+			
+			.modal{width: 400px;min-height: 100px;background-color: white;margin: 0 auto;border-radius: 0px 0px 5px 5px ;position: fixed;top: 5%;left: 40%;display: block}
+			.modal-titulo{display: block;background-color:  #0069b3;color: white;padding: 3px 5px;font-size: 1.2em}
+            .modal-fondo{width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);position: fixed;display: block; top:0;;left: 0;color:white}
+            .modal-cuerpo{padding: 5px 1px}            
+            .modal-icono{font-size:4.0em;text-align:center;color:red;width: 80px}
+            .modal-texto{ font-size: 1.2em;width: 315px;line-height: 20px; color:silver}
+            .modal-botonera{display: block;width: 100%;padding: 5px 0px;text-align: center}
+            .modal-botonera a{padding: 2px 4px;min-width: 40px;display: inline-block;border-radius: 3px;color: white;font-size: 1.2em;border: 1px solid}
+            .modal-botonera a.positivo{background-color: #337ab7;border-color: #2e6da4}
+            .modal-botonera a.positivo:HOVER{background-color: #286090}
+            .modal-botonera a.negativo{background-color: #d9534f;border-color: #d43f3a}
+            .modal-botonera a.negativo:HOVER{background-color: #c9302c}  
+              
+              
+            .pnCronograma{display: inline-block;vertical-align: top;width: 74.99%}            
+            .pnActividad{border: 1px solid silver;width: 100%;display: block;min-height: 500px;position: relative;;background-color: white;}
+            .pnInforme{display: block;border: 1px solid silver;height: 140px;padding: 5px;background-color: #eeeeee;position: relative}
+             textarea{border: 1px solid silver;padding: 3px;margin: 1px;border-radius: 0px;width: 99%;resize:none;min-height: 80px}
+     
+           
+          
+            
+          
+            .gria-admin table{font-size: 0.8em}
+            
+            .colum-hora li{display: block;outline: 1px solid silver;text-align: center}
+            .colum-hora li b{height: 60px;width: 100%;line-height: 60px;font-size:0.8em;color: white}
+            .colum-fecha{width: 120px;display: table-cell}
+            .colum-fecha li{display: block;outline: 1px solid silver}
+            .ficha-actividad{position: absolute;border: 1px solid silver;width: 95%;border-radius: 2px;background-color: #e7f1f7;font-size: 0.8em;overflow: hidden}
+            .ficha-actividad:hover .ficha-actividad-subMenu{display: block}
+            .ficha-actividad .ficha-actividad-subMenu{position: absolute;top: 0px;right: 5px;font-size: 1.2em;display: none}
+            
+            .ficha-cronograma{position: relative;font-size: 0.9em;text-align: center;width: 150px;margin: 10px}
+            .ficha-cronograma.select{outline:3px solid #0081c2}
+           
+            
+            
+          
+			.circular-bar {
+			  text-align: center;   
+			  position: relative
+			}
+			.circular-bar .circular-bar-content {
+			  display: block;
+			  width: 100%;
+			  position: absolute;  
+			  top: 30px;
+			  text-align: center;
+			  
+			}
+			.circular-bar .circular-bar-content strong {
+			  display: block;  
+			  font-size: 14px;
+			 
+			}
+
+
+        </style>
+        <span class="tituto-admin">PRACTICAS DE INDUCCION PROFESIONAL </span>
+          <h:form id="frmSubir" enctype="multipart/form-data" prependId="false" style="display: none" >           
+                     
+                
+                <p:fileUpload id="btExaminar" styleClass="subirArchivo" mode="simple" value="#{administrarPracticaB.uploadedFile}"  />   
+                <h:commandButton id="btSubir" value="Subir" actionListener="#{administrarPracticaB.save}">
+         
+                </h:commandButton>
+         
+                     
+         </h:form>
+        
+        
+        <h:form id="frmPracticas" prependId="false" >
+            
+            <h:panelGroup layout="block" id="pnDatos" styleClass="paneles" >
+            <div class="paneles column" style="width: 48.5%">
+            	<img class="column" style="width: 120px;height: 150px;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{administrarPracticaB.alumnoPracticaS.persona.persona}" />
+                <div class="column" >
+                
+                        
+                        <h:outputLabel value="ALUMNO"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.alumno.alumno}" disabled="true"  /><br/>
+                        <h:outputLabel value="PERSONA" />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.persona.paterno} #{administrarPracticaB.alumnoPracticaS.persona.materno} #{administrarPracticaB.alumnoPracticaS.persona.nombres}" disabled="true"  style="width: 350px" /><br/>
+                        
+                        
+                        <h:outputLabel value="TELEFONO"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.persona.telefono}" disabled="true"  />
+                        <h:outputLabel value="CELULAR"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.persona.celular}" disabled="true"  /><br/>
+                        <h:outputLabel value="CORREO"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.persona.emailP}" disabled="true" style="width: 350px" /><br/>
+                         <h:outputLabel value="IMPRESION"  />
+                        <p:calendar value="#{administrarPracticaB.alumnoCertificacion.fechaImpresion}"    disabled="true" pattern="dd-MM-yyyy" />
+                        <h:outputLabel value="RECOGIDO"  />
+                        <p:calendar value="#{administrarPracticaB.alumnoCertificacion.fechaEntrega}"   disabled="true" pattern="dd-MM-yyyy" />
+                        <br />
+                        
+                      
+                        <h:outputLabel value="ESTADO"  />
+                        
+                         <h:outputLabel id="txtEstado"  rendered="#{administrarPracticaB.alumnoPractica ne null }"  value="#{estadoB.mostrarEstadoCodigo(administrarPracticaB.alumnoPractica.estadoRegistro).descripcion}"  />
+                       
+                    
+            
+            	</div>
+                
+                </div>
+                <div class="paneles column" style="width: 48.5%">
+                 		<h:outputLabel value="PROMEDIO"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.alumnoCursoSeccion.promedio}" disabled="true"  /><br/>
+                		<h:outputLabel value="CURSO"  />
+                        <h:inputText value="#{administrarPracticaB.alumnoPracticaS.curso.descripcion}" disabled="true"  style="width: 350px" /><br/>
+                       
+                  		<h:outputLabel  value="SECCION" />
+                         <h:inputText  value="#{administrarPracticaB.alumnoPracticaS.periodoSeccion.seccion}"  disabled="true" /> <br/>
+                        <h:outputLabel  value="FECHA INICIO" />
+                        <h:inputText  value="#{administrarPracticaB.alumnoPracticaS.periodoSeccion.fechaInicio}"  disabled="true" >
+                        <f:convertDateTime  pattern="dd-MM-yyyy"/>
+                        </h:inputText>                        
+                        <h:outputLabel  value="FECHA FINAL" >
+                       
+                        </h:outputLabel>
+                        <h:inputText  value="#{administrarPracticaB.alumnoPracticaS.periodoSeccion.fechaFin}" disabled="true" />  
+                        
+                  
+                         <hr/>
+                        
+                         <h:outputLabel  title="Días Transcurridos" style="position: relative;"   >
+                          <b style="font-size: 1.4em;position: absolute;top:0;left: 0;width: 45px;height: 45px;text-align: center;line-height: 60px;color: red;">#{administrarPracticaB.contDia}</b> 
+                         <i class="fa fa-calendar-o" style="font-size: 3.0em;" />
+                         </h:outputLabel>
+                         <div class="column paneles" style="width: 85%;height: 34px">
+                         <ui:repeat  value="#{administrarPracticaB.detallePagoPersonaL}" var="itemDetallePagoPersonal">
+                         	#{itemDetallePagoPersonal.numeroComprobante}<br />
+                         	<i class="fa fa-usd" />#{itemDetallePagoPersonal.montoTotal}
+                         </ui:repeat>
+                         <h:outputLabel rendered="#{empty administrarPracticaB.detallePagoPersonaL }" value="No tiene pagos" style="color :silver" />
+                         </div>
+             
+                         
+                </div>
+				<div class="paneles" style="position: relative" >
+	
+				
+				<h:outputLabel id="cbExpediente" value="EXPEDIENTE" />
+				
+				<h:selectOneMenu value="#{administrarPracticaB.expediente}">
+				
+				<f:selectItems value="#{administrarPracticaB.tramTramitePersonaL}" var="itemTramitePersona" itemLabel="#{itemTramitePersona.expediente}" itemValue="#{itemTramitePersona.expediente}" />
+				<f:ajax  execute="@this" render="txtFut ckRequisito pnBotoneraTramite" listener="#{administrarPracticaB.mostrarTramitePersona}" />
+		
+				</h:selectOneMenu>
+				
+               <h:outputLabel for="txtFut"  value="F.U.T" />
+               <h:inputText id="txtFut" value="#{administrarPracticaB.tramTramitePersona.fut}"  disabled="true" />
+               
+               <h:selectManyCheckbox value="#{administrarPracticaB.requisito}"  id="ckRequisito" disabled="#{not administrarPracticaB.banderaTramite}" >
+               <f:selectItems value="#{administrarPracticaB.tramRequisitoL}" var="itemRequisito" itemLabel="#{itemRequisito.descripcion}" itemValue="#{itemRequisito.requisito}" />
+               
+               </h:selectManyCheckbox>
+               
+               <h:panelGroup  layout="block" id="pnBotoneraTramite" rendered="#{administrarPracticaB.tramRequisitoL ne null }"  style="position: absolute;right: 2px;top:2px">
+	               <h:commandLink id="btGuardarT" disabled="#{not administrarPracticaB.banderaTramite}" title="Guardar" styleClass="boton-circulo" >
+	               <i class="fa fa-floppy-o"  />
+	               		
+	               		<f:ajax execute="@this cbExpediente ckRequisito txtFut" render="ckRequisito btGuardarT btEditarT btCancelarT"  listener="#{administrarPracticaB.insertarRequisitoPersona}" />
+	               </h:commandLink>
+	               <h:commandLink id="btEditarT" disabled="#{ administrarPracticaB.banderaTramite}" title="Editar" styleClass="boton-circulo" >
+	                     <i class="fa fa-pencil" />
+	                     
+	               		<f:ajax execute="@this " render="ckRequisito btGuardarT btEditarT btCancelarT" listener="#{administrarPracticaB.editarRequisitoPersona}"  />
+	               </h:commandLink>
+	               <h:commandLink id="btCancelarT" disabled="#{not administrarPracticaB.banderaTramite}" title="Cancelar" styleClass="boton-circulo" >
+	                     <i class="fa fa-reply" />
+	               		<f:ajax execute="@this "  render="ckRequisito btGuardarT btEditarT btCancelarT" listener="#{administrarPracticaB.cancelarRequisitoPersona}"  />
+	               </h:commandLink>
+               
+               </h:panelGroup>
+               
+				</div>
+            </h:panelGroup>
+            
+             <div class="paneles">
+             			<h:commandLink  id="btBuscar"  styleClass="boton-normal" >
+                            <i class="fa fa-search"/>
+                            Buscar
+                            <f:ajax execute="@this" render="txtPaternoB txtMaternoB txtNombresB" listener="#{administrarPracticaB.busqueda}" />
+                        </h:commandLink>
+                  		
+                    <h:commandLink id="btTerminar" styleClass="boton-normal"  disabled="#{administrarPracticaB.alumnoPractica eq null }"  onclick="return confirmacion(this,'¿ Esta seguro cambiar de estado ?');" >
+                            <i class="fa fa-bell-o" />
+                            Terminar 
+                            <f:ajax execute="@this" render=":frmPracticas:txtEstado tvPrincipal " listener="#{administrarPracticaB.estadoPractica}" />
+                        </h:commandLink>
+                    
+                    <ui:param name="param" value="PARAMARRAY,#{administrarPracticaB.alumnoPracticaS.alumno}" />
+                    <h:commandLink id="btImprimir" immediate="true"  target="_blank"  disabled="#{ administrarPracticaB.alumnoPractica.tutor eq null}"  styleClass="boton-normal"  actionListener="#{utilB.imprimirIreports('administrativo/practica/constanciaPracticaIniciales', 1,fn:split(param,','))}" >
+                            <i class="fa fa-print"/>
+                            Imprimir
+                    </h:commandLink>
+             
+             </div>
+                          
+                    
+       
+                
+                
+            <p:tabView id="tvPrincipal"  prependId="false" >
+                 <p:ajax event="tabChange" update="tvPrincipal:pnDetalleHoras tvPrincipal:pnActividad"/>
+                <p:tab  id="tabFicha"  >
+               <f:facet name="title">
+            <i class="fa fa-file-text-o" />
+               FICHA DE REGISTRO
+            
+               
+               </f:facet>
+                    <div class="paneles">
+                    	 <h:outputLabel value="Fecha Inicio" />
+                    	 <p:calendar id="txtFechaInicio" value="#{administrarPracticaB.alumnoPractica.fechaInicio}"  pattern="dd-MM-yyyy" disabled="#{not administrarPracticaB.bandera}" mask="true" mindate="#{utilB.fechaHoy()}" required="true"  />
+                    	 <br />
+                    
+                        <h:outputLabel value="Oficina" />
+                        <h:selectOneMenu id="cbOficina" value="#{administrarPracticaB.alumnoPractica.oficina}" disabled="#{not administrarPracticaB.bandera}"  style="width: 400px">
+                            <f:selectItem itemLabel="--Seleccion--" />
+                            <f:selectItems value="#{administrarPracticaB.oficinaL}" var="itemOficina" itemLabel="#{itemOficina.descripcion}" itemValue="#{itemOficina.oficina}" />
+                        	<f:ajax execute="@this" render="cbTutor" listener="#{administrarPracticaB.mostrarPersonaOficina}" />    
+                        </h:selectOneMenu>
+                        <br/>
+                        <h:outputLabel value="Evaluador"  />
+                        <h:selectOneMenu id="cbTutor" value="#{administrarPracticaB.alumnoPractica.tutor}" disabled="#{not administrarPracticaB.bandera}"  style="width: 400px">
+                            <f:selectItem itemLabel="--Seleccion--" />
+                            <f:selectItems value="#{administrarPracticaB.personaTutorL}" var="tutor" itemLabel="#{tutor.paterno} #{tutor.materno} #{tutor.nombres}" itemValue="#{tutor.persona}" />
+                            
+                        </h:selectOneMenu><br/>
+                        <h:outputLabel value="Observacion"  /><br/>
+                        <h:inputTextarea id="txtObservacion" value="#{administrarPracticaB.alumnoPractica.observacion}"  disabled="#{not administrarPracticaB.bandera}"  />
+                        
+                        <h:panelGroup layout="block" id="pnBotonera" rendered="#{administrarPracticaB.alumnoPracticaS ne null}">
+    
+                        <h:commandLink  styleClass="boton-normal" disabled="#{administrarPracticaB.alumnoPractica ne null?true:administrarPracticaB.bandera}" >
+                            <i class="fa fa-file-o" />
+                            Nuevo
+                        <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnBotonera :frmPracticas:tvPrincipal" listener="#{administrarPracticaB.nuevo}" />
+                    </h:commandLink>
+                          <h:commandLink type="button"   styleClass="boton-normal" disabled="#{not administrarPracticaB.bandera}" >
+                            <i class="fa fa-floppy-o" />
+                            Guardar
+                            <f:ajax execute="txtFechaInicio cbOficina cbTutor txtObservacion"  render=":frmPracticas:tvPrincipal:pnBotonera txtFechaInicio cbOficina cbTutor txtObservacion"  listener="#{administrarPracticaB.guardar}" />
+                    </h:commandLink>
+                    <h:commandLink type="button"  styleClass="boton-normal" disabled="#{not administrarPracticaB.bandera}" >
+                    		
+                        <i class="fa fa-undo" />
+                        Cancelar
+                        <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnBotonera :frmPracticas:tvPrincipal" listener="#{administrarPracticaB.cancelar}" />
+                    </h:commandLink>    
+                        <h:commandLink   styleClass="boton-normal" disabled="#{administrarPracticaB.alumnoPractica eq null?true:administrarPracticaB.bandera}" >
+                            <i class="fa fa-pencil" />
+                            Editar
+                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnBotonera :frmPracticas:tvPrincipal" listener="#{administrarPracticaB.editar}" />
+                    </h:commandLink>   
+                           <h:commandLink  styleClass="boton-normal" disabled="true" >
+                            <i class="fa fa-times" />
+                            Eliminar
+                        <f:ajax execute="@this" />
+                    </h:commandLink>  
+                    
+                    
+                     <ui:param name="paramPR" value="ALUMNO,#{administrarPracticaB.alumnoPracticaS.alumno.alumno},CURSO,#{administrarPracticaB.alumnoPracticaS.curso.curso}" />
+					                    <h:commandLink styleClass="boton-normal" title="Imprimir " disabled="#{administrarPracticaB.alumnoPractica eq null?true:administrarPracticaB.bandera}"  immediate="true"  target="_blank"    actionListener="#{utilB.imprimirIreports('administrativo/practica/practicaReglamento', 1,fn:split(paramPR,','))}" >
+					                            <i class="fa fa-print"/>
+					                            Imprimir					                            
+					                    </h:commandLink>
+                    
+               
+            		</h:panelGroup>
+                    </div>
+                    
+                    
+                    <h:panelGroup layout="block" id="pnInforme" styleClass="paneles" style="min-height: 170px;position: relative;">
+                    
+                    <h:outputLabel value="PLAN DE TRABAJO " />
+                       <div  class="pnInforme" >
+                               
+                               
+                           <ui:repeat value="#{administrarPracticaB.alumnoPlanPracticaL}" var="itemPlan">
+                               
+                               
+	                            <div style="display: inline-block;vertical-align: top;background-color:white;padding: 3px;width: 100px;height: 100px;outline:  1px solid silver;text-align: center;margin: 5px;color: #{itemPlan.aprobado ?'green':'red'}" >
+	                                <div style="display: block; ">
+	                                 <i class="fa fa-file-pdf-o" style="font-size: 3.0em" /><br/>
+	                                 <span style="font-size: 0.8em">#{itemPlan.informe}</span>
+	                                </div>
+	                                <div style="display: block;text-align: center;height: 20px ">
+	                                    <h:commandLink title="APROBADO" rendered="#{itemPlan.fechaRevisado eq null}" >
+	                                            <i class="fa fa-check"  style="color: #008000"  />
+	                                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal"  listener="#{administrarPracticaB.aprobarInforme(itemPlan)}" />
+	                                        </h:commandLink>
+	                                       <h:commandLink title="DESAPROBADO"  rendered="#{itemPlan.fechaRevisado eq null}"  >
+	                                            <i class="fa fa-times" style="color: red" />
+	                                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal" listener="#{administrarPracticaB.deshaprobarInforme(itemPlan)}" />
+	                                        </h:commandLink>
+	                           
+	                                    <h:commandLink immediate="true" title="DESCARGAR" actionListener="#{administrarPracticaB.prepDownload(itemPlan.ruta.concat('\\').concat(itemPlan.informe))}">
+	                                            <i class="fa fa-cloud-download" />
+	                                             <p:fileDownload value="#{administrarPracticaB.download}" />
+	                                        </h:commandLink>
+	                                </div>
+	                          
+			                        </div>
+	                        </ui:repeat>
+                            <h:outputLabel value="NO SE ENCUNETRA INFORMES SUBIDOS" style="display: block;text-align: center;color: silver;line-height:  100px" rendered="#{administrarPracticaB.alumnoInformePracticaL eq null}" />
+                            <div style="position: absolute;bottom: 0;right: 0">                           	
+                            
+                            
+			                    <h:commandLink id="btNuevoPlan"  title="Subir plan Trabajo" styleClass="boton-circulo"  rendered="#{administrarPracticaB.alumnoPractica ne null}"  disabled="#{administrarPracticaB.alumnoPractica.estadoRegistro eq 53?true:administrarPracticaB.alumnoPractica.fechaPlan ne null}"  onclick="subirArchivo()"     >
+			                        <i class="fa fa-cloud-upload" />
+			                        
+			                        <f:ajax execute="@this" listener="#{administrarPracticaB.nuevoPlan}" />
+			                    </h:commandLink> 
+                            
+                            </div>
+                               
+                            
+                       </div>
+                     
+                        <h:outputLabel value="INFORME " />
+                           
+                           
+                       <div  class="pnInforme" >
+                               
+                               
+                           <ui:repeat value="#{administrarPracticaB.alumnoInformePracticaL}" var="itemInforme">
+                               
+                               
+	                            <div style="display: inline-block;vertical-align: top;background-color:white;padding: 3px;width: 100px;height: 100px;outline:  1px solid silver;text-align: center;margin: 5px;color: #{itemInforme.aprobado ?'green':'red'}" >
+	                                <div style="display: block; ">
+	                                 <i class="fa fa-file-pdf-o" style="font-size: 3.0em" /><br/>
+	                                 <span style="font-size: 0.8em">#{itemInforme.informe}</span>
+	                                </div>
+	                                <div style="display: block;text-align: center;height: 20px ">
+	                                    <h:commandLink title="APROBADO"   rendered="#{itemInforme.fechaRevisado eq null}"   >
+	                                            <i class="fa fa-check" style="color: #008000" />
+	                                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal"  listener="#{administrarPracticaB.aprobarInforme(itemInforme)}" />
+	                                        </h:commandLink>
+	                                       <h:commandLink title="DESAPROBADO"  rendered="#{itemInforme.fechaRevisado eq null}"  >
+	                                            <i class="fa fa-times" style="color: red" />
+	                                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal" listener="#{administrarPracticaB.deshaprobarInforme(itemInforme)}" />
+	                                        </h:commandLink>
+	                           
+	                                    <h:commandLink immediate="true" title="DESCARGAR" actionListener="#{administrarPracticaB.prepDownload(itemInforme.ruta.concat('\\').concat(itemInforme.informe))}">
+	                                            <i class="fa fa-cloud-download" />
+	                                             <p:fileDownload value="#{administrarPracticaB.download}" />
+	                                        </h:commandLink>
+	                                </div>
+	                          
+			                        </div>
+	                        </ui:repeat>
+                            <h:outputLabel value="NO SE ENCUNETRA INFORMES SUBIDOS" style="display: block;text-align: center;color: silver;line-height:  100px" rendered="#{administrarPracticaB.alumnoInformePracticaL eq null}" />
+                            <div style="position: absolute;bottom: 0;right: 0">
+                            	<h:commandLink id="btNuevoInforme"  title="Subir Plan de TRabajo" styleClass="boton-circulo"  rendered="#{administrarPracticaB.alumnoPractica ne null}"  disabled="#{administrarPracticaB.alumnoPractica.estadoRegistro eq 53?true:administrarPracticaB.alumnoPractica.fechaInforme ne null}"    onclick="subirArchivo()"  >
+			                        <i class="fa fa-cloud-upload" />
+			                        
+			                        <f:ajax execute="@this" listener="#{administrarPracticaB.nuevoInforme}" />
+			                    </h:commandLink> 
+                            
+                            
+                            </div>
+                               
+                            
+                       </div>
+                       
+                           
+                    </h:panelGroup> 
+                   
+                </p:tab>
+                <p:tab id="tabCronograma"  >
+                  <f:facet name="title">
+                  <i class="fa fa-calendar" />
+                  GENERACION DE CRONOGRAMA
+                  
+                  </f:facet>
+                  
+                
+                    <h:panelGroup layout="block" id="pnDetalleHoras" style="border: 1px solid silver;padding: 10px;background-color: white;;margin: 5px 0px">
+                        <script>
+                            $(document).ready(function(){
+                                    $(".dial").knob({
+                                        'min':0
+                                    });
+                            });
+                        </script>
+                        
+                        <div style="display: block;border: 1px solid silver">
+                            <div style="display: inline-block;width: 25%;padding: 10px 0px">
+                                <div class="circular-bar" style="width: 150px;display: inline-block">
+
+                                    <input type="text" value="#{administrarPracticaB.minutosProyectados}%" class="dial" data-width="120" data-max="12000" data-height="120" data-readOnly="true" data-fgColor="#e74c3c" />
+                                 <div class="circular-bar-content">
+                                     <strong>MIN</strong>
+                                 </div>
+                                 </div>
+                                 <div style="display: inline-block;vertical-align: top;padding: 10px;font-size: 0.8em">
+                                         HORAS :#{administrarPracticaB.calcularTiempo(administrarPracticaB.minutosMax)}<br />
+                                         HORAS PROYECTADAS:#{administrarPracticaB.calcularTiempo(administrarPracticaB.minutosProyectados)}<br />
+                                         HORAS RESTANTES:#{administrarPracticaB.calcularTiempo(administrarPracticaB.minutosMax - administrarPracticaB.minutosProyectados)}<br />
+                                         HORAS EJECUTADAS:#{administrarPracticaB.calcularTiempo(administrarPracticaB.minutosEjecutados)}
+                                 </div>  
+                        </div>   
+                    
+                    
+                    <h:panelGroup layout="block" id="pnListaCronograma" styleClass="pnCronograma" >
+                            
+                       
+                        
+                        <div style="display: block;width: 100%;text-align: center;height: 30px;outline: 1px solid silver;">
+                       	<b>CRONOGRAMAS</b>
+                          
+                       	</div>
+                        <div style="display: block;width: 100%;outline: 1px solid silver;height: 120px;position: relative;background-color: #eeeeee;">
+                         <div style="position: absolute;bottom: 0;right: 0">
+                             <h:commandLink id="btNuevoC" title="NUEVO CRONOGRAMA" styleClass="boton-circulo" rendered="#{administrarPracticaB.alumnoPractica ne null}"  disabled="#{administrarPracticaB.alumnoPractica.estadoRegistro eq 53}"  >
+                                    <i class="fa fa-plus" />
+                                <f:ajax execute="@this" render=":frmPracticas:pnCronograma" listener="#{administrarPracticaB.nuevoCronograma}" />
+                            </h:commandLink>
+                             
+                                </div>
+                                
+                            <ui:repeat value="#{administrarPracticaB.alumnoPracticaCronogramaL}" var="itemCronograma">
+                            
+                                <div class="column paneles ficha-cronograma #{itemCronograma.cronograma eq administrarPracticaB.alumnoPracticaCronogramaS.cronograma ? 'select':''}" >
+                                
+                                
+                                 
+                                    
+                           
+                                    <div>
+                                         <h:commandLink>
+	                                    #{utilB.convertDateString(itemCronograma.fechaInicio,'EEEEE dd MMMMM yyyy')}
+	                                    <br />
+	                                    #{utilB.convertDateString(itemCronograma.fechaFinal,'EEEEE dd MMMMM yyyy')}
+	                                    <br/>
+	                                    <b>#{itemCronograma.minutoProyectado} - #{itemCronograma.minutoEjecutado}</b>
+		                                  <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnActividad  btCorte :frmPracticas:btImprimir :frmPracticas:tvPrincipal:pnListaCronograma" listener="#{administrarPracticaB.seleccionCronograma(itemCronograma)}" onevent="onevent"  />
+		                                    </h:commandLink>
+                                    </div>                               
+                                    
+		                          
+		                            
+		                            
+		                             <div class="ficha-cronograma-subBotonera"  >
+                                  <h:commandLink id="btCorte" title="Corte"  disabled="false"  >
+			                            <i class="fa fa-scissors" style="color:red" />
+			                            
+			                            <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnDetalleHoras" listener="#{administrarPracticaB.nuevoCronogramaCorte}" />
+			                      </h:commandLink>
+                                    
+                                        <h:commandLink title="Editar"  rendered="#{itemCronograma.corte eq 0}" style="color:green">
+                                                <i class="fa fa-pencil "   />
+                                                <f:ajax execute="@this"  render=":frmPracticas:txtFechaInicioC :frmPracticas:txtFechaFinalC" listener="#{administrarPracticaB.editarCronograma(itemCronograma)}" />
+                                       </h:commandLink>
+                                            
+                                        <h:commandLink title="Eliminar" onclick="return confirmacion(this,'¿ Esta seguro eliminar el cronograma ?');"  rendered="#{itemCronograma.minutoProyectado eq 0}" style="color:red"  >
+                                                  <i class="fa fa-times "   />
+                                                  <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnListaCronograma" listener="#{administrarPracticaB.eliminarCronograma(itemCronograma)}"  />
+                                        </h:commandLink>
+                                        
+                                         <ui:param name="paramC" value="ALUMNO,#{itemCronograma.alumno},CRONOGRAMA,#{itemCronograma.cronograma},CURSO,#{itemCronograma.curso}" />
+					                    <h:commandLink title="Imprimir F1" immediate="true"  target="_blank"    actionListener="#{utilB.imprimirIreports('administrativo/practica/cronogramaPractica', 1,fn:split(paramC,','))}" >
+					                            <i class="fa fa-print"/>					                            
+					                    </h:commandLink>
+					                    <h:commandLink title="Imprimir F2" immediate="true"  target="_blank"    actionListener="#{utilB.imprimirIreports('administrativo/practica/cronogramaMesPractica', 1,fn:split(paramC,','))}" >
+					                            <i class="fa fa-print"/>					                            
+					                    </h:commandLink> 
+					                     <h:commandLink title="Imprimir F3" immediate="true"  target="_blank"    actionListener="#{utilB.imprimirIreports('administrativo/practica/cronogramaPracticaTotal', 1,fn:split(paramC,','))}" >
+					                            <i class="fa fa-print"/>					                            
+					                    </h:commandLink> 
+                                    </div>
+                                </div>
+                            
+
+
+                            </ui:repeat>   
+                            
+                        </div>
+                         </h:panelGroup>
+                        </div>
+                        
+                    </h:panelGroup>
+                    
+                    
+                   
+                   
+                        
+              <div class="pnActividad" >
+                  <div style="position: absolute;bottom: 0;right: 0">
+                   <h:commandLink id="btNuevoA"  title="Nueva Actividad" styleClass="boton-circulo" rendered="#{administrarPracticaB.alumnoPractica ne null}"   disabled="#{administrarPracticaB.alumnoPractica.estadoRegistro eq 53 ?true:administrarPracticaB.alumnoPracticaCronogramaS.cronograma eq 0}"   >
+                        <i class="fa fa-plus" />
+                         
+                        <f:ajax execute="@this" render=":frmPracticas:pnManteActividad" listener="#{administrarPracticaB.nuevoActividad}" />
+                   </h:commandLink> 
+                  </div>
+                    
+                
+                        <div style="background-color: #0081c2;display: inline-block;min-height: 10px;width: 4%">
+                            <ul class="colum-hora" style="width:  100%">
+                                <li style="height: 40px" ><i class="fa fa-clock-o" style="font-size: 1.7em;color:white"/></li>   
+                                <li ><b>8:00</b></li>
+                                <li ><b>9:00</b></li>
+                                <li ><b>10:00</b></li>
+                                <li ><b>11:00</b></li>
+                                <li ><b>12:00</b></li>
+                                <li ><b>13:00</b></li>
+                                <li ><b>14:00</b></li>
+                                <li ><b>15:00</b></li>
+                                <li ><b>16:00</b></li>
+                                <li ><b>17:00</b></li>
+                                <li ><b>18:00</b></li>
+                                <li ><b>19:00</b></li>
+                                <li ><b>20:00</b></li>
+                                <li ><b>21:00</b></li>
+                                <li ><b>22:00</b></li>
+                              
+                            </ul>
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;width: 95%;overflow: auto;margin-left: -4px;">
+                            
+                    
+                        
+                      <h:panelGroup layout="block" id="pnActividad" style="width: #{administrarPracticaB.cabeceraCronogramaL.size()*120}px">
+                   
+                               
+                        
+                              <ui:repeat value="#{administrarPracticaB.cabeceraCronogramaL}" var="itemFechas">
+                                <ul class="colum-fecha" >
+                                    <li style="height: 40px;background-color: #0081c2;text-align: center;">
+                                        <h:commandLink disabled="#{administrarPracticaB.alumnoPracticaCronogramaS.corte eq 1}" style="color:white!important" >
+                                            #{utilB.listaDiasSemana[itemFechas.dia]}<br />                                        
+                                        
+                                        <h:outputLabel value="#{itemFechas.fecha}" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                        </h:outputLabel>
+                                        
+                                        
+                                        <f:ajax execute="@this" render=":frmPracticas:pnManteActividad" listener="#{administrarPracticaB.nuevaActividadDiaria(itemFechas.dia,itemFechas.fecha)}" />
+                                        </h:commandLink>
+                                        
+                                    </li>
+                                    <li style="height: 900px;position: relative;padding: 0px 2px">
+                                        
+                                        
+                                        <ui:repeat value="#{itemFechas.fichaActividadL}" var="itemActividad">
+                                        
+                                            <div class="ficha-actividad" style="top: #{itemActividad.distancia}px;height: #{itemActividad.alto}px;" title="#{itemActividad.alto} Minutos">
+                                                <div style="position: relative;z-index: 1;display: block;height: 100%">
+                                                   
+                                                        <p>#{itemActividad.actividad}</p>
+                                                        <b style="position: absolute;bottom: 0;right: 0;">
+                                                        		#{utilB.convertTimes(itemActividad.horaInicio)} - #{utilB.convertTimes(itemActividad.horaFinal)}
+                                                        </b>
+                                                        
+                                                   
+                                                    
+                                                    <div class="ficha-actividad-subMenu">
+                                                        <h:commandLink title="Editar"  rendered="#{administrarPracticaB.alumnoPracticaCronogramaS.corte ne 1}" style="color:green" >
+                                                        <i class="fa fa-pencil "   />
+                                                        <f:ajax execute="@this" render=":frmPracticas:pnManteActividad" listener="#{administrarPracticaB.editarActividad(itemActividad)}" />
+                                                        </h:commandLink>
+                                                        <h:commandLink title="Eliminar" onclick="return confirmacion(this,'¿ Esta seguro eliminar la actividad del dia  #{utilB.convertDate(itemFechas.fecha,'dd-MM-yyyy')}?');" style="color:red" rendered="#{administrarPracticaB.alumnoPracticaCronogramaS.corte ne 1}" >
+                                                        <i class="fa fa-times "   />
+                                                          <f:ajax execute="@this" render=":frmPracticas:tvPrincipal:pnActividad :frmPracticas:tvPrincipal:pnDetalleHoras" listener="#{administrarPracticaB.eliminarActividad(itemActividad)}" />
+                                                        </h:commandLink>
+                                                    </div>
+                                                    
+                                                    
+                                                    <div style="position: absolute;display: block;width: 100%; ;background-color: #e74c3c;top: #{itemActividad.distanciaFicha}px;height: #{itemActividad.altoFicha}px;z-index: -1" />
+                                                        
+                                                   
+                                                </div>
+                                            </div>
+                                        </ui:repeat>
+                                    </li>
+                                </ul>
+                            </ui:repeat>
+                          
+                            
+                           </h:panelGroup>
+                        </div>
+                    </div>
+                </p:tab>
+                    <p:tab  id="tbEmpresarial" disabled="#{administrarPracticaB.alumnoPractica eq null?true:administrarPracticaB.alumnoPractica.estadoRegistro ne 53 }" >
+                    <f:facet name="title">
+                    
+                    <i class="fa fa-building-o" />
+                    		INDUCCIÓN PROFESIONAL
+                    
+                    </f:facet>
+                    	<h:outputLabel value="F.U.T" />
+                    	<br />
+                    	<h:outputLabel value="EMPRESA" />
+                    	<br />
+                    	<h:outputLabel value="CARGO" />
+                    	<br />
+                    	<h:outputLabel value="FECHA INICIO" />
+                    	
+                    	<div  class="paneles" >
+                    		<h:commandLink styleClass="boton-normal" >
+                    		Generar Carta
+                    		<f:ajax execute="@this" />
+                    		</h:commandLink>
+                    	</div>
+                    </p:tab>
+            </p:tabView>
+            
+            
+            
+            <p:dialog header="..: BUSCAR ALUMNO :::.."  widgetVar="dlgBusquedaAlumno" modal="true" closeOnEscape="true" resizable="false" width="700"  footer="LA NOTA MINIMA ES DE 14" >
+                <h:outputLabel value="Paterno" />
+                <h:inputText id="txtPaternoB" value="#{administrarPracticaB.paternoB}" >
+                <f:ajax execute="@this" render="tbBusquedaAlumno" listener="#{administrarPracticaB.filtroAlumnoPractica}" />
+                </h:inputText><br/>
+                <h:outputLabel value="Materno" />
+                <h:inputText id="txtMaternoB" value="#{administrarPracticaB.maternoB}" >
+                <f:ajax execute="@this" render="tbBusquedaAlumno" listener="#{administrarPracticaB.filtroAlumnoPractica}" />
+                
+                </h:inputText><br/>
+                <h:outputLabel value="Nombres" />
+                <h:inputText id="txtNombresB" value="#{administrarPracticaB.nombresB}" >
+                <f:ajax execute="@this" render="tbBusquedaAlumno" listener="#{administrarPracticaB.filtroAlumnoPractica}" /> 
+                </h:inputText><br/>
+              
+                
+                <p:dataTable id="tbBusquedaAlumno" rowIndexVar="status" value="#{administrarPracticaB.alumnoPracticaL}" var="itemAlumno" selectionMode="single" rowKey="#{itemAlumno.alumno}#{itemAlumno.curso}" selection="#{administrarPracticaB.alumnoPracticaS}" disabledSelection="#{itemAlumno.alumnoCursoSeccion.promedio le 13}" scrollable="true" styleClass="gria-admin" scrollHeight="400" emptyMessage="NO SE ENCONTRO REGISTRO"  widgetVar="tbBusqueda" >
+                    <p:ajax event="rowSelect"  update=":frmPracticas:pnDatos :frmPracticas:tvPrincipal :frmPracticas:btBuscar :frmPracticas:btTerminar" listener="#{administrarPracticaB.seleccionBusqueda}"   oncomplete="dlgBusquedaAlumno.hide()" />
+                    <p:column headerText="N." width="10">
+                        #{status+1}
+                    </p:column>
+                    
+                    <p:column headerText="Datos Personales"   >
+                        
+                        <div onclick="seleccionarAlumno(#{status},#{itemAlumno.alumnoCursoSeccion.promedio le 13})">
+	                         <img class="column" style="width: 50px;height: 50px;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{itemAlumno.persona.persona}" />
+	                         <div class="column"   >
+	                            #{itemAlumno.alumnoCursoSeccion.periodo} 
+	                            <br />
+	                            #{itemAlumno.persona.paterno} #{itemAlumno.persona.materno} #{itemAlumno.persona.nombres}
+	                            <br/>
+	                            <b>  #{itemAlumno.curso.curso} - #{itemAlumno.curso.descripcion}</b>
+	                        	<br/>
+	                        	#{itemAlumno.periodoSeccion.fechaInicio} - #{itemAlumno.periodoSeccion.fechaFin}
+	                        </div>
+                        </div>
+                        
+                        
+                    </p:column>
+                   
+                    <p:column headerText="Nota" width="50" style="text-align: center" >
+                        <b style="font-size: 1.5em;color:#{itemAlumno.alumnoCursoSeccion.promedio le 13?'red':'blue'}" >#{itemAlumno.alumnoCursoSeccion.promedio}</b> 
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            
+            
+            <p:dialog header="..: Crear Registro Actividad :.."  widgetVar="dlgRegistroCronograma"   width="600"  modal="true" closeOnEscape="true" resizable="false"  >
+                <h:panelGroup layout="block" id="pnManteActividad">
+                    <h:outputLabel value="Dia"  />
+                    <h:selectOneMenu id="cbDia" value="#{administrarPracticaB.fichaActividad.dia}" disabled="#{not administrarPracticaB.banderaActividad}">                    
+                    <f:selectItem itemLabel="Lunes" itemValue="1" />
+                    <f:selectItem itemLabel="Martes" itemValue="2" />
+                    <f:selectItem itemLabel="Miercoles" itemValue="3" />
+                    <f:selectItem itemLabel="Jueves" itemValue="4" />
+                    <f:selectItem itemLabel="Viernes" itemValue="5" />
+                    <f:selectItem itemLabel="Sabado" itemValue="6" />
+                    <f:selectItem itemLabel="Domingo" itemValue="7" />
+                    <f:ajax execute="@this" />
+                </h:selectOneMenu>
+                <br/>
+                
+                
+                <h:outputLabel value="Inicio"  />
+                <p:calendar id="txtFechaIni" disabled="#{not administrarPracticaB.banderaActividad}"   value="#{administrarPracticaB.fichaActividad.fecha}"  pattern="dd-MM-yyyy" required="true" mask="true"  mindate="#{administrarPracticaB.alumnoPracticaCronogramaS.fechaInicio}"  maxdate="#{administrarPracticaB.alumnoPracticaCronogramaS.fechaFinal}" size="10" readonlyInput="true"   />
+                <p:calendar id="txtHoraIni" value="#{administrarPracticaB.fichaActividad.horaInicio}" showButtonPanel="true" pattern="HH:mm" timeOnly="true" mask="true" minHour="8" maxHour="22"  stepMinute="10" required="true" size="5" style="#{ component.valid ? '' : 'border-color:red;'}" >
+                <p:ajax event="dateSelect"  process="@this" update="txtHoraFin" />
+                </p:calendar>
+                
+                <br/>
+                <h:outputLabel value="Fin"  />
+                <p:calendar id="txtFechaFin" disabled="#{not administrarPracticaB.banderaActividad}"  value="#{administrarPracticaB.fichaActividad.fechaFin}" pattern="dd-MM-yyyy" required="true" mask="true" mindate="#{administrarPracticaB.alumnoPracticaCronogramaS.fechaInicio}" maxdate="#{administrarPracticaB.alumnoPracticaCronogramaS.fechaFinal}" size="10" readonlyInput="true"  />
+                <p:calendar id="txtHoraFin" value="#{administrarPracticaB.fichaActividad.horaFinal}" showButtonPanel="true" pattern="HH:mm" timeOnly="true" mask="true"   minHour="#{administrarPracticaB.fichaActividad.horaInicio.hours}" maxHour="22"  stepMinute="10" required="true"  size="5" style="#{ component.valid ? '' : 'border-color:red;'}" /><br/>
+                
+                <h:outputLabel value="Actividad"  />
+                <br/>
+                <h:inputTextarea id="txtActividad" value="#{administrarPracticaB.fichaActividad.actividad}" style="width: 100%;height: 100px;resize: none;padding:2px" hp:placeholder="Escribir actividad .." /><br/>
+                
+                </h:panelGroup>
+                
+                <f:facet name="footer" >
+                    <div style="display: block;text-align: right">
+                    
+                        <h:commandLink styleClass="boton-verde" >
+                            GUARDAR
+                            <f:ajax execute="cbDia txtFechaIni txtFechaFin txtHoraIni txtHoraFin txtActividad " render="txtHoraIni txtHoraFin :frmPracticas:tvPrincipal:pnActividad  :frmPracticas:tvPrincipal:pnDetalleHoras" listener="#{administrarPracticaB.guardarActividad}" onevent="onevent" />
+                        </h:commandLink> 
+                        <h:commandLink  styleClass="boton-rojo" onclick="dlgRegistroCronograma.hide()">
+                            CERRAR
+                        <f:ajax execute="@this" render="txtHoraIni txtHoraFin" resetValues="true" />
+                        </h:commandLink>
+                    
+                    </div>
+                   
+                </f:facet>
+                
+            </p:dialog>
+            
+            
+            
+            
+            
+            
+            
+           
+            
+            
+            <p:dialog  header="..: ENVIAR CORREO :.." widgetVar="dlgCorreo" width="500"  modal="true" resizable="false" closeOnEscape="true" >
+                
+         
+              
+                 
+                <h:outputLabel value="Para" />
+                <h:inputText id="txtPara" value="#{administrarPracticaB.alumnoPracticaS.persona.emailP}" />
+                <br />
+                <h:outputLabel value="Asunto" />
+                <h:inputText id="txtAsunto" value="#{administrarPracticaB.asunto}" />
+                <hr/>
+                <p:editor id="txtEditor" widgetVar="editorWidget" value="#{administrarPracticaB.texto}" style="width: 100%" controls="bold italic underline strikethrough size color highlight bullets numbering alignleft center alignright" required="#{true}" />
+               
+                
+                <f:facet name="footer">
+                    <div style="display: block;text-align: right">
+                    
+                    	<h:commandLink >
+                            ENVIAR
+                            <f:ajax  render=":frmPracticas:tvPrincipal:pnInforme" execute=" txtPara txtAsunto txtEditor"  listener="#{administrarPracticaB.enviarCorreo}" />
+                        </h:commandLink>
+                    
+                        <h:commandLink  onclick="dlgCorreo.hide()">
+                            CANCELAR
+                        <f:ajax execute="@this" />
+                        </h:commandLink>
+                         
+                    </div>
+                </f:facet>
+            </p:dialog>
+            
+            
+            
+            
+            
+            <p:dialog header="..: CRONOGRAMA :.." widgetVar="dlgCronograma" modal="true" resizable="false" closeOnEscape="true" >
+                <h:panelGroup layout="block" id="pnCronograma">
+                         <h:outputLabel value="FECHA INICIO" /><br/>
+                         <p:calendar id="txtFechaInicioC" value="#{administrarPracticaB.alumnoPracticaCronograma.fechaInicio}" mask="true" pattern="dd-MM-yyyy" required="#{true}" >
+                            <p:ajax event="dateSelect" process="@this" update="txtFechaFinalC" />
+                        </p:calendar>
+                        <br/>
+                        <h:outputLabel value="FECHA FINAL" /><br/>
+                        <p:calendar id="txtFechaFinalC" value="#{administrarPracticaB.alumnoPracticaCronograma.fechaFinal}"  mask="true" mindate="#{administrarPracticaB.alumnoPracticaCronograma.fechaInicio}" pattern="dd-MM-yyyy" required="#{true}" />
+
+                </h:panelGroup>
+           
+                <f:facet name="footer">
+                      <div style="display: block;text-align: right" >
+                     
+                    <h:commandLink styleClass="boton-verde" >
+                            ACEPTAR
+                            <f:ajax execute="txtFechaInicioC txtFechaFinalC" render="txtFechaInicioC txtFechaFinalC :frmPracticas:tvPrincipal:pnActividad :frmPracticas:tvPrincipal:pnDetalleHoras" listener="#{administrarPracticaB.guardarCronograma}" />
+                    </h:commandLink> 
+                    
+                       <h:commandLink  styleClass="boton-rojo" onclick="dlgCronograma.hide()">
+                            CANCELAR
+                        <f:ajax execute="@this" />
+                    </h:commandLink> 
+                    </div>
+                    
+                </f:facet>
+            </p:dialog>
+            
+            
+            <p:dialog header="..: CORTE DE CRONOGRAMA :.." widgetVar="dlgCronogramaCorte" modal="true" resizable="false" closeOnEscape="true" >
+                <h:outputLabel value="FUT" />
+                <h:inputText id="txtFutC" value="#{administrarPracticaB.alumnoPracticaCronogramaCorte.fut}" style="#{ component.valid ? '' : 'border-color:red;'}" required="true" />
+                <br/>
+                
+                <h:outputLabel value="TRAMITE" />
+                <h:inputText id="txtTramiteC" value="#{administrarPracticaB.alumnoPracticaCronogramaCorte.practica}" style="#{ component.valid ? '' : 'border-color:red;'}" required="true" />
+                <br/>
+                <h:outputLabel value="FECHA" />
+                <p:calendar id="txtFechaC" value="#{administrarPracticaB.alumnoPracticaCronogramaCorte.fecha}"  required="true" pattern="dd-MM-yyyy" mask="true" />
+                <br />
+                <h:outputLabel value="AUTORIZADO" />
+             
+                <h:selectOneMenu id="cbAutorizaC" value="#{administrarPracticaB.alumnoPracticaCronogramaCorte.autorizado}" >
+                   <f:selectItem itemLabel="--Seleccionar--" />
+                </h:selectOneMenu>
+                
+                
+                <br />
+                <h:outputLabel value="OBSERVACION" />
+                  <br />
+                <h:inputTextarea id="txtObservacionC" value="#{administrarPracticaB.alumnoPracticaCronogramaCorte.observacion}" style="display: block;width: 400px;height: 100px;resize: none" />
+             
+                
+                 <f:facet name="footer">
+                      <div style="display: block;text-align: right" >
+                       <h:commandLink styleClass="boton-verde" >
+                            ACEPTAR
+                            <f:ajax execute="txtFechaC txtFutC txtTramiteC cbAutorizaC txtObservacionC" render="txtFutC txtTramiteC txtFechaC :frmPracticas:btImprimir "  listener="#{administrarPracticaB.guardarCronogramaCorte}" />
+                    </h:commandLink>  
+                        <h:commandLink styleClass="boton-rojo"  onclick="dlgCronogramaCorte.hide()">
+                            CANCELAR
+                        <f:ajax execute="@this"  render="txtFutC txtTramiteC txtFechaC" resetValues="true"/>
+                    </h:commandLink>
+                   
+                    </div>
+                    
+                </f:facet>
+            </p:dialog>
+        </h:form>
+            </ui:define>
+    
+    </ui:composition>

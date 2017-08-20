@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gruposTipoExamen" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d62c0c3d-f324-4dfa-b683-43c8453dca78">
+	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="41"/>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CARRERA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURSO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.INSTITUCION,E.BANNER,A.PERIODO,D.DESCRIPCION DESPERIODO,A.CARRERA,A.MALLA,A.CURSO,C.DESCRIPCION DESCURSO,A.GRUPO_EXAMEN,A.MAXIMO_VACANTES,A.ACTUAL_VACANTES,B.ALUMNO,BA.PERSONA,BB.APELLIDO_PATERNO +' '+ BB.APELLIDO_MATERNO +' '+BB.NOMBRES DESPERSONA
+FROM DI.HOR_CURSO_PERIODO_GRUPO_EXAMEN A,DI.ACA_ALUMNO_CURSO_SECCION_GRUPO_EXAMEN  B LEFT JOIN SIGU.ACA_ALUMNO BA
+ON BA.INSTITUCION=B.INSTITUCION AND BA.ALUMNO=B.ALUMNO
+LEFT JOIN UPA.DAT_PERSONAS BB
+ON BB.PERSONA=BA.PERSONA
+,UPA.ACA_CURSOS C,UPA.ACA_PERIODOS D,UPA.SYS_INSTITUCION E
+WHERE A.INSTITUCION=$P{INSTITUCION} AND A.PERIODO=$P{PERIODO} AND A.CARRERA=$P{CARRERA} AND A.CURSO=$P{CURSO}
+AND B.INSTITUCION=A.INSTITUCION AND B.PERIODO=A.PERIODO AND B.CARRERA=A.CARRERA AND B.MALLA=A.MALLA AND B.CURSO=A.CURSO AND B.GRUPO_EXAMEN=A.GRUPO_EXAMEN
+AND C.CURSO=A.CURSO
+AND D.PERIODO=A.PERIODO AND D.INSTITUCION=A.INSTITUCION
+AND E.INSTITUCION=A.INSTITUCION
+ORDER BY A.GRUPO_EXAMEN,DESPERSONA]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Integer"/>
+	<field name="BANNER" class="java.lang.Object"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="MALLA" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="GRUPO_EXAMEN" class="java.lang.Integer"/>
+	<field name="MAXIMO_VACANTES" class="java.lang.Integer"/>
+	<field name="ACTUAL_VACANTES" class="java.lang.Integer"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="PERSONA" class="java.lang.String"/>
+	<field name="DESPERSONA" class="java.lang.String"/>
+	<group name="PERSONAL" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{GRUPO_EXAMEN}]]></groupExpression>
+		<groupHeader>
+			<band height="163">
+				<staticText>
+					<reportElement uuid="6c3a437f-9b8d-4400-bc7b-fe3af3acddee" x="158" y="145" width="342" height="15"/>
+					<box leftPadding="10"/>
+					<textElement verticalAlignment="Top">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ESTUDIANTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="1bc442c1-9fdf-4be1-bf4f-a4bbc26cb870" x="54" y="145" width="100" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CODIGO]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="94e769a7-ad9b-433f-8cca-5491670f99a0" x="114" y="53" width="229" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{DESCURSO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="b5518af2-68a4-4573-b096-cf94352c8392" x="14" y="52" width="90" height="15"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[ASIGNATURA:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="93f9e58c-41a4-4874-839d-924eb89dec26" x="433" y="22" width="90" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[GRUPO]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="63d0ef57-c78a-43d1-b650-9e453ae5ba9f" x="49" y="143" width="451" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="d32469bb-68e2-41c7-bd7a-d3f4be49c69e" x="49" y="162" width="451" height="1"/>
+				</line>
+				<textField>
+					<reportElement uuid="1e19a982-056e-42a9-8345-415ffb6e49de" x="433" y="42" width="90" height="71"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="48" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GRUPO_EXAMEN}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="d91b2cf5-2b79-42d0-83c1-778ef0fb8121" x="114" y="84" width="100" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{MAXIMO_VACANTES}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="84feddf4-b034-44b7-a53b-b850a460122f" x="114" y="100" width="100" height="16"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{ACTUAL_VACANTES}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="40278291-fcd4-4835-9ac3-3c6c6f6272be" x="14" y="84" width="90" height="15"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[VACANTES:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b308a0e5-537f-494f-9e1a-815caf766a8e" x="14" y="100" width="90" height="16"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[MATRICULADOS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d1458d6b-dda4-44bc-82fc-6c195489d5b5" x="14" y="36" width="90" height="16"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[PERIODO:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="8d4fa8d7-0e65-4530-ac93-801abc2b1d2e" x="114" y="36" width="100" height="16"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{DESPERIODO}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="8bc64990-c6dd-48d3-a1d4-eb45dfbd2c21" mode="Transparent" x="1" y="129" width="554" height="1" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="70" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement uuid="3a1601ac-9731-47fa-a794-20d2e12fbc5d" x="0" y="0" width="555" height="58"/>
+				<imageExpression><![CDATA[JRImageRenderer.getInstance((byte []) $F{BANNER})]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement uuid="5f180e49-7ae8-460d-8a0c-8c80f8c58981" x="49" y="-19" width="1" height="34"/>
+			</line>
+			<line>
+				<reportElement uuid="f8e87224-da1f-4614-80d4-15737a752cbe" x="50" y="14" width="450" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="3371217a-6bad-4362-98e4-4bb1a2769b0d" x="157" y="-20" width="1" height="34"/>
+			</line>
+			<textField>
+				<reportElement uuid="d627929a-611c-4065-a404-761649b11da8" x="54" y="1" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5f49ab98-24e1-4645-bdcb-b75d6e6b3373" x="158" y="2" width="342" height="12"/>
+				<box leftPadding="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESPERSONA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="24cc94cb-54cd-415c-b375-dd0e92a5d279" x="500" y="-20" width="1" height="35"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

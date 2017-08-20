@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+        <script type="text/javascript" src="#{utilB.ruta}/SGAWEB/resources/js/jquery.geocomplete.js"></script>       
+    </h:head>
+    <h:body>
+        <style>
+            #pnDatos,#pnBotonera{border: 1px solid silver;padding: 10px}
+            #pnDatos label{display: inline-block;width: 130px;vertical-align: top;}
+            #pnDatos input,#pnDatos  select,#pnDatos textArea{padding: 3px;margin: 1px}
+            #pnDatos select{min-width: 250px}
+            #pnDatos textArea{resize: none}
+            #pnDatos #txtFecha_input{box-shadow: none;border-radius: 1px;width: 150px}
+            #pnBotonera input{min-width: 120px;padding: 8px;margin: 0px 2px;cursor: pointer}
+            #pnBotonera input:disabled{cursor: default}
+        </style>
+        <script>
+            function geocode() {
+
+                PF('mapa').geocode(document.getElementById('txtBusqueda').value);
+            }
+
+
+        </script>
+        <h:form id="frmRutaCaptacion" prependId="false"  >
+            <h:panelGroup layout="block" id="pnDatos">                              
+
+                <div style="display: inline-block;vertical-align: top">
+                    <h:outputLabel  value="FECHA :" />
+                    <p:calendar id="txtFecha" value="#{rutaCaptacionB.personalRutaCaptacion.fecha}"  pattern="dd-MM-yyyy"  />
+
+
+
+                    <br/>
+                    <h:outputLabel value="PERSONAL :" />
+                    <h:selectOneMenu id="cboPersonal" value="#{rutaCaptacionB.personalRutaCaptacion.personal}" >
+                        <f:selectItem itemLabel="Seleccionar" />
+                        <f:selectItem itemLabel="BORDA COSIO MARILU MARLENI" itemValue="0000000803" />
+                        <f:selectItem itemLabel="GUILLEN ARROYO MAYRA ALEJANDRA" itemValue="0000001191" />
+
+                    </h:selectOneMenu>   
+                </div>
+                <h:commandButton value="Mostrar" type="button" style="display: inline-block;padding: 10px;min-width: 100px;margin: 5px" > 
+                    <f:ajax execute="cboPersonal txtFecha" render="gmap" listener="#{rutaCaptacionB.mostrarRutaPersonal(rutaCaptacionB.personalRutaCaptacion.fecha, rutaCaptacionB.personalRutaCaptacion.personal)}"/>
+                </h:commandButton>
+
+
+                <br/>
+                <h:outputLabel value="DIRECCION REF.:" />
+                <h:inputTextarea id="txtDireccion" value="#{rutaCaptacionB.personalRutaCaptacion.direccion}" cols="60" rows="5" disabled="#{not rutaCaptacionB.bandera}"/>            
+                <br/>
+                <h:outputLabel value="OBSERVACION :" />
+                <h:inputTextarea id="txtObservacion" value="#{rutaCaptacionB.personalRutaCaptacion.observacion}" cols="60" rows="5" disabled="#{not rutaCaptacionB.bandera}"/>
+
+            </h:panelGroup>
+
+
+            <h:panelGroup layout="block" id="pnBotonera">
+
+
+
+
+                <h:commandButton value="Nuevo" type="button" disabled="#{rutaCaptacionB.bandera}"> 
+                    <f:ajax execute="txtFecha cboPersonal" render="txtDireccion txtBusqueda txtObservacion pnBotonera pnBusqueda gmap" listener="#{rutaCaptacionB.nuevo(rutaCaptacionB.personalRutaCaptacion.fecha, rutaCaptacionB.personalRutaCaptacion.personal)}"/>
+                </h:commandButton>
+                <h:commandButton value="Guardar:" disabled="#{not rutaCaptacionB.bandera}"> 
+                    <f:ajax execute="txtDireccion txtFecha cboPersonal txtObservacion "  render="txtDireccion txtObservacion pnBotonera pnBusqueda gmap" listener="#{rutaCaptacionB.guardar(rutaCaptacionB.personalRutaCaptacion.fecha, rutaCaptacionB.personalRutaCaptacion.personal)}"/>
+                </h:commandButton>
+                <h:commandButton value="Editar" type="button" disabled="#{rutaCaptacionB.bandera}"> 
+                    <f:ajax execute="@this" render="pnBotonera gmap" listener="#{rutaCaptacionB.editar()}"/>
+                </h:commandButton>
+                <h:commandButton value="Cancelar" type="button" disabled="#{not rutaCaptacionB.bandera}"> 
+                    <f:ajax execute="txtFecha cboPersonal" render="txtFecha cboPersonal txtDireccion txtObservacion pnBotonera pnBusqueda gmap" listener="#{rutaCaptacionB.cancelar(rutaCaptacionB.personalRutaCaptacion.fecha, rutaCaptacionB.personalRutaCaptacion.personal)}" />
+                </h:commandButton>
+
+                <h:commandButton value="Eliminar" type="button" onclick="if (!confirm('¿Esta seguro de eliminar Ruta?'))
+                            return false;"> 
+                    <f:ajax execute="txtFecha cboPersonal" render="txtFecha cboPersonal txtObservacion pnBotonera gmap" listener="#{rutaCaptacionB.eliminar(rutaCaptacionB.personalRutaCaptacion.fecha, rutaCaptacionB.personalRutaCaptacion.personal)}" />
+                </h:commandButton>
+
+            </h:panelGroup>
+            <h:panelGroup id="pnBusqueda" layout="block" style="border: 1px solid silver;text-align: right;padding:5px 20px ">
+                <h:inputText id="txtBusqueda" value="#{rutaCaptacionB.busqueda}" size="80" style="padding: 5px" disabled="#{not rutaCaptacionB.banderaBusqueda}" />
+                <h:commandButton value="Buscar" type="button" onclick="geocode()" style="padding: 5px;width: 80px" disabled="#{not rutaCaptacionB.banderaBusqueda}"  />
+
+                <script>
+
+                    $(function() {
+
+                        var options = {
+                            map: ".gmap"
+                        };
+
+                        $("#txtBusqueda").geocomplete(options)
+                                .bind("geocode:result", function(event, result) {
+
+                                    console.log("Result: " + result.formatted_address);
+                                })
+
+                                .bind("geocode:error", function(event, status) {
+                                    console.log("ERROR: " + status);
+                                })
+
+                                .bind("geocode:multiple", function(event, results) {
+                                    console.log("Multiple: " + results.length + " results found");
+                                });
+
+                    });
+
+                </script>
+
+
+            </h:panelGroup>
+
+
+
+            <p:gmap id="gmap" styleClass="gmap"  widgetVar="mapa" center="#{rutaCaptacionB.centerGeoMap}" zoom="#{rutaCaptacionB.zoon}" disableDefaultUI="true"  type="ROADMAP"  model="#{rutaCaptacionB.draggableModel}" style="width:100%;height:700px">
+                <p:ajax event="markerDrag" listener="#{rutaCaptacionB.onMarkerDrag}"   />
+                <p:ajax event="overlaySelect" listener="#{rutaCaptacionB.onMarkerSelect}" update="@this txtObservacion"   />
+                <p:ajax event="geocode" listener="#{rutaCaptacionB.onGeocode}" update="@this" />
+                <p:ajax event="stateChange" listener="#{rutaCaptacionB.onStateChange}"/>
+            </p:gmap>
+        </h:form>
+
+
+
+    </h:body>
+</html>
+

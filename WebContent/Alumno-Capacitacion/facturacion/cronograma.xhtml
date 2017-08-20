@@ -1,0 +1,40 @@
+
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        template="/Alumno/plantilla.xhtml">
+                       
+            <ui:define name="titulo">
+                Cronograma de Pagos
+            </ui:define>
+                  
+            <ui:define name="contenido">
+                <style>
+                   #frmCronograma ul li{display: inline-block;vertical-align: top }
+                </style>
+                <span class="tituloCuerpo"> CRONOGRAMA DE PAGOS </span>
+                
+       
+                
+                <div id="principal">
+                     <!--            
+                    <span>
+                        <a id="uno1" class="pdfCronograma" style="color: yellow"
+                        href="http://www.upig.edu.pe/java/documentos/CRONOGRAMA DE PAGOS 20142 (I-IV).pdf" >CRONOGRAMA DE  PAGOS UPIG DEL PRIMER AL CUARTO CICLO</a>    
+                    </span>
+                    
+                    <span>
+                        <a id="uno2" class="pdfCronograma" style="color: yellow"
+                        href="http://www.upig.edu.pe/java/documentos/CRONOGRAMA DE PAGOS 20142 (IV-X).pdf" >CRONOGRAMA DE  PAGOS UPIG DEL QUIENTO AL DECIMO CICLO</a>    
+                    </span> 
+                     -->
+                    
+                    <object width="100%" height="100%" style="display: block;position: absolute" type="application/pdf" data="#{usuarioB.alumnoPeriodo.nivel_referencial ge 5?'http://www.upig.edu.pe/intranet/documentos/CRONOGRAMAS/CRONOGRAMA_DE_PAGOS_UPIG_2015-1_3_10.pdf':'http://www.upig.edu.pe/intranet/documentos/CRONOGRAMAS/CRONOGRAMA_DE_PAGOS_UPIG_2015-1_3_10.pdf'}">
+                   </object>
+                                     
+               </div>
+                
+            </ui:define>
+            
+        </ui:composition>
+

@@ -1,0 +1,373 @@
+
+            <ui:composition 
+            
+            xmlns="http://www.w3.org/1999/xhtml"
+		      xmlns:h="http://xmlns.jcp.org/jsf/html"
+		      xmlns:p="http://primefaces.org/ui"
+		      xmlns:f="http://xmlns.jcp.org/jsf/core"
+		      xmlns:ht="http://xmlns.jcp.org/jsf/passthrough"
+		      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+            
+             template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                MANTENIMIENTO TRAMITE DOCUMENTARIO
+            </ui:define>
+            
+            
+            
+             <ui:define name="contenido">
+      
+        <span class="tituto-admin">MANTENIMIENTO TRAMITE DOCUMENTARIO</span>
+        
+        <style>   
+        	.bloquear:before{content: "";width: 100%;height: 100%;background: rgba(0,0,0,0.7);position: absolute;cursor: no-drop}   
+            .grupo-oficina {display: block;border: 1px solid silver;overflow: hidden;max-height: 400px;padding: 10px;background-color: white;}            
+            .grupo-oficina:hover{overflow: auto}
+            .ficha-oficina{display: inline-block;border: 1px solid silver;width: 150px;height: 150px;vertical-align: top;font-size: 0.8em;text-align: center;margin: 2px 0px}          
+            .ficha-oficina-tramite{display: inline-block;border: 1px solid silver;width: 150px;height: 100px;vertical-align: top;position: relative;margin-right: 50px;font-size: 0.8em;padding: 10px 2px;background-color: white;}
+            .ficha-oficina-tramite:BEFORE{ content: "\f061";font-family:"FontAwesome";position: absolute;top: 40%;right: -40px;color: green;font-size: 2.5em}
+            .ficha-oficina-tramite:HOVER .ficha-oficina-tramite-eliminar{display: block;}
+            .ficha-oficina-tramite-eliminar{display: none;position: absolute;top: 0;right: 0;color: red;font-size: 1.5em}
+            .ficha-oficina-tramite-orden{display:block;border-radius:50%;height: 30px;width: 30px;background-color: blue;color: white;text-align:center;line-height:30px;position: absolute;bottom: 0;right: 0}
+        
+ 
+
+        </style>
+       <script>
+       
+       var bandera=false;
+       var idGeneral;
+       function confirmacion(obj,cadena){
+       	
+           idGeneral=obj;
+           if(bandera){
+               $(".modal-fondo").remove();
+               $(".modal").remove();
+               bandera=false;
+               return true;
+           }else{
+              if(! $('.modal-fondo').hasClass("modal-fondo")){
+                  $('body').append('<div class="modal-fondo"  /> ');
+                   $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                   }else{
+                   $(".modal-fondo").remove();
+                   $(".modal").remove();
+              }                    
+               
+               return false;
+           }
+           
+       }
+       
+       function valida(estado){
+           bandera=estado;           
+           $(idGeneral).click();            
+       }
+       
+       
+       
+            function validar(){
+              
+                
+                //$("#frmVenta\\:txtAsunto").addClass("nuevo");
+                for (i = 0; i &lt; arguments.length; i++) {
+                    
+                    if($(arguments[i]).val()==""){
+                        $(arguments[i]).css({"border":"1px solid ","border-color":"red"});
+                    }else{
+                        $(arguments[i]).css({"border":"none ","border-color":"none"});
+                    }
+                     
+                    
+                    
+                }
+            }
+           
+           
+            $(document).ready(function(){
+                
+                  
+                
+                $("body").on("click","#frmTramiteRequisito\\:btEditar",function(){                   
+                     console.log("editar");
+                    $("#tbTramiteDocumentario").addClass("bloquear");
+                });
+                
+                $("body").on("click","#frmTramiteRequisito\\:btCancelar",function(){                   
+                    console.log("cancelar");
+                    $("#tbTramiteDocumentario").removeClass("bloquear");
+                });
+                        
+                
+            });
+           
+        </script>
+           
+        <h:form id="frmTramiteRequisito" prependId="false">
+          
+            
+        <h:panelGroup id="pnDatos" layout="block" styleClass="paneles" >
+            <h:outputLabel value="CODIGO" />
+            <h:inputText value="#{tramTramiteRequisitoB.tramTramiteDocumentario.tramite}" disabled="#{true}" />
+            <br />
+            
+            <h:outputLabel value="TIPO TRAMITE" />
+            <h:selectOneMenu id="cbTipoTramite" value="#{tramTramiteRequisitoB.tramTramiteDocumentario.tipoTramite}" disabled="#{not tramTramiteRequisitoB.bandera}" style="width: 180px" required="true">
+               <f:selectItem itemLabel="Selecionar" />
+               <f:selectItems value="#{tramDocumentoB.mostrarTipoTramite()}" var="tipoTramite" itemLabel="#{tipoTramite.descripcion}" itemValue="#{tipoTramite.tipoTramite}" />
+               <f:ajax execute="@this"  />
+            </h:selectOneMenu>
+             <br></br>
+            
+            <h:outputLabel value="TRAMITE" />
+            <h:inputText id="txtDescripcion" value="#{tramTramiteRequisitoB.tramTramiteDocumentario.descripcion}"  size="70" disabled="#{not tramTramiteRequisitoB.bandera}" required="true"/>
+             <br></br>
+            <h:outputLabel value="ABREVIATURA" />
+            <h:inputText id="txtAbreviatura" value="#{tramTramiteRequisitoB.tramTramiteDocumentario.abreviatura}" disabled="#{not tramTramiteRequisitoB.bandera}"/>
+            <br></br>
+            <h:outputLabel value="HORAS" />
+            <h:inputText id="txtTiempo" value="#{tramTramiteRequisitoB.tramTramiteDocumentario.tiempoEntrega}" size="3" disabled="#{not tramTramiteRequisitoB.bandera}"/>
+            <br></br>
+           <h:outputLabel value="ESTADO" />
+            <h:selectOneMenu id="cbEstado" value="#{tramTramiteRequisitoB.tramTramiteDocumentario.estadoRegistro}" disabled="#{not tramTramiteRequisitoB.bandera}" >
+            <f:selectItem itemLabel="Activo" itemValue="1" />
+            <f:selectItem itemLabel="Desactivo" itemValue="0" />
+            </h:selectOneMenu>
+            
+        </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnBotonera" styleClass="paneles" >
+            <h:commandLink id="btBuscar"  styleClass="boton-normal"  disabled="#{tramTramiteRequisitoB.bandera}" onclick="dlgTramite.show()" >                     
+                     <i class="fa fa-search" />
+                     Buscar
+                     <f:ajax execute="@this" />
+                </h:commandLink>  
+                <h:commandLink id="btNuevo"  styleClass="boton-normal"  disabled="#{tramTramiteRequisitoB.bandera}">
+                    <i class="fa fa-file-text-o" />
+                    Nuevo
+                    <f:ajax execute="@this" render="pnDatos pnBotonera tbRequisitoTramite pnOficinaTramite btAgregarRequisito" listener="#{tramTramiteRequisitoB.nuevo}" />
+                </h:commandLink>
+                <h:commandLink id="btEditar"  styleClass="boton-normal"  disabled="#{tramTramiteRequisitoB.bandera}">
+                    <i class="fa fa-pencil-square-o" />
+                    Editar
+                    <f:ajax execute="@this"   render="pnDatos pnBotonera btAgregarRequisito" listener="#{tramTramiteRequisitoB.editar}"/>
+                </h:commandLink>
+                <h:commandLink id="btGuardar"  styleClass="boton-normal"  disabled="#{not tramTramiteRequisitoB.bandera}" onclick="validar('#frmTramiteRequisito\\:txtDescripcion')">
+                    <i class="fa fa-floppy-o" />
+                    Guardar
+                    <f:ajax execute="cbTipoTramite txtDescripcion  txtAbreviatura txtTiempo cbEstado"  render="pnDatos pnBotonera tbRequisitoTramite pnOficinaTramite btAgregarRequisito"   listener="#{tramTramiteRequisitoB.guardar}"/>
+                </h:commandLink>
+                <h:commandLink id="btCancelar"  styleClass="boton-normal" disabled="#{not tramTramiteRequisitoB.bandera}" >
+                    <i class="fa fa-reply" />
+                    Cancelar
+                    <f:ajax execute="@this" render="pnDatos pnBotonera tbRequisitoTramite pnOficinaTramite btAgregarRequisito"  listener="#{tramTramiteRequisitoB.cancelar}"/>
+                </h:commandLink>
+                 <h:commandLink id="btEliminar"  styleClass="boton-normal"  disabled="#{tramTramiteRequisitoB.bandera}" onclick="return confirmacion(this,'¿ Esta seguro eliminar Tramite?');">
+                     
+                     <i class="fa fa-trash-o" />
+                     Eliminar
+                     <f:ajax execute="@this" render="pnDatos pnBotonera tbTramiteDocumentario " listener="#{tramTramiteRequisitoB.eliminar}"/>
+                     
+                     
+                </h:commandLink>
+ 				    
+                
+                <h:commandLink id="btImprimir"  styleClass="boton-normal"  disabled="true"  >                     
+                     <i class="fa fa-print" />
+                     Imprimir
+                     <f:ajax execute="@this" />
+                     
+                     
+                </h:commandLink>                
+           
+            </h:panelGroup>
+            
+            
+            
+       
+                
+                <b>REQUISITO</b>
+                <div class="paneles">
+                <div >
+                	<h:commandLink styleClass="boton-normal"  id="btAgregarRequisito"  disabled="#{tramTramiteRequisitoB.bandera}" >
+                	<i class="fa fa-plus" />
+						                Agregar Requisito
+					<f:ajax execute="@this" render=":frmTramiteRequisito:txtBusquedaR :frmTramiteRequisito:tbRequisito" listener="#{tramTramiteRequisitoB.nuevoRequisito}"  /> 
+					</h:commandLink>
+                
+                </div>
+                 				
+                <p:dataTable id="tbRequisitoTramite" value="#{tramTramiteRequisitoB.tramRequisitoL}" var="itemRequisito"  rowIndexVar="status" scrollable="true" scrollHeight="220"  emptyMessage="NO SE ENCONTRO RESULTADO"  >
+                         
+                    
+                            <p:column headerText="Nr." width="15" >
+                                #{status +1}
+                            </p:column>
+                            <p:column headerText="REQUISITO">
+                                #{itemRequisito.descripcion}
+                            </p:column>
+                    <p:column width="20" >
+                            <h:commandLink title="Eliminar Requisito" onclick="return confirmacion(this,'¿ Esta seguro eliminar Requisito?');" style="color:red" >
+                                <i class="fa fa-times" />                                    
+                                <f:ajax execute="@this" render="tbRequisitoTramite" listener="#{tramTramiteRequisitoB.eliminarTramiteRequisito(itemRequisito)}" />
+                            </h:commandLink>
+                    </p:column>
+                        
+                </p:dataTable>
+                
+                </div>
+                
+        
+        
+                
+                
+                
+                <b>OFICINAS</b>
+                
+                <h:panelGroup layout="block" id="pnDatosTramiteOficina" styleClass="paneles">
+                    
+                 
+                  <div style="display: block;border: 1px solid silver;overflow: auto;padding: 10px">
+                      <h:panelGroup layout="block" id="pnOficinaTramite" style=" ;display:block;min-height:150px">
+                          <ui:repeat value="#{tramTramiteRequisitoB.tramTramiteOficinaL}" var="itemTramiteOficina" >                        
+                            <div class="ficha-oficina-tramite" >
+                            
+                             <h:commandLink title="Eliminar Oficina" class="ficha-oficina-tramite-eliminar" >
+                                    <i class="fa fa-times" />
+                                    <f:ajax execute="@this" render=":frmTramiteRequisito:pnOficinaTramite" listener="#{tramTramiteRequisitoB.eliminarTramiteOficina(itemTramiteOficina)}" />
+                                </h:commandLink>
+                              <h:outputLabel value="#{oficinaB.mostrarOficinaCodigo(1,itemTramiteOficina.oficinaEmisor).descripcion}" style="display:block; text-align:center" />
+                                
+                                <h:inputTextarea value="#{itemTramiteOficina.descripcion}" style="width: 96%;display: block;resize:none;text-align:center" ht:placeholder="Descripcion del proceso" >
+                                	<f:ajax execute="@this" listener="#{tramTramiteRequisitoB.insertarTramiteOficina(itemTramiteOficina)}"   /> 
+                                </h:inputTextarea>
+                                
+                               <h:commandLink value="#{itemTramiteOficina.orden}" class="ficha-oficina-tramite-orden"  rendered="#{tramTramiteRequisitoB.banderaOficina}" disabled="#{itemTramiteOficina.orden ne 0}" >
+                               <f:ajax execute="@this" render="@this" listener="#{tramTramiteRequisitoB.enumerar(itemTramiteOficina)}" />
+                               </h:commandLink>
+                            </div>
+                          
+                        
+                        </ui:repeat> 
+                      </h:panelGroup>
+                      
+                         <div style="display: block;height: 20px;border: 1px solid silver;text-align: right;;padding: 10px 5px">
+                         <h:commandLink id="btOrden" title="REORDENAR"  disabled="#{tramTramiteRequisitoB.banderaOficina}">
+                         <i class="fa fa-sort-numeric-asc" />
+                         	
+                         	<f:ajax  render="btOrden btGuardarOrden btCancelarOrden pnOficinaTramite" listener="#{tramTramiteRequisitoB.reordenar}" /> 
+                         </h:commandLink>
+                         
+                         <h:commandLink id="btGuardarOrden" title="GUARDAR" disabled="#{not tramTramiteRequisitoB.banderaOficina}">
+                         <i class="fa fa-floppy-o" />
+                         	
+                         	<f:ajax render="btOrden btGuardarOrden btCancelarOrden pnOficinaTramite"  listener="#{tramTramiteRequisitoB.guardarOrden}" /> 
+                         </h:commandLink>
+                         
+                         <h:commandLink id="btCancelarOrden" title="CANCELAR" disabled="#{not tramTramiteRequisitoB.banderaOficina}">
+                         <i class="fa fa-reply" />
+                         	
+                         	<f:ajax render="btOrden btGuardarOrden btCancelarOrden pnOficinaTramite" listener="#{tramTramiteRequisitoB.cancelarOrden}" /> 
+                         	
+                         </h:commandLink>
+                         </div>
+                    </div>
+                    
+               <b>LISTADO OFICINAS</b>
+               
+                    <div class="grupo-oficina" >
+                        <ui:repeat value="#{oficinaB.filtroOficina('%', '%')}" var="oficina" >
+                        <h:commandLink type="button">
+                            <div class="ficha-oficina" >
+                                #{oficina.descripcion}<br/>
+                                
+                                <i class="#{oficina.classIcon}" style="font-size: 3.5em" />
+                            </div>
+                            <f:ajax execute="@this" render=":frmTramiteRequisito:pnDatosTramiteOficina" listener="#{tramTramiteRequisitoB.insertarOficina(oficina)}" />
+                        </h:commandLink>
+                        
+                    </ui:repeat> 
+                    </div>
+             </h:panelGroup>
+       
+            
+            
+            
+            <p:dialog header="..: BUSCAR REQUISITO :.." modal="true" width="600"  closeOnEscape="true" resizable="false" widgetVar="dlgRequisito" >
+            <div class="paneles">
+     
+             <i class="fa fa-search" />
+              <h:inputText id="txtBusquedaR" value="#{tramTramiteRequisitoB.busquedaRequisito}"  ht:placeholder="Busqueda requisito .." style="display: inline-block;width: 95%;border:none">
+
+                  <f:ajax  execute=":frmTramiteRequisito:txtBusquedaR" render=":frmTramiteRequisito:tbRequisito " listener="#{tramTramiteRequisitoB.filtrarRequisitoTramite}"  />
+              </h:inputText>
+            
+            
+            </div>
+                    
+            
+            <p:dataTable id="tbRequisito" value="#{tramTramiteRequisitoB.tramRequisitoL}" var="itemRequisito" rowKey="#{itemRequisito.requisito}" selectionMode="single" selection="#{tramTramiteRequisitoB.tramRequisito}" scrollable="true" scrollHeight="300"  rowIndexVar="status" emptyMessage="No tiene requisitos asignados"   >
+            <p:ajax event="rowDblselect"   update=":frmTramiteRequisito:tbRequisitoTramite"  listener="#{tramTramiteRequisitoB.insertarTramiteRequisito}" />
+                <p:column headerText="Nr." width="20">
+                	#{status + 1}
+	            </p:column>
+	            <p:column headerText="Descripcion">
+	            	#{itemRequisito.descripcion}
+	            </p:column> 
+	            
+	          
+            </p:dataTable>
+              <f:facet name="footer">
+              <div style="display: block;text-align: right">
+              
+	            
+		            
+		             <h:commandLink styleClass="boton-rojo" onclick="dlgRequisito.hide()">
+			            Cancelar
+			            <f:ajax execute="@this" />
+		            </h:commandLink>
+              </div>
+	           
+	           </f:facet>
+            </p:dialog>
+            
+            <p:dialog header="..: BUSQUEDA TRAMITE :.." closeOnEscape="true" resizable="false"  modal="true" width="600"  widgetVar="dlgTramite"> 
+            
+            <div class="paneles" >
+             <i class="fa fa-search" />
+            <h:inputText value="#{tramTramiteRequisitoB.busquedaTramite}"  ht:placeholder="Escribir busqueda .." style="display: inline-block;width: 95%;border:none" >
+                    <f:ajax  execute="@this" render="tbTramiteDocumentario" listener="#{tramTramiteRequisitoB.filtroTramiteDocumentario('%', tramTramiteRequisitoB.busquedaTramite)}" />
+            </h:inputText>
+            </div>
+            
+            <p:dataTable id="tbTramiteDocumentario" value="#{tramTramiteRequisitoB.tramTramiteDocumentarioL}" var="itemTramite" selectionMode="single" rowKey="#{itemTramite.tramite}" selection="#{tramTramiteRequisitoB.tramTramiteDocumentario}"  scrollable="true" scrollHeight="300"  rowIndexVar="status"   >
+            <p:ajax event="rowSelect" update=":frmTramiteRequisito:pnDatos :frmTramiteRequisito:tbRequisitoTramite :frmTramiteRequisito:pnOficinaTramite"   listener="#{tramTramiteRequisitoB.mostrarTramiteDocumento}"   />
+            <p:column headerText="Nr." width="20">
+            #{status+1}
+            </p:column>
+            <p:column headerText="Tramite">
+            #{itemTramite.descripcion}
+            </p:column>
+            </p:dataTable>
+            
+              <f:facet name="footer">
+               <div style="display: block;text-align: right">
+          
+                <h:commandLink styleClass="boton-rojo" onclick="dlgTramite.hide()">
+                    CANCELAR
+                  <f:ajax execute="@this" />
+                </h:commandLink>
+               
+               </div>
+               
+	       
+	           </f:facet>
+            </p:dialog>
+            
+        </h:form>
+
+             </ui:define>
+            </ui:composition>
+
+

@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <script  type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.js"></script>
+        <script>
+            $(document).ready(function() {
+                $(".btSiguiente").click(function() {
+                    $(this).closest('li').css("display", "none");
+                    $(this).closest('li').next().css("display", "block");
+                });
+                $("input[type=radio]").click(function() {
+                    $(this).closest('li').children(" .botonera ").children(".btSiguiente").attr("disabled", false);
+                });
+            });
+        </script>
+    </h:head>
+    <h:body>
+        <style>
+            html{font-family: "Tahoma";background: silver;}
+            body{width: 80%;margin: 10px auto;padding: 5px;background: white;border: 1px solid;}
+            ul li{/*border: 1px solid red;*/height: 200px;position: relative;}
+            ul li:first-child{display: block;}
+            ul li{display: none;}
+            ul li .respuestas{display: block;margin-left: 50px;}
+            ul li .pregunta{background-color: #0069B3;color: #ffffff;}
+            ul li .respuestas td{padding: 10px;text-transform: uppercase;}
+
+            .botonera{/*border: 1px solid red;*/position: absolute;width: 100%;text-align: right;bottom: 0px;}
+            input[type="radio"]{color: red;}
+            .botonera input[type="button"]{padding: 10px;cursor: pointer;}
+            .pregunta_desc{padding: 10px 10px;display: block;width: 95%;font-weight: bold;margin: 0px 20px;}
+            #frmTest{width: 90%;margin: 0 auto;}
+            .correccion{margin-left: -40px;}
+            .fintest{text-align: center;font-size: 2em;display: block;}
+            .instrucciones{margin: 0 auto;width: 80%;text-align: center;}
+            .instrucciones span{font-size: 1.5em;font-weight: bold;text-align: center;}
+            @media (min-width : 1000px){.instrucciones{width: 50%;}}
+
+            #contador{width:25%;font-size:2em;text-align: justify;color:green;margin: 0 auto;}
+            .alerta{color:red !important;}
+        </style>
+
+        <div class="instrucciones">
+            <span>INSTRUCCIONES</span>
+            <p>
+                Este inventario es para ayudarte a descubrir tu manera preferida de aprender.<br/>
+                Cada  persona tiene su manera preferida de aprender. Reconocer sus preferencias le ayudará a comprender sus fuerzas
+                en cualquier situación de aprendizaje. Por  favor,  responda  Ud.  verazmente  a cada pregunta.<br/>
+                Responda Ud. según lo que hace actualmente, no según lo que piense que sea la respuesta correcta.
+            </p>
+
+            <div id="contador"/>
+
+        </div>
+
+
+        <h:form id="frmTest" prependId="false">
+            <ul class="correccion">
+                <ui:repeat value="#{encuestaB.mostrarPreguntas(5,1,'P')}" var="preguntas" varStatus="status"  >
+                    <li>
+                        <div class="pregunta">
+                            <span class="pregunta_desc">
+                                #{preguntas.orden}- #{preguntas.descricion.toUpperCase()}
+                            </span>            
+                        </div>
+
+                        <h:selectOneRadio  class="respuestas" value="#{encuestaB.rpt}"  rendered="#{preguntas.tipo eq 'radio'}" required="true"  >
+                            <f:selectItems   value="#{encuestaB.mostrarRespuesta(5, preguntas.pregunta)}" var="repuesta" itemLabel="#{repuesta.descripcion}" itemValue="#{repuesta.repuesta}"  />
+                            <f:ajax execute="@this" listener="#{encuestaB.adicionarRepuesta(5, preguntas.pregunta, encuestaB.rpt,'',usuarioB.usu)}"  />
+                        </h:selectOneRadio>
+
+                        <div class="botonera">                           
+                            <span>#{status.index +1 } de 24 #{status.end }</span>
+                            <h:commandButton  value="SIGUIENTE" type="button" class="btSiguiente"  disabled="true" />
+                        </div>
+                    </li>      
+                </ui:repeat>
+                <li>
+                    <span class="fintest">
+                        GRACIAS POR REALIZAR EL TEST.
+                    </span>
+                </li>
+            </ul>
+        </h:form>
+
+
+        <script type="text/javascript">
+
+            cuentaAbajo(10);
+           
+
+            function abrirModal() {
+                var util = "Fullscreen=yes";
+                modal = window.open("", "mimodal", util);
+            }
+
+            function cerrarModal() {
+                mimodal.close();
+            }
+
+            function cuentaAbajo(minutos) {
+                var tiempoFinal = new Date().getTime() + minutos * 60000;
+                var espacio = document.getElementById("contador");
+
+                var _second = 1000;
+                var _minute = _second * 60;
+                var _hour = _minute * 60;
+                /*var _day = _hour * 24;*/
+
+                var repetir = setInterval(function() {
+                    contador();
+                }, 1000);
+
+                function contador() {
+                    var tiempoInicio = new Date().getTime();
+                    var tiempoReal = tiempoFinal - tiempoInicio;
+                    if (tiempoReal > 0) {
+                        /*var dias = Math.floor(tiempoReal / _day);
+                         var horas = Math.floor((tiempoReal % _day) / _hour);*/
+                        var minutos = Math.floor((tiempoReal % _hour) / _minute);
+                        var segundos = Math.floor((tiempoReal % _minute) / _second);
+
+                        /*document.getElementById("contador").innerHTML = dias + 'd ';
+                         document.getElementById("contador").innerHTML += horas + 'h ';*/
+
+                        if (tiempoReal >= 60000) {
+                            espacio.innerHTML = minutos + 'min ';
+                            espacio.innerHTML += segundos + 's';
+                        } else {
+                            espacio.innerHTML = segundos + 's';
+                            espacio.className = 'alerta';
+                        }
+
+                    } else {
+                        alert('SE ACABO TU TIEMPO');
+                        /*cerrarModal();*/
+                        location.reload();
+                    }
+                }
+                ;
+            }
+        </script>
+
+    </h:body>
+</html>
+

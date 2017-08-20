@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <style>
+            #tbPrincipal\:tbDetalleFamiliar thead{font-size: 0.7em}
+
+            #tbPrincipal{font-size: 0.8em}
+            #tbPrincipal input[type=submit]{padding: 5px}
+            #tbPrincipal h3{border-bottom: 1px solid}
+        </style>
+
+
+
+
+        FICHA DE LEVANTAMIENTO DE INFORMACIÓN DEL INGRESANTE ALA UPIG.
+        <h:form id="frmDatosPersonales" prependId="false">
+            SEMESTRE ACADEMICO:<h:inputText />
+            CODIGO:<h:inputText value="#{usuarioB.usu}" /><BR/>
+            CARRERA PROFESIONAL:<h:inputText  value="#{usuarioB.carrera.descripcion}" size="80" /><BR/>
+            <p:tabView id="tbPrincipal" >
+
+                <p:tab title="DATOS PERSONALES" id="tab01" >
+                    <div style="margin-bottom: 20px">
+                        <h3>MIS DATOS</h3>
+                        <div style="display: inline-block;width: 89%;vertical-align: top">
+                            A.PATERNO<h:inputText  value="#{usuarioB.persona.paterno}" />
+                            A.MATERNO<h:inputText value="#{usuarioB.persona.materno}" /><BR/>
+                            NOMBRE:<h:inputText value="#{usuarioB.persona.nombres}" size="60" /><BR/>
+
+                            FECHA NACIMIENTO:<h:inputText  />EDAD <h:inputText/>
+                            <br/>
+                            DOCUMENTO
+                            <h:selectOneMenu value="#{usuarioB.persona.tipodocumento}">
+                                <f:selectItem itemValue="0" itemLabel="[NO ESPECIFICA]" />
+                                <f:selectItem itemValue="1" itemLabel="D.N.I." />
+                                <f:selectItem itemValue="2" itemLabel="PARTIDA DE NACIMIENTO ORIGINAL" />
+                                <f:selectItem itemValue="3" itemLabel="LIBRETA MILITAR" />
+                            </h:selectOneMenu>
+                            N°-<h:inputText value="#{usuarioB.persona.numero_documento}" /><BR/>
+                            SEXO:<h:selectOneRadio value="#{usuarioB.persona.sexo}"  layout="lineDirection" style="display: inline-block">
+                                <f:selectItem itemLabel="M" itemValue="1" />
+                                <f:selectItem itemLabel="F" itemValue="0"  />
+                            </h:selectOneRadio>
+                        </div>
+                        <div style="display: inline-block;width: 10%;vertical-align: top">
+                            <img src="SVerImagen" style="border: 1PX solid;" width="100" height="130" />
+                        </div>
+
+
+                    </div>
+                    <div style="margin-bottom: 20px">
+                        <h3>LUGAR DE NACIMIENTO</h3>
+                        UBIGEO<h:inputText /><h:commandButton value="..." type="button" onclick="dlgUbigeo.show()"/>
+
+
+
+
+
+                        ESTADO CIVIL:  
+                        <h:selectOneMenu value="#{usuarioB.persona.estado_civil}" >
+                            <f:selectItem itemLabel="--Seleccionar--" />    
+                            <f:selectItems value="#{estadoCivilB.mostrarEstadoCivil()}" var="estadoCivil" itemValue="#{estadoCivil.estadoCivil}" itemLabel="#{estadoCivil.descripcion}"/>
+                        </h:selectOneMenu>
+                        <br/>
+
+
+
+                        TELF. CASA<h:inputText value="#{usuarioB.persona.telefono}" />
+                        CELULAR <h:inputText value="#{usuarioB.persona.celular}"/><br/>
+                        E-MAIL <h:inputText value="#{usuarioB.persona.emailP}" />
+                    </div>
+
+                    <div style="margin-bottom: 20px">
+
+                        <h3>DOMICILIO</h3>
+
+                        DIRECCION:<h:inputText value="#{usuarioB.persona.direccion_ubigeo}"/><br/>
+                        UBIGEO<h:inputText /><h:commandButton value="..." type="button" onclick="dlgUbigeo.show()"/>
+
+
+                    </div>
+                    <div style="margin-bottom: 20px">
+                        <h3>DATOS DE TRABAJO</h3>
+
+                        CENTRO LABORAL:<h:inputText value="#{usuarioB.persona.centro_trabajo}" /><br/>
+                        CARGO :<h:inputText value="#{usuarioB.persona.cargo_desempeña}"/>TIEMPO SERVICIO :<h:inputText value="#{usuarioB.persona.tipo_servicio}" />MESES<br/>
+                        TEFT. :<h:inputText value="#{usuarioB.persona.telefonoTrabajo}" /><br/>
+                        CORREO INSTITUCIONAL :<h:inputText value="#{usuarioB.persona.emailS}" /><br/>
+                        CONDICION LABORAL:
+                        <h:selectOneRadio value="#{usuarioB.persona.condicion_laboral}">
+                            <f:selectItems value="#{condicionLaboralB.mostrarCondicionLaboral()}" var="condicionLaboral" itemValue="#{condicionLaboral.condicionLaboral}" itemLabel="#{condicionLaboral.descripcion}" />
+                        </h:selectOneRadio>
+                        TIPO DE CONTRATO:
+                        <h:selectOneRadio value="#{usuarioB.persona.tipo_contrato}">
+                            <f:selectItems value="#{tipoContratoB.mostrarTipoContrato()}" var="contrato" itemValue="#{contrato.tipoContrato}" itemLabel="#{contrato.descripcion}" />
+                        </h:selectOneRadio>
+                        DEDICACION:
+
+                        <h:selectOneRadio value="#{usuarioB.persona.dedicacion}">
+                            <f:selectItems value="#{dedicacionB.mostrarDadicacion()}" var="dedicacion" itemValue="#{dedicacion.dedicacion}" itemLabel="#{dedicacion.descripcion}" />
+                        </h:selectOneRadio>
+
+                    </div>
+                </p:tab>
+
+                <p:tab title="DATOS PERSONALES VIVENDA" id="tab02">
+                    TENECIA DE VIVIENDA:
+                    <h:selectOneRadio value="#{usuarioB.persona.situacionVivienda}" >
+                        <f:selectItems value="#{situacionViviendaB.mostrarSituacionVivienda()}" var="situacion" itemValue="#{situacion.situacionVivienda}" itemLabel="#{situacion.descripcion}" />    
+                    </h:selectOneRadio><BR/>
+                    TIPOS DE VIVIENDA
+                    <h:selectOneRadio value="#{usuarioB.persona.tipoVivienda}">
+
+                        <f:selectItems value="#{tipoViviendaB.mostrarTipoVivienda()}" var="tipovivienda" itemValue="#{tipovivienda.tipoVivienda}" itemLabel="#{tipovivienda.descripcion}" />
+                    </h:selectOneRadio><BR/>
+                    BIENES
+                    <h:selectManyCheckbox id="ckBienes" value="#{fichaIngresanteB.bienesL}" >
+                        <f:selectItems value="#{bienesB.mostrarBienes()}" var="bienes" itemValue="#{bienes.bienes}" itemLabel="#{bienes.descripcion}" />                    
+                    </h:selectManyCheckbox><BR/>
+                    SERVICIOS
+                    <h:selectManyCheckbox>
+                        <f:selectItem itemLabel="AGUA"  itemValue="0"/>
+                        <f:selectItem itemLabel="LUZ" itemValue="0"/>
+                        <f:selectItem itemLabel="TELEFONO FIJO" itemValue="0"/>
+                        <f:selectItem itemLabel="CABLE" itemValue="0"/>
+                        <f:selectItem itemLabel="INTERNET" itemValue="0"/>
+                        <f:selectItem itemLabel="GAS" itemValue="0"/>
+
+                    </h:selectManyCheckbox><BR/>
+
+                    GRUPO SANGINEO
+                    <h:selectOneRadio value="#{usuarioB.persona.grupoSangineo}">                    
+                        <f:selectItems value="#{grupoSangineoB.mostrarGrupoSangineo()}" var="grupoSangineo" itemValue="#{grupoSangineo.grupoSangineo}" itemLabel="#{grupoSangineo.descripcion}" />
+                    </h:selectOneRadio><BR/>
+                    <h3>GASTO FAMILIAR MENSUAL</h3>
+                    <p:dataTable id="tbGastos" value="#{fichaIngresanteB.mostrarPerGastos()}" var="gastos" rowIndexVar="status" style="width: 300px" selection="#{fichaIngresanteB.gastosSeleccionL}" rowKey="#{gastos.gasto}">
+
+
+
+
+
+                        <p:column selectionMode="multiple"  style="width:16px;text-align:center"/>
+                        <p:column headerText="N°">
+                            #{status+1}
+                        </p:column >
+                        <p:column headerText="GASTO MENSUAL">
+                            #{gastos.descripcion}
+                        </p:column >
+                        <p:column headerText="MONTO">
+                            <h:inputText value="#{gastos.monto}" size="5" >
+
+                            </h:inputText>
+
+                        </p:column>
+
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="ESTRUCTURA FAMILIAR" id="tab03">
+
+                    <p:dataTable id="tbDetalleFamiliar" value="#{fichaIngresanteB.detalleL}" var="detalle"  rowIndexVar="status">
+                        <p:column headerText="N">
+                            #{status +1}
+                        </p:column>
+                        <p:column headerText="APELLIDOS Y NOMBRES">
+                            #{detalle.paterno} #{detalle.materno} #{detalle.nombres}
+                        </p:column>
+                        <p:column headerText="EDAD">
+                            #{detalle.fechaNacimiento}
+                        </p:column>
+                        <p:column headerText="ESTADO CIVIL">
+                            #{estadoCivilB.mostrarEstadoCivil(detalle.estadoCivil).descripcion}
+
+                        </p:column>
+                        <p:column headerText="OCUPACION">
+                            #{ocupacionB.mostrarOcupacion(detalle.ocupacion).descripcion}
+
+                        </p:column>
+                        <p:column headerText="CENTRO LABORAL">                        
+                            #{detalle.centroLaboral}
+                        </p:column>
+                        <p:column headerText="SUELDO MENSUAL" >                        
+                            <h:inputText size="5"/>
+                        </p:column>
+                        <p:column headerText="PARENTESCO">
+                            <h:selectOneMenu value="#{detalle.parentesco}">
+                                <f:selectItems value="#{parentescoB.mostrarParentesco()}" var="parentesco" itemValue="#{parentesco.parentesco}" itemLabel="#{parentesco.descripcion}" />
+                            </h:selectOneMenu>
+                        </p:column>
+                        <p:column headerText="PAGA MIS ESTUDIOS?" style="width: 50px">
+                            <h:selectBooleanCheckbox value="#{detalle.pagaesrudios}" >   SI                    
+                            </h:selectBooleanCheckbox>
+                        </p:column>
+
+
+
+                        <p:column headerText="TIPO DE ENFERMEDAD">
+                            <h:selectOneMenu  value="#{detalle.tipoEnfermedad}" style="width: 200px">
+                                <f:selectItems value="#{tipoEnfermedadB.mostrarTipoEnfermedad()}" var="enfermedad" itemValue="#{enfermedad.tipoEnfermedad}" itemLabel="#{enfermedad.descripcion}" />
+                            </h:selectOneMenu>
+                        </p:column>
+                        <p:column headerText="LUGAR ATENCION">
+                            <h:selectOneMenu  value="#{detalle.hospital}" style="width: 100px">
+                                <f:selectItems value="#{hospitalB.mostrarHospital()}" var="hospital" itemValue="#{hospital.hospital}" itemLabel="#{hospital.descripcion}" />
+                            </h:selectOneMenu>
+                        </p:column>
+                        <p:column headerText="GASTO ENFER. S/.">
+                            <h:inputText  value="#{detalle.gastos}" size="5" />
+
+
+                        </p:column>
+
+                        <p:column headerText="" style="width: 50px">
+
+                            <h:commandButton value="Quitar"  >
+
+                                <f:ajax execute="@this" render="tbDetalleFamiliar " listener="#{fichaIngresanteB.quitarFila(status)}" />
+                            </h:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <h:commandButton id="btAgregar" disabled="#{fichaIngresanteB.detalleL.size() gt 2}" value="Agregar"  type="button" onclick="dlgModal.show()" />
+
+
+
+                </p:tab>
+            </p:tabView>
+
+            <h:commandButton value="GUARDAR TODO" >
+
+                <f:ajax  execute="tbPrincipal:tab01 tbPrincipal:tab02 tbPrincipal:tab03"  listener="#{fichaIngresanteB.guardarTodo(usuarioB.persona,usuarioB.persona.persona)}" />
+            </h:commandButton>
+        </h:form>
+
+
+        <h:form>
+            <p:dialog  widgetVar="dlgModal" modal="true" height="500" width="750" header="BUSQUEDA DE PERSONA" >
+                A.PATERNO:<h:inputText value="#{personaB.busPaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda"/>
+                </h:inputText>
+                <br/>
+                A.MATERNO:<h:inputText value="#{personaB.busMaterno}" >
+                    <f:ajax execute="@this" render="tbBusqueda"/>
+                </h:inputText>
+                <br/>
+                A.NOMBRE:<h:inputText value="#{personaB.busNombres}">
+                    <f:ajax execute="@this" render="tbBusqueda"/>
+                </h:inputText><br/>
+
+
+                <p:dataTable id="tbBusqueda" value="#{personaB.filtroPersona(personaB.busPaterno,personaB.busMaterno, personaB.busNombres)}" var="persona" rowIndexVar="status" rowKey="#{persona.persona}" selectionMode="single">
+                    <p:ajax event="rowSelect" listener="#{fichaIngresanteB.onRowSelect}"  oncomplete="dlgModal.hide()" update=":frmDatosPersonales:tbPrincipal:tbDetalleFamiliar" />
+                    <p:column headerText="N-">
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="A.PATERNO">
+                        #{persona.paterno}
+                    </p:column>
+                    <p:column headerText="A.MATERNO">
+                        #{persona.materno}
+                    </p:column>
+                    <p:column headerText="A.NOMBRE">
+                        #{persona.nombres}
+                    </p:column>
+                    <f:facet name="footer">
+                        <h:commandButton value="Nuevo" onclick="dlgModalPersona.show()" type="button" />
+                    </f:facet>
+                </p:dataTable>
+            </p:dialog>
+
+
+            <p:dialog widgetVar="dlgModalPersona" modal="true" height="300" width="450" header="INGRESO DE PERSONA">
+                A.PATERNO:<h:inputText value="#{fichaIngresanteB.persona.paterno}" /><br/>
+                A.MATERNO:<h:inputText value="#{fichaIngresanteB.persona.materno}" /><br/>
+                NOMBRE:<h:inputText value="#{fichaIngresanteB.persona.nombres}" /><br/>
+                FECHA NACIMIENTO:<h:inputText /><br/>
+                ESTADO CIVIL:
+                <h:selectOneMenu value="#{fichaIngresanteB.persona.estado_civil}">
+                    <f:selectItem itemLabel="--Seleccionar--" />    
+                    <f:selectItems value="#{estadoCivilB.mostrarEstadoCivil()}" var="estadoCivil" itemValue="#{estadoCivil.estadoCivil}" itemLabel="#{estadoCivil.descripcion}"/>
+                </h:selectOneMenu><br/>
+                OCUPACION
+                <h:selectOneMenu value="#{fichaIngresanteB.persona.ocupacion}">                    
+                    <f:selectItems value="#{ocupacionB.mostrarOcupacion()}" var="ocupacion" itemValue="#{ocupacion.ocupacion}" itemLabel="#{ocupacion.descripcion}"/>
+                </h:selectOneMenu>
+                CENTRO LABORAL
+                <h:inputText value="#{fichaIngresanteB.persona.centro_trabajo}" />
+
+
+                <div style="margin: 20px 0px;text-align: center">
+                    <h:commandButton value="INGRESAR" onclick="dlgModalPersona.hide();
+                            dlgModal.hide()">
+                        <f:ajax execute="@form" listener="#{fichaIngresanteB.ingresarFamiliar()}" render=":frmDatosPersonales:tbPrincipal:tbDetalleFamiliar"  />
+                    </h:commandButton>
+                    <h:commandButton value="LIMPIAR"  type="reset" />
+                </div>
+            </p:dialog>
+        </h:form>
+        <h:form>
+            <p:dialog widgetVar="dlgUbigeo" header="UBIGEO" modal="true" height="150px" width="450px">
+                DEPARTAMENTO:
+                <h:selectOneMenu id="cbDepartamento" value="#{ubigeoDepartamentoB.seleccion}">
+                    <f:selectItems value="#{ubigeoDepartamentoB.mostrarDepartamento()}" var="departamento" itemValue="#{departamento.departamento}" itemLabel="#{departamento.descripcion}" />
+                    <f:ajax execute="@this" render="cbProvincia" />
+                </h:selectOneMenu><BR/>
+                PROVINCIA:
+                <h:selectOneMenu id="cbProvincia" value="#{ubigeoProvinciaB.seleccion}">
+                    <f:selectItem itemLabel="--Seleccionar--" />    
+                    <f:selectItems value="#{ubigeoProvinciaB.mostrarDistrito(ubigeoDepartamentoB.seleccion)}" var="provincia" itemValue="#{provincia.provincia}" itemLabel="#{provincia.descripcion}" />
+                    <f:ajax execute="@this" render="cbDistrito" />
+                </h:selectOneMenu><BR/>
+                DISTRITO:
+                <h:selectOneMenu id="cbDistrito" value="#{ubigeoDistritoB.selecion}">
+                    <f:selectItem itemLabel="--Seleccionar--" />    
+                    <f:selectItems value="#{ubigeoDistritoB.mostrarDistrito(ubigeoDepartamentoB.seleccion, ubigeoProvinciaB.seleccion)}" var="distriro" itemValue="#{distriro.distrito}" itemLabel="#{distriro.descripcion}" />
+                </h:selectOneMenu><BR/>
+                <h:commandButton value="ACEPTAR" />
+                <h:commandButton value="CANCELAR" />
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+
+
+

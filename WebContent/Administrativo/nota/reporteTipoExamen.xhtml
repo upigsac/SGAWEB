@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"     >
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body style="border: 1px solid red;">
+        <h:form style="height: 95%">
+              #{admin_notaB.refrescarInstitucionPeriodo(1,20151)}
+            <h:panelGroup layout="block" id="pnDatos">
+                 
+                 <h:outputLabel value="DOCENTE" />
+                    <h:selectOneMenu value="#{admin_notaB.seleccionDocente}" class="carreras" id="cboDocente"  >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue="$"/>                       
+                        <f:selectItems value="#{admin_notaB.listaDocentePeriodo}" var="docente" itemValue="#{docente.persona}" itemLabel="#{docente.paterno} #{docente.materno} #{docente.nombres}" />
+                        <f:ajax execute="@this"   listener="#{admin_notaB.mostrarCarreraDocente()}" />
+                    </h:selectOneMenu>
+            </h:panelGroup>            
+            <h:outputLabel value="CARRERA" />
+            <br/>
+            <h:outputLabel value="SECCION" />
+            <br/>
+            <h:outputLabel value="CURSO" />
+            <br/>
+            <h:outputLabel value="TIPO EXAMEN" />
+            <h:selectOneMenu value="#{tipoExamenB.seleccion}">                
+                <f:selectItem itemLabel="EXAMEN FINAL" itemValue="EP"/>
+                <f:selectItem itemLabel="EXAMEN PARCIAL" itemValue="EF"/>
+                <f:selectItem itemLabel="1RA PRACTICA" itemValue="U4"/>
+                <f:selectItem itemLabel="2DA PRACTICA" itemValue="U9"/>
+                <f:ajax execute="@this" />
+            </h:selectOneMenu>
+            <h:panelGroup layout="block" id="pnBotonera" >
+                <h:commandButton value="Mostrar">
+                    <f:ajax execute="cboDocente"  render="pnVisor" />
+                </h:commandButton>
+                
+            </h:panelGroup>
+                
+            
+            
+            <h:panelGroup layout="block" id="pnVisor">
+                <iframe id="visor" width="100%" height="100%" style="border: 1px solid red"  src="SReporteIreport?ruta=notas/actaTipoExamen&amp;parametros=INSTITUCION,1,PERIODO,20151,CARRERA,$,PERSONAL,$,CURSO,$,SECCION,$,tipoExamen,#{tipoExamenB.seleccion}" />
+                
+            </h:panelGroup>
+            
+        </h:form>
+        
+        
+                    
+                
+                
+    </h:body>
+</html>
+

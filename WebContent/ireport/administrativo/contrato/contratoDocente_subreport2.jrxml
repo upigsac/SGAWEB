@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contratoDocente_subreport2" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7dfdf7bf-007e-4ab4-a88f-ce9c7c363cf2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="personal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contrato" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL DI.SP_MOSTRAR_CONTRATO_CURSOS (1,$P{contrato},$P{personal})}]]>
+	</queryString>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="CONTRATO" class="java.lang.Integer"/>
+	<field name="INSTITUCION" class="java.lang.Integer"/>
+	<field name="DESINSTITUCION" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="MALLA" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.Short"/>
+	<field name="DESTURNO" class="java.lang.String"/>
+	<field name="HORAS_TEORIA" class="java.lang.Short"/>
+	<field name="HORAS_PRACTICA" class="java.lang.Short"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="DESSECCION" class="java.lang.String"/>
+	<field name="ESTADO_REGISTRO" class="java.lang.Integer"/>
+	<variable name="HORAS_TEORIA_1" class="java.lang.Short" calculation="Sum">
+		<variableExpression><![CDATA[$F{HORAS_TEORIA}+$F{HORAS_PRACTICA}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="2ae50625-3e69-412e-9960-761506f72f59" mode="Opaque" x="11" y="17" width="145" height="20" backcolor="#999999"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ASIGNATURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c3a50dec-c89c-4534-a367-030674f87b14" mode="Opaque" x="156" y="17" width="195" height="20" backcolor="#999999"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESCUELA PROFESIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e98ff44b-8173-4cd6-8ddb-5db4100b3d69" mode="Opaque" x="476" y="17" width="65" height="20" backcolor="#999999"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° HORAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bd1fd47f-1b6b-431e-bae6-0a8a47f2485d" mode="Opaque" x="351" y="17" width="50" height="20" backcolor="#999999"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TURNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="889980c8-bec2-4ba7-b977-336f1cdbb64c" mode="Opaque" x="401" y="17" width="75" height="20" backcolor="#999999"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SECCION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="812be7c5-7daf-485e-953d-e3dc3c29bd23" x="11" y="0" width="145" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCURSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d4e3f98a-8d57-4455-9a47-430d11f339e1" x="156" y="0" width="195" height="20"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCARRERA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="126404f6-b048-4c4a-a7f0-5edd4e2ab2a4" x="476" y="0" width="65" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HORAS_TEORIA}+$F{HORAS_PRACTICA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="41658e04-5b10-488e-86e7-66514160d2af" x="351" y="0" width="50" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESTURNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6a01b6cb-64b5-4bd6-a960-47d375a7712a" x="401" y="0" width="75" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESSECCION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6aa918c9-5bf3-491a-a887-d60338b6ad1b" x="11" y="0" width="465" height="20"/>
+				<box rightPadding="5">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL HORAS SEMANALES]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="697c6c88-eab1-461d-a188-061066959c7f" x="476" y="0" width="65" height="20"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{HORAS_TEORIA_1} + ' Horas']]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

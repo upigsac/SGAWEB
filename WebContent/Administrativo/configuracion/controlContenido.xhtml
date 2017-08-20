@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+            
+                <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+              <ui:define name="titulo">
+                
+                CONTROL DE CONTENIDOS
+                
+            </ui:define>  
+        
+            
+        
+          <ui:define name="contenido"> 
+            <script>
+             $(document).ready(function(){
+                    
+                     
+                  $(".fsubidos").click(function(){
+                     $(".listaDocentes-cabecera").css("display","block");
+                         $(".listaDocentes-cabecera span").each(function(){
+                          
+                          if ($(this).text()==="TOTAL 0" ){
+                              $(this).parent().css("display","none");                              
+                          }
+                      }); 
+                  });
+                  $(".fnosubidos").click(function(){
+                     $(".listaDocentes-cabecera").css("display","block");
+                         $(".listaDocentes-cabecera span").each(function(){
+                          
+                          if ($(this).text()!=="TOTAL 0" ){
+                              $(this).parent().css("display","none");                              
+                          }
+                      }); 
+                  });
+                  $(".ftodos").click(function(){
+                     $(".listaDocentes-cabecera").css("display","block");
+                  });
+                  
+              });
+           </script>         
+            <style>
+                
+                table th{color: white;background-color: #282828;font-size: 15px}
+                table th label{display: block;padding: 10px 0px}
+                table tbody td label{display: block;text-align: center                }
+                .cabecera label{display: inline-block;width: 120px;padding: 10px 5px}
+                #listaDocentes{border: 1px solid silver}
+                #listaDocentes .listaDocentes-titulo{background-color: #282828}
+                #listaDocentes .listaDocentes-titulo li{margin: 10px 0px;display: inline-block;color: white}
+                #listaDocentes .listaDocentes-detalle{margin-left: 30px;}
+                #listaDocentes .listaDocentes-detalle li{display: inline-block}
+                #listaDocentes .listaDocentes-cabecera{border-bottom: 1px solid silver                }
+                #listaDocentes .listaDocentes-cabecera >li{;font-weight: bold;padding: 8px 5px;color:black; margin: 15px 0px ;background-color: #f1f1f1;display: inline-block}
+            </style>
+                                  
+                <span class="tituto-admin">CONTROL DE CONTENIDOS</span>
+            
+                <div style="position: absolute;right: 5px;top: 110px">
+                <input type="button" value="TODOS " class="ftodos"/><input type="button" value="SUBIDOS" class="fsubidos"/><input type="button" value="NO SUBIDOS" class="fnosubidos"/>
+                </div>
+                <!--
+                <h:form target="_blank">
+                    
+                    <div style="text-align: right;margin-bottom: 20px">
+                   <h:commandLink class="linkpdf" value="IMPRIMIR TOTAL SUBIDOS "  action="reporte.jsp">
+                        <f:param name="reporte"  value="SGAWEB0002" />
+                        <f:param name="docente"  value="%" />
+                        <f:param name="carrera"  value="%" />
+                        <f:param name="formato"  value="5" />
+                        <f:param name="periodo"  value="20141" />
+                    </h:commandLink>
+                    
+                    
+                        <h:commandLink class="linkexcel" value="IMPRIMIR TOTAL SUBIDOS "  action="reporte.jsp">
+                        <f:param name="reporte"  value="SGAWEB0002" />
+                        <f:param name="docente"  value="%" />
+                        <f:param name="carrera"  value="%" />
+                        <f:param name="formato"  value="2" />
+                        <f:param name="periodo"  value="20141" />
+                    </h:commandLink>
+                    
+                    
+                    <h:commandLink class="linkpdf" value="IMPRIMIR TOTAL  NO SUBIDOS "  action="reporte.jsp">
+                        <f:param name="reporte"  value="SGAWEB0005" />
+                        <f:param name="docente"  value="%" />
+                        <f:param name="carrera"  value="%" />
+                        <f:param name="formato"  value="5" />
+                        <f:param name="periodo"  value="20141" />
+                    </h:commandLink>
+                    
+                    
+                    <h:commandLink  class="linkexcel" value="IMPRIMIR TOTAL NO  SUBIDOS "  action="reporte.jsp">
+                        <f:param name="reporte"  value="SGAWEB0005" />
+                        <f:param name="docente"  value="%" />
+                        <f:param name="carrera"  value="%" />
+                        <f:param name="formato"  value="2" />
+                        <f:param name="periodo"  value="20141" />
+                    </h:commandLink>
+                    </div>
+                </h:form>
+                -->
+                <h:form >
+                    <div class="cabecera">
+                    <label>CARRERA :</label> 
+                    <h:selectOneMenu id="cboCarrera"  value="#{contenidoB.seleccionCarrera}">                           
+                        <f:selectItem itemLabel="-- SELECCIONE --"/>
+                        
+                        <f:selectItems value="#{carreraB.mostrarCarrera(1,usuarioB.periodoS)}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.descripcion}"/>
+                        <f:ajax execute="@this" render="@form " listener="#{contenidoB.mostrarCarreraDocente(usuarioB.periodoS,contenidoB.seleccionCarrera)}"/>
+                    </h:selectOneMenu>
+                    <br/><br/><br/><br/>
+             
+                    
+                   </div>
+                    
+                    
+                    
+                   
+                 
+                    
+                    
+                    <!-- CAMBIOS PARA MEJORAS -->
+                    <div id="listaDocentes">
+                        <ul class="listaDocentes-titulo" >
+                                    <li style="width: 80px" >PERIODO</li>
+                                    <li style="width: 580px">ARCHIVO</li>
+                                    <li style="width: 150px">CARPETA</li>
+                                    <li style="width: 10px"></li>
+                                    <li style="width: 10px"></li>
+                                    <li style="width: 180px">FECHA</li>
+                                    <li>
+                                        <h:commandLink style="color: white" value="IMPRIMIR" actionListener="#{contenidoB.imprimir('%')}" target="_black" />
+                                    </li>
+                                    
+                         </ul>
+                    <ui:repeat value="#{contenidoB.listaDocentes}" var="docentes" >
+                          
+                        
+                        
+                        <ul class="listaDocentes-cabecera">
+                            <li style="width: 90%">#{docentes.get(0)}  #{docentes.get(2)} #{docentes.get(3)} #{docentes.get(1)}</li> 
+                            <li style="width: 7%;text-align: center">
+                                <h:commandLink value="imprimir" actionListener="#{contenidoB.imprimir(docentes.get(0))}"  target="_black"/>
+                                
+                                
+                            
+                            
+                            </li>
+                            <ui:repeat value="#{contenidoB.mostrarArchivosDocente(docentes.get(0),usuarioB.periodoS,contenidoB.seleccionCarrera)}" var="listaArchivos">
+                                
+                                
+                                <ul class="listaDocentes-detalle">
+                                    <li style="width: 50px" >#{listaArchivos.get(0)}</li>
+                                    <li style="width: 550px">#{listaArchivos.get(1)}</li>
+                                    <li style="width: 120px">#{listaArchivos.get(2)}</li>
+                                    <li style="width: 80px">#{listaArchivos.get(5)}</li>
+                                    <li style="width: 80px">#{listaArchivos.get(6)}</li>
+                                    <li style="width: 100px">#{listaArchivos.get(7)}</li>
+                                    <li><h:commandLink actionListener="#{contenidoB.descargar(listaArchivos.get(4))}" >
+                                            
+                                        <img src="../../resources/imagenes/descargar.png"   title="DESCARGAR"/>
+                                        </h:commandLink></li>
+                                    
+                                </ul>
+                                    
+
+                            </ui:repeat>
+                            <span style="display: block;width: 100%;text-align: right;padding:  10px 0px">TOTAL #{contenidoB.listaArchivosDocente.size()}</span>
+                          </ul>
+                    </ui:repeat>
+                    
+                    </div>
+                    
+                    
+                </h:form>
+          </ui:define>
+         </ui:composition>
+                
+    </h:body>
+</html>
+

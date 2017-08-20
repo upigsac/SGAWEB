@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ph="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body onload="#{centroEducativoB.mostrarCentroEducativo()}">
+        <style>
+            #frmCentroEducativo\:pnDatos label{display: inline-block;width: 130px}
+            #frmCentroEducativo\:pnDatos input,#frmCentroEducativo\:pnDatos select{margin: 1px;padding: 3px}
+            #frmCentroEducativo\:pnBotonera{margin: 15px 5px;border: 1px solid silver;padding: 10px}
+            #frmCentroEducativo\:pnBotonera input{margin: 1px;padding: 8px;width: 80px}
+        </style>
+        <h:form id="frmCentroEducativo" >
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:outputLabel value="Centro Educativo" />
+                <h:inputText value="#{centroEducativoB.centroEducativo.centroEducativo}" disabled="#{true}" /><br/>
+                <h:outputLabel value="Regimen" />
+                <h:selectOneMenu value="#{centroEducativoB.centroEducativo.regimen}" disabled="#{not centroEducativoB.bandera}">
+                    <f:selectItem itemLabel="--Seleccionar" />
+                    <f:selectItem itemLabel="PRIVADO" itemValue="1"/>
+                    <f:selectItem itemLabel="ESTATAL" itemValue="2"/>
+                </h:selectOneMenu>
+                
+                
+                <br/>
+                <h:outputLabel value="Tipo" />
+                <h:selectOneMenu value="#{centroEducativoB.centroEducativo.tipo}" disabled="#{not centroEducativoB.bandera}">
+                    <f:selectItem itemLabel="--Seleccionar--" />
+                    <f:selectItems value="#{tipoCentroEducativoB.mostrarTipoCentroEducativo()}" var="tipo" itemLabel="#{tipo.descripcion}" itemValue="#{tipo.tipoCentroEducativo}" />
+                </h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="Descripcion"  />
+                <h:inputText value="#{centroEducativoB.centroEducativo.descripcion}"  disabled="#{not centroEducativoB.bandera}" style="width: 400px" /><br/>
+                
+                <h:outputLabel value="Abreviatura" />
+                <h:inputText value="#{centroEducativoB.centroEducativo.abreviatura}" disabled="#{not centroEducativoB.bandera}" /><br/>
+                <h:outputLabel value="Estado" />
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera" >
+               <h:commandButton type="button" value="Nuevo" disabled="#{centroEducativoB.bandera}" >
+                   <f:ajax execute="@this" render=":frmCentroEducativo:pnDatos pnBotonera" listener="#{centroEducativoB.nuevo()}"  />
+                </h:commandButton>
+                <h:commandButton type="button" value="Guardar" disabled="#{not centroEducativoB.bandera}">
+                    <f:ajax  execute=":frmCentroEducativo:pnDatos" render=":frmCentroEducativo:pnDatos pnBotonera tbDetalle" listener="#{centroEducativoB.guardar()}" />
+                </h:commandButton>
+                <h:commandButton  type="button" value="Cancelar" disabled="#{not centroEducativoB.bandera}">
+                    <f:ajax execute="@this" render=":frmCentroEducativo:pnDatos pnBotonera" listener="#{centroEducativoB.cancelar()}"  />
+                </h:commandButton>
+                
+                <h:commandButton type="button" value="Editar" disabled="#{(centroEducativoB.bandera )  }">
+                    <f:ajax execute="@this"  render=":frmCentroEducativo:pnDatos pnBotonera" listener="#{centroEducativoB.editar()}" />
+                </h:commandButton>
+            </h:panelGroup>
+            
+            <p:dataTable id="tbDetalle" value="#{centroEducativoB.centroEducativoL}" var="detalle" rowIndexVar="status" selectionMode="single" rowKey="#{detalle.centroEducativo}" selection="#{centroEducativoB.centroEducativo}" >
+                <p:ajax event="rowSelect"  update=":frmCentroEducativo:pnDatos" /> 
+                <f:facet name="header" >
+                    <div style="text-align: right">
+                        <h:inputText id="txtBuqueda" value="#{centroEducativoB.busDescripcion}" ph:placeholder="Ingrese Busqueda" style="padding: 5px" >
+                        <f:ajax execute="@this" render="tbDetalle" event="change" listener="#{centroEducativoB.buscar()}" />
+                    </h:inputText>
+                 <h:commandButton type="button" value="BUSQUEDA" disabled="#{(centroEducativoB.bandera )  }">
+                     <f:ajax execute="txtBuqueda" render="tbDetalle"  listener="#{centroEducativoB.buscar()}"  />
+                </h:commandButton>
+                    </div>
+                    
+                </f:facet>
+                
+                
+                <p:column headerText="N°">
+                    #{status+1} 
+                </p:column>
+                <p:column headerText="Regimen">
+                    
+                    #{detalle.regimen eq 1?'PRIVADO':'ESTATAL'} 
+                </p:column>
+
+                <p:column headerText="TIPO">
+                    #{tipoCentroEducativoB.mostrarTipoCentroEducativo(detalle.tipo).descripcion}                    
+                </p:column>
+                <p:column headerText="DESCRIPCION">
+                    #{detalle.descripcion}
+                </p:column>
+                <p:column headerText="ABREVIATURA">
+                    #{detalle.abreviatura} 
+                </p:column>
+                <p:column headerText="ESTADO">
+                    #{detalle.estadoRegistro} 
+                </p:column>
+        
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+
+

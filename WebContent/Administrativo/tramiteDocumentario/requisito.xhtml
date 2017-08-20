@@ -1,0 +1,147 @@
+<ui:composition  
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+         
+       template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+               MATENIMIENTO REQUISITOS
+            </ui:define>
+            
+            
+            
+        <ui:define name="contenido">
+
+            <style>
+            .cambio table thead, .cambio table tbody{font-size: 0.8em}
+            .cambio .ui-datatable-odd{background-color: white}
+            .cambio .ui-state-highlight{background: #2182C2!important}
+            .cambio .ui-state-hover{box-shadow: none;background: #E4E4E4!important;}
+            
+    
+            </style>
+            
+            <script>
+                $(document).ready(function(){
+                   $("body").keydown(function(event){
+                    /*
+                        var rows = PF('tabla').tbody[0].childElementCount;
+                        var index = PF('tabla').originRowIndex;
+                        
+                       
+                       if (event.keyCode === 38){
+                           console.log("arriba");
+                        if (index === 0) {
+                            index = rows - 1;
+                        } else {
+                            index--;
+                        }
+                       }
+                       else if(event.keyCode === 40){
+                           console.log("abajo ");
+                            index ++;
+                       }
+                        
+                        PF('tabla').unselectAllRows();
+                        PF('tabla').selectRow(index);
+                        PF('tabla').originRowIndex = index;
+                       */
+                   }) ;
+                });
+            </script>
+        <span class="tituto-admin">MANTENIMIENTO REQUISITOS</span>
+        <h:form id="frmRequisito">
+            <h:panelGroup layout="block" id="pnDatos" class="paneles" >
+                <h:outputLabel value="CODIGO" />
+                <h:inputText  value="#{tramRequisitoB.tramRequisito.requisito}" disabled="#{true}" />
+                <br/>
+                <h:outputLabel value="DESCRIPCION" style="vertical-align:top" />
+                <h:inputTextarea id="txtDescripcion" value="#{tramRequisitoB.tramRequisito.descripcion}" style=";width: 350px;min-height: 60px" disabled="#{not tramRequisitoB.bandera}" pt:required="true" />
+                <br/>
+               <h:outputLabel value="ABREVIATURA"  />
+                <h:inputText id="txtAbreviatura" value="#{tramRequisitoB.tramRequisito.abreviatura}"  disabled="#{not tramRequisitoB.bandera}"  />
+                <br/>
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera" class="paneles">
+            
+                <h:commandLink title="Nuevo"  styleClass="boton-normal" disabled="#{tramRequisitoB.bandera}"  onclick="PF('bui').show()">
+                	<i class="fa fa-file-text-o" ></i>
+                	Nuevo
+                    <f:ajax execute="@this" render="pnDatos pnBotonera txtBusqueda" listener="#{tramRequisitoB.nuevo}"/>
+                </h:commandLink>
+                
+                <h:commandLink title="Guardar" type="button" styleClass="boton-normal" disabled="#{not tramRequisitoB.bandera}" >
+                	<i class="fa fa-floppy-o" ></i>
+                	Guardar
+                    <f:ajax execute="pnDatos" render="tbRequisito pnDatos pnBotonera" listener="#{tramRequisitoB.guardar}"/>
+                </h:commandLink>
+                
+                <h:commandLink title="Editar" type="button" styleClass="boton-normal" disabled="#{ tramRequisitoB.bandera}" onclick="PF('bui').show()">
+                	<i class="fa fa-pencil" ></i>
+                	Editar
+                    <f:ajax execute="@this"  render="pnDatos pnBotonera" listener="#{tramRequisitoB.editar()}"/>
+                </h:commandLink>
+                
+                <h:commandLink title="Cancelar" type="button" styleClass="boton-normal" disabled="#{not tramRequisitoB.bandera}" >
+                	<i class="fa fa-reply" ></i>
+                	Cancelar
+                    <f:ajax execute="@this" render="pnDatos pnBotonera" listener="#{tramRequisitoB.cancelar()}"/>
+                </h:commandLink>
+                
+                <h:commandLink title="Elimina" styleClass="boton-normal" disabled="#{ tramRequisitoB.bandera}" onclick="if(!confirm('¿Esta seguro de Eliminar')) return false;">                
+                	<i class="fa fa-times" ></i>
+                	Elimina
+                    <f:ajax execute="@this"  render="pnDatos pnBotonera tbRequisito" listener="#{tramRequisitoB.eliminar()}"/>
+                </h:commandLink>
+                
+                <h:commandLink title="Imprimir Lista" styleClass="boton-normal" disabled="#{true}" >                
+                	<i class="fa fa-print" ></i>
+                	Imprimir
+                    
+                </h:commandLink>
+                
+             
+            </h:panelGroup>
+            <p:blockUI block="pbDetalle" widgetVar="bui"/>
+            <h:panelGroup id="pbDetalle" styleClass="paneles" layout="block" style="padding: 0px 10px">
+                <div style="padding: 4px;display: block;text-align: right;border: 1px solid silver">
+                    <h:inputText id="txtBusqueda" value="#{tramRequisitoB.txtBusqueda}" pt:placeholder="BUSCAR REQUISITO" style="padding: 4px;" >
+                        <f:ajax event="keyup" execute="@this" render="tbRequisito" listener="#{tramRequisitoB.fitroRequisitos(tramRequisitoB.txtBusqueda)}" />
+                    </h:inputText>
+                    
+                    
+                </div>
+            
+                <p:dataTable id="tbRequisito" value="#{tramRequisitoB.tramRequisitoL}" var="detalle" rowIndexVar="status" selectionMode="single" rowKey="#{detalle.requisito}" selection="#{tramRequisitoB.tramRequisito}" styleClass="cambio" widgetVar="tabla"  >
+                <p:ajax event="rowSelect" update=":frmRequisito:pnBotonera :frmRequisito:pnDatos"/>
+                <p:column headerText="Nr."  width="20">
+                    #{status +1 }
+                </p:column>
+                
+             
+                <p:column headerText="DESCRIPCION">
+                    #{detalle.descripcion}
+                </p:column>
+                <p:column headerText="ABREVIATURA" width="200">
+                    #{detalle.abreviatura}
+                </p:column>
+                <p:column headerText="ESTADO" width="70" style="text-align:center">
+                <h:commandLink style="border:1px solid ;display:block;background-color: #{detalle.estadoRegistro eq '1'?'green':'red'};color:white;border-radius:2px;padding:2px 0px">
+                #{detalle.estadoRegistro eq '1'?'Activo':'Desactivo'}
+                <f:ajax execute="@this" render="tbRequisito" listener="#{tramRequisitoB.estadoRequisito(detalle)}" /> 
+                </h:commandLink>
+                    
+                </p:column>
+            </p:dataTable>
+            </h:panelGroup>
+            
+        </h:form>
+
+            </ui:define>
+         	</ui:composition>
+

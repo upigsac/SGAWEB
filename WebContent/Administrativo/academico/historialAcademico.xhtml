@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                HISTORIAL ACADEMICO
+                
+            </ui:define>    
+                    
+            <ui:define name="contenido">
+                
+                <style>
+                    label{width: 120px;display: inline-block;margin-bottom: 10px}
+                    
+                </style>
+                
+                <span class="tituto-admin">HISTORIAL ACADEMICO</span>
+                <h:form id="frmAcademico"  >
+                
+                    
+                    
+                    
+                 <label>PERIODO INICIAL</label>
+                 
+                 <h:selectOneMenu value="#{historialAcademicoAdminB.periodoIni}" >
+                     <f:selectItems value="#{periodoB.mostrarPeriodo(1)}" var="periodo" itemLabel="#{periodo.desPeriodo}" itemValue="#{periodo.periodo}" />
+                     <f:ajax execute="@this" render="cbPeridoFin" />
+                 </h:selectOneMenu>
+                 <BR/>
+                 <label>PERIODO FINAL</label>
+                 <h:selectOneMenu id="cbPeridoFin" value="#{historialAcademicoAdminB.periodoFin}" >
+                     <f:selectItems value="#{periodoB.mostrarPeriodo(1)}" var="periodo" itemLabel="#{periodo.desPeriodo}" itemValue="#{periodo.periodo}"  itemDisabled="#{(periodo.periodo +1 le historialAcademicoAdminB.periodoIni)}"  />
+                     
+                 </h:selectOneMenu>
+                 <br/>
+                 <label>CARRERA</label>
+                 <h:selectOneMenu id="cbCarrera" value="#{historialAcademicoAdminB.carrera}" >
+                     <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                     <f:selectItems value="#{carreraB.mostrarCarreraRegulares()}" var="carrera" itemLabel="#{carrera.abreviatura}" itemValue="#{carrera.carrera}" />
+                     <f:ajax execute="@this" render="cbEstudiante" />
+                 </h:selectOneMenu>
+                 
+                 <BR/>
+                 <label>ESTUDIANTE</label>
+                 <h:selectOneMenu  id="cbEstudiante" value="#{historialAcademicoAdminB.alumno}">
+                     <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                     <f:selectItems value="#{personaB.mostrarAlumnoCarrera(1, historialAcademicoAdminB.carrera)}" var="alumno" itemValue="#{alumno.persona}" itemLabel="#{alumno.paterno} #{alumno.materno} #{alumno.nombres}" />
+                     
+                 </h:selectOneMenu>
+                 
+                <br/>
+                <ui:param name="param" value="@LSALUMNO,#{historialAcademicoAdminB.alumno},@LSPERIOD,#{historialAcademicoAdminB.periodoIni},@LSPERIODOFIN,#{historialAcademicoAdminB.periodoFin}" />
+                <h:commandLink class="linkpdf" target="_black" value="VISTA DE IMPRESION"   actionListener="#{utilB.imprimir_crystal('\\Administrativo\\academico\\reporte\\', 'SGAWEB0023', 0, fn:split(param,','))}"   />
+                
+                </h:form>
+                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

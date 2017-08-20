@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                FICHA DE INSCRIPCION
+            </ui:define>
+
+            <ui:define name="contenido">
+
+                <style scoped="true">
+                    textarea:not(.resize){resize: none;}
+                    .w100{width: 80%;}
+                    .w50{width: 50%;}
+                    
+                    
+                    #frmFicha span{display: block;}
+                    #frmFicha label span{width: 200px;display: inline-block;text-transform: uppercase; font-family: arial;font-size: 0.8em}
+                    #pnDatos input,#pnDatos textArea{padding: 4px;margin: 2px}
+                    #pnDatos .cajaGrande{margin-left: 200px;width: 560px;height: 50px}
+                    #pnDatos select{min-width: 200px}
+                    #botonera{margin: 15px 0px;padding: 20px}
+                    #botonera input{padding: 10px ;margin: 2px ;cursor: pointer;min-width: 120px}
+                    
+                </style>
+
+                <span class="tituto-admin">REGISTRAR INSCRIPCION</span>
+
+                
+
+                    <h:form id="frmFicha" prependId="false" pt:autocomplete="off">  
+                        <h:panelGroup layout="block" id="pnDatos" style="border: 1px solid silver;padding: 10px">
+                            <span>
+                           
+
+                            <label>
+                                <span>Apellido Paterno</span>
+                                <h:inputText id="txtap" value="#{fichaB.entrada.ap_pat}" pt:required="required"/>
+                            </label>
+
+                            <label>
+                                <span>Apellido Materno</span>
+                                <h:inputText id="txtam" value="#{fichaB.entrada.ap_mat}" pt:required="required"/>
+                            </label> 
+                            
+                            
+                            
+                        </span>
+                        <span>
+                            <label>
+                                <span>Nombres</span>
+                                <h:inputText id="txtnom" value="#{fichaB.entrada.nombres}" pt:required="required" size="75"/>
+                            </label>
+                        </span>
+                        
+                        <span>
+                            <label>
+                                <span>Correo Electronico</span>
+                                <h:inputText id="txtem" pt:type="email" value="#{fichaB.entrada.email}" pt:required="required" title="Ingrese un correo valido" size="75"/>
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <span>Teléfono Celular</span>
+                                <h:inputText id="txtcel" pt:placeholder="Numero de 9 digitos" maxlength="9" pt:pattern=".{9,}" title="Minimo 9 digitos" value="#{fichaB.entrada.fono_cel}" pt:required="required"/>
+                            </label>
+
+                            <label>
+                                <span>Teléfono Fijo</span>
+                                <h:inputText id="txtfijo" maxlength="7" pt:placeholder="Numero de 7 digitos" pt:pattern=".{7,}" title="Minimo 7 digitos" value="#{fichaB.entrada.fono_fijo}" pt:required="required"/>                                
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <span>Dirección</span>
+                                <br/>
+                                <h:inputTextarea class="cajaGrande" value="#{fichaB.entrada.direccion}" />
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <span>Grado de Instrucción</span>
+                                <h:selectOneMenu id="cbgrad" value="#{fichaB.entrada.grado_inst}" pt:required="required" title="Seleccione una grado">
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItem itemValue="SECUNDARIA" itemLabel="SECUNDARIA"/>
+                                    <f:selectItem itemValue="SUPERIOR" itemLabel="SUPERIOR"/>
+                                </h:selectOneMenu>                                
+                            </label>
+
+                            <label>
+                                <span>Carrera de interés</span>
+                                <h:selectOneMenu id="cbcar" value="#{fichaB.entrada.carrera_int}" pt:required="required" title="Selecciona una carrrera">
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItem itemValue="000001" itemLabel="ING. SISTEMAS"/>
+                                    <f:selectItem itemValue="000002" itemLabel="MARKETING"/>
+                                    <f:selectItem itemValue="000003" itemLabel="DERECHO"/>
+                                    <f:selectItem itemValue="000004" itemLabel="ING. CIVIL"/>
+                                    <f:selectItem itemValue="000005" itemLabel="ENFERMERIA"/>                                    
+                                    
+                                </h:selectOneMenu>
+                            </label>
+                        </span>
+                        <span>
+                            <label>
+                                <span>Consulta</span>
+                                <br/>
+                                <h:inputTextarea id="txtobs" value="#{fichaB.entrada.consulta}"   styleClass="cajaGrande"  pt:required="required"/>
+                            </label>
+                        </span>
+                        <br/>
+                        <hr width="90%"/>
+                        <br/>
+                        <span>
+                            <label>
+                                <!--SOLO LIMA - LIMA 15-01-->
+                                <span>departamento</span>  
+                                <h:selectOneMenu id="cbDepartamento" value="Lima" pt:required="required" title="Seleccion un distrito" disabled="#{true}">
+                                    <f:selectItem itemValue="Lima" itemLabel="Lima"/>
+                                    
+                                </h:selectOneMenu>
+                                <br/>
+                                <span>provincia</span>  
+                                <h:selectOneMenu id="cbProvincia" value="Lima" pt:required="required" title="Seleccion un distrito" disabled="#{true}">
+                                    <f:selectItem itemValue="Lima" itemLabel="Lima"/>
+                                    
+                                </h:selectOneMenu>
+                                <br/>
+                                
+                                <span>Distrito</span>                              
+                                <h:selectOneMenu id="cbubd" value="#{fichaB.entrada.lugarUbigeo}" pt:required="required" title="Seleccion un distrito">
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{ubigeoDistritoB.mostrarDistrito(fichaB.ubigeoDepartamento, fichaB.ubigeoProvincia)}" var="dis" itemValue="#{dis.distrito}" itemLabel="#{dis.descripcion}"/>
+                                </h:selectOneMenu>
+                            
+<br/>
+                            
+                                <span>Lugar de Captacion</span>
+                                <br/>
+                                <h:inputTextarea id="txtcapt" value="#{fichaB.entrada.lugarCaptacion}" styleClass="cajaGrande" pt:required="required"/>                                
+                            </label>
+                        </span>                 
+                        </h:panelGroup>
+                               
+
+                        <h:messages globalOnly="true" showDetail="false"/>
+                        
+                        <h:panelGroup layout="block" id="botonera" style="border: 1px solid silver">                            
+                            
+                                <h:commandButton value="CONFIRMAR" action="#{fichaB.registrarInscripcion}"/>
+
+                                <h:commandButton value="CANCELAR" type="reset"/>
+                        </h:panelGroup>
+                        
+
+                    </h:form>
+
+                
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

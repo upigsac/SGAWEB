@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                REPORTE CARGA HORARIA SEMESTRAL
+            </ui:define>    
+
+             <ui:define name="contenido">
+                 <span class="tituto-admin">CARGA HORARIA SEMESTARAL</span>
+        <h:form>
+            DOCENTE 
+            <h:selectOneMenu value="#{reporteMarcacionSemetralB.docenteS}">                   
+                         <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                         <f:selectItems value="#{personaB.mostrarDocenteMarcacion(reporteMarcacion.seleccionCarrera)}" var="personal" itemValue="#{personal.persona}" itemLabel="#{personal.paterno}" />
+                    </h:selectOneMenu> 
+                    <BR/>
+            TURNO 
+            <h:selectOneMenu value="#{reporteMarcacionSemetralB.turnoS}">                                
+                                <f:selectItem itemLabel="-- TODOS --" itemValue="%" />
+                                <f:selectItem itemLabel="MAÑANA" itemValue="M" />
+                                <f:selectItem itemLabel="TARDE" itemValue="T" />
+                                <f:selectItem itemLabel="NOCHE" itemValue="N" />
+                    </h:selectOneMenu> 
+                    <BR/>
+                    
+                    <h:commandButton value="CONSULTAR" >
+                        <f:ajax execute="@form" render="tbDetalle" listener="#{reporteMarcacionSemetralB.mostrarCargaHoraria()}" />
+                    </h:commandButton>
+            
+            <p:dataTable id="tbDetalle" value="#{reporteMarcacionSemetralB.marcacionL}" var="semestral" scrollable="true">
+                  <f:facet name="header">
+                            <h:commandLink disabled="#{empty reporteMarcacionSemetralB.marcacionL}">
+                                <img src="../../resources/imagenes/excel.png" width="36"/>
+                                <p:dataExporter type="xls" target="tbDetalle" fileName="Carga_Horaria"/>
+                            </h:commandLink>
+                        </f:facet>
+                <p:column headerText="CODIGO">
+                    #{semestral.get(0)}
+                </p:column>
+                <p:column headerText="DOCENTE">
+                    #{semestral.get(1)}
+                </p:column>
+                <p:column headerText="CODASIG.">
+                    #{semestral.get(2)}
+                </p:column>
+                <p:column headerText="ASIGNATURA">
+                    #{semestral.get(3)}
+                </p:column>
+                <p:column headerText="TURNO">
+                    #{semestral.get(4)}
+                </p:column>
+                <p:column headerText="HORAS SEMANALES">
+                    #{semestral.get(5)}
+                </p:column>
+                <p:column headerText="HORAS MENSUALES">
+                    #{semestral.get(6)}
+                </p:column>
+                <p:column headerText="HORAS SEMENESTRALES">
+                    #{semestral.get(7)}
+                </p:column>
+                
+            </p:dataTable>
+            
+        </h:form>
+           </ui:define>
+         </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,194 @@
+
+
+        <ui:composition 
+	
+	          xmlns="http://www.w3.org/1999/xhtml"
+		      xmlns:h="http://xmlns.jcp.org/jsf/html"
+		      xmlns:p="http://primefaces.org/ui"
+		      xmlns:f="http://xmlns.jcp.org/jsf/core"
+		      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"		
+		      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        
+         template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                RECEPCION DE ACTAS
+            </ui:define>
+
+
+
+            <ui:define name="contenido">
+            
+             <style >
+                        .blocklabel > label{display: block;}
+                        .textcenter{text-align: center;}
+                        table tr td.excepcion{text-align: left;padding-left: 3px !important;}
+                        .docenteSeleccion{background-color: lightgreen;font-weight: bold;}
+                        td.tooltip{position: relative;overflow: auto !important;}
+                        span.tooltip{display: none;}.boton-filtrar{padding: 5px 10px;}
+                        span.tooltip label > span:first-child{font-weight: bold;width: 150px;display: inline-block;}
+                        /*td.tooltip:hover{font-weight: bold;}*/
+                        td.tooltip:hover span.tooltip{display: block;position: absolute;top: -110px;left: 210px;background-color: palegoldenrod;width: 300px;padding: 5px;border-radius: 5px;}
+                        .ui-datatable thead tr th,.ui-datatable tr td{font-size: 0.65em;}
+                        .ui-datatable tbody td{padding: 0px;}
+                        .ui-datatable tbody td.tooltip{display: table;border: none;}/*hack para chrome*/
+                        .ui-datatable-tablewrapper{overflow: visible;}
+                    </style>
+            
+                <div>
+                   
+
+                    <span class="tituto-admin">RECEPCION DE ACTAS</span>
+
+                    <h:form styleClass="blocklabel">
+<div class="paneles">
+ 						<h:outputLabel  value="CARRERA"  />
+                            <h:selectOneMenu value="#{recepcionActa.filtro_carrera}">
+                              <f:selectItem itemValue="%" itemLabel="TODOS"/> 
+                            <f:selectItems  value="#{carreraB.mostrarCarrera(usuarioB.institucionS,usuarioB.periodoS)}" var="itemCarrera" itemLabel="#{itemCarrera.descripcion}" itemValue="#{itemCarrera.carrera}" />
+                               <f:ajax execute="@this" render="cboPersonal"/>
+                            </h:selectOneMenu>
+                         
+                        
+<br />
+                        <h:outputLabel value="PERSONAL" />
+                            
+                            <h:selectOneMenu id="cboPersonal" value="#{recepcionActa.filtro_personal}" >
+                                <f:selectItem itemValue="%" itemLabel="TODOS"/>
+                                <f:selectItems value="#{personaB.mostrarPersonalCarrera(usuarioB.institucionS, usuarioB.periodoS,recepcionActa.filtro_carrera)}" var="per" itemValue="#{per.persona}" itemLabel="#{per.paterno} #{per.materno}, #{per.nombres}"/>
+                            </h:selectOneMenu>
+                        
+
+
+</div>
+                      <div class="paneles">
+                        <h:commandLink value="FILTRAR" styleClass="boton-normal">
+                            <f:ajax  execute="cboPersonal" render="dt_listadocontrol" listener="#{recepcionActa.listarRecepciones()}" />
+                        </h:commandLink>
+                      
+                      </div> 
+                      
+
+                        <p:dataTable id="dt_listadocontrol" value="#{recepcionActa.listadoControl}" var="control" styleClass="textcenter font14" emptyMessage="SIN REGISTROS" editable="true" editMode="cell">
+
+                            <p:columnGroup type="header">
+
+                                <p:row>
+                                    <!--<p:column rowspan="3" width="70" headerText="CODIGO"/>-->
+                                    <p:column rowspan="3" headerText="DOCENTE"/>
+                                    <p:column rowspan="3" width="80" headerText="CARRERA"/>
+                                    <p:column rowspan="3" width="65" headerText="TURNO"/>
+
+                                    <p:column rowspan="3" width="50" headerText="CICLO"/>
+                                    <p:column rowspan="3" headerText="ASIGNATURA"/>
+                                    <p:column rowspan="3" width="70" headerText="SECCION"/>
+
+                                    <p:column rowspan="1" colspan="5" headerText="RECEPCION DE ACTAS EN FISICO"/>
+
+                                  
+
+                                </p:row>
+
+                                <p:row>
+                                    <p:column rowspan="1" colspan="5" headerText="ACTAS"/>
+                                </p:row>
+
+                                <p:row>                            
+                                    <c:forEach items="#{recepcionActa.listadoExamenActa}" var="te">
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputFormat value="#{te.header}" escape="false"/>
+                                            </f:facet>
+                                        </p:column>
+                                    </c:forEach>                            
+                                </p:row>
+
+                            </p:columnGroup>
+
+                            <!--
+                            <p:column>
+                            #{control.personal.personal}
+                        </p:column>
+                            -->
+                            <p:column styleClass="excepcion tooltip">
+                                #{control.persona.nombres}
+                                <span class="blocklabel tooltip">
+                                    <label>
+                                        <span>CODIGO DE PERSONAL</span>
+                                        #{control.personal.personal}
+                                    </label>                            
+                                    <label>
+                                        <span>TIPO DE DOCUMENTO</span>
+                                        #{control.persona.tipodocumento eq 1 ? 'DNI' : ''}
+                                    </label>
+                                    <label>
+                                        <span>NUM. DE DOCUMENTO</span>
+                                        #{control.persona.numero_documento}
+                                    </label>
+                                    <label>
+                                        <span>FECHA DE NACIMIENTO</span>
+                                        #{control.persona.fecha_nacimiento}
+                                    </label>
+                                    <label>
+                                        <span>EMAIL PRINCIPAL</span>
+                                        #{control.persona.emailP}
+                                    </label>
+                                    <label>
+                                        <span>EMAIL SECUNDARIO</span>
+                                        #{control.persona.emailS}
+                                    </label>
+                                </span>
+                            </p:column>
+
+                            <p:column>
+                                <span>#{control.carrera.abreviatura}</span>
+                            </p:column>                
+                            <p:column>
+                                #{control.seccion_periodo.turno eq 1 ? 'MAÑANA' : control.seccion_periodo.turno eq 2 ? 'TARDE' : control.seccion_periodo.turno eq 3 ? 'NOCHE' : 'NO ESPEFICA'}
+                            </p:column>
+
+                            <p:column>
+                                #{control.seccion_periodo.nivelModular eq 1 ? 'I' : control.seccion_periodo.nivelModular eq 2 ? 'II' : control.seccion_periodo.nivelModular eq 3 ? 'III' : control.seccion_periodo.nivelModular eq 4 ? 'IV' : control.seccion_periodo.nivelModular eq 5 ? 'V' : control.seccion_periodo.nivelModular eq 6 ? 'VI' : control.seccion_periodo.nivelModular eq 7 ? 'VII' : control.seccion_periodo.nivelModular eq 8 ? 'VIII' : control.seccion_periodo.nivelModular eq 9 ? 'IX' : control.seccion_periodo.nivelModular eq 10 ? 'X' : control.seccion_periodo.nivelModular eq 11 ? 'XI' : control.seccion_periodo.nivelModular eq 12 ? 'XII' : 'N/E'}
+                            </p:column>
+                            <p:column styleClass="excepcion">
+                                #{control.curso.descripcion}
+                            </p:column>
+                            <p:column>
+                                #{control.curso_seccion.seccion}
+                            </p:column>
+
+                            <!---->                    
+
+                            <c:forEach items="#{recepcionActa.listadoExamenActa}" var="te" varStatus="stat">
+                                <p:column>
+                                    <p:cellEditor>
+                                        <f:facet name="output">   
+
+                                            <h:outputFormat value="#{control.examenes[te.index].property_date}" styleClass="fecha_output">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputFormat>
+
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:calendar value="#{control.examenes[te.index].property_date}" pattern="dd/MM/yyyy" styleClass="textcenter">
+                                                <p:ajax event="dateSelect" update="@(.fecha_output)" listener="#{recepcionActa.onCellEdit(control,te.property)}"/>
+                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short"/>
+                                            </p:calendar>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                            </c:forEach>
+
+                     
+
+                        </p:dataTable>
+
+                    </h:form>
+
+               
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+

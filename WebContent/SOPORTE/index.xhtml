@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>PEDIDO</title>
+           <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+    </h:head>
+    <h:body>
+        <style>
+            *{padding: 0PX;margin: 0px;list-style: none}
+            body{;background-color: #EEEEEE}
+            .pabellon >li{display: inline-block;vertical-align: top;width:  150px;height: 100px;border: 0px solid silver}
+            .panel{display: block;border: 1px solid silver;padding: 5px;background-color: white;margin: 10px 5px}
+            .cabecera{height: 150px}
+            .cuerpo{min-height: 600px}
+            .pabellon{display: block;border: 1px solid red;text-align: center;padding: 10px}
+            .pie{height: 50px}
+        </style>
+        <h:form id="frmPedido">
+            <div class="cabecera panel">
+                
+            </div>
+            <div class="cuerpo panel">
+            <ul class="pabellon">
+            <ui:repeat value="#{pedidoB.pabellonL}" var="itemPabellon">
+                <li>
+                    <h:commandLink>
+                        <i class="fa fa-university" style="font-size: 5.0em" />
+                        <br/>
+                        #{itemPabellon.descripcion}
+                        <f:ajax execute="@this" render=":frmPedido:pnPiso" listener="#{pedidoB.seleccionPabellon(itemPabellon)}" />
+                    </h:commandLink>
+                    
+                
+                </li>
+            </ui:repeat>
+        </ul>
+            
+            
+            
+            <h:panelGroup layout="block" id="pnPiso" style="border: 1px solid red;display: block;">
+                <ul class="piso" style="border: 1px solid green"> 
+                    <ui:repeat value="#{pedidoB.pedidoPisoAulaL}" var="itemPabellonPiso">
+                        <li style="border: 1px solid blue;margin: 10px 2px">
+                    
+                    <H3>PISO  .-  #{itemPabellonPiso.pabellonPiso.piso}</H3>
+                    <ul class="piso-aula">
+                        
+                    
+                    <ui:repeat value="#{itemPabellonPiso.aulaL}" var="itemAula">
+                        <li style="display: inline-block;vertical-align: top" ><h:commandLink onclick="dlgPedido.show()">
+                                <div style="border: 1px solid silver;padding: 20px;position: relative">
+                                        <i class="fa fa-shopping-cart" style="font-size: 5.0em" />   
+                                        <span style="display: block;width:  30px;height: 30px;position: absolute;top: -15px;right: -15px;border: 1px solid ;border-radius: 50%;background-color: #000;z-index: 5" />
+                                        <br/>
+                                        #{itemAula.descripcion}
+                                    </div>
+                                <f:ajax execute="@this" />
+                            </h:commandLink>
+                            
+                            
+                            
+                            </li>
+                         
+                    </ui:repeat>
+                    </ul>
+                    
+                
+                </li>
+                    </ui:repeat>
+                </ul>
+            </h:panelGroup>
+            
+            </div>
+            <div class="pie panel">
+                <h:outputLabel value="HORA INICIO" />
+                <p:calendar timeOnly="#{true}" />
+                <BR/>
+                <h:outputLabel value="HORA FINAL" />
+                <p:calendar />
+                <div>
+                    <b>
+                        OCUPADO
+                        <i class="fa fa-shopping-cart" style="font-size: 2.0em;color: red" />   
+                    </b>
+                    <b>
+                        LIBRE
+                        <i class="fa fa-shopping-cart" style="font-size: 2.0em;color: green" />   
+                    </b>
+                     
+                      
+                </div>
+            </div>
+            
+            
+            <p:dialog header="INGRESO DE PEDIDO" widgetVar="dlgPedido" modal="#{true}" resizable="#{false}" closeOnEscape="#{true}" height="500" width="500">
+                <h:outputLabel value="FECHA" />
+                <p:calendar />
+                <br/>
+                <h:outputLabel value="HORA INICIO" />
+                 <h:inputText />
+                <br/>
+                <h:outputLabel value="HORA FINAL" />
+                 <h:inputText />
+                <br/>
+                <h:outputLabel value="PERSONA" />
+                <h:inputText />
+                <f:facet name="footer">
+                    <div style="display: block;text-align: right">
+                        <h:commandLink>
+                             ACEPTAR
+                            <f:ajax execute="@this" />
+                        </h:commandLink>
+                        <h:commandLink>
+                             CANCELAR
+                            <f:ajax execute="@this" />
+                        </h:commandLink>
+                    </div>
+                </f:facet>
+            </p:dialog>
+            
+            
+        </h:form>
+        
+        
+    </h:body>
+</html>
+

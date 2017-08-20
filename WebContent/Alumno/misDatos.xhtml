@@ -1,0 +1,174 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                    xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+               MI PERFIL
+                
+            </ui:define>    
+            
+        
+            
+            
+        <ui:define name="contenido"> 
+            <style>
+                input[type="text"]{border: none;border-bottom: 2px solid rgba(0,0,0,0.12);width: 98%;padding: 2px 2px 1px }
+                input[type="text"]:disabled{background-color: white}
+                input[type="text"]:focus {border-color: rgb(16,108,200) }
+                input[type="text"]:focus + label{color: red}
+                .float-label.focus label,.float-label-only label{transform: translateY(0px) scale(0.70);color: rgba(124,124,124,1);color: rgb(16,108,200)}
+                .input-helper{display: flex;flex-direction: column;width: 100%;margin: 2px;}
+                 label[for]{transform: translateY(20px);pointer-events: none;transform-origin: left;padding: 0 0 0 5px;width: 100%;z-index: 1;transition-duration: 0.25s;color: rgba(124,124,124,0.55);font-size: 1.8em}
+                 .boton{display: inline-block;padding: 8px;margin: 2px;background-color: #0088CE;border-radius: 3px;color: white;min-width: 70px;text-align: center}
+                 span.boton{opacity: 0.5}
+                 
+            </style>
+            <script>
+                $(document).ready(function(){
+                    
+               $("body").on(".float-label input","focus")     
+                    
+                $(".float-label input").focus(function() {
+                        
+                        $(this).parent().addClass("focus");
+                       
+                    }).blur(function() {
+                        if ($(this).val()==""){
+                            $(this).parent().removeClass("focus");
+                            
+                        }
+
+                    });
+                });
+            </script>
+            <span class="tituloCuerpo"> MI PERFIL </span>
+          
+                    
+           
+            
+            <h:form id="frmDatos" prependId="false" >
+                
+                
+                
+                
+                <div style="display: block;border: 1px solid silver ;padding: 5px 10px;background-color: #F1F1F1">
+                    
+           
+                <div style="display: block;border: 1px solid silver ;margin: 5px 0px">
+                    <div style="display: block;padding: 10px  5px;background-color: #0088CE;color: white">
+                        <b>DATOS PERSONALES</b>
+                    </div>
+                   
+                   <div style="padding: 5px 10px;background: white">
+                       
+                 
+                   <div style="display: inline-block;vertical-align: top;width: 75%">
+                       <div class="float-label input-helper #{not empty usuarioB.persona.nombres  ?'focus':''}" >
+                            <h:outputLabel for="txtNombre" value="Nombre "/>
+                            <h:inputText id="txtNombre" value="#{usuarioB.persona.nombres}" disabled="true" />
+                       </div>
+                       
+                       <div class="float-label input-helper #{not empty usuarioB.persona.paterno  ?'focus':''}" >
+                            <h:outputLabel for="txtPaterno"  value="Apellido Paterno "/>
+                            <h:inputText id="txtPaterno" value="#{usuarioB.persona.paterno}"  disabled="true"/>
+                       </div>
+                       
+                        <div class="float-label input-helper #{not empty usuarioB.persona.materno  ?'focus':''}">
+                        <h:outputLabel for="txtMaterno" value="Apellido Materno "/>
+                        <h:inputText id="txtMaterno" value="#{usuarioB.persona.materno}" disabled="true" />
+
+                        </div>
+                       <div class="float-label input-helper #{not empty usuarioB.persona.numero_documento  ?'focus':''}">
+                           <h:outputLabel for="txtNumero" value="DNI "/>
+                           <h:inputText id="txtNumero" value="#{usuarioB.persona.numero_documento}" disabled="#{not personaPerfilB.bandera}" maxlength="8" />
+                       </div>
+                       
+                       <div class="float-label input-helper #{not empty usuarioB.persona.fecha_nacimiento  ?'focus':''}">
+                        <h:outputLabel for="txtNacimiento" value="Fecha Nacimiento "/>
+                        <p:calendar id="txtNacimiento" value="#{usuarioB.persona.fecha_nacimiento}" disabled="#{not personaPerfilB.bandera}" pattern="dd-MM-yyyy" mask="true" />
+                           
+                       </div>
+                        
+                       
+                   </div>
+                   <div style="display: inline-block;vertical-align: top;width: 24%;text-align: center">
+                        <h:graphicImage value="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" style="width: 150px;height: 150px;border: 1px solid silver;border-radius: 50%" />
+                        <br/>
+                        <h:outputLabel for="rbSexo" value="Sexo: "/><br/>
+                        <h:selectOneRadio id="rbSexo" value="#{usuarioB.persona.sexo}" disabled="#{not personaPerfilB.bandera}">
+                            <f:selectItem itemLabel="Masculino &lt;i class='fa fa-mars' >&lt;/i>" itemValue="1" itemEscaped="false" />
+                            <f:selectItem itemLabel="Femenino &lt;i class='fa fa-venus' >&lt;/i>" itemValue="0" itemEscaped="false" />
+                        </h:selectOneRadio>
+                   </div>
+                     </div>
+                      
+                </div>
+                
+              
+                
+                
+                
+                
+                <div style="display: block;border: 1px solid silver;margin: 5px 0px">
+                    
+                    <div style="display: block;padding: 10px  5px;background-color: #0088CE;color: white">
+                        <B>DISPOSITIVOS DE COMUNICACION</B>
+                    </div>
+                    <div style="padding: 5px 10px;background: white">
+                        <div class="float-label input-helper #{not empty usuarioB.persona.telefono  ?'focus':''}">
+                        <h:outputLabel for="txtTelefono" value="Telefono Fijo "/>
+                        <h:inputText id="txtTelefono" value="#{usuarioB.persona.telefono}" disabled="#{not personaPerfilB.bandera}" />
+                    </div>
+                    
+                    <div class="float-label input-helper #{not empty usuarioB.persona.celular  ?'focus':''}">
+                        <h:outputLabel for="txtCelular" value="Telfono Celular "/>
+                        <h:inputText id="txtCelular" value="#{usuarioB.persona.celular}" disabled="#{not personaPerfilB.bandera}"  />
+                    </div>
+                    
+                    <div class="float-label input-helper #{not empty usuarioB.persona.emailP  ?'focus':''}">
+                        <h:outputLabel for="txtEmailP" value="Correo Principal "/>
+                        <h:inputText id="txtEmailP" value="#{usuarioB.persona.emailP}" disabled="#{not personaPerfilB.bandera}"  />
+                    </div>
+                    
+                    <div class="float-label input-helper focus">
+                       <h:outputLabel for="txtEmailO" value="Correo Opcional "/>
+                        <h:inputText id="txtEmailO" value="#{usuarioB.persona.emailS}" disabled="#{not personaPerfilB.bandera}"   /> 
+                    </div>
+                        
+                    </div>
+                    
+                    
+                </div>
+ 
+                    <div style="display: block;text-align: right;padding: 10px 3px">
+                        <h:commandLink id="btEditar" styleClass="boton" disabled="#{personaPerfilB.bandera}">
+                        <i class="fa fa-pencil" />
+                        Editar
+                        <f:ajax execute="@this" render="txtTelefono txtCelular txtEmailP txtEmailO rbSexo btEditar btGuardar btCancelar" listener="#{personaPerfilB.editarPersona()}" />
+                    </h:commandLink>
+                     <h:commandLink id="btGuardar" styleClass="boton" disabled="#{not personaPerfilB.bandera}" >
+                        <i class="fa fa-floppy-o" />
+                        Guardar
+                        <f:ajax execute="@this txtTelefono txtCelular txtEmailP txtEmailO" render="txtTelefono txtCelular txtEmailP txtEmailO rbSexo btEditar btGuardar btCancelar" listener="#{personaPerfilB.insertarPersona()}" />
+                    </h:commandLink>
+                    
+                     <h:commandLink id="btCancelar" styleClass="boton" disabled="#{not personaPerfilB.bandera}">
+                       <i class="fa fa-reply" />
+                        Cancelar
+                        <f:ajax execute="@this" render="@form" listener="#{personaPerfilB.cancelarPersona()}" />
+                    </h:commandLink>                    
+                 </div>
+        </div>    
+               
+               
+        </h:form>
+      
+        </ui:define>
+            
+        </ui:composition>
+
+

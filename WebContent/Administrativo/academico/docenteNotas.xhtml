@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+       <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                VERIFICACION REGISTRO SIN DOCENTE
+                
+            </ui:define>    
+                    
+               <ui:define name="contenido" >
+                   <span class="tituto-admin">VERIFICACIONES DOCENTE SIN NOTAS ep y/o ep - #{usuarioB.periodoS}</span>
+                   <h:form  target="_blank">
+               
+                       <h:commandLink class="linkpdf" value="IMPRIMIR  FORMATO PDF"  action="reporte.jsp" >
+                            <f:param name="reporte"  value="SGAWEB0006" />
+                            <f:param name="periodo"  value="#{usuarioB.periodoS}" />
+                            <f:param name="formato"  value="5" />
+                       </h:commandLink>
+                       
+                       <h:commandLink class="linkexcel" value="IMPRIMIR  FORMATO EXCEL"  action="reporte.jsp" >
+                            <f:param name="reporte"  value="SGAWEB0006" />
+                            <f:param name="periodo"  value="#{usuarioB.periodoS}" />
+                            <f:param name="formato"  value="2" />
+                       </h:commandLink>
+                       
+                        
+                       
+                   </h:form>
+               </ui:define>
+           </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+        	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	
+    </h:head>
+        
+    <h:body>
+          <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Docente/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+                GESTOR DE CONTENIDOS
+                
+            </ui:define>
+                                       
+             
+              <ui:define name="contenido">
+        
+        
+        
+              <style>
+            .sub-titulo{font-weight: bold}
+            .slider{border: 1px solid silver;width: 100%;height: 170px;margin-bottom: 30px;margin-left: 20px  }
+            .slider div >a{text-align: center;font-weight: bold;font-size: 15px;bottom:50%;   background-color: red;position: absolute;width: 20px;height: 20px;vertical-align: top;border-radius: 50%;display: none}
+            .slider div:hover >a{display: inline-block}
+            .slider div{position: relative;display: inline-block;width: 800px;height: 100%;overflow: hidden}
+            .slider div ul{list-style: none;width: 10000px;height: 100%;margin: 0px;padding: 5px 0px }
+            .slider div ul li{background-size: 50%;background: center; background-repeat: no-repeat ; display: inline-block;vertical-align: top;height: 94%;text-align: center;width: 200px}
+            .slider div ul li b{color: white;display: block;height: 100%;background-color: rgba(0,0,0,0.5);transition: all 1s}
+            .slider div ul li:hover b{  cursor: pointer;background-color: rgba(255,255,255,0);color: black;transition: all 1s }
+            
+             iframe{display: none;height: 640px;width: 75%;vertical-align: top;}
+             
+         
+        </style>
+        
+        
+        <script>
+            $(document).ready(function(){
+                
+             
+               
+               $(".despla").click(function(e){
+                    e.preventDefault();
+                    indice=((Math.abs(parseInt($(this).next().css("margin-left"))/205))+1);
+                    total=$(this).next().children().size();
+                   if(total >indice ){
+                       
+                       cont=(205*indice);
+                   }else{
+                       cont=0;                     
+                   }                   
+                   $(this).next().css({"margin-left":"-"+cont+"px",transition:"all 1s"});
+                   
+               }); 
+                
+                
+                
+               $(".slider ul a").click(function(e){
+                    e.preventDefault();
+                   
+                   $("iframe").attr("src",$(this).attr("href")+"&amp;embedded=true");
+                   
+                    $(".slider >div").css({width:"210px",transition:"all 1s"})
+                   $("iframe").css({"display":"inline-block"});
+                   
+               }); 
+                                
+               
+             
+            });
+            
+            
+        </script>
+      
+          
+     
+                 
+      <span class="tituto-docente"> DOCUMENTOS DE GESTION ADMINISTRATIVA </span>
+                
+                
+            
+        
+        <div style="display: block">
+        <div style="    display: inline-block">
+            <span class="sub-titulo" > GUIAS  </span>
+            <div class="slider">
+                
+
+                <div id="slider-guia">
+                    <a class="despla" href="#" >></a>
+                    <ul>
+                    <ui:repeat value="#{archivosB.mostrarCarpeta('GUIA','ADMIN')}" var="guias" >
+                        <a href="https://docs.google.com/viewer?url=http://www.upig.edu.pe/java/documentos/#{guias.url}" >
+                            <li style="background-image: url('#{guias.portada}') "><b>#{guias.titulo}</b></li>
+                        </a>
+                    </ui:repeat>
+                    </ul>
+        
+
+                </div>
+
+               
+            </div>
+
+            <span class="sub-titulo" > REGLAMENTOS</span>
+            <div class="slider">
+                
+
+                <div id="slider-reglamento">
+                    <a class="despla" href="#" >></a>
+                    <ul>
+                    <ui:repeat value="#{archivosB.mostrarCarpeta('REGLAMENTO','ADMIN')}" var="reglamentos" >
+                        <a href="https://docs.google.com/viewer?url=http://www.upig.edu.pe/java/documentos/#{reglamentos.url}" >
+                            <li style="background-image: url('#{reglamentos.portada}"><b>#{reglamentos.titulo}</b></li>
+                        </a>
+                    </ui:repeat>
+                    </ul>
+
+
+                </div>
+
+               
+            </div>
+
+            <span class="sub-titulo" > EVALUACIÓN  </span>
+            <div class="slider ">
+
+                  
+
+                <div id="slider-formatos">
+                    <a class="despla" href="#" >></a>
+                    <ul>
+                    <ui:repeat value="#{archivosB.mostrarCarpeta('EVALUACION','ADMIN')}" var="evalu" >
+                        <a href="https://docs.google.com/viewer?url=www.upig.edu.pe/java/documentos/#{evalu.url}" >
+                            <li style="background-image: url('#{evalu.portada}')"><b>#{evalu.titulo}</b></li>
+                        </a>
+                    </ui:repeat>
+                    </ul>            
+                </div>
+
+
+
+            </div>
+        </div>
+        <iframe  src="#">
+            
+        </iframe>
+        </div>
+            </ui:define>
+          </ui:composition>
+   
+            </h:body>
+     
+    
+</html>
+

@@ -1,0 +1,115 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                        xmlns:p="http://primefaces.org/ui"
+                        template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            CURSOS MATRICULADOS
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                
+            
+        <style>
+             .ficha-matricula {border: 1px solid silver}
+            .ficha-matricula ul li{border:  1px solid silver;display: inline-block;vertical-align: top;margin: 4px;min-width: 400px ;max-width: 600px;width: 32%;border-radius: 5px;min-height: 235px;overflow: hidden;transition: all 0.5s }
+            .ficha-datos{display: block;padding: 5px;background-color: white;transition:all 0.5s;}
+            .ficha-datos b{display: inline-block;min-width: 90px}
+            .ficha-datos label{display: inline-block; min-width: 40px}
+            .ficha-datos span{display: block;width: 100%;margin: 4px 0px;}
+            ul li:hover .ficha-datos{background-color: #E4E4E4}
+        </style>
+        <h:form>
+             <span class="tituloCuerpo"> CURSOS MATRICULADOS </span>
+            <div class="ficha-matricula">
+                <div style="display: block;text-align: center;border: 1PX solid silver;padding-top: 20px;position: relative;font-size: 1.5em;">
+                    <b>FICHA DE MATRICULA</b>
+                       <ui:param name="param1"  value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},ALUMNO,,#{usuarioB.usu}" />
+                       <h:commandLink title="Imprimir Ficha" target="_blank" actionListener="#{utilB.imprimirIreports('alumno/matricula/fichaMatricula', 1,fn:split(param1,','))}" style="position: absolute;right: 5px;top: 5px;color: #000">
+                    
+                    
+                    
+                <i class="fa fa-print" />
+                    
+                   
+                </h:commandLink>
+                </div>
+                 
+                                 
+                
+            <ul>
+                
+            
+        <ui:repeat value="#{fichaMatriculaB.mostrarMatricula(usuarioB.institucionS, usuarioB.periodoS, usuarioB.usu)}" var="itemFicha">
+            <li>
+                <div style="display: block;background-color: #019EE3; text-align: center;color: white;padding: 10px 5px;font-weight: bold;font-size: 1.0em;font-family: arial">
+                     <h:outputLabel value="#{itemFicha.desPersona}" style="text-transform: uppercase" /> <br/>
+                </div>
+                
+                
+                <div class="ficha-datos" style="">
+                    <div style="display: inline-block;vertical-align: top;width: 25%">
+                        <img  style="width: 100%;height: 140px;vertical-align: top;display: inline-block;border: 1px solid silver" src="SVerImagenAlumno?alumno=#{itemFicha.persona}" />
+                    </div>
+                    <div style="display: inline-block;vertical-align: top;padding: 2px 4px;width: 70%;font-family: arial;font-size: 0.8em">
+                        <div style="min-height: 140px" >
+                        <span>
+                            <b>CODIGO    </b><h:outputLabel value="#{itemFicha.curso}" style="font-weight: bold;color: #0088CE;font-size: 1.3em" /> 
+                        </span>
+                        <span >
+                            <b>CURSO     </b>
+                            <div style="display: inline-block;vertical-align: top;width: 70%;">
+                                <h:outputLabel value="#{itemFicha.desCurso}" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;display: block " title="#{itemFicha.desCurso}" /> 
+                            </div>
+                            
+                        </span>
+                        
+                        <span>
+                            <b>SECCION </b><h:outputLabel value="#{itemFicha.desSeccion}" />
+                        </span>
+                        <span>
+                            <b>CREDITOS </b><h:outputLabel value="#{itemFicha.creditos}" /> 
+                        </span>
+                        <span>
+                            <b>TURNO </b><h:outputLabel value="#{itemFicha.desTurno}" /> 
+                        </span>
+                        <span>
+                            <b>H. TEORIA</b><h:outputLabel value="#{itemFicha.horaTeoria}" /> <b>H. PRACTICA</b><h:outputLabel value="#{itemFicha.horaPractica}" /> 
+                            
+                        </span>
+                        <span>
+                            <b title="Trabajo de Investigacion">T. INVESTI.</b><h:outputLabel value="#{itemFicha.formula eq 10?'SI':'NO'}" style="font-weight: bold;color: #{itemFicha.formula eq 10?'red':''}" />   
+                            
+                        </span>
+                    </div>
+                       
+
+                    </div>
+                </div>
+                 <div style="display: block;border: 1px solid silver;width: 100%;padding: 10px 0px">
+                     <h:commandLink title="DESCARGAR" style="padding: 0px 15px" disabled="#{itemFicha.silabu eq null}" actionListener="#{fichaMatriculaB.prepDownload(itemFicha.ruta.concat('\\').concat(itemFicha.silabu))}"  >
+                                 <i class="fa fa-cloud-download" />
+                             SILABO
+                              <p:fileDownload value="#{fichaMatriculaB.download}" />
+                     </h:commandLink>
+                     <h:commandLink title="HORARIO DOCENTE" style="padding: 0px 15px" disabled="#{true}" rendered="#{false}" >
+                                 <i class="fa fa-clock-o" />
+                             HORARIO DOCENTE
+                             <f:ajax execute="@this" />
+                     </h:commandLink>
+                </div>
+                
+                
+            </li>
+        </ui:repeat>
+            </ul>
+            
+        </div>
+            
+        </h:form>
+</ui:define>
+</ui:composition>

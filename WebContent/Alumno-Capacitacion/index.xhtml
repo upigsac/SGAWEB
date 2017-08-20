@@ -1,0 +1,116 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        template="plantilla.xhtml">
+
+            <ui:define name="titulo">
+                SISTEMA DE UPIG
+            </ui:define>
+            <ui:define name="contenido">
+                <script>
+                    $(document).ready(function() {
+                        $(".selector").draggable({addClasses: false});
+                        $(".modal .cerrar").click(function() {
+                            $(this).parent().fadeOut(400, function() {
+                                $(this).remove();
+                                $(".modal:last").css({transform: "rotate(0 deg)",
+                                    transition: "all 0.4s"});
+                            });
+                        });
+                        x = 5;
+                        $(".modal").each(function() {
+                            $(this).css("transform", "rotate(" + x + "deg)");
+                            x -= 5;
+                        });
+                        $(".modal:last").css("transform", "rotate(0deg)");
+                    });
+                </script>
+                <style>
+                    .modal{box-shadow: 1px 1px 5px black;  z-index: 1;background: #1976F9;width: 600px;height: 350px;border: 15px solid white ;position: absolute;top: 0px ;left: 100px}
+                    .modal:hover span{display: block}                                          
+                    .modal .cerrar{background: url('../resources/imagenes/next.png')no-repeat scroll 50% 50% rgba(255,255,255,0.5);  border-radius: 8px;display: none;cursor: pointer;position: absolute;top: 46%;left: 46%;width: 50px;height: 50px}
+                    .modal .modal-titulo{background: black;color: white;text-align: center;display: block;width: 100%;margin-top: 20px;height: 50px;font-size: 40px ;font-weight: bold}
+                    .modal .modal-cuerpo{width: 100%;min-height: 40%;display: block;color: white;margin:10px 10px}
+                    .modal .modal-pie{width: 100%;min-height: 15%;display: block;position: absolute;bottom:0px;color: white;background: rgba(0,0,0,0.8);text-align: center;padding-top: 10px}
+                    @-webkit-keyframes pulso{
+                        0%{opacity: 0;}
+                        25%{;opacity: 0.4;}
+                        50%{;opacity: 1;}
+                        75%{;opacity: 1;}
+                        100%{opacity: 0;}
+                    }
+                    @-moz-keyframes pulso{
+                        0%{opacity: 0;}
+                        25%{;opacity: 0.4;}
+                        50%{;opacity: 1;}
+                        75%{;opacity: 1;}
+                        100%{opacity: 0;}
+                    }
+
+
+                   .pulsasion{-webkit-animation: pulso 5s infinite linear;-moz-animation: pulso 5s infinite linear}
+
+                </style>    
+                
+                <!--    MODAL DEL COMUNICADOS URGENTES    -->
+                <ui:repeat value="#{usuarioB.mensajeControl(usuarioB.institucionS,usuarioB.periodoS,carreraB.mostrarCarreraPersonal(usuarioB.institucionS,usuarioB.usuarios.usuario).carrera)}" var="modales">
+                    <div class="modal"  >
+                        <span class="modal-titulo">COMUNICADO</span>
+                        <span class="cerrar"></span>
+                        <span class="modal-cuerpo">
+                            <h:outputLabel escape="false" value="#{modales.get(1)}" />   
+                        </span>
+
+                        <span class="modal-pie">                       
+                            <h:outputLabel escape="false" value="#{modales.get(2)}" />
+                        </span>
+                    </div>
+                </ui:repeat>                
+                <!--    ********************************    -->
+                <span class="tituloCuerpo" style="margin-bottom: 3px">ACCESOS DIRECTOS- #{usuarioB.periodoS}</span>
+                <div class="principal" >
+                    <object width="83%" height="97%" style="display: none;position: absolute">
+                    </object>
+
+                    <div class="iconos-indice">
+                        <ul>
+                            
+                            <ui:repeat value="#{archivosB.mostrarArchivos(usuarioB.institucionS,usuarioB.periodoS,usuarioB.usu,2)}" var="listaArchivo">
+                                <li class="selector">
+                                    <h:outputLabel value="Nuevo" rendered="#{listaArchivo.fecha_importacia gt utilB.fechaHoy()}" style="padding: 10px 3px;border-radius: 50%;border: 3px solid white;color: white;text-align: center;font-size: 1.2em;background-color: red;position: absolute;" class="pulsasion" />                                    
+                                    <a href="#{listaArchivo.url}" target="_blank">
+                                        <img src="#{listaArchivo.portada}" />
+                                        <span>#{listaArchivo.titulo}</span>
+                                    </a>
+                                </li>
+                            </ui:repeat>  
+                        </ul>
+                    </div>     
+                    <br/>
+
+
+                    <div class="divArchivo">               
+                        <span>AVISOS</span>    
+                        <ul>
+                            <ui:repeat value="#{archivosB.mostrarArchivos(usuarioB.institucionS,usuarioB.periodoS,usuarioB.usu,1)}" var="listaArchivo">
+                                <li>
+                                    <h:panelGroup layout="block" class="principal1" rendered="#{carreraB.carrera.carrera eq archivosB.carrera_archivo}" style="background: url('../resources/imagenes/#{ listaArchivo.portada}') no-repeat ;background-size: 100%; border:  #{ listaArchivo.fecha_importacia.after(utilB.fechaHoy()) ? '3px solid red':'1px solid black'}">
+
+                                        <div class="secundario"/>
+                                        <b class="pulsasion" style="padding: 10px 3px;border-radius: 50%;border: 3px solid white;color: white;text-align: center;font-size: 1.2em;background-color: red;position: absolute;display:#{listaArchivo.fecha_importacia gt utilB.fechaHoy() ? 'inline-block':'none'} ">nuevo</b>    
+                                        <a  class="uno pdf" href="http://www.upig.edu.pe/#{listaArchivo.url}" >#{listaArchivo.titulo}</a>                            
+                                        <a class="dos" href="#{listaArchivo.url_externo}" onclick="window.open(this.href, 'this.target', 'width=890,height=530,top=10,left=10,scrollbars=yes');return false;">En linea</a>
+                                    </h:panelGroup>
+                                </li>
+                            </ui:repeat>
+                        </ul>    
+
+                    </div>    
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+

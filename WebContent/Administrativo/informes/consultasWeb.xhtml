@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <style>
+        </style>
+    </h:head>
+    <h:body>
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                CONSULTAS PAGINA WEB
+            </ui:define>
+
+            <ui:define name="contenido">
+                
+                <span class="tituto-admin"> CONSULTAS DE PAGINA WEB </span>
+                
+                <form>
+                    <iframe name="frame" width="100%" height="800" src="http://www.upig.edu.pe/captacion/reporte.php?user=#{usuarioB.usu}" border="0" frameborder="0"/>
+                </form>
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+</html>
+

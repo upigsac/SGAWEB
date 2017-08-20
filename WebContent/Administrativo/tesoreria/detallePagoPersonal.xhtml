@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+         <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+    </h:head>
+    <h:body>
+        
+         <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                ORDEN DE PAGO
+                
+            </ui:define>
+
+             <ui:define name="contenido">
+        <style>
+            #frmDetalleOrdenPago\:pnMatenimientoOrdenPago .subLabel{display: inline-block;vertical-align: top;width: 140px}
+            #frmDetalleOrdenPago\:pnMatenimientoOrdenPago textArea{resize: none}
+            #frmDetalleOrdenPago\:pnDatos{border:  1px solid silver ;min-height: 100px;padding: 5px}
+            #frmDetalleOrdenPago\:pnDatos label{margin: 0px 3px}
+            #frmDetalleOrdenPago\:pnDatos input{padding: 4px}
+            #frmDetalleOrdenPago\:pnBotonera{border:  1px solid silver;padding: 8px             }
+            #frmDetalleOrdenPago\:pnBotonera input{padding: 8px;margin: 2px;min-width: 100px}
+            #frmDetalleOrdenPago\:pnSubBotonera {border: 1px solid silver;text-align: right;padding: 10px;margin-top: 20px}
+            #frmDetalleOrdenPago\:pnSubBotonera input{padding: 5px;margin: 2px}
+                .temaAdmin table thead,.temaAdmin table tbody,.temaAdmin table tfoot{font-size: 0.7em}
+               .temaAdmin .ui-datatable-odd{background-color: white}
+               .temaAdmin .ui-state-highlight{background: #2182C2!important}
+               .temaAdmin .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+               
+        </style>
+        <h:form id="frmDetalleOrdenPago">
+            <h:panelGroup  layout="block" id="pnDesplazamiento">
+                <h:commandButton value="Anterior" type="button">
+                    <f:ajax execute="@this" render="txtCodigo txtNombres tbPrincipal:tbDetalle" listener="#{detallePagoPersonalB.anterior()}" />
+                </h:commandButton>
+                <h:inputText id="txtCodigo" value="#{detallePagoPersonalB.pagoPersonal.codigo}" readonly="#{true}" style="text-align: center;color: red;font-weight: bold "/>
+                <h:commandButton value="Siguiente " type="button">
+                    <f:ajax execute="@this" render="txtCodigo txtNombres tbPrincipal:tbDetalle" listener="#{detallePagoPersonalB.siguiente()}"/>
+                </h:commandButton>
+            </h:panelGroup>
+            
+            
+            <h:panelGroup layout="block" id="pnDatos">
+                <h:graphicImage value="" style="display: inline-block;width: 100px;height: 110px;border: 1px solid silver "/>
+                
+                
+                <div style="display: inline-block;vertical-align: top">
+                    <h:outputLabel value="Apellidos y Nombres :"/>
+                    <br/>
+                    <h:inputText id="txtNombres" value="#{detallePagoPersonalB.pagoPersonal.apellidos}" size="30" readonly="#{true}"/>
+                </div>
+                
+             
+                
+                
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera">
+                <h:commandButton value="Nuevo" type="button" onclick="dlgMatenimiento.show()">
+                    <f:ajax execute="@this" render="frmDetalleOrdenPago:pnMatenimientoOrdenPago frmDetalleOrdenPago:pnSubBotonera" listener="#{detallePagoPersonalB.nuevo()}" />
+                </h:commandButton>
+                 <h:commandButton value="Editar" type="button" onclick="dlgMatenimiento.show()">
+                     <f:ajax execute="@this" render="frmDetalleOrdenPago:pnMatenimientoOrdenPago frmDetalleOrdenPago:pnSubBotonera" listener="#{detallePagoPersonalB.editar()}" />
+                 </h:commandButton>
+                <h:commandButton value="Eliminar" type="button" onclick="if (!confirm('¿Esta seguro de Eliminar?')) return false;" >
+                    <f:ajax execute="@this" render="frmDetalleOrdenPago:pnMatenimientoOrdenPago " listener="#{detallePagoPersonalB.eliminar()}" />
+                 </h:commandButton>
+                  <h:commandButton value="Anular" type="button" onclick="if (!confirm('¿Esta seguro de Anular?')) return false;" >
+                    <f:ajax execute="@this" render="frmDetalleOrdenPago:pnMatenimientoOrdenPago " listener="#{detallePagoPersonalB.anular()}" />
+                 </h:commandButton>
+                <h:commandButton value="Buscar" type="button" onclick="dlgBusqueda.show()">
+                    <f:ajax execute="@this" render="txtBusqueda tbBusqueda"  listener="#{detallePagoPersonalB.nuevoBusqueda()}" />
+                </h:commandButton>
+                <h:commandButton value="Imprimir" type="button" >
+                    <f:ajax execute="@this"  listener="#{printTicketB.imprimir('53', detallePagoPersonalB.detallePagoPersonal.numeroComprobante)}"  />
+                </h:commandButton>
+            </h:panelGroup>
+            
+            
+               
+            
+            
+            
+            
+            
+            
+            
+            <p:tabView id="tbPrincipal" >
+                
+                <p:tab  id="tbPagoDiario" >
+                    <f:facet name="title">
+                        <h:outputText value="Pago diario" />
+                        <b class="fa fa-users" style="color: #2182C2" />
+                    </f:facet>
+                    <div style="display: block;margin: 5px">
+                        <h:outputLabel value="Fecha:" />
+                        <p:calendar id="txtFechaBusqueda" value="#{detallePagoPersonalB.busFecha}" pattern="dd-MM-yyyy" maxdate="#{utilB.fechaHoy()}" style="width: 100px" />
+                        <h:commandButton type="button" value="Mostrar" >
+                        
+                        <f:ajax execute="@this tbPrincipal:txtFechaBusqueda" render="tbPrincipal:tbDetalleDiario" listener="#{detallePagoPersonalB.mostarDetalleDiario()}" />
+                        </h:commandButton>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                 <p:dataTable id="tbDetalleDiario" value="#{detallePagoPersonalB.detallePagoPersonalLD}" var="detalleDiario" selectionMode="single" selection="#{detallePagoPersonalB.detallePagoPersonal}" rowKey="#{detalleDiario.codigo}"  rowIndexVar="status" styleClass="temaAdmin">
+                 <p:ajax event="rowSelect"  />
+                <p:column headerText="Nro" width="15">
+                    <b>#{status +1}</b> 
+                </p:column>
+                 <p:column headerText="Numero Comprobante"  width="80" style="text-align: center" >
+                   <h:outputLabel value="#{detalleDiario.numeroComprobante}"  style="font-weight: bold;font-size: 1.5em;color: #999" />
+                </p:column>
+                  <p:column headerText="Tipo Concepto"  width="100" >
+                    #{detalleDiario.tipoConcepto}
+                </p:column>
+              
+                 <p:column headerText="Mes" width="80" >
+                    #{detalleDiario.mes}
+                </p:column>
+                 
+                <p:column headerText="Observacion"   >
+                    
+                    <b style="color: red">#{detalleDiario.personal}</b> - <b>#{detallePagoPersonalB.mostrarPersonal(detalleDiario.personal).apellidos}</b>
+                    <BR/>
+                    #{detalleDiario.observacion}
+                </p:column>
+                 <p:column headerText="Monto Total" width="80" style="text-align: center">
+                    <b style="color: #008000">#{detalleDiario.montoTotal}</b>
+                </p:column>
+                <p:column headerText="Monto Pago" width="80" style="text-align: center">
+                    #{detalleDiario.montoPago}
+                </p:column>
+                <p:column headerText="Monto Saldo" width="80" style="text-align: center"    >
+                    #{detalleDiario.montoSaldo}
+                </p:column>
+                 <p:column headerText="Fecha Pago" width="80">
+                    #{detalleDiario.fechaPago}
+                </p:column>
+                <p:column headerText="Estado" width="80">
+                    #{detalleDiario.estadoRegistro}
+                </p:column>
+            </p:dataTable>
+                </p:tab>
+                <p:tab  id="tbPago">
+                    
+                    <f:facet name="title">
+                        <h:outputText value="Mis Pagos" />
+                        <b class="fa fa-user" style="color: #2182C2" />
+                    </f:facet>
+                    
+                    
+                    <p:dataTable id="tbDetalle" value="#{detallePagoPersonalB.detallePagoPersonalL}" var="detalle"   rowIndexVar="status" styleClass="temaAdmin">
+              
+                <p:column headerText="Nro" width="15">
+                    <b>#{status +1}</b> 
+                </p:column>
+               <p:column headerText="Numero Comprobante"  width="80" >
+                    #{detalle.numeroComprobante}
+                </p:column>
+                <p:column headerText="Tipo Concepto"  width="100" >
+                    #{detalleDiario.tipoConcepto}
+                </p:column>
+                 
+                        <p:column headerText="Mes" width="80" >
+                    #{detalle.mes}
+                </p:column>
+                        
+                <p:column headerText="Observacion"   >
+                    #{detalle.observacion}
+                </p:column>
+                 <p:column headerText="Monto Total" width="80" style="text-align: center">
+                    <b style="color: #008000">#{detalle.montoTotal}</b>
+                </p:column>
+                <p:column headerText="Monto Pago" width="80" style="text-align: center">
+                    #{detalle.montoPago}
+                </p:column>
+                <p:column headerText="Monto Saldo" width="80" style="text-align: center"    >
+                    #{detalle.montoSaldo}
+                </p:column>
+                 <p:column headerText="Fecha Pago" width="80">
+                    #{detalle.fechaPago}
+                </p:column>
+                <p:column headerText="Estado" width="80">
+                    #{detalle.estadoRegistro}
+                </p:column>
+            </p:dataTable>
+                </p:tab>
+            </p:tabView>
+            
+            
+            
+            
+            <p:dialog header="MANTENIMIENTO"  widgetVar="dlgMatenimiento" width="500" height="500" modal="#{true}" resizable="#{false}" closable="#{false}"  >
+                
+                
+                <h:panelGroup layout="block" id="pnMatenimientoOrdenPago">
+                    
+                 <h:outputLabel class="subLabel" value="Nº Comprobante"/>
+                 <h:inputText id="txtNumComprobante" value="#{detallePagoPersonalB.detallePagoPersonal.numeroComprobante}" />
+                 <br/>
+                <h:outputLabel class="subLabel" value="Meses"/>
+                <h:selectOneMenu id="cbMeses" value="#{detallePagoPersonalB.detallePagoPersonal.mes}">
+                    <f:selectItems value="#{utilB.listaMeses}" var="meses" itemLabel="#{meses.toString()}" itemValue="#{meses.toString()}" />                      
+                </h:selectOneMenu>
+                
+                <br/>
+                <h:outputLabel class="subLabel"  value="Tipo Pago"/>
+                <h:selectOneMenu id="cbTipoPago" value="#{detallePagoPersonalB.detallePagoPersonal.tipoPago}">
+                    <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                </h:selectOneMenu>
+                <ul>
+                    <li>
+                          <h:outputLabel class="subLabel" value="Monto Total" />
+                          <h:inputText id="txtMontoTotal" value="#{detallePagoPersonalB.detallePagoPersonal.montoTotal}" size="5" >
+                              <f:ajax event="keyup" render="txtMontoPago" execute="@this" listener="#{detallePagoPersonalB.espejo()}"   />
+                          </h:inputText>
+                        
+                    </li>
+                    <li>
+                        
+                        <h:outputLabel class="subLabel" value="Monto Pago"/>
+                        <h:inputText id="txtMontoPago" value="#{detallePagoPersonalB.detallePagoPersonal.montoPago}" size="5" disabled="#{true}" />
+                    </li>
+                    <li>
+                <h:outputLabel class="subLabel" value="Monto Saldo"/>
+                <h:inputText id="txtMontoSaldo" value="#{detallePagoPersonalB.detallePagoPersonal.montoSaldo}" size="5" disabled="#{true}" />
+                        
+                    </li>
+                </ul>
+                <h:outputLabel class="subLabel" value="Tipo de Concepto"/>
+                 <h:selectOneMenu id="cbTipoConcepto" value="#{detallePagoPersonalB.detallePagoPersonal.tipoConcepto}">
+                    <f:selectItem itemLabel="A CUENTA" itemValue="A CUENTA" />
+                    <f:selectItem itemLabel="ALQUILER" itemValue="ALQUILER" />
+                    <f:selectItem itemLabel="ADELANTO" itemValue="ADELANTO" />
+                    <f:selectItem itemLabel="CANCELACION" itemValue="CANCELACION" />                    
+                    <f:selectItem itemLabel="COMPRA" itemValue="COMPRA" />
+                    <f:selectItem itemLabel="MOVILIDAD" itemValue="MOVILIDAD" />
+                </h:selectOneMenu>
+                 <br/>
+                  <h:outputLabel value="Observacion"/>
+                   <br/>
+                   <h:inputTextarea id="txtObservacion" value="#{detallePagoPersonalB.detallePagoPersonal.observacion}" style="width: 100%;height: 120px" />
+                  <br/>
+                  <h:outputLabel class="subLabel" value="Fecha"/>
+                  <p:calendar id="txtFechaPago" value="#{detallePagoPersonalB.detallePagoPersonal.fechaPago}" pattern="dd-MM-yyyy" />
+                
+                </h:panelGroup>
+                
+                <h:panelGroup layout="block" id="pnSubBotonera">
+                    <h:commandButton type="button" value="#{detallePagoPersonalB.bandera?'Guardar':'Actualizar'}">
+                        <f:ajax execute="@this frmDetalleOrdenPago:cbMeses frmDetalleOrdenPago:cbTipoPago frmDetalleOrdenPago:txtMontoTotal frmDetalleOrdenPago:txtMontoPago frmDetalleOrdenPago:txtMontoSaldo   frmDetalleOrdenPago:txtNumComprobante frmDetalleOrdenPago:txtFechaPago frmDetalleOrdenPago:txtObservacion frmDetalleOrdenPago:cbTipoConcepto"  render="frmDetalleOrdenPago:tbPrincipal:tbDetalle" listener="#{detallePagoPersonalB.insertar()}" />
+                    </h:commandButton>
+                    <h:commandButton type="button" value="Cancelar" onclick="dlgMatenimiento.hide()">
+                        <f:ajax execute="@this" listener="#{detallePagoPersonalB.cancelar()}" />
+                    </h:commandButton>
+                </h:panelGroup>
+                
+                
+            </p:dialog>
+            
+            
+            
+            <p:dialog header=".: BUSQUEDA DE PERSONAL .:" widgetVar="dlgBusqueda" width="500" height="400" modal="#{true}" resizable="#{false}"  >
+                <h:outputLabel value="Apellidos" />
+                <h:inputText id="txtBusqueda" value="#{detallePagoPersonalB.busqueda}" >
+                    <f:ajax event="keyup" execute="@this" render="tbBusqueda" listener="#{detallePagoPersonalB.buscarPersonal()}" />
+                </h:inputText>
+                <h:commandButton type="button" value="Nuevo Personal" onclick="dlgPersonal.show()">
+                    <f:ajax execute="@this" render="txtApellidosNombresP txtNombresP" listener="#{detallePagoPersonalB.nuevoPersonal()}" />
+                </h:commandButton>
+                
+                <p:dataTable id="tbBusqueda" value="#{detallePagoPersonalB.pagoPersonalL}" var="detalleBusqueda" rowIndexVar="status" selection="#{detallePagoPersonalB.pagoPersonal}" selectionMode="single"  rowKey="#{detalleBusqueda.codigo}" scrollable="#{true}" scrollHeight="300" >                    
+                    
+                    <p:ajax event="rowSelect" update="frmDetalleOrdenPago:txtCodigo  frmDetalleOrdenPago:txtNombres frmDetalleOrdenPago:tbPrincipal:tbDetalle" listener="#{detallePagoPersonalB.seleccionarBusqueda()}" oncomplete="dlgBusqueda.hide()" />
+                    
+                    <p:column headerText="Nro." width="30" >
+                        #{status+1}
+                       
+                    </p:column>
+                    
+                    <p:column headerText="Codigo" width="80">
+                        #{detalleBusqueda.codigo}
+                    </p:column>
+                    
+                    <p:column headerText="Apellidos Nombres" >
+                        #{detalleBusqueda.apellidos}
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog header="NUEVO PERSONAL" widgetVar="dlgPersonal" modal="#{true}" height="200" width="400" resizable="#{false}" closable="#{false}" >
+                
+                
+                <h:panelGroup layout="block" id="pnPersonalDatos">
+                
+                
+                
+                <h:outputLabel  value="Apellidos:" />
+                  <br/>
+                  <h:inputText id="txtApellidosNombresP" value="#{detallePagoPersonalB.pagoPersonalN.apellidos}"  size="30"/>    
+                
+                  <h:outputLabel  value="Nombres:" />
+                  <br/>
+                  <h:inputText id="txtNombresP" value="#{detallePagoPersonalB.pagoPersonalN.nombres}"  size="30"/>                    
+                </h:panelGroup>
+               <BR/>
+                <h:commandButton type="button" value="Guardar">
+                    <f:ajax execute="txtApellidosNombresP txtNombresP" listener="#{detallePagoPersonalB.insertarPersonal()}" />
+                </h:commandButton>
+                <h:commandButton type="button" value="Cancelar" onclick="dlgPersonal.hide()" >
+                    <f:ajax execute="@this" />
+                </h:commandButton>
+            </p:dialog>
+            
+            
+          
+        </h:form>
+             </ui:define>
+         </ui:composition>
+    </h:body>
+</html>
+

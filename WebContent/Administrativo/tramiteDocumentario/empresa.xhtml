@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"      
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>aaa</title>
+    </h:head>
+    <h:body>
+        
+        <style>
+           
+            #frmEmpresa\:pnDatos,#frmEmpresa\:pnBotonera{border: 1px solid silver;padding: 5px}
+            #frmEmpresa\:pnDatos label{display: inline-block;vertical-align: top;width: 120px}
+            #frmEmpresa\:pnDatos input{padding: 2px;margin:  0px 0px 2px 0px}
+            #frmEmpresa\:pnDatos textArea{resize: none;width: 350px;height: 60px}
+            #frmEmpresa\:pnBotonera input{padding: 8px 5px;margin: 2px;min-width: 100px}
+            
+            .cambio table thead, .cambio table tbody{font-size: 0.8em}
+            .cambio .ui-datatable-odd{background-color: white}
+            .cambio .ui-state-highlight{background: #2182C2!important}
+            .cambio .ui-state-hover{box-shadow: none;background: #E4E4E4!important}
+            .Activo,.Inactivo{display: block;border-radius: 3px;text-align: center;color: white!important;padding: 0px 5px;min-width: 50px  }
+            .Activo{background: #008000}
+            .Inactivo{background: #e74c3c}
+        </style>
+        
+        <h:form id="frmEmpresa">
+            <p:blockUI block="frmEmpresa:pbDetalle" widgetVar="pnBloqueo" />
+            <h:panelGroup layout="block" id="pnDatos" >
+                <h:outputLabel for="txtEmpresa" value="EMPRESA:" />
+                <h:inputText id="txtEmpresa" value="#{empresaB.empresa.empresa}" disabled="#{true}" />
+                <br/>
+                <h:outputLabel for="txtRuc" value="R.U.C:"  />
+                <h:inputText id="txtRuc" value="#{empresaB.empresa.ruc}" disabled="#{not empresaB.bandera}" maxlength="12" />
+                <br/>
+                <h:outputLabel for="txtRazonSocial" value="RAZÓN SOCIAL:"  />
+                <h:inputText id="txtRazonSocial" value="#{empresaB.empresa.razonSocial}" disabled="#{not empresaB.bandera}" required="#{true}" style="width: 350px" />
+                <br/>
+                <h:outputLabel for="txtTelefono" value="TELEFONO:" />
+                <h:inputText id="txtTelefono" value="#{empresaB.empresa.telefono}" disabled="#{not empresaB.bandera}" />
+                <br/>
+                <h:outputLabel for="txtDireccion" value="DIRECCION:" />
+                <h:inputTextarea id="txtDireccion" value="#{empresaB.empresa.direccion}" disabled="#{not empresaB.bandera}" />
+                
+                
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera" >
+                <h:commandButton id="btNuevo" type="button" value="NUEVO" disabled="#{empresaB.bandera}" >
+                    <f:ajax execute="@this" render="pnBotonera txtEmpresa txtRuc txtRazonSocial txtTelefono txtDireccion" listener="#{empresaB.nuevo()}" />
+                </h:commandButton>
+                <h:commandButton type="button" value="GUARDAR" disabled="#{not empresaB.bandera}">
+                    <f:ajax execute="txtEmpresa txtRuc txtRazonSocial txtTelefono txtDireccion" render="pnBotonera tbDetalle txtEmpresa txtRuc txtRazonSocial txtTelefono txtDireccion" listener="#{empresaB.ingresar()}" />
+                </h:commandButton>
+                <h:commandButton type="button" value="CANCELAR" disabled="#{not empresaB.bandera}">
+                    <f:ajax execute="@this" render="pnBotonera txtRuc txtRazonSocial txtTelefono txtDireccion" listener="#{empresaB.cancelar()}" />
+                </h:commandButton>
+                 <h:commandButton type="button" value="EDITAR" >
+                    <f:ajax execute="@this" render="pnBotonera txtRuc txtRazonSocial txtTelefono txtDireccion" listener="#{empresaB.editar()}" />
+                </h:commandButton>
+                <h:commandButton type="button" value="BUSCAR" disabled="#{empresaB.bandera}">
+                    <f:ajax execute="@this"  />
+                </h:commandButton>
+                
+            </h:panelGroup>
+         
+            <h:panelGroup id="pbDetalle" layout="block" style="padding: 0px 10px">
+                   <h:inputText value="#{empresaB.busqueda}" ps:placeholder="Ingreso Razon Social">
+                
+                <f:ajax execute="@this" render="tbDetalle" event="keyup" listener="#{empresaB.filtroEmpresa(empresaB.busqueda.concat('%'))}" />
+            </h:inputText>
+                
+            <p:dataTable id="tbDetalle" value="#{empresaB.empresaL}" var="item" rowKey="#{item.empresa}" selectionMode="single" selection="#{empresaB.empresa}" rowIndexVar="status" styleClass="cambio">
+               <p:ajax event="rowSelect"  update="frmEmpresa:txtEmpresa frmEmpresa:txtRuc frmEmpresa:txtRazonSocial frmEmpresa:txtTelefono frmEmpresa:txtDireccion" />
+                <p:column headerText="NR." width="15">
+                    #{status + 1 }
+                </p:column>
+                <p:column headerText="RUC" width="100">
+                    #{item.ruc}
+                </p:column>
+                <p:column headerText="RAZON SOCIAL">
+                    #{item.razonSocial}
+                </p:column>
+                <p:column headerText="TELEFONO" width="80">
+                    #{item.telefono}
+                </p:column>
+                <p:column headerText="ESTADO" width="60">
+                    <h:commandLink value="#{item.estadoRegistro eq 0?'Inactivo':'Activo'}" styleClass="#{item.estadoRegistro eq 0?'Inactivo':'Activo'}">
+                        <f:ajax execute="@this" render="tbDetalle" listener="#{empresaB.cambiarEstado(item)}" />
+                    </h:commandLink>
+                    
+                </p:column>
+            </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
+</html>
+

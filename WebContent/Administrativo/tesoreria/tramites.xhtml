@@ -1,0 +1,856 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+
+
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Facelet Title</title>
+
+        </h:head>
+        <h:body>
+
+
+            <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    INGRESO DE NOTAS ALUMNO
+                </ui:define>
+
+
+                <ui:define name="contenido">
+                    <style>
+
+
+
+                        .conteinerbusqueda{font-size: 14px;target-position: front;}
+                        .ui-panelgrid tr, .ui-panelgrid td {border:0 !important;}
+
+
+
+                        #cabecerarecibo\:dtpagosrealizar_head tr th{font-size: 12px;padding: 2px ;color: black}
+                        #cabecerarecibo\:dtpagosrealizar tbody tr{color: black}
+                        #cabecerarecibo\:dtpagosrealizar tbody tr td:nth-child(2){color: blue!important;font-size: 13px;font-weight: bold}
+                        #cabecerarecibo\:botonera{text-align: center}
+                        #cabecerarecibo\:botonera button{min-height: 60px;width: 200px;color: black}
+                        .ui-widget-header{background: #BDC3C7   ;color: white}
+
+                        #frmReprogramacion\:dtreprogramacion_data tr td{font-size: 12px;font-weight: bold}
+
+
+
+
+                    </style>
+
+
+
+                    <div class="conteinerest">
+                        <h:form id="cabecerarecibo" target="_blank">
+                            <span class="tituto-admin">COBRANZA</span>
+
+                            <p:growl id="msjgrowl" showDetail="false" life="5000"/>
+                            <div class="conteinerbusqueda" style="position: relative">
+
+
+                                <p:panel header="Comprobante de Pago - #{mensajeBean.msjcabecera}" style="height: 150px;width: 80%">
+
+                                    <p:panelGrid id="pnlgradio" columns="1" style="display: inline-block;width: 20%">
+                                        <p:selectOneRadio id="radiocabecera" value="#{mensajeBean.optioncomp}" layout="pageDirection">
+                                            <p:ajax event="change" process="@this" update="pnlgrdrsocial txtcorr txtserie" listener="#{mensajeBean.cambiodoc}" />
+                                            <f:selectItem itemLabel="BOLETA" itemValue="5" />
+                                            <f:selectItem itemLabel="FACTURA" itemValue="6"/>   
+                                            <f:selectItem itemLabel="RECIBO" itemValue="7"/>
+                                        </p:selectOneRadio>
+
+                                    </p:panelGrid>
+
+
+                                    <p:panelGrid id="pnlgrdcabecera" style="display: inline-block;vertical-align: top;width: 50%">
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Numero de Comprobante:"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="txtcorr" value="#{mensajeBean.corre}" size="3"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="-" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="txtserie" value="#{mensajeBean.serie}" size="9" maxlength="7" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:commandButton  id="cmdCorrelativo" value="..." update=":frmbVenta:local :frmbVenta:modulo :frmbVenta:seriex :frmbVenta:numact :frmbVenta:numini :frmbVenta:numfin" oncomplete="PF('DlgFrmCsmbioSeries').show();" actionListener="#{mensajeBean.cambioserie}"/>
+                                            </p:column>
+
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Forma de pago:"  />            
+                                            </p:column>
+                                            <p:column colspan="4">
+                                                <p:selectOneMenu value="#{mensajeBean.fpago}" style="width: 230px; ">
+                                                    <p:ajax event="change" update="pnlgrdfpago" process="@this" listener="#{mensajeBean.verfpago}"/>
+                                                    <f:selectItems value="#{mensajeBean.selectfpago}"/>
+                                                </p:selectOneMenu>
+                                            </p:column>
+
+
+                                        </p:row>
+                                    </p:panelGrid>
+
+
+                                    <p:panelGrid id="pnlgrdfecha" style="display: inline-block;vertical-align: top;width: 28%" >
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Fecha de pago:"  />
+                                            </p:column>
+                                            <p:column>
+                                                <p:calendar  effect="slideDown" navigator="true" pattern="dd/MM/yyyy"  value="#{mensajeBean.fechapago}" title="Seleecione Fecha" size="9" id="dtimefecha" yearRange="1900:2013"/>
+                                            </p:column>
+
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Con IGV (10%):"  />
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectBooleanCheckbox value="#{mensajeBean.igv}" />
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+
+
+
+                                    <p:panelGrid id="pnlgrdfpago" columns="4" style="margin-left: 25%;display: #{mensajeBean.displayfpago};margin-top: 15px; ">
+                                        <p:outputLabel value="N° Documento:"/>
+                                        <p:inputText value="#{mensajeBean.nrodeposito}"/>
+                                        <p:outputLabel value="Fecha:"/>
+                                        <p:calendar  effect="slideDown" navigator="true" pattern="dd/MM/yyyy"  value="#{mensajeBean.fechadepo}" title="Seleecione Fecha" size="9" id="dtimefechadepo" yearRange="1900:2013"/>
+                                    </p:panelGrid>
+
+
+                                </p:panel>
+
+
+                                <p:panel header="Razon Social"  style="width: 80%" >
+                                    <p:panelGrid id="pnlgrdrsocial" style="width: 100%;display: inline-block;vertical-align: top" >
+                                        <p:row rendered="#{mensajeBean.displayruc}">
+                                            <p:column  style="width: 18%">
+                                                <h:outputLabel  value="Razon Social:"   />
+                                            </p:column>
+                                            <p:column style="width: 30%">
+                                                <p:inputText id="codrsocial"  value="#{mensajeBean.racsocial}"   style="width: 95%"/>
+                                            </p:column>
+                                            <p:column style="width: 10%">
+                                                <h:outputLabel value="Ruc:"   />
+                                            </p:column>
+                                            <p:column  style="width: 40%">
+                                                <p:inputText id="rucrscial" value="#{mensajeBean.ruc}" style="width: 80%"   />
+                                                <p:commandButton image="cssbotonbsqd" oncomplete="PF('DialogFrmBusquedaRSocial').show();" />
+                                            </p:column>
+
+                                        </p:row>
+                                        <p:row>
+
+                                            <p:column  style="width: 18%">
+                                                <h:outputLabel value="A Nombre de:"   />
+
+                                                <p:hotkey bind="f1"    oncomplete="PF('DialogFrmBusqueda').show();"/>  
+                                            </p:column>
+                                            <p:column style="width: 30%">
+                                                <p:inputText id="codpersona"  value="#{mensajeBean.codpers}"  style="width: 95%" />
+                                            </p:column>
+                                            <p:column style="width: 5%">
+                                                <p:commandButton image="cssbotonbsqd" oncomplete="PF('DialogFrmBusqueda').show();" />
+                                            </p:column>
+                                            <p:column style="width: 50%">
+                                                <p:inputText id="nompersona" value="#{mensajeBean.nompers}"  style="width: 95%" />
+                                            </p:column>    
+
+
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="4" style="width: 100%">
+                                                <p:dataTable var="data" id="dtcarreras"  value="#{mensajeBean.tabcarr}" style="width: 100%"  
+                                                             rows="50"   rowKey="#{data.descrip}" emptyMessage="No hay registros">                  
+                                                    <p:columns value="#{mensajeBean.tabcolumns}"  var="column" columnIndexVar="colIndex">
+                                                        <f:facet name="header" >
+                                                            <h:outputText value=" #{column.header}"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{data[column.property]}" styleClass="selecttr"/>
+                                                    </p:columns> 
+                                                </p:dataTable>
+                                            </p:column>
+
+
+                                        </p:row>
+                                    </p:panelGrid>
+
+
+
+                                </p:panel>
+                                <p:panelGrid  id="botonera" style=" width: 18.5%;height: 280px; position: absolute;right: 0px;top: 0px">
+                                    <p:row>
+                                        <p:column>
+                                            <p:commandButton value="Limpiar todo" actionListener="#{mensajeBean.limpieza}"  update=":cabecerarecibo:dtpagosrealizar :cabecerarecibo:dtcarreras :cabecerarecibo:codrsocial :cabecerarecibo:rucrscial :cabecerarecibo:codpersona :cabecerarecibo:nompersona :cabecerarecibo:cdscto :cabecerarecibo:nmontotot :cabecerarecibo:autnro"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:hotkey bind="f2"   update=":formpendi:dtpendientes"  oncomplete="PF('DialogFrmPendiente').show();" actionListener="#{mensajeBean.pagopendiente}"/> 
+                                            <p:commandButton value="Agregar Conceptos de Estado de Cuenta"  update=":formpendi:dtpendientes" actionListener="#{mensajeBean.pagopendiente}"  oncomplete="PF('DialogFrmPendiente').show();" />                                        
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+
+
+
+                                            <p:commandButton value="Imprimir Comprobante"  actionListener="#{mensajeBean.grabar}">                              
+                                            </p:commandButton>
+
+
+                                        </p:column>
+                                    </p:row>
+
+                                </p:panelGrid>
+
+
+                                <p:panel header="Lista de Conceptos a Pagar">
+                                    <p:panelGrid id="pnlgrddsctos" >
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Descuento:"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectOneMenu id="cbodsctos" value="#{mensajeBean.dscto}" filter="true" filterMatchMode="startsWith" style="width: 100%;">
+                                                    <f:selectItems value="#{mensajeBean.selectdsctos}"/>
+                                                    <p:ajax listener="#{mensajeBean.seleccionadscto}" event="change" process="@this"  update="cdscto"/>
+                                                </p:selectOneMenu>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Monto Descuento:"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="cdscto" value="#{mensajeBean.descuento}"/>
+                                            </p:column>
+                                            <p:column>
+
+                                            </p:column>
+                                            <p:column>
+                                                <p:hotkey bind="f3"   oncomplete="PF('DialogPagos').show();" update=":tramites:cbotconceptos :tramites:dtpagos" actionListener="#{mensajeBean.mostrarcombos}"/> 
+                                                <p:commandButton value="Agregar Conceptos" oncomplete="PF('DialogPagos').show();" update=":tramites:cbotconceptos :tramites:dtpagos" actionListener="#{mensajeBean.mostrarcombos}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Nro. Autorizacion:"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="autnro" value="#{mensajeBean.nroautoriz}" size="8"/>
+                                                <p:commandButton value=".." />
+                                                <p:commandButton value="Asignar Descuento Adicional" oncomplete="PF('DialogFrmDescuentos').show();" update=":cabecerarecibo:dtpagosrealizar" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Nuevo Monto Total"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="nmontotot" value="#{mensajeBean.nmontotot}" size="5"/>
+                                            </p:column>
+                                            <p:column>
+
+                                            </p:column>
+                                            <p:column>
+                                                <p:commandButton value="Quitar Conceptos" style="width: 100%;" update=":cabecerarecibo:dtpagosrealizar" actionListener="#{mensajeBean.quitartabla}"/>
+                                            </p:column>
+
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:panel>
+
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+                            <p:dataTable var="pend" id="dtpagosrealizar"  value="#{mensajeBean.tabpendientes}"  
+                                         rows="6"    rowKey="#{pend.concepto}"   cellSeparator="true" selectionMode="single"    editable="true" editMode="cell" 
+                                         emptyMessage="No hay registros">                  
+
+                                <p:column headerText="tipo" width="3%">
+                                    <h:outputText value="#{pend.tipo}"/>
+                                </p:column>
+
+                                <p:column headerText="Institucion" style="width:5%; text-align: center;" >
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.institucion}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.institucion}"/>
+                                </p:column>
+
+                                <p:column headerText="Concepto" style="width:17%;" >
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.descripcion}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.descripcion}"/>
+                                </p:column>
+
+                                <p:column headerText="Cuota" style="width:4%; text-align: center;" >
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.cuota}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.cuota}"/>
+                                </p:column>
+
+                                <p:column headerText="Cant." width="3%" >
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{pend.cantidad}"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{pend.cantidad}" size="2" >
+
+                                                <p:ajax event="blur" listener="#{mensajeBean.onRowSelect2}"  update=" :cabecerarecibo:dtpagosrealizar :cabecerarecibo:codpersona :cabecerarecibo:nompersona :cabecerarecibo:dtcarreras :cabecerarecibo:cbodsctos :frmDescuentos:cbodsctosotorg :cabecerarecibo:nmontotot"
+                                                        process="@this"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Monto Base"  width="4%" >
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{pend.mpago}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <h:outputText value="#{pend.mpago}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Monto Parte" width="4%" >
+
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.mparte}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.mparte}"/>
+                                </p:column>
+
+                                <p:column headerText="Dscto" width="4%" >
+
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.mdscto}"/>                  
+                                    </f:facet>
+                                    <h:outputText value="#{pend.mdscto}"/>
+
+                                </p:column>
+
+                                <p:column headerText="Dscto. Adic." style="width:4%" >
+                                    <f:facet name="output">
+                                        <h:outputText  value="#{pend.mdsctoadic}"/>
+                                    </f:facet>
+                                    <h:outputText  value="#{pend.mdsctoadic}"/>
+                                </p:column>
+
+                                <p:column headerText="Mora a EE.Cta" style="text-align: center;" width="4%">
+                                    <f:facet name="output">
+                                        <p:outputLabel value="Mora a EE.Cta"/>
+                                    </f:facet>
+
+                                    <p:selectBooleanCheckbox value="#{pend.opc}"/>
+
+
+                                </p:column>
+
+                                <p:column headerText="Mora" width="3.5%">
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.mint}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.mint}"/>
+                                </p:column>
+
+                                <p:column headerText="Sub Total" width="5%">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{pend.subtotal}"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <h:outputText value="#{pend.subtotal}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Pago a Cancelar" width="8%">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{pend.mtotal}"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{mensajeBean.mtotal}"/>
+                                        </f:facet>
+
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Saldo" width="4%">
+                                    <f:facet name="output">
+                                        <h:outputText value="#{pend.saldo}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{pend.saldo}"/>
+                                </p:column>
+                                <p:column width="5%">
+                                    <p:commandLink id="btnAlumnoDelete" update="dtpagosrealizar"  value="Eliminar" style="color: red" actionListener="#{mensajeBean.eliminaritem(pend)}"/>
+                                </p:column>
+                            </p:dataTable>
+
+
+
+
+
+
+
+
+
+
+
+                            <p:dataTable id="dtreprogramaciones" rows="6" value="#{mensajeBean.reprogramacion}" styleClass="tamaÃ±o" var="rep" rowKey="#{rep.personal}" style="display: none">
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Reprogramacion"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rep.examen}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Curso"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rep.curso}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Seccion"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rep.seccion}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Periodo"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rep.periodo}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Cant."/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rep.cant}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Monto Total"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{mensajeBean.montototalrep}"/>
+                                </p:column>
+                                <p:column width="4%">
+                                    <p:commandLink id="btreprogramacionDelete" update="dtreprogramaciones"  value="Eliminar" actionListener="#{mensajeBean.eliminarrepog(rep)}"></p:commandLink>
+                                </p:column>
+                            </p:dataTable>                 
+
+
+                        </h:form>
+
+
+                    </div>
+
+
+
+                    <!--                       FIN PANTALLA                          -->
+                    <!--         BUSQUEDA DE PERSONAS                                -->
+                    <div class="conteinerbusqueda">
+                        <p:dialog id="DialogBusqueda" width="60%" widgetVar="DialogFrmBusqueda" modal="true" 
+                                  showEffect="explode" hideEffect="fade" resizable="false">
+                            <h:form id="busqueda">
+                                <h:panelGrid id="pnlbusqueda" columns="3">
+                                    <h:outputText value="Apellido Paterno :"/>
+                                    <p:watermark value="Ingrese Apellido Paterno" for="paterno"/> 
+                                    <p:inputText style="width: 100%;" value="#{mensajeBean.paterno}" id="paterno" maxlength="20" />
+                                    <h:outputText value="Apellido Materno :" />
+                                    <p:watermark value="Ingrese Apellido Materno" for="materno"/>
+                                    <p:inputText style="width: 100%;" value="#{mensajeBean.materno}" id="materno" maxlength="20"/>
+                                    <h:outputText value="Nombres :" style="float: right;"/>
+                                    <p:watermark value="Ingrese Nombres " for="nombres"/>
+                                    <p:inputText style="width: 100%" value="#{mensajeBean.nombres}" id="nombres"/>
+                                    <p:commandButton value="  B U S C A R  "  id="btnbuscar"  update=":form:dtpersonas"  actionListener="#{mensajeBean.nombrescaja}"/>
+                                </h:panelGrid>
+                            </h:form>
+
+
+
+
+                            <h:form id="form" >
+                                <p:dataTable var="data" id="dtpersonas" styleClass="tamaño" value="#{mensajeBean.personas}"  
+                                             rows="100" scrollable="true"   rowKey="#{data.persona}" selectionMode="single"  scrollHeight="250"  selection="#{mensajeBean.person}" 
+                                             emptyMessage="No hay registros">                  
+
+                                    <p:ajax event="rowSelect" listener="#{mensajeBean.onRowSelect}"  update=":cabecerarecibo:codpersona :cabecerarecibo:nompersona :cabecerarecibo:dtcarreras :cabecerarecibo:cbodsctos :cabecerarecibo:dtpagosrealizar"
+                                            process="@this"  oncomplete="PF('DialogFrmBusqueda').hide(); "/>
+
+                                    <p:columns value="#{mensajeBean.columns}"  var="column" columnIndexVar="colIndex">
+                                        <f:facet name="header">
+                                            <h:outputText value=" #{column.header}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{data[column.property]}" styleClass="selecttr"/>
+                                    </p:columns> 
+                                </p:dataTable>
+                            </h:form>
+                        </p:dialog>
+                    </div>
+                    <!--           FIN                                                          -->           
+                    <!--                        PAGOS OBLIGATORIOS                               -->
+
+
+                    <div class="conteinerbusqueda">
+                        <p:dialog id="DialogPendiente" width="97%" height="350px" widgetVar="DialogFrmPendiente" modal="true" 
+                                  showEffect="explode" hideEffect="fade" resizable="false">
+                            <h:form id="formpendi" >
+
+                                <p:dataTable var="pend" id="dtpendientes" styleClass="tamañotab" value="#{mensajeBean.cpendientes}"  
+                                             rows="100" scrollable="true"   rowKey="#{pend.item}" resizableColumns="true"  cellSeparator="true"  scrollHeight="200"  selection="#{mensajeBean.pendientes}" 
+                                             emptyMessage="No hay registros">                  
+                                    <p:columns value="#{mensajeBean.columnsp}"  var="column" columnIndexVar="colIndex">
+                                        <f:facet name="header">
+                                            <p:outputLabel value=" #{column.header}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pend[column.property]}" styleClass="selecttr" style="text-align: center;"/>
+                                    </p:columns> 
+                                    <p:column selectionMode="multiple" style="width:4%"/>
+                                </p:dataTable>
+                                <br></br>
+                                <p:commandButton id="btnpagosralizar" value="Aceptar" actionListener="#{mensajeBean.aumentofilaspend}" update=":cabecerarecibo:dtpagosrealizar" oncomplete="PF('DialogFrmPendiente').hide();"/>   
+                            </h:form>
+                        </p:dialog>
+                    </div>
+
+                    <!--                         FIN                                  -->
+                    <!--                              TRAMITES                                   -->
+                    <div class="conteinerbusqueda">
+                        <p:dialog id="Dialogpagos" width="80%"  widgetVar="DialogPagos" modal="true" 
+                                  showEffect="explode" hideEffect="fade" resizable="false">
+                            <h:form id="tramites">
+                                <p:panelGrid id="pnlgtramites" >
+                                    <p:row>
+                                        <p:column >
+                                            <p:outputLabel value="Institucion"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="cboinstitucion"  value="#{mensajeBean.inst}" >
+                                                <f:selectItems value="#{mensajeBean.selectinstitucion}"/>
+                                                <p:ajax event="change" process="@this" update=":tramites:cbotconceptos :cabecerarecibo:cbodsctos :tramites:dtpagos" listener="#{mensajeBean.selecciontconcepto}" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Tipo de Conceptos"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu value="#{mensajeBean.tconcepto}" id="cbotconceptos">
+                                                <f:selectItems value="#{mensajeBean.selecttconcep}"/>
+                                                <p:ajax event="change" process="@this" listener="#{mensajeBean.mostrartabla}" update=":tramites:dtpagos :tramites:lblperiodos :tramites:cboperiodos" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel id="lblperiodos" value="Periodos" style="margin-left: 25%; padding-right: 2%; vertical-align: 37%; display: #{mensajeBean.display} " />
+                                            <p:selectOneMenu id="cboperiodos" value="#{mensajeBean.peri}" style="display: #{mensajeBean.display}"  >
+                                                <p:ajax event="change" process="@this" listener="#{mensajeBean.mostrartablaper}" update=":tramites:dtpagos"/>
+                                                <f:selectItems value="#{mensajeBean.selectperiodo}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+
+
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Buscar Concepto"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText value="#{mensajeBean.bscconcepto}" size="70">
+
+                                            </p:inputText>
+                                            <p:commandButton id="butacc"  value="BUSCAR" actionListener="#{mensajeBean.filtrarTabla}" update=":tramites:dtpagos" ></p:commandButton>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:dataTable var="tab" id="dtpagos"  styleClass="tamañotram" rowKey="#{tab.concepto}" value="#{mensajeBean.tablacon}" scrollable="true" rows="10" resizableColumns="true"  cellSeparator="true"  scrollHeight="250"  selection="#{mensajeBean.tabtpendientes}" 
+                                                         emptyMessage="No hay registros">
+                                                <p:columns value="#{mensajeBean.columntabla}"  var="columnt" columnIndexVar="colIndex"  width="6%">
+                                                    <f:facet name="header">
+                                                        <p:outputLabel value="#{columnt.header}"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{tab[columnt.property]}" />
+                                                </p:columns>
+                                                <p:column selectionMode="multiple" width="2%"/>
+                                            </p:dataTable>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:commandButton id="btnpagosralizar2" value="Aceptar" actionListener="#{mensajeBean.aumentofilas}" update=":cabecerarecibo:dtpagosrealizar :frmReprogramacion" oncomplete="PF('DialogPagos').hide();">  
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:row>
+
+                                </p:panelGrid>
+
+                            </h:form>
+                        </p:dialog>
+                    </div>
+                    <!--           FIN                                                          -->
+                    <!--                            RAZON SOCIAL FACTURA                                       -->
+                    <div class="conteinerbusqueda">
+                        <p:dialog id="DialogBusquedaRSocial"  width="60%" widgetVar="DialogFrmBusquedaRSocial" modal="true" 
+                                  showEffect="explode" hideEffect="fade" resizable="false">
+                            <h:form id="busquedaRSocial">
+                                <h:panelGrid id="pnlbusquedaRSocial" columns="3">
+                                    <h:outputText value="Razon Social :"/>
+                                    <p:watermark value="Ingrese Razon Social" for="razsocial"/> 
+                                    <p:inputText style="width: 100%;" value="#{mensajeBean.rsocial}" id="razsocial"/>
+                                    <h:outputText value="Telefono :" />
+                                    <p:watermark value="Ingrese Telefono" for="telfrzsocial"/>
+                                    <p:inputText style="width: 100%;" value="#{mensajeBean.tlfrsocial}" id="telfrzsocial" maxlength="20" />
+                                    <h:outputText value="Direccion :"/>
+                                    <p:watermark value="Ingrese Direccion " for="dirrzsocial"/>
+                                    <p:inputText style="width: 100%" value="#{mensajeBean.dirrsocial}" id="dirrzsocial"/>
+                                    <p:commandButton value="  B U S C A R  "  id="btnbuscar"  update=":formrzsocial:dtrazonsocial"  actionListener="#{mensajeBean.verrazonsocial}"/>
+                                </h:panelGrid>
+                            </h:form>
+
+                            <h:form id="formrzsocial" >
+                                <p:dataTable var="data" id="dtrazonsocial" styleClass="tamaño" value="#{mensajeBean.tabrazsocial}"  
+                                             rows="100" scrollable="true"   rowKey="#{data.ruc}" selectionMode="single"  scrollHeight="250"  selection="#{mensajeBean.person}" 
+                                             emptyMessage="No hay registros">                  
+
+                                    <p:ajax event="rowSelect" listener="#{mensajeBean.SelectRazon}"  update=":cabecerarecibo:codrsocial :cabecerarecibo:rucrscial "
+                                            process="@this"  oncomplete="PF('DialogFrmBusquedaRSocial').hide();"/>
+
+                                    <p:columns value="#{mensajeBean.razcolumns}"  var="column" columnIndexVar="colIndex">
+                                        <f:facet name="header">
+                                            <h:outputText value=" #{column.header}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{data[column.property]}" styleClass="selecttr"/>
+                                    </p:columns> 
+                                </p:dataTable>
+
+                            </h:form>
+                        </p:dialog>
+                    </div>
+                    <!--                     DESCUENTOS                                  -->
+                    <div class="conteinerbusqueda">
+                        <p:dialog id="DialogDescuentos"  width="60%" widgetVar="DialogFrmDescuentos" modal="true" 
+                                  showEffect="explode" hideEffect="fade" resizable="false">
+
+                            <h:form id="frmDescuentos" enctype="application/x-www-form-urlencoded">
+
+                                <p:panelGrid >
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Otroga :"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="cbodsctosotorg" value="#{mensajeBean.otorga}" style="width: 100%; ">
+                                                <f:selectItems value="#{mensajeBean.perauto}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Documento N°:"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText value="#{mensajeBean.nroautoriz}" required="true" />
+                                            <p:outputLabel value="Fecha:" style="padding-left:  3%; padding-right: 0.2%;"/>
+                                            <p:calendar effect="slideDown" navigator="true" pattern="dd/MM/yyyy"  value="#{mensajeBean.fechadscto}" title="Seleecione Fecha" size="9" id="dtimedsctos" yearRange="1900:2013"/>
+                                        </p:column>
+                                        <p:column>
+
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Observacion :"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputTextarea value="#{mensajeBean.obsdscto}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="Archivo Digital" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:fileUpload value="#{mensajeBean.file}" mode="simple" fileUploadListener="#{mensajeBean.upload}"/> 
+                                        </p:column>
+                                        <p:column>
+                                            <p:commandButton value="Asignar" update=":cabecerarecibo:dtpagosrealizar :cabecerarecibo:nmontotot"  oncomplete="PF('DialogFrmDescuentos').hide(),handleLoginRequest(xhr, status, args)"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </h:form>          
+                        </p:dialog>
+                    </div>
+                    <!--                 FIN POP                                     -->
+
+                    <!--             POP SERIES                                      -->
+                    <div id="conteinerbusqueda">
+                        <center>
+                            <p:dialog id="DialogFrmCambioSeries" width="60%" widgetVar="DlgFrmCsmbioSeries" hideEffect="explode" modal="true" resizable="false" showEffect="shake">
+                                <h:form id="frmbVenta">
+                                    <p:outputLabel value="Boleta de Venta" style="font-size: xx-large;"/> 
+                                    <br></br><br></br>
+                                    <p:panelGrid id="pnlgrdboletaVenta" columns="2" >
+                                        <p:outputLabel value="Local :" style="float: right;"/>
+                                        <p:inputText id="local" value="#{mensajeBean.local}"/>
+                                        <p:outputLabel value="Modulo :"/>
+                                        <p:selectOneMenu id="modulo" value="#{mensajeBean.modulo}" style="width: 100%;">
+                                            <f:selectItems value="#{mensajeBean.selectmodulos}"/>
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>
+                                    <br></br>
+                                    <p:panelGrid id="pnlgrdseries" columns="4" style="width: 68%;">
+                                        <p:outputLabel value="Series :" style="float: right;"/>
+                                        <p:inputText id="seriex" value="#{mensajeBean.seriex}" size="8"/>
+                                        <p:outputLabel value="Num. Actual :"/>
+                                        <p:spinner id="numact" value="#{mensajeBean.numactual}" size="6"/>
+                                        <p:outputLabel value="Num. Ini :"/>
+                                        <p:spinner id="numini" value="#{mensajeBean.numini}" size="6"/>
+                                        <p:outputLabel value="Num. Fin :" style="float: right;"/>
+                                        <p:spinner id="numfin" value="#{mensajeBean.numfin}" size="6"/>
+                                    </p:panelGrid>
+                                    <p:commandButton value="Cambiar Serie" actionListener="#{mensajeBean.cambioseries}" update=":cabecerarecibo:txtserie" oncomplete="PF('DlgFrmCsmbioSeries').hide();"/>
+                                </h:form>
+                            </p:dialog>
+                        </center>
+                    </div>
+                  
+
+
+
+
+
+                    <p:dialog id="DialogReprogramacion" width="80%"  widgetVar="DlgReprogramacion"  hideEffect="explode" modal="true" style="overflow: no-display;" resizable="false" showEffect="shake">
+                        <h:form id="frmReprogramacion">
+                            <p:panelGrid >
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <p:outputLabel value="Reprogramacion de Practicas Calificada: " styleClass="texto1"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel id="lblrmontoreprog" value="#{mensajeBean.montoreprog}"  style="padding-left: 2px;font-size: 80%; vertical-align: 7px;"/>
+                                        <p:selectOneMenu id="cbopracticas" value="#{mensajeBean.up}" style="margin-left: 430px;">
+                                            <f:selectItem itemLabel="PRACTICA CALIFICADA I" itemValue="U4"/>
+                                            <f:selectItem itemLabel="PRACTICA CALIFICADA II" itemValue="U9"/>
+                                            <p:ajax event="change" listener="#{mensajeBean.reprog}" update="dtreprogramacion" process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="FUT: " styleClass="texto1"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="txtcorrefut" value="#{mensajeBean.correfut}" size="3" maxlength="3" style="font-size: 80%;"/>
+                                        <p:outputLabel value="-"/>
+                                        <p:inputText id="txtseriefut" maxlength="7" value="#{mensajeBean.seriefut}" size="6" style="font-size: 80%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:column>
+                                            <p:outputLabel id="lblrmontofut" value="#{mensajeBean.montofut}"  style="padding-left: 2px; padding-right: 3px; font-size: 80%;"/>
+                                        </p:column>
+
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="3">
+                                        <p:dataTable var="repro" id="dtreprogramacion" styleClass="tamaÃ±otab"  value="#{mensajeBean.tabreprogramacion}"  rows="15" scrollable="true" 
+                                                     rowKey="#{repro.personal}" scrollHeight="250" selection="#{mensajeBean.reprogramacion}" >
+                                            <p:column width="30%">
+                                                <f:facet name="header" >
+                                                    <p:outputLabel value="Docente"/>
+                                                </f:facet>
+                                                <h:outputText value="#{repro.docente}" />  
+                                            </p:column>
+                                            <p:column width="20%">
+                                                <f:facet name="header">
+                                                    <p:outputLabel value="Curso"/>
+                                                </f:facet>
+                                                <p:outputLabel value="#{repro.curso}"/>
+                                            </p:column>
+                                            <p:column width="10%">
+                                                <f:facet name="header">
+                                                    <p:outputLabel value="Seccion"/>
+                                                </f:facet>
+                                                <p:outputLabel value="#{repro.seccion}" />
+                                            </p:column>
+                                            <p:column width="10%">
+                                                <f:facet name="header">
+                                                    <p:outputLabel value="Periodo"  />
+                                                </f:facet>
+                                                <p:outputLabel value="#{repro.periodo}"/>
+                                            </p:column>
+                                            <p:column width="20%">
+                                                <f:facet name="header" >
+                                                    <p:outputLabel value="Practica"/>
+                                                </f:facet>
+                                                <p:outputLabel value="#{repro.examen}"/>
+                                            </p:column>
+                                            <p:column selectionMode="multiple" style="width:4%"/>                                
+                                        </p:dataTable>   
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:commandButton value="Reprogramar" id="btnreprog"  update=":cabecerarecibo:dtreprogramaciones :cabecerarecibo:msjgrowl" actionListener="#{mensajeBean.visible}" oncomplete="PF('DlgReprogramacion').hide();"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+
+                        </h:form>
+                    </p:dialog>
+
+
+
+
+
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        function manejarReporte(xhr, status, args) {
+                            if (args.estaLogeado) {
+                                setTimeout(function() {
+                                    window.location = args.view;
+                                }, 500);
+                            }
+                        }
+
+                        //]]>
+
+
+
+                    </script>
+                 
+                </ui:define>
+            </ui:composition>
+        </h:body>
+    </f:view>
+</html>
+

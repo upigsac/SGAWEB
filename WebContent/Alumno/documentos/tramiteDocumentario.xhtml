@@ -1,0 +1,61 @@
+      <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                      xmlns="http://www.w3.org/1999/xhtml"
+                      xmlns:h="http://xmlns.jcp.org/jsf/html"                        
+                      template="/Alumno/plantilla.xhtml">
+        
+          <ui:define name="titulo">
+                ESTADO DE TRAMITE
+            </ui:define>
+            
+        <ui:define name="contenido">
+        <style>
+            .label{display: inline-block;vertical-align: top;width: 120px}
+          
+        </style>
+        
+        <span class="tituloCuerpo"> TRAMITES DOCUMENTARIOS </span>
+        
+       	#{tramiteDocumentarioAlumnoB.load(1,usuarioB.persona.persona)}
+         
+        <ui:repeat value="#{tramiteDocumentarioAlumnoB.tramiteAlumnoL}" var="itemTramiteAlumno">
+          <div class="paneles" style="position: relative;">
+          
+          
+            <h3>
+                <i class="fa fa-clipboard" style="color: silver"/>
+                <h:outputLabel style="padding-left: 10px" value="#{itemTramiteAlumno.tramTramite.descripcion}" />
+            </h3>
+        
+                <h:outputText value="EXPEDIENTE:" styleClass="label" /> <b>#{itemTramiteAlumno.tramTramitePersona.expediente}</b>
+        <h:outputLabel style="position: absolute;top: 5px ;right: 10px;font-weight: bold;font-family: arial;color: #{itemTramiteAlumno.tramTramitePersona.estadoRegistro eq 1?'green':'#2182C2'}" value="#{estadoB.mostrarEstadoCodigo(itemTramiteAlumno.tramTramitePersona.estadoRegistro).descripcion}" />
+        <br/>
+        
+        <h:outputText value="FECHA INICIO:" styleClass="label" />#{itemTramiteAlumno.tramTramitePersona.fechaIngreso}
+        
+        
+         
+        <br/>
+        <h:outputText value="FECHA TERMINO :" styleClass="label" />         #{itemTramiteAlumno.tramTramitePersona.fechaFin}
+       
+            
+            <ui:repeat value="#{itemTramiteAlumno.tramTramiteSeguimientoL}" var="itemTramiteSeguimiento" varStatus="status">
+                <div class="column panenes">
+                
+                
+                
+                </div>
+                
+               
+                     
+                        
+                   
+                          
+                     
+                
+            </ui:repeat>
+       </div>
+        </ui:repeat>
+      
+        
+        </ui:define>
+  </ui:composition>

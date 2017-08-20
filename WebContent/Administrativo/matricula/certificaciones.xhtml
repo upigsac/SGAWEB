@@ -1,0 +1,464 @@
+<ui:composition 
+	  template="/Administrativo/plantilla.xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+         
+         >
+    
+            <ui:define name="titulo">
+               CERTIFICACIONES 
+            </ui:define>
+              
+             <ui:define name="contenido">
+               <script>      
+               
+               $(".btCerraPoput").click(function(e){
+					e.preventDefault();
+				
+					$("#pnDialogo").css("display","none");
+				});
+                    
+            		var bandera=false;
+    	            var idGeneral;
+    	         
+    	            function confirmacion(obj,cadena){
+    	                idGeneral=obj;
+    	                if(bandera){
+    	                    $(".modal-fondo").remove();
+    	                    $(".modal").remove();
+    	                    bandera=false;
+    	                    return true;
+    	                }else{
+    	                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+    	                       $('body').append('<div class="modal-fondo"  /> ');
+    	                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+    	                        }else{
+    	                        $(".modal-fondo").remove();
+    	                        $(".modal").remove();
+    	                   }                    
+    	                    
+    	                    return false;
+    	                }
+    	                
+    	            }
+    	            
+    	            function valida(estado){
+    	                bandera=estado;           
+    	                $(idGeneral).click();            
+    	            }
+                </script>
+                 
+                 <style>
+                   
+                    
+                    .ficha-tipoCertificado{;margin: 2px;padding: 5px;width: 220px;border: 1px solid silver}
+                    .ficha-tipoCertificado img{width: 100%;height: 120px;}
+                    .ficha-tipoCertificado label{display: block;text-align: center;border-top:1px solid silver}
+                    .select-ficha{border-color: red}
+                    .select-ficha label{color: red} 
+                    .sub-menu{position:absolute;top: 0;right: 0;display: none;}
+                    #pnDetalle:HOVER .sub-menu{display: block;}
+                    #pnDialogo{display: none;width: 100%;height: 100%; ;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.8)}
+                  </style>
+             
+             <h:form id="frmCertificacion"  prependId="false">
+             #{certificacionesB.pasarSesiones(usuarioB.institucionS,usuarioB.periodoS)}
+             
+             <span class="tituto-admin">CERTIFICACIONES </span>
+             
+               		<div class="paneles column" style="height: 140px;width: 70%">
+               			<label>DOCENTE</label> 
+	                    <h:selectOneMenu value="#{certificacionesB.persona}" class="carreras" id="cboDocente"  >
+	                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>                       
+	                        <f:selectItems value="#{certificacionesB.personaL}" var="itemPersona" itemValue="#{itemPersona.persona}" itemLabel="#{itemPersona.paterno} #{itemPersona.materno} #{itemPersona.nombres}" />
+	                        <f:ajax execute="@this" render="cboCarrera "  listener="#{certificacionesB.mostrarCarrera}"  />
+	                    </h:selectOneMenu>    	                   
+	                        
+	                    <br/>
+	                    <label>CARRERA</label> 
+	                    <h:selectOneMenu value="#{certificacionesB.carrera}" class="carreras" id="cboCarrera" required="true" >
+	                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+	                        <f:selectItems value="#{certificacionesB.carreraL}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+	                        <f:ajax execute="@this" render="cboSeccion" listener="#{certificacionesB.mostrarSeccion}" />
+	                    </h:selectOneMenu>
+	                    <br/>
+	                    <label>SECCION</label> 
+	                    <h:selectOneMenu value="#{certificacionesB.seccion}" id="cboSeccion" required="true" class="cboSeccion"     >
+	                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+	                        <f:selectItems value="#{certificacionesB.seccionL}" var="itemSeccion" itemValue="#{itemSeccion.seccion}" itemLabel="#{itemSeccion.descripcion}" />
+	                        <f:ajax execute="@this" render="cboCurso "  listener="#{certificacionesB.mostrarCurso}" />
+	                    </h:selectOneMenu>
+	
+	                    <br/>
+	
+	                    <label>CURSO</label> 
+	                    <h:selectOneMenu value="#{certificacionesB.curso}" id="cboCurso" required="true" style="width: 290px">
+	                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+	                        <f:selectItems value="#{certificacionesB.cursoL}" var="curso" itemValue="#{curso.curso}" itemLabel="#{curso.curso} - #{curso.descripcion}"/>
+	                        
+	                        <f:ajax execute="@this" render="pnReporte pnDetalle tbAlumnoCertificado btActualizar btImprimir pnTipoCertificado lblConcepto lblCertificado btNuevoFirma btCancelarTF btEditarTC"   listener="#{certificacionesB.mostrarCertificaciones}"  onevent="onevent"   />                       
+	                    </h:selectOneMenu>
+               		
+               		</div>
+                   
+                   <div  class="column paneles" style="position:relative;;height: 140px;width: 28.0%" >
+                    <h:panelGroup layout="block" id="pnDetalle"    >
+                   
+                     <ui:repeat  value="#{certificacionesB.firmaCertificacionCursoL}" var="itemFirma">
+                            
+                            <div style="display: inline-block;border: 1px solid;width: 100px;vertical-align: top">
+                                
+                                <div style="position: relative;">
+                                    <img  style="width: 100px;height: 120px;vertical-align: top;display: inline-block" src="SVerImagenAlumno?alumno=#{itemFirma.persona}" />
+                                    <span style="display: block;width: 100%;text-align: center;max-height: 80px;background-color: rgba(0,0,0,0.5);position: absolute;bottom:  0px;color: white;font-size: 0.78em;min-height: 40px">#{itemFirma.cargo}</span>
+                                    <div class="sub-menu" >
+                                      		<h:commandLink title="Editar" style="color:green">
+			                                	<i class="fa fa-pencil" />
+			                                   <f:ajax execute="@this" render=":frmCertificacion:cboPersona :frmCertificacion:txtCargo :frmCertificacion:txtAbreviatura" listener="#{certificacionesB.editarFirma(itemFirma)}"  />
+			                                </h:commandLink>
+		                                     <h:commandLink title="ELIMINAR"  style="color:red;" onclick="return confirmacion(this,'¿ Esta seguro eliminar ?');"     >      
+			                                	<i class="fa fa-times" />                          
+			                                    <f:ajax execute="@this" render=":frmCertificacion:pnDetalle " listener="#{certificacionesB.eliminarFirma(itemFirma)}" />
+			                                </h:commandLink>   
+                                    </div>
+                                                                             
+                                </div>
+                             
+                            </div>                  
+                        </ui:repeat>
+                        </h:panelGroup>
+                        
+                        
+                        <div style="position: absolute;bottom: 5px;right: 5px">
+                        <h:commandLink id="btNuevoFirma"  styleClass="boton-circulo"  title="Agregar Firma"   disabled="#{certificacionesB.alumnoCertificadoPagoL.size() eq 0}"    >
+                     			<i class="fa fa-user-plus" />
+                     			
+                     			<f:ajax execute="@this" render="cboPersona txtCargo txtAbreviatura" listener="#{certificacionesB.nuevaFirma}" />
+                     		</h:commandLink>
+                        </div>                     		
+                   
+                   </div>
+                  
+                 <div class="paneles" style="position: relative;padding: 10px 5px" >
+                 
+                 
+                 <div style="overflow: auto">
+                 
+                 
+                 <h:panelGroup layout="block"  id="pnTipoCertificado" style="min-height:160px;width: #{certificacionesB.banderaTipoCertificado eq true?'240':certificacionesB.tipoCertificadoL.size() *240}px"    >
+                 <ui:repeat  var="itemTipoCertificado" value="#{certificacionesB.tipoCertificadoL}"  >
+                 <h:commandLink disabled="#{certificacionesB.banderaTipoCertificado}" rendered="#{itemTipoCertificado.certificado eq certificacionesB.cursoSeccion.tipoCertificado ?true:not certificacionesB.banderaTipoCertificado}">
+                 
+                 
+		           		<div class="column ficha-tipoCertificado #{itemTipoCertificado.certificado eq certificacionesB.cursoSeccion.tipoCertificado?'select-ficha':''}"  >
+		          
+		           			<h:graphicImage value="SimagenBD?opcion=1&amp;codigo=#{itemTipoCertificado.certificado}" />
+		           		
+			                 		                 
+			                 <h:outputLabel id="lblCertificado" value="#{itemTipoCertificado.descripcion}" />
+			                 
+			                 
+		           		</div>
+		           		<f:ajax execute="@this" render=":frmCertificacion:pnTipoCertificado :frmCertificacion:btCancelarTF :frmCertificacion:btEditarTC" listener="#{certificacionesB.insertarCursoSeccion(itemTipoCertificado.certificado)}" /> 
+           		</h:commandLink>
+           		
+           		
+           		</ui:repeat>
+             </h:panelGroup>
+             
+             
+             
+             	
+              </div>  
+              
+              <div style="position: absolute;right: 5px;bottom: 5px">
+	                  <h:commandLink id="btEditarTC" title="Editar..." styleClass="boton-circulo" disabled="#{certificacionesB.alumnoCertificadoPagoL.size() eq 0?true: not certificacionesB.banderaTipoCertificado}" >
+	                 <i class="fa fa-pencil" />
+	                 <f:ajax execute="@this" render=":frmCertificacion:pnTipoCertificado btCancelarTF btEditarTC" listener="#{certificacionesB.editarTipoCertificado}" />
+	                 </h:commandLink>
+	                  <h:commandLink id="btCancelarTF" title="Cancelar" styleClass="boton-circulo" disabled="#{certificacionesB.banderaTipoCertificado}" >
+	                 <i class="fa fa-reply" />
+	                 <f:ajax execute="@this" render=":frmCertificacion:pnTipoCertificado btCancelarTF btEditarTC" listener="#{certificacionesB.cancelarTipoCertificado}" />
+	                 </h:commandLink>
+                 </div>    
+          </div>
+             <div class="paneles">
+           		<ui:param name="param" value="INSTITUCION,#{certificacionesB.institucion},PERIODO,#{certificacionesB.periodo},CURSO,#{certificacionesB.curso},SECCION,#{certificacionesB.seccion},ALUMNOS,#{certificacionesB.parramArray(certificacionesB.seleccionAlumnoCertificadoPagoL)}" />
+           		<h:commandLink id="btImprimir" title="Vista Previa"  target="_blank" disabled="#{certificacionesB.seleccionAlumnoCertificadoPagoL.size() eq 0}"  styleClass="boton-normal" actionListener="#{utilB.imprimirIreports(tipoCertificadoB.mostrarTipoCertificado(certificacionesB.cursoSeccion.tipoCertificado).reporte.concat('-').concat(certificacionesB.firmaCertificacionCursoL.size()), 1, fn:split(param,','))}"   >
+           		<i class="fa fa-print" />
+           			Imprimir
+           			
+           		</h:commandLink>
+           		<h:commandLink id="btActualizar" styleClass="boton-normal" disabled="#{certificacionesB.alumnoCertificadoPagoL.size() eq 0?true:false}">
+           		<i class="fa fa-refresh" />
+           			Actualizar
+           		<f:ajax execute="@this" render="tbAlumnoCertificado" listener="#{certificacionesB.mostrarCertificaciones}" />
+           		</h:commandLink>
+           </div>
+           
+           <div class="paneles">
+             		 MONTO DE CONCEPTO:
+                     <h:outputLabel id="lblConcepto" value="#{certificacionesB.conceptoCurso.montoPago} "  style="color: red" />                     
+                     
+                     <br/>
+                     MONTO DE CERTIFICACIÓN: 
+                     <h:outputLabel id="lblCertificado" value="#{certificacionesB.conceptoCertificado.montoPago}"  style="color: red" />
+           
+           </div>
+           
+           
+           
+           <p:dataTable id="tbAlumnoCertificado" value="#{certificacionesB.alumnoCertificadoPagoL}" var="itemAlumnoCertificadoPago" rowKey="#{itemAlumnoCertificadoPago.alumnoCursoSeccion}" selection="#{certificacionesB.seleccionAlumnoCertificadoPagoL}" disabledSelection="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega ne null?true:itemAlumnoCertificadoPago.alumnoCursoSeccion.promedio lt 11  ?true:   (itemAlumnoCertificadoPago.totalConcepto+itemAlumnoCertificadoPago.totalCertificado) lt ((certificacionesB.conceptoCurso.montoPago + certificacionesB.conceptoCertificado.montoPago))}"  rowIndexVar="status" style="font-size:0.8em">
+            <p:column width="10" selectionMode="multiple"   />
+            <p:ajax event="rowSelect" update="btImprimir"    />
+            <p:ajax event="rowSelectCheckbox" update="btImprimir"  />
+            <p:ajax event="rowUnselectCheckbox" update="btImprimir"  />
+            <p:ajax event="rowUnselect" update="btImprimir"  />
+            <p:ajax event="toggleSelect"   update="btImprimir"   />
+           <p:column headerText="N." width="10">
+           	#{status+1}
+           </p:column>
+           <p:column headerText="Alumno">
+           <h:graphicImage value="SVerImagenAlumno?alumno=#{itemAlumnoCertificadoPago.persona.persona}" style="width: 40px;height: 40px"></h:graphicImage>
+           
+           <div class="column" >
+	           	#{itemAlumnoCertificadoPago.alumnoCursoSeccion.alumno}
+	           	<br />
+	           	#{itemAlumnoCertificadoPago.persona.paterno} #{itemAlumnoCertificadoPago.persona.materno} #{itemAlumnoCertificadoPago.persona.nombres}
+	           	<br />
+	           	<h:commandLink title="Copia"  disabled="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega eq null}" >
+	           	<i class="fa fa-files-o" />
+	           	<f:ajax execute="@this"  render=":frmCertificacion:txtFut :frmCertificacion:txtComprobante :frmCertificacion:txtObservacion :frmCertificacion:btAceptarCP :frmCertificacion:imgFotoFUT :frmCertificacion:pnReporte" listener="#{certificacionesB.nuevoFUT(itemAlumnoCertificadoPago.alumnoCursoSeccion.alumno)}"/>
+	           	</h:commandLink>
+	           	
+           </div>
+           
+           </p:column>
+           
+           <p:column headerText="Promedio" width="60" style="text-align:center">
+           	<b style="color: #{itemAlumnoCertificadoPago.alumnoCursoSeccion.promedio lt 11?'red':'blue' }">
+           	#{itemAlumnoCertificadoPago.alumnoCursoSeccion.promedio}
+           	</b>
+           </p:column>
+             <p:column headerText="Libro" width="50">
+             <h:inputText value="#{itemAlumnoCertificadoPago.alumnoCertificacion.libro}" size="3" rendered="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega ne null}"  >
+              <f:ajax execute="@this" render="@this" listener="#{certificacionesB.insertarAlumnoCertificacion(itemAlumnoCertificadoPago.alumnoCertificacion)}" /> 
+             
+             </h:inputText>
+             
+             
+           	
+           </p:column>
+           <p:column headerText="Folio" width="50">
+           <h:inputText value="#{itemAlumnoCertificadoPago.alumnoCertificacion.folio}" size="3" rendered="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega ne null}"  >
+           <f:ajax execute="@this" render="@this" listener="#{certificacionesB.insertarAlumnoCertificacion(itemAlumnoCertificadoPago.alumnoCertificacion)}" /> 
+           </h:inputText>
+           	
+           </p:column>
+           <p:column headerText="Fecha Impresion" width="80">
+           	#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaImpresion}
+           </p:column>
+           <p:column headerText="Fecha Entrega" width="80" style="text-align:center">
+           
+           
+           <h:commandLink rendered="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaImpresion ne null? itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega eq null:false}" onclick="return confirmacion(this,'¿  Al entregar el certificado no podrá volver a reimprimir está seguro ?');" >
+           <i class="fa fa-hand-lizard-o" />
+           <br />
+           Entregado
+           <f:ajax execute="@this" render="tbAlumnoCertificado" listener="#{certificacionesB.recogerCertificado(itemAlumnoCertificadoPago.alumnoCertificacion)}" />
+          
+           </h:commandLink>
+           <h:outputLabel value="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega}" rendered="#{itemAlumnoCertificadoPago.alumnoCertificacion.fechaEntrega ne null}" style="color:green" />
+           	
+           </p:column>
+           <p:column headerText="Total Pago." width="60">
+           	#{itemAlumnoCertificadoPago.totalConcepto}
+           	<br />
+           #{itemAlumnoCertificadoPago.totalCertificado}
+           </p:column>
+           
+           
+           </p:dataTable>
+           <div id="pnDialogo">
+        
+	        <div style="display: block;width: 780px;height: 95%;margin: 20px auto;border: 1px solid ;position: relative;">
+	        <div style="display: block;position: relative">
+	        	<b style="display: block;color: white;background-color: #2182C2;padding: 10px 5px" >INTRANET UPIG</b>
+	        	<h:commandLink title="Cerrar" style=";position: absolute;right: 2px;top: 2px;font-size:1.5em">
+	        		<i class="fa fa-times" style="color: red" />
+	        		<f:ajax execute="@this" listener="#{certificacionesB.cerrarFUT}" />
+	        	</h:commandLink>
+	        </div>
+	        
+	        	
+           
+         
+           <div class="paneles">
+           <h:graphicImage styleClass="column" id="imgFotoFUT" value="SVerImagenAlumno?alumno=#{certificacionesB.formatoUnicoTramite.persona}" style="width: 80px;height: 80px" /> 
+           <div Class="column"  >
+           	<h:outputLabel  value="F.U.T" />
+           	<h:inputText id="txtFut" value="#{certificacionesB.formatoUnicoTramite.fut}" >
+           		<f:ajax execute="@this" render="txtFut txtComprobante txtObservacion btAceptarCP" listener="#{certificacionesB.buscarFUT}" />           	
+           	</h:inputText>
+           	<br />
+           	<h:outputLabel  value="Comprobante" />
+           	<h:inputText id="txtComprobante" value="#{certificacionesB.formatoUnicoTramite.numeroComprobante}" />
+           	<br />
+           	<h:outputLabel  value="Observacion" />
+           	
+           	<h:inputTextarea id="txtObservacion" value="#{certificacionesB.formatoUnicoTramite.observacion}" />
+           
+           
+           </div>
+           
+           
+           </div>
+           	
+           	<div class="paneles" style="display: block;text-align: right">
+                            
+		                      	<h:commandLink id="btAceptarCP" title="Vista Previa"  target="_blank"    >
+		                      		ACEPTAR	
+		                    		<f:ajax execute="@this" />
+		                		</h:commandLink>
+		    </div>      	
+           <h:panelGroup id="pnReporte" layout="block" style="display: block;width: 100%;height: 80%;">
+	        		<iframe src="SReporte?reporte=certificado\Induccion20Horas-1&amp;param=INSTITUCION,#{certificacionesB.institucion},PERIODO,#{certificacionesB.periodo},CURSO,#{certificacionesB.curso},SECCION,#{certificacionesB.seccion},ALUMNOS,#{certificacionesB.alumnoCopia}" style="display: block;width: 100%;height: 100%;border: none;" />
+	       </h:panelGroup>
+               	</div>
+        </div>   
+           
+        
+           
+             
+            
+            <p:dialog widgetVar="dlgFirma"   header="..: RESPONSABLES DE FIRMAR :.." resizable="false"  modal="true"  closeOnEscape="true" >
+                        
+                
+               
+                PERSONAL <br/>
+                <h:selectOneMenu id="cboPersona" value="#{certificacionesB.firmaCertificacionCurso.persona}" >
+                    <f:selectItem itemLabel="-- SELECCIONAR --" />
+                    <f:selectItems value="#{personaB.mostrarResponsableFirma()}" var="itemPersona" itemValue="#{itemPersona.persona}"  itemLabel="#{itemPersona.nombreCompletos()}" />
+                </h:selectOneMenu>
+                <br/>
+                
+                CARGO <br/>
+                <h:inputText id="txtCargo" value="#{certificacionesB.firmaCertificacionCurso.cargo}"  size="50" /> <BR/>
+                ABREVIATURA <br />
+                <h:inputText  id="txtAbreviatura" value="#{certificacionesB.firmaCertificacionCurso.abreviatura}" size="10" /> <BR/>
+              
+                    <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+		                      	<h:commandLink >
+		                      		REGISTRAR	
+		                    		<f:ajax execute="@this cboPersona txtCargo txtAbreviatura" render="pnDetalle" listener="#{certificacionesB.ingresarFirma}" />
+		                		</h:commandLink>
+		                		<h:commandLink onclick="dlgFirma.hide()">
+		                			CANCELAR
+		                			<f:ajax execute="@this" />
+		                		</h:commandLink>
+                
+                
+                            </div>
+                 </f:facet>
+                    
+                
+            </p:dialog>
+            
+                  
+            
+        </h:form>
+                
+                 <p:dialog header="DETALLE DE PAGO" width="800" height="400" widgetVar="dlgDetallePago" modal="true" closeOnEscape="#{true}" resizable="#{false}"  >
+                     <h:form id="frmPagoPersonal">    
+                         <p:dataTable id="tbDetallePago" value="#{alumnoCertificacionB.detallePagoPersonaL}" var="detalle" widgetVar="status" style="font-size: 0.8em">
+                             <p:column headerText="N°">
+                                 #{status + 1}                                 
+                             </p:column>
+                             <p:column headerText="N° Comprobante">
+                                 #{detalle.numeroComprobante}                                 
+                             </p:column>
+                             <p:column headerText="TIPO">
+                                 #{tipoConceptoB.mostrarTipoConcepto(detalle.tipoConcepto).descripcion}                                 
+                             </p:column>
+                             <p:column headerText="CONCEPTO">
+                                 #{detalle.concepto}
+                             </p:column>
+                             <p:column headerText="BASE">
+                                 #{detalle.montoBase}
+                             </p:column>
+                             <p:column headerText="PARTE">
+                                 #{detalle.montoParte}
+                             </p:column>
+                             <p:column headerText="TOTAL">
+                                 #{detalle.montoTotal}
+                             </p:column>
+                             <p:column headerText="DESCUENTO">
+                                 #{detalle.montoDescuento}
+                             </p:column>
+                         </p:dataTable>
+                     </h:form>
+                 </p:dialog>
+                 
+                 
+                 
+                 
+                 <p:dialog header="DETALLE DE PAGO CERTIFICACION" width="950" height="400" widgetVar="dlgDetallePagoCerficacion" modal="true" resizable="#{false}" closeOnEscape="#{true}">
+                     <h:form id="frmPagoPersonalCertificacion">    
+                         <p:dataTable id="tbDetallePagoCertificaion" value="#{alumnoCertificacionB.detallePagoPersonaL}" var="detalle" widgetVar="status" style="font-size: 0.7em">
+                             <p:column headerText="N°">
+                                 #{status + 1}                                 
+                             </p:column>
+                             <p:column headerText="N° Comprobante">
+                                 #{detalle.numeroComprobante}                                 
+                             </p:column>
+                             <p:column headerText="TIPO">
+                                 #{tipoConceptoB.mostrarTipoConcepto(detalle.tipoConcepto).descripcion}                                 
+                             </p:column>
+                             <p:column headerText="CONCEPTO">
+                                 #{detalle.concepto}
+                             </p:column>
+                             <p:column headerText="BASE">
+                                 #{detalle.montoBase}
+                             </p:column>
+                             <p:column headerText="PARTE">
+                                 #{detalle.montoParte}
+                             </p:column>
+                             <p:column headerText="TOTAL">
+                                 #{detalle.montoTotal}
+                             </p:column>
+                             <p:column headerText="MONTO DES.">
+                                 #{detalle.montoDescuento}
+                             </p:column>                            
+                             
+                             <p:column headerText="DESCUENTO">
+                                 
+                                 #{descuentoB.mostrarDescuento(detalle.descuento).descripcion}
+                                 
+                             </p:column>
+                             <p:column headerText="MONTO DES. ADI">
+                                 #{detalle.montoDescuentoAdi}
+                             </p:column>                            
+                             
+                             <p:column headerText="DESCUENTO">
+                                 
+                                 #{descuentoB.mostrarDescuento(detalle.descuentoAdi).descripcion}
+                                 
+                             </p:column>
+                         </p:dataTable>
+                     </h:form>
+                 </p:dialog>
+                 
+                 
+               
+                 
+                
+                 
+             </ui:define>
+         </ui:composition>
+
+

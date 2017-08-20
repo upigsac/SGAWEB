@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        
+        
+        <title>
+            <ui:insert name="titulo">
+
+            </ui:insert> 
+        </title>
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        
+    </h:head>
+    <style>
+          body{background-color: silver;}
+         
+        *{padding: 0px;margin: 0px;list-style: none}
+        .menu a{color: #000}
+        .menu span{color: silver}
+        .menu{display: inline-block;min-width: 700px;border-radius:  0px 25px 25px 0px;margin: 10px;padding: 10px;border-left: 0px!important ;border: 5px solid orange;background-color:  white}
+        .menu li{display: inline-block;vertical-align: top;border: 1px solid silver;min-width: 80px;;text-align: center;padding: 5px 2px}
+        .menu li i{font-size: 3.0em}
+        .menu li span{color: orange}
+        .menu li:hover a i {color: orange}
+        .maq-cabecera{background-color: #0088CE;padding: 5px 0px}
+        .maq-cabecera div{display: inline-block;vertical-align: top}
+        .cabecera-menu{width: 90%}
+        .cabecera-logo{width: 9%;text-align: center}
+        .pnRegistro input,.pnRegistro textArea,.pnRegistro select{display: block;width: 95%;margin: 2px 5px;padding: 2px 4px}
+         .sub-botonera{display: block;text-align: right; }
+         .sub-botonera a{padding: 4px 5px;margin: 1px 2px;border-radius: 3px;color: white}
+              .sub-botonera a:nth-child(1){background-color: #008000}
+              .sub-botonera a:nth-child(2){background-color: red}
+    </style>
+    <script>
+             
+            console.log(window.location.href  );
+             
+        
+      
+    </script>
+    <h:body>
+        <ui:insert name="cabecera">
+            <h:form>
+                <div class="maq-cabecera">
+                    
+                    <div class="cabecera-menu" >
+                        <ul class="menu" >
+                            <li>
+                                <h:commandLink title="BASE DE DATOS" >
+                                    <i class="fa fa-database" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(1,'BASE DE DATOS')}" />
+                                    <br/>
+                                   <span >Datos</span>  
+                                </h:commandLink>
+
+                            </li>
+                            <li>
+                                <h:commandLink title="MAPA ESTRATEGICO" disabled="#{true}"  >
+                                    <i class="fa fa-sitemap" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(2,'MAPA ESTRATEGICO')}" />
+                                    <br/>
+                                   <span >Mapa Estrategico</span>  
+                                </h:commandLink>
+                            </li>
+                             <li>
+                                <h:commandLink title="BALANCE SCORECARD"  >
+                                    <i class="fa fa-balance-scale" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(3,'BALANCE SCORECARD')}" />
+                                    <br/>
+                                   <span >Balnace Scorecard</span>  
+                                </h:commandLink>
+                            </li>  
+                            <li>
+                                <h:commandLink title="PERPESTIVA FINANCIERA" >
+                                    <i class="fa fa-calculator" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(4,'PERPESTIVA FINANCIERA')}" />
+                                    <br/>
+                                   <span >Financiera</span>  
+                                </h:commandLink>
+                            </li>
+                            <li>
+                                <h:commandLink title="PERPESTIVA CLIENTE" >
+                                    <i class="fa fa-user" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(5,'PERPESTIVA CLIENTE')}" />
+                                </h:commandLink>
+                                <br/>
+                                <span >Cliente</span>  
+                            </li>
+                            <li>
+                                <h:commandLink title="PERPESTIVA PROCESO INTERNO" >
+                                   <i class="fa fa-laptop" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(6,'PERPESTIVA PROCESO INTERNO')}" />
+                                </h:commandLink>
+                                <br/>
+                                <span >Proceso Interno</span>  
+                            </li>
+                            <li>
+                                <h:commandLink title="PERPESTIVA RRHH" >
+                                    <i class="fa fa-university" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(7,'PERPESTIVA RRHH')}" />
+                                </h:commandLink>
+                                <br/>
+                                   <span >Recursos Humanos</span>  
+                            </li>
+                            
+                            <li>
+                                <h:commandLink title="SEMAFORO" >
+                                    <i class="fa fa-th" />
+                                    <f:ajax execute="@this" render="lblSubTitulo" listener="#{bscB.seleccionMenu(8,'SEMAFORO')}" />
+                                </h:commandLink>
+                                <br/>
+                                   <span >Semaforo</span>  
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cabecera-logo" >
+                        <img src="http://www.upig.edu.pe/intranet/imagenes/indice/logotipo.png" style="width: 100px; height: 100px" />
+                    </div>
+                
+        </div>
+            <div class="subTitulo" style="border: 1px solid;height: 30px ">
+                <span style="display: inline-block;vertical-align: top;width: 25px;height: 25px;border: 3px solid orange  ;border-radius: 50%;text-align: center;line-height: 25px " >
+                    <i class="fa fa-circle" />
+                    
+                </span>
+                <h:outputLabel id="lblSubTitulo" value="#{bscB.subTitulo}" style="background-color: orange;line-height: 30px;padding: 3px 20px" />
+                
+                
+                    
+            
+                
+            </div>
+                <h:selectOneMenu value="#{bscB.anio}">
+                       <f:selectItem itemLabel="2017" itemValue="2017" />
+                       <f:selectItem itemLabel="2016" itemValue="2016" />
+                       <f:selectItem itemLabel="2015" itemValue="2015" />
+                
+                   </h:selectOneMenu>
+        </h:form>
+        </ui:insert>
+        <ui:insert name="cuerpo"    >
+            
+        </ui:insert>
+        
+    </h:body>
+</html>
+

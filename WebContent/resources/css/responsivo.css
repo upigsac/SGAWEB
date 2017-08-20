@@ -1,0 +1,29 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 16-abr-2016, 9:03:43
+    Author     : Administrador
+*/
+
+  @media screen and (max-width: 768px) {
+            .index-cabecera { }
+            .index-cabecera h2{font-size: 1.0em;transition: all 0.5s}
+            .index-cabecera span{font-size: 0.8em;transition: all 0.5s}
+            
+            .index-cabecera .index-cabecera-logo{padding: 0px 2px!important}
+            .index-cabecera .index-cabecera-logo img{height: 30px!important;width: 30px!important;transition: all 0.5s}
+            .index-cuerpo .index-cuerpo-columDerecha{display: none}
+            .index-cuerpo .index-cuerpo-columIzquierda{display: block;border: 1px solid  transparent ;width: 100%!important}
+           .index-cuerpo .index-cuerpo-columIzquierda .index-login-aviso{display: none}
+  }
+  
+  @media screen and (max-width: 480px) { 
+            .index-cabecera{}
+            .index-cabecera .index-cabecera-logo{display: none}            
+            .index-cabecera span{display: none}
+            .index-pie{display: none!important;}
+  
+  }

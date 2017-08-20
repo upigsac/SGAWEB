@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="plantillaContrato" language="groovy" pageWidth="595" pageHeight="842" columnWidth="425" leftMargin="85" rightMargin="85" topMargin="20" bottomMargin="20" uuid="72ccfd23-2f8f-4639-b96e-f03f9ce2c204">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PERSONAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Administrador\\workspace\\SGAWEB\\WebContent\\ireport\\administrativo\\contrato\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[EXECUTE DI.SP_PLANTILLA_CONTRATO 1,$P{PERSONAL},$P{CONTRATO}]]>
+	</queryString>
+	<field name="TIPOPERSONAL" class="java.lang.Integer"/>
+	<field name="CODCONTRATO" class="java.lang.Integer"/>
+	<field name="TIPOCONTRATO" class="java.lang.String"/>
+	<field name="FIRMAALUMNO" class="java.lang.String"/>
+	<field name="SECCION_1" class="java.lang.String"/>
+	<field name="SECCION_2" class="java.lang.String"/>
+	<field name="FIRMA" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement uuid="5d95cab9-6d53-4c0e-b1b5-4a6ce8d7e326" x="0" y="23" width="425" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPOCONTRATO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="60b5b16d-9880-4c74-8c0a-1bfcc9dccba1" x="0" y="0" width="425" height="20"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$F{SECCION_1}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="20">
+			<printWhenExpression><![CDATA[(($F{TIPOPERSONAL}==4 && $F{CODCONTRATO}==16)?true:false)]]></printWhenExpression>
+			<subreport>
+				<reportElement uuid="5d52410f-6dec-4137-8258-f0b61988b160" x="0" y="0" width="425" height="20"/>
+				<subreportParameter name="PERSONAL">
+					<subreportParameterExpression><![CDATA[$P{PERSONAL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CONTRATO">
+					<subreportParameterExpression><![CDATA[$P{CONTRATO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["D:\\"+ "plantillaContratoCurso.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9d1d1c48-b1d3-454c-955d-617a5f85353b" x="0" y="0" width="425" height="20"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$F{SECCION_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="127">
+			<line>
+				<reportElement uuid="03b86bfa-7f56-49bb-a30e-0241dbbae64d" x="20" y="81" width="158" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="16411a6d-7bc5-4de8-a42b-f3747ed45cad" x="234" y="82" width="178" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="96d4e77e-8ce2-45e8-9451-4d402cb7dd44" x="20" y="83" width="158" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FIRMA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcd1b6c2-ddd4-4f23-a15c-c5b753373909" x="234" y="83" width="178" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FIRMAALUMNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="16826cc0-ffdb-43ca-a6fa-943e2de1e3e1" x="20" y="98" width="158" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GERENTE GENERAL]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" /><!--jquery de PF-->
+        <script type="text/javascript" src="#{utilB.ruta}/SGAWEB/resources/js/modal.js"></script>
+        <script type="text/javascript" src="#{utilB.ruta}/SGAWEB/resources/js/maskedinput-1.1.2.pack.js"></script>     
+      
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/administrativo/style.css" />
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        <script type="text/javascript" src="https://cdn.rawgit.com/aterrien/jQuery-Knob/master/dist/jquery.knob.min.js"></script>    
+
+        <script>
+
+    	
+        
+            $(document).ready(function() {
+            	$("body").on("click","#btMenu",function(){
+            		
+            		$("#pnNavegacion").toggleClass("mostra-menu");
+            	});
+            	
+            	
+            	$("#txtBusquedaMenu").keyup(function(e){
+            		$("ul.menuHijo").css("display","block");
+            			
+            		if($( this ).val()!=""){
+            			$("ul.menuHijo li a span").css("display", "none");		
+            			$("ul.menuHijo li a span:contains('"+ $( this ).val() +"')").css("display", "block");
+            		}	
+            	    
+            		
+            	
+            	    
+            	    
+            	    
+            
+            	    
+            	    
+            	});
+              
+               
+               var pathArray=window.location.pathname.split('/');               
+               console.log(pathArray[pathArray.length-1]);
+               $( "ul.menuHijo li a" ).each(function() {
+            	   
+            	   var pathLocalArray=$(this).attr("href").split('/');
+
+            	   if(pathArray[pathArray.length-1]==pathLocalArray[pathLocalArray.length-1]){
+						$(this).css("color","red");
+						
+						
+						$(this).parent().parent().parent().addClass("select-menu");
+						
+						$(this).parent().parent().prev().children(".menu-flecha").css( "transform","rotate(0deg)");
+            	   }
+            	 });
+               $("body").on("click",".itemPadre",function(e){
+               	e.preventDefault();
+               	
+               	$(this).next().slideToggle("fast");
+               	$(this).toggleClass("select-menu");
+               	if($(this).hasClass("select-menu")){
+               		
+               		$(this).children(".menu-flecha").css( "transform","rotate(0deg)" );	
+               	}else{
+               		$(this).children(".menu-flecha").css( "transform","rotate(90deg)" );
+               	}
+               	
+               });
+            	 
+                
+                $("body").on("click","#icon-config",function() {
+                    $("#conf-persona-ventana").slideToggle("fast");
+                });
+               
+                
+                $("#txtBusqueda").change(function(){
+                   console.log($(this).val());
+                   $("body:contains('"+$(this).val()+"')").css("font-weight", "bold");
+                    
+                });
+                
+              
+                
+                
+                $(window).scroll(function() {          
+                	if($(window).scrollTop()>=100){
+                //		$("header.header-d").addClass("header-fijo");
+               // 		$(".column-nav").addClass("menu-fijo");
+                		//$("header.header-d").css({"height":"50px","position":"fixed"});	
+                	}
+                	else{
+              //  		$("header.header-d").removeClass("header-fijo");
+                //		$(".column-nav").removeClass("menu-fijo");
+                		//$("header.header-d").css({"height":"115px","position":"relative"});
+                	}
+                   
+                    
+                });
+                
+                
+                
+                
+                
+                banderaChat=true;
+                $("#pnChat-cabecera").click(function(e){
+                    e.preventDefault();
+                    if(banderaChat){
+                        $("#pnChat").animate({height:"600px"},400,"swing");
+                    }else{
+                        $("#pnChat").animate({height:"35px"},400,"swing");
+                    }
+                    banderaChat=!banderaChat;
+                });
+                
+            });
+            function loaded() {
+                document.getElementById('tope').style.display = 'none';
+            }
+            function notificacion(msg,speed,fadeSpeed,type){
+                $('.notify').remove();
+
+			      if (typeof fade != "undefined"){
+			      clearTimeout(fade);
+			      }
+			      $('body').append('<div class="notify '+type+'" style="display:none;position:fixed;right:10px;Z-INDEX:999999999999"><p>'+msg+'</p></div>');
+			
+			      notifyHeight = $('.notify').outerHeight();
+			
+			      $('.notify').css('top',-notifyHeight).animate({top:10,opacity:'toggle'},speed);
+			
+			      fade = setTimeout(function(){
+			
+			      $('.notify').animate({top:notifyHeight+10,opacity:'toggle'}, speed);
+			
+			      }, fadeSpeed);
+			}
+            
+            var bandera=false;
+            var idGeneral;
+         
+            function confirmacion(obj,cadena){
+                idGeneral=obj;
+                if(bandera){
+                    $(".modal-fondo").remove();
+                    $(".modal").remove();
+                    bandera=false;
+                    return true;
+                }else{
+                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+                       $('body').append('<div class="modal-fondo"  /> ');
+                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                        }else{
+                        $(".modal-fondo").remove();
+                        $(".modal").remove();
+                   }                    
+                    
+                    return false;
+                }
+                
+            }
+            
+            function valida(estado){
+                bandera=estado;           
+                $(idGeneral).click();            
+            }
+          
+        </script>
+        <style>
+            #msg{       
+                padding:10px 10px; /*Espaciado interno*/
+                width:180px; /*Ancho del contenedor*/
+                text-align:center; /*Alineación del texto*/
+                background-color:rgba(245,152,52,0.4); /*Color de fondo*/
+                position:fixed; /*Permite que se mantenga estático*/
+                display:none; /*Oculta el contenedor*/
+                right: 30px; /*Separación del borde izquierdo*/
+                bottom:30px; /*Separación inferior del borde*/
+                box-shadow:0 0 5px #555; /*Sombras CSS3*/
+                z-index: 55;
+                 
+            }
+            .accesoRapido{display: inline-block;vertical-align: top;width: 200px;text-align: right}
+            .accesoRapido li{cursor: pointer;display: inline-block;vertical-align: top;width: 25px;padding: 2px 4px;height: 20px;background-image: url('../../resources/imagenes/AccesoRapido.png')}
+            #pnChat{border: 1px solid ;width: 250px;height: 35px;position: fixed;right: 10px ;bottom: 0px}
+            #pnChat-cabecera{background-color: #0069b3;padding: 10px;color: white;cursor: pointer;font-size: 1.3em;font-weight: bold}
+            #pnChat-cuerpo{height: 90%;overflow-y: scroll;background-color: white}
+            #pnChat-oficina >li{border-bottom:  2px solid #0073AA;padding: 3px 2px}
+          
+            
+            
+        </style>
+        <title>
+            <ui:insert name="titulo">
+            </ui:insert>    
+        </title>
+        <f:event type="preRenderView" listener="#{usuarioB.verificarSesion}" />
+    </h:head>
+
+    <h:body onload="loaded()">
+      
+        <div id="tope" style="z-index: 10000">
+            <div id="cargando">
+            </div>
+            
+        </div>
+     
+
+        <div id="wrapper" > <!-- CONTENEDOR PRINCIPAL -->
+     
+            <ui:insert name="cabecera">
+                <h:panelGroup layout="block" id="divCabecera"  >
+                    
+                
+                
+                    <header class="header-d" style=";border-bottom:5px solid #{usuarioB.institucionAcceso.colorLinea};background-color: #{usuarioB.institucionAcceso.colorCabecera}" >
+                        <div class="header-hgroup inlineblock"  >
+                        <div class="inlineblock header-hgroup-img">
+                        
+                        
+                        <a href="/SGAWEB/faces/Administrativo/index.xhtml">
+                         <h:graphicImage  styleClass="header-hgroup-img-logo "  value="SimagenBD?opcion=3&amp;codigo=#{usuarioB.institucionS}"   />
+                        </a>
+                        
+                        </div>
+                       
+                            
+                            <div class="lema inlineblock " >
+                                <h1 >UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h1>
+                                <h3 >"Excelencia Académica para un Mundo Globalizado"</h3>
+                            </div>
+                            
+                        </div>
+                        <div class="header-person inlineblock">
+                            <div class="header-person-det inlineblock">
+                                
+                                <span  id="nomPerson">#{usuarioB.persona.nombreCompletos()}</span>
+                                <span id="userPerson">#{usuarioB.usuarios.usuario} </span>
+                                
+                                <span id="icon-config"  title="Opciones" >
+                                <i class="fa fa-cog" />
+                                
+                                </span>
+                                <h:form>
+                                    <div id="conf-persona-ventana" class="sm-header" style="z-index:1110" >
+                                        <div class="triangulo"/>
+                                        
+                                        <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" width="100" height="130"/>
+                                        <ul id="conf-personal">
+                                            <li>
+                                          
+                                            Mi Perfi
+                                           </li>
+                                            <li>
+                                            Cambiar Clave
+                                         
+                                            </li>
+                                            
+                                            
+                                            <li>
+												Ayuda
+												
+												</li>
+
+                                            <li><h:commandLink value="Cerrar Sesion" action="#{usuarioB.cerrarSesion}" /></li>
+                                        </ul>    
+                                    </div>
+                                </h:form>
+                            </div>
+                            <div class="header-person-img inlineblock">
+                                <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" class="img-person" width="70px" height="70px" id="button"  />
+                            </div>
+                            <!--<div id="reloj" class="inlineblock"> </div>-->
+                        </div>
+                    </header> 
+                
+                </h:panelGroup>
+            </ui:insert>
+            
+            
+            
+          
+            <div  id="wrapper-nav-section" >
+             
+               
+                <div class="column-nav inlineblock" >
+                <h:form prependId="false" rendered="true">
+                <h:panelGroup layout="block" id="opc-inst-period"   style="border-bottom:5px solid white;background-color: #{usuarioB.institucionAcceso.colorMenu};" >
+                
+                <a id="btMenu"  class="column" >
+                                <i class="fa fa-bars" style="color: white" />
+                
+                   </a>
+                
+                <div id="column-nav-cabecera" class="column ">
+                 <label class="color-c font20">Institución </label>
+                            <h:selectOneMenu value="#{usuarioB.institucionS}" id="cmbInstitucion" >                           
+                                <f:selectItems value="#{usuarioB.institucionL}" var="institucion" itemValue="#{institucion.institucion}" itemLabel="#{institucion.descripcion} "  />                               
+                                <p:ajax process="@this cmbPeriodo" update="@this cmbPeriodo :pnNavegacion :opc-inst-period :pnAreaTrabajo :divCabecera" listener="#{usuarioB.mostrarInstitucionAcceso(usuarioB.institucionS)}" />
+                            </h:selectOneMenu>                            
+                            
+                            <label class="color-c font20">Periodo </label>                            
+                            <h:selectOneMenu value="#{usuarioB.periodoS}" id="cmbPeriodo" >                           
+                                <f:selectItems value="#{usuarioB.periodoL}" var="lista" itemValue="#{lista.periodo}" itemLabel="#{lista.desPeriodo}"/>
+                                <p:ajax process="@this cmbInstitucion" update=":pnAreaTrabajo" />
+                            </h:selectOneMenu>
+                
+                </div>
+             
+                       
+                    </h:panelGroup>
+                    
+                    
+                    
+                    
+                    
+                    <h:panelGroup layout="block" id="pnNavegacion"  style="background-color: #{usuarioB.institucionAcceso.colorMenu}" rendered="true">
+                            <div class="busqueda-menu paneles "  >
+                             <i class="fa fa-search" />
+                            <h:inputText id="txtBusquedaMenu" pt:placeholder="Buscar ..." style="width: 80%;border:none" />
+                           
+                            </div>
+                         
+                         
+                           <ul id="main-lista" >
+                            
+                            <ui:repeat value="#{usuarioB.menuL}" var="item" > 
+                                <li>
+                                    <a class="#{item.url ne '#'?'':'itemPadre'}" href="#{item.url}"  style="position: relative;color:#{usuarioB.institucionAcceso.colorLetraMenu}"   >
+                                       <i class="#{item.classIcono}" />
+                                        <span>#{item.nombre.trim()} </span>
+                                    	<i class="fa fa-sort-desc menu-flecha"  style="display: #{item.url ne '#'?'none':'block'}" />    
+                                    </a>
+                                    
+                                    <ul class="menuHijo">
+                                        <ui:repeat value="#{item.menuL}" var="hijo">
+                                            <li>
+                                             
+                                                
+                                                <a href="/SGAWEB/faces/Administrativo/#{hijo.url}"  title="#{hijo.nombre}"  style="color:#{usuarioB.institucionAcceso.colorLetraMenu}" >
+                                                    
+                                                    <span >#{hijo.nombre.trim()}</span>
+                                                </a>
+                                                
+                                            </li>
+                                        </ui:repeat>
+                                    </ul>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                            </h:panelGroup>   
+                              </h:form>
+                </div>
+                    
+                
+              
+                <section class="inlineblock" id="wrapper-section" >
+                   
+                        <h:panelGroup layout="block" id="pnAreaTrabajo">
+                            <ui:insert name="contenido">
+                                
+                            </ui:insert>
+                        </h:panelGroup>
+                
+                </section>
+            </div>
+            
+            
+            
+            
+            
+        </div>
+    </h:body>
+</html>

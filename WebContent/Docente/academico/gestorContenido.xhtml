@@ -1,0 +1,231 @@
+ <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                 template="/Docente/plantilla.xhtml"
+                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+                 xmlns:f="http://xmlns.jcp.org/jsf/core">
+            <ui:define name="titulo">
+                GESTOR DE CONTENIDOS
+            </ui:define>
+     <ui:define name="contenido">
+         <style>
+            *{padding: 0PX;margin: 0px}
+            a{text-decoration: none;color: #000}
+            ul{list-style: none}
+            .panel-carpeta{border: 1px solid silver;display: block;text-align: right;font-size: 1.0em;position: relative;padding: 10px}
+            
+            .panel-carpeta-nuevo{position: absolute;bottom: -100px;left: 0;padding: 10px;border-radius: 5px;background-color: silver;width: 250px}    
+            .panel-carpeta-nuevo:before{content: "";border-top: 15px solid transparent;border-bottom:15px solid silver;border-left:15px solid transparent;border-right:15px solid transparent;position: absolute;top: -30px;left: 20px  }
+            .panel-cursos {outline: 1px solid silver;padding: 10px;overflow-x:  auto;height: 220px ;margin: 0px}
+            
+            .panel-cursos .select{background-color: #e1e1e1;outline-color: #0081c2}
+            .panel-cursos .select i{position: absolute;top: -10px;right: -10px;height: 30px;width: 30px;border-radius: 50%;background-color: red;color: white;text-align: center;line-height: 30px;z-index: 5;display: block!important}
+            .ficha-curso{display: inline-block;vertical-align: top;outline: 2px solid silver;height: 180px;width: 210px;font-size: 0.9em;margin: 2px;position: relative; }
+            .ficha-curso label{display: block;width: 100%;margin: 3px 0px}
+            .ficha-curso label b{min-width: 55px;display: inline-block;vertical-align: top }
+            .ficha-curso label span{;display: inline-block;width: 140px;}
+            .panel-arbol{display: block;width: 100%;border: 1px solid silver;height: 30px}
+            .panel-arbol a{display: inline-block;padding: 5px;margin: 1px  4px}
+            .ficha-archivo{border: 1px solid silver;display: inline-block;vertical-align: top;height: 150px;width: 150px;position: relative;padding: 5px;border-radius: 5px;margin: 5px}
+            .ficha-archivo-delete{position: absolute;right: 2px;top: 2px; color: red;opacity: 0}
+            .ficha-archivo-subMenu{;position: absolute;width: 100%;left:0px;text-align: center;font-size: 2.0em;top: 30px;opacity: 0;color: silver;background-color:  #0081c2}
+            .ficha-archivo:hover .ficha-archivo-subMenu{opacity: 1}
+            .ficha-archivo:hover .ficha-archivo-delete{opacity: 1}
+            .boton{padding: 4px;margin: 2px;border-radius: 4px;background-color: #0081c2;color: white}
+            span.boton{opacity: 0.5}
+        </style>
+         <script>
+             
+             $(document).ready(function(){
+                 /*
+                console.log($(".ficha-curso").size());
+                ancho=$(".ficha-curso").size()*240;
+                $("#frmArchivo\\:pnDatos").css("width",ancho);
+                */
+             });
+             
+            function subirArchivo(){
+                
+               
+            $("#btExaminar").click();
+             
+            }
+            $("body").on("change","#btExaminar",function (){    
+                   
+                   $("#btSubir").click();
+             }); 
+        </script>
+        
+        
+         <span class="tituloCuerpo docente">GESTOR DE CONTENIDOS</span>
+         <h:form id="frmSubir" enctype="multipart/form-data" prependId="#{false}" style="display: none" >           
+                     
+                
+                <p:fileUpload id="btExaminar" styleClass="subirArchivo" mode="simple" value="#{exploradorArchivoB.uploadedFile}"  />   
+                <h:commandButton id="btSubir" value="Subir" actionListener="#{exploradorArchivoB.save}">
+                    <f:ajax execute="btExaminar" render="@form :frmArchivo:pnArchivos :frmArchivo:pnCarpeta"/>
+                </h:commandButton>
+         
+                     
+         </h:form>
+        
+        
+        <h:form id="frmArchivo" html5:autocomplete="off" >
+
+            <div  class="panel-cursos" >
+                <h:panelGroup layout="block" id="pnDatos"  style="height: 100%;width: #{exploradorArchivoB.mostrarCursoArchivo(usuarioB.institucionS,usuarioB.periodoS,usuarioB.personal.personal).size() * 220}px" >
+               
+                    
+                             
+                <ui:repeat value="#{exploradorArchivoB.cursoSeccionPersonalL}" var="itemCurso">      
+                 <h:commandLink> 
+                    <div  class="ficha-curso #{itemCurso.curso.concat(itemCurso.seccion) eq exploradorArchivoB.cursoSeccionPersonalS.curso.concat(exploradorArchivoB.cursoSeccionPersonalS.seccion)?'select':''}" >                            
+                        <span style="border-bottom:  1px solid silver;display: block;padding: 2px;height: 40px;text-align: center;font-weight: bold;color: white;background-color: #0081c2">#{itemCurso.desCarrera}</span>
+                     
+                        <div style="padding: 5px;" curso-data="#{itemCurso.curso}">
+                                                     
+                            <label>
+                                <b>Curso:</b><span>#{itemCurso.desCurso}</span>
+                            </label>
+                            <label>
+                                <b>Seccion:</b><span>#{itemCurso.desSeccion}</span>
+                                
+                            </label>
+                            <label>
+                                <b>Turno: </b><span>#{itemCurso.desturno}</span>
+                            </label>    
+                            <label>
+                                <b>Sede: </b><span>#{itemCurso.desSede}</span> 
+                            </label>
+                            
+                            
+                            
+                            
+                        </div>
+                         
+                        <i class="fa fa-check" style="display: none" />
+                        
+                    </div>
+                       <f:ajax execute="@this" render=":frmArchivo:pnDatos :frmArchivo:pnArchivos :frmArchivo:pnCarpeta" listener="#{exploradorArchivoB.seleccionCurso(itemCurso)}" />
+                        </h:commandLink>  
+                </ui:repeat>
+              
+            </h:panelGroup>
+               </div>
+            
+            
+          
+            
+            
+            
+            <h:panelGroup id="pnCarpeta" layout="block" styleClass="panel-carpeta" >
+                <div style="position: relative;display: inline-block;vertical-align: top;">
+                    
+                        <h:commandLink styleClass="boton" disabled="#{exploradorArchivoB.cursoSeccionArchivoS eq null}" >
+                        <i class="fa fa-folder-open-o " />
+
+                          NUEVA CARPETA
+                          <f:ajax execute="@this" render=":frmArchivo:pnCarpeta" listener="#{exploradorArchivoB.nuevaCarpeta()}" />
+                        </h:commandLink>
+                    <div layout="block"  class="panel-carpeta-nuevo" style="display:#{exploradorArchivoB.banderaCarpeta?'inline-block':'none'}" >
+                       
+                        <h:inputText id="txtCarpeta" value="#{exploradorArchivoB.nombreCarpeta}" html5:placeholder="Nombre de la Carpeta" style="padding: 4px;width: 95%" maxlength="40" required="#{true}" />
+                    
+                        <div style="display: block;border: 1px solid white;padding: 5px;color: white;margin: 2px 0px">
+                            <h:commandLink>
+                           CANCELAR
+                           <f:ajax execute="@this" render="pnCarpeta" listener="#{exploradorArchivoB.cancelarCarpeta()}" />
+                       </h:commandLink>
+                       <h:commandLink>
+                           CREAR
+                           <f:ajax execute="@this txtCarpeta" render="pnCarpeta pnArchivos" listener="#{exploradorArchivoB.insertarCarpeta()}" />
+                       </h:commandLink>
+                     </div>
+                   
+                    </div>
+                </div>
+            
+                
+                <h:commandLink styleClass="boton" onclick="subirArchivo()" disabled="#{exploradorArchivoB.cursoSeccionArchivoS eq null}"  >                   
+                    <i class="fa fa-cloud-upload " />                  
+                      SUBIR ARCHIVO
+                      <f:ajax execute="@this"  />
+                </h:commandLink>
+                <h:commandLink styleClass="boton" disabled="#{true}"  >                   
+                    <i class="fa fa-th-list" />                  
+                      
+                      <f:ajax execute="@this"  />
+                </h:commandLink>
+                <h:commandLink styleClass="boton"  >                   
+                    <i class="fa fa-th-large " />                  
+                      
+                      <f:ajax execute="@this"  />
+                </h:commandLink>
+                
+                
+            </h:panelGroup>
+            
+            
+            <h:panelGroup layout="block" id="pnArchivos" style="display: block;min-height: 400px;width: 100%;" styleClass="panel-archivo" >
+                
+                
+                
+                <div class="panel-arbol" >  
+                    <ui:repeat value="#{exploradorArchivoB.arbolArchivoL}" var="itemArbol"  varStatus="index">
+                    <h:commandLink >
+                        <i class="fa fa-angle-right"  style="display: #{index.index eq 0?'none':'inline-block'}" />
+                        <i class="fa fa-folder-open" style="color: gold"  />
+                        #{itemArbol.carpeta}    
+                        <f:ajax execute="@this"  render=":frmArchivo:pnArchivos :frmArchivo:pnCarpeta" listener="#{exploradorArchivoB.seleccionArbol(itemArbol.carpeta,index.index)}" />
+                    </h:commandLink>
+                    
+                </ui:repeat>
+            </div>
+                
+           <div style="display: block;width: 100%;min-height:500px;">
+            <ui:repeat value="#{exploradorArchivoB.cursoSeccionArchivoL}" var="itemArchivo">
+                        <div class="ficha-archivo" >
+                         
+                            <h:commandLink styleClass="ficha-archivo-delete" title="ELIMINAR" onclick="if (!confirm('¿Esta seguro de Eliminar?')) return false;" rendered="#{itemArchivo.archivoPadre ne '\\'}" >
+                                    <i class="fa fa-times"  />
+                                    <f:ajax execute="@this" render=":frmArchivo:pnArchivos" listener="#{exploradorArchivoB.eliminar(itemArchivo) }" />
+                            </h:commandLink>
+                            <div class="ficha-archivo-subMenu" style="display: #{itemArchivo.formato eq null?'none':'block'}">
+                                
+                                <h:commandLink immediate="#{true}" title="Descargar" actionListener="#{exploradorArchivoB.prepDownload(itemArchivo.ruta.concat('\\').concat(itemArchivo.archivo))}"  >
+                                        <i class="fa fa-cloud-download"/>                                       
+                                        <p:fileDownload value="#{exploradorArchivoB.download}" />
+                                </h:commandLink>
+                                
+                                <h:commandLink title="onliness" rendered="#{false}" >
+                                        <i class="fa fa-cloud"/>
+                                </h:commandLink>
+                                
+                            </div>
+                            <h:commandLink  disabled="#{not empty itemArchivo.formato}">
+                                <span style="display: block;width: 100%;text-align: center;height: 70%;font-size: 4.5em">                                    
+                                    
+                                    <i class="#{itemArchivo.formato eq  null ?'fa fa-folder-open':utilB.classIcono(itemArchivo.formato)}"  style="color: #{itemArchivo.formato eq  null ?'gold':'silver'}" />
+                                </span>
+                                <div style="display: block;width: 100%;;position: relative" title="#{itemArchivo.archivo}">
+                                        <span style="outline:  1px solid silver;text-align: center;height: 40px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;display: block;font-size: 0.8em;line-height: 40px ">#{itemArchivo.archivo}</span>
+                                </div>
+                                
+                              <f:ajax execute="@this" render=":frmArchivo:pnArchivos :frmArchivo:pnCarpeta" listener="#{exploradorArchivoB.seleccionArchivo(itemArchivo,itemArchivo.archivo)}" />
+                            </h:commandLink>   
+                        </div>
+                    </ui:repeat>
+                    <h:outputLabel  rendered="#{exploradorArchivoB.cursoSeccionArchivoL.size() eq 0}"  style="color: silver;display: block;text-align: center;margin: 5% auto"  >
+                        <i class="fa fa-folder-open"  style="font-size: 5.5em" />
+                    <br/>
+                    <span>CARPETA VACIA</span>
+                    </h:outputLabel>
+                  </div>
+            </h:panelGroup>
+           
+        </h:form>
+         
+     </ui:define>
+ </ui:composition>
+
+

@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body onload="#{seccionB.mostrarSeccion(3)}">
+        <h:form id="frmSeccion">
+            <h:panelGroup id="pnDatos" layout="block">
+                <h:outputLabel value="SECCIONES:"/>
+                <h:inputText value="#{seccionB.seccion.seccion}" disabled="#{(not empty seccionB.seccion.seccion)}"  />
+                <h:commandButton value="Generar">
+                    <f:ajax execute="@this" render="pnDatos" />
+                </h:commandButton><br/>
+                <h:outputLabel value="DESCRIPCION"/>
+                <h:inputText value="#{seccionB.seccion.descripcion}" disabled="#{not seccionB.bandera}" style="width: 350px" /><br/>    
+                <h:outputLabel value="ESTADO"/>
+                <h:selectOneMenu value="#{seccionB.seccion.estadoRegistro}" disabled="#{not seccionB.bandera}">
+                    <f:selectItem itemLabel="HABILITADO" itemValue="1"/>
+                    <f:selectItem itemLabel="DESHABILITADO" itemValue="0"/>
+                </h:selectOneMenu>
+                             
+            </h:panelGroup><br/>
+            <h:panelGroup id="pnBotonera" layout="block">
+              
+                <h:commandButton value="NUEVO" disabled="#{seccionB.bandera}" >
+                    <f:ajax execute="@this" render="pnDatos pnBotonera"  listener="#{seccionB.nuevo(1)}"  />
+                </h:commandButton>
+                <h:commandButton value="GUARDAR" disabled="#{not seccionB.bandera}" >
+                    
+                    <f:ajax execute="pnDatos"  render="tbSecciones pnBotonera"  listener="#{seccionB.insertar(seccionB.seccion)}"/>
+                </h:commandButton>
+                <h:commandButton value="EDITAR" disabled="#{seccionB.bandera}">
+                    <f:ajax execute="@this" render="pnBotonera pnDatos"  listener="#{seccionB.editar()}"/>
+                </h:commandButton>
+                <h:commandButton value="CANCELAR" disabled="#{not seccionB.bandera}">
+                    <f:ajax execute="@this" render="pnDatos pnBotonera"  listener="#{seccionB.cancelar()}"/>
+                </h:commandButton>
+            </h:panelGroup>
+            
+             <div style="text-align: right">
+                        <h:inputText value="#{seccionB.cadena}">
+                            <f:ajax event="keyup" execute="@this" render="tbSecciones"  listener="#{seccionB.filtro(3,seccionB.cadena)}" />
+                        </h:inputText>
+             </div>
+            <p:dataTable id="tbSecciones" value="#{seccionB.seccionL}" var="seccion" rowIndexVar="status" rowKey="#{seccion.seccion}" selectionMode="single" selection="#{seccionB.seccion}" >
+                <p:ajax event="rowSelect"  update=":frmSeccion:pnDatos"     /> 
+                
+                <f:facet name="header" >
+                   
+                    
+                </f:facet>
+                
+                <p:column headerText="N">
+                    #{status +1}
+                </p:column>
+                <p:column headerText="SECCION">
+                    #{seccion.seccion}
+                </p:column>
+                <p:column headerText="DESCRIPCION">
+                    #{seccion.descripcion}
+                </p:column>
+                <p:column headerText="ESTADO">
+                    #{estadoB.mostrarEstadoCodigo(seccion.estadoRegistro).descripcion}
+                    
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

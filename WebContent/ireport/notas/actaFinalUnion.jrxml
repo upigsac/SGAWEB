@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="actaFinalUnion" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="524efe97-fe1d-4376-9368-1e3e8dd7b96b">
+	<property name="ireport.zoom" value="1.7715610000000026"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{PROMEDIO}<=10]]></conditionExpression>
+			<style mode="Opaque" forecolor="#FF0033"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="PERIODO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CARRERA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERSONAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURSO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SECCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.INSTITUCION,A.PERIODO,K.DESCRIPCION DESPERIODO,H.DESCRIPCION DESFACULTAD,A.CARRERA,I.DESCRIPCION DESCARRERA,E.NIVEL_MODULAR,M.DESCRIPCION DESCICLO
+,A.CURSO,N.DESCRIPCION DESCURSO,E.CREDITOS,A.SECCION,Q.DESCRIPCION DESSECCION,F.TURNO
+,J.DESCRIPCION DESTURNO,A.PERSONAL,(SELECT AA.APELLIDO_PATERNO +' '+ AA.APELLIDO_MATERNO +' '+AA.NOMBRES  FROM  UPA.DAT_PERSONAS AA WHERE AA.PERSONA=O.PERSONA)DOCENTE,D.APELLIDO_PATERNO +' '+ D.APELLIDO_MATERNO +' '+D.NOMBRES AS DESALUMNO,
+B.ALUMNO,B.PROMEDIO,DI.SF_NUMERO_LETRA(B.PROMEDIO)DESNOTA,A.ESTADO_REGISTRO
+FROM SIGU.HOR_CURSO_SECCION_DOCENTE A ,SIGU.ACA_ALUMNO_CURSO_SECCION B,SIGU.ACA_ALUMNO C,UPA.DAT_PERSONAS D,SIGU.HOR_MALLA_CURRICULAR_CURSO_ACT E,SIGU.HOR_PERIODO_SECCION F,SIGU.ACA_ALUMNO_PERIODO P,SIGU.HOR_SECCION Q
+,SIGU.ACA_FACULTAD_CARRERA G,SIGU.ACA_FACULTAD H,UPA.ACA_CARRERAS I,UPA.ACA_TURNOS J,UPA.ACA_PERIODOS K,SIGU.ACA_CICLO M,UPA.ACA_CURSOS N,SIGU.PER_PERSONAL O
+where A.INSTITUCION=$P{INSTITUCION} AND A.PERIODO=$P{PERIODO} AND A.CARRERA LIKE $P{CARRERA} AND A.PERSONAL LIKE $P{PERSONAL}  AND  A.CURSO LIKE $P{CURSO} AND A.SECCION LIKE $P{SECCION} AND A.ESTADO_REGISTRO=1
+AND B.INSTITUCION=A.INSTITUCION  AND B.PERIODO=A.PERIODO AND B.MALLA=A.MALLA AND B.CARRERA=A.CARRERA AND B.CURSO=A.CURSO AND B.SECCION LIKE '%' AND B.ESTADO_REGISTRO=1
+AND C.INSTITUCION=A.INSTITUCION  AND C.ALUMNO=B.ALUMNO AND C.ESTADO_REGISTRO=1
+AND D.PERSONA=C.PERSONA
+AND E.INSTITUCION=A.INSTITUCION AND E.CARRERA=A.CARRERA AND E.MALLA=A.MALLA AND  E.CURSO=A.CURSO
+AND F.INSTITUCION=A.INSTITUCION AND F.PERIODO=A.PERIODO AND F.CARRERA=A.CARRERA AND F.SECCION=B.SECCION AND F.TURNO=(SELECT  TURNO FROM SIGU.HOR_PERIODO_SECCION WHERE INSTITUCION=A.INSTITUCION AND PERIODO=A.PERIODO AND CARRERA=A.CARRERA AND SECCION=A.SECCION)
+AND G.INSTITUCION=A.INSTITUCION AND G.CARRERA=A.CARRERA
+AND H.INSTITUCION=G.INSTITUCION AND H.FACULTAD=G.FACULTAD
+AND I.CARRERA=A.CARRERA
+AND J.TURNO=F.TURNO
+AND K.INSTITUCION=A.INSTITUCION AND K.PERIODO=A.PERIODO
+AND M.CICLO=E.NIVEL_MODULAR
+AND N.CURSO=A.CURSO
+AND O.PERSONAL=A.PERSONAL
+AND P.INSTITUCION=A.INSTITUCION AND P.PERIODO=A.PERIODO AND P.ALUMNO=B.ALUMNO AND P.NIVEL_REFERENCIAL<>0 AND  P.ESTADO_REGISTRO=5
+AND Q.INSTITUCION=A.INSTITUCION AND Q.SECCION=A.SECCION AND Q.ESTADO_REGISTRO=1
+ORDER BY SECCION,CURSO,DESALUMNO]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Short"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="DESFACULTAD" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="NIVEL_MODULAR" class="java.lang.Short"/>
+	<field name="DESCICLO" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="CREDITOS" class="java.math.BigDecimal"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="DESSECCION" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.Short"/>
+	<field name="DESTURNO" class="java.lang.String"/>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="DOCENTE" class="java.lang.String"/>
+	<field name="DESALUMNO" class="java.lang.String"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="PROMEDIO" class="java.math.BigDecimal"/>
+	<field name="DESNOTA" class="java.lang.String"/>
+	<field name="ESTADO_REGISTRO" class="java.lang.Short"/>
+	<variable name="variable1" class="java.lang.Integer" resetType="Group" resetGroup="PERSONAL" incrementType="Group" incrementGroup="PERSONAL" calculation="Sum">
+		<variableExpression><![CDATA[$V{PERSONAL_COUNT}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="CARRERA_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{CARRERA}]]></variableExpression>
+	</variable>
+	<group name="PERSONAL" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{PERSONAL}+$F{CURSO}+$F{SECCION}]]></groupExpression>
+		<groupFooter>
+			<band height="89">
+				<line>
+					<reportElement uuid="5b6148fc-a3fd-4223-968e-25f1691550d6" x="28" y="54" width="133" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="68097e38-52e0-4803-8c3e-bd1f1f379159" x="425" y="55" width="100" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="7b81f879-c75f-4573-8817-0e71d8b5098a" x="232" y="70" width="100" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="b96bb4df-8efd-4b53-9bc1-53dd770ebc38" x="425" y="56" width="100" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DOCENTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="32cbb3aa-d19d-4147-bc89-75b6f06d9d77" x="232" y="71" width="100" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[OAARC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c7f2264b-b719-4b22-b25e-0e5fb1dba3fb" x="28" y="55" width="133" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[COORDINADOR DE FACULTAD]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="209">
+			<textField>
+				<reportElement uuid="0bb63d47-d789-4da4-9b61-ffa38d3ebef7" x="27" y="81" width="511" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ACTA DE EVALUACIÓN FINAL: "+$F{DESPERIODO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2de74d4a-f43a-4101-990f-4916b5c72cc0" x="27" y="111" width="511" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ESCUELA PROFESIONAL DE "+$F{DESCARRERA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4837db41-5955-47c4-a2d1-7297eaf38fce" x="27" y="99" width="511" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FACULTAD DE "+$F{DESFACULTAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="05e519b6-a494-40f6-afbb-191ebb5bf6b2" x="72" y="138" width="281" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+ $F{CURSO}+' - '+$F{DESCURSO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="39c1666e-b693-43e2-b811-452e80a7c213" x="72" y="151" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[": "+ $F{CREDITOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5d2f8f7c-0405-43f5-9630-75724139f89e" x="72" y="164" width="281" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+ $F{DOCENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ded6add0-fdd4-45e5-9242-3ebefd6eb516" x="429" y="138" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[": "+ $F{DESSECCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2bfb4abc-6413-448c-96eb-46fee42d7619" x="429" y="164" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[": "+ $F{DESCICLO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6b62e8b3-7009-44fe-a767-5d960aa18747" x="429" y="151" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[": "+ $F{DESTURNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="28e1e16b-18f8-43b9-99d5-01783cfe49ac" x="8" y="138" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CURSO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="517a7df0-f49b-4dae-9998-d07df1faf7fe" x="8" y="151" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CRÉDITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a8e98a64-f38e-4087-9076-8b8147bee1f7" x="8" y="164" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38110530-3708-4b39-b8a5-0dcd2597a720" x="365" y="138" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SECCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d38d4d69-75f4-4c83-bfe2-42dd471f0663" x="365" y="151" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TURNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="99730544-e6d8-4c52-9bbd-e4a902a58ff9" x="365" y="164" width="60" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CICLO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bbced560-6db0-4fbf-8721-dce3345b14d8" x="31" y="185" width="69" height="23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="815ac9f0-6d41-41f8-85cc-be634e0ba011" x="100" y="185" width="229" height="24"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS Y NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a20eb663-ad6f-4943-a769-8ada51ec1db9" x="329" y="185" width="100" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA
+(Nro.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="df785d71-2610-45d0-854b-6233a1d49268" x="430" y="185" width="108" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA
+(LETRA)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ba17db38-6735-4810-b1ef-b294d93f09fa" x="5" y="185" width="25" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NRO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="421725ea-8992-495a-9eab-290fdbd2ad3d" x="5" y="184" width="536" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="adecbc82-8312-4a8b-a303-945fc0511105" x="6" y="207" width="536" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6ddb66ac-e185-4a19-8437-b25936d31b5d" x="31" y="0" width="69" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="43ca8aa9-314b-49d2-910d-cd01e8c489c2" x="100" y="0" width="229" height="12"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement uuid="27183f21-8cec-4564-9131-5a37c75411be" style="style1" x="329" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROMEDIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1f94e6eb-d696-44af-9f90-84aa99a37cb8" x="429" y="0" width="109" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESNOTA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="9e42c0bb-f4c1-40a1-b1ad-cd2316360cfa" x="542" y="-24" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement uuid="ccc4ac04-8d4a-4f4b-9033-89fa0ffcb241" x="4" y="-24" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement uuid="53baa4f4-1bb2-4153-a4f5-a392a3ae2b8d" x="5" y="12" width="538" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="ea25c691-94a8-4d94-8fdb-2abba633bb71" x="4" y="0" width="27" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PERSONAL_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="58f0f7d8-2873-4b8f-9b4e-c0577bad1555" x="30" y="-24" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement uuid="32a1776f-18f4-479c-9071-f82b1197a04a" x="100" y="-24" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement uuid="e77a98c8-904a-4556-b094-84e05c449f63" x="329" y="-24" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement uuid="db28ae40-c236-4dcb-bc2c-b82759c8449d" x="429" y="-24" width="1" height="36"/>
+			</line>
+			<break>
+				<reportElement uuid="0fba9b0d-248c-457e-acff-d7dd122d375e" x="0" y="13" width="543" height="1" printWhenGroupChanges="PERSONAL">
+					<printWhenExpression><![CDATA[($V{PERSONAL_COUNT} % 33)==0]]></printWhenExpression>
+				</reportElement>
+			</break>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="24" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="21" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h5="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    ESTUDIANTE CON  DEUDA
+                </ui:define>
+                
+
+            <ui:define name="contenido">
+                <style>
+                    label{display: inline-block;width: 120px;margin:   5PX 0PX}
+                    .globo{color: red;border: 1px solid silver;padding: 2px 0px;border-radius: 8px;display: inline-block;width: 200px;text-align: center;background-color: white }
+                </style>
+                
+                
+                <script>
+                    $(document).ready(function(){
+                       
+                    });
+                    
+                </script>
+                
+                
+                <span class="tituto-admin">ESTUDIANTE DE DEUDA</span>
+                <h:form id="frmDatos" prependId="false" >
+           <!--
+                 {matriculaB.codigo eq null?matriculaB.codigo:personaB.buscarPersonaAlumno(matriculaB.codigo).persona }
+               -->     
+                <label>Codigo</label> <h:inputText value="#{matriculaB.codigo}" id="txtCodigo" maxlength="10" >
+                    
+                </h:inputText>
+                <p:commandLink  value=" ... "  oncomplete="msgModal.show()"  />
+                <br/>
+                 
+                 <label>CICLO</label>
+                 <h:selectOneMenu  id="cboCiclo"  value="#{cicloB.seleccionCiclo}"   > 
+                 <f:selectItem itemLabel="SELECCIONE"/>   
+                 <f:selectItem itemLabel="II"  itemValue="2" />
+                 <f:selectItem itemLabel="III"  itemValue="3" />
+                 <f:selectItem itemLabel="IV"  itemValue="4" />
+                 <f:selectItem itemLabel="V"  itemValue="5" />
+                 <f:selectItem itemLabel="VI"  itemValue="6" />
+                 <f:selectItem itemLabel="VII"  itemValue="7" />
+                 <f:selectItem itemLabel="VIII"  itemValue="8" />
+                 <f:selectItem itemLabel="IX"  itemValue="9" />
+                 <f:selectItem itemLabel="X"  itemValue="10" />
+             
+                </h:selectOneMenu>
+                    <BR/>
+                    
+                  <label>Periodo Ini:</label>
+                  <h:selectOneMenu  id="cboPeriodoIni"  value="#{periodoB.seleccionPeriodoIni}" > 
+                 <f:selectItem itemLabel="SELECCIONE"/>
+                 <f:selectItems value="#{periodoB.listaperiodo}" var="lista" itemValue="#{lista.periodo}" itemLabel="#{lista.desPeriodo}"/>
+                 <f:ajax execute="@this" render="cboPeriodoFin"/>
+                </h:selectOneMenu>
+                  
+                  
+            <br/>
+            
+                <label>Periodo Final :</label>
+             <h:selectOneMenu  id="cboPeriodoFin"  value="#{periodoB.seleccionPeriodoFin}" > 
+                 <f:selectItem itemLabel="SELECCIONE"/>
+                 <f:selectItems  value="#{periodoB.listaperiodo}" var="lista" itemValue="#{lista.periodo}" itemLabel="#{lista.desPeriodo}" itemDisabled="#{(lista.periodo +1 le periodoB.seleccionPeriodoIni)  }"/>
+                 
+             </h:selectOneMenu>
+                  
+                
+                  <br/><br/><br/>
+                  <ui:param name="param" value="@CODIGOS,#{personaB.buscarPersonaAlumno(matriculaB.codigo).persona},@LDESPER,#{periodoB.seleccionPeriodoIni},@LHASPER,#{periodoB.seleccionPeriodoFin},@LITIPSQL,2,@LSCICLO,#{cicloB.seleccionCiclo}" />
+                  
+                  <h:commandLink class="linkpdf" value="IMPRIMIR FORMATO "    target="_blank"  actionListener="#{utilB.imprimir_crystal('\\Administrativo\\tesoreria\\reporte\\','SGAWEB0010', 0, fn:split(param,','))}" />
+                  <h:commandLink class="linkexcel" value="IMPRIMIR FORMATO "    actionListener="#{utilB.imprimir_crystal('\\Administrativo\\tesoreria\\reporte\\','SGAWEB0010', 1, fn:split(param,','))}" />
+                            
+                      <br/>
+                      <br/>
+                  
+                  
+                  <!--
+                  <h:commandLink class="linkpdf"  action="reporte_1.jsp" value="IMPRIMIR FORMATO "   >
+                            <f:param name="reporte"  value="SGAWEB00010" />
+                            <f:param name="formato" value="5"/>
+                  </h:commandLink>
+                  <h:commandLink class="linkexcel"  action="reporte_1.jsp" value="IMPRIMIR FORMATO " target="_blank"  >
+                            <f:param name="reporte"  value="SGAWEB00010" />
+                            <f:param name="formato" value="2"/>
+                  </h:commandLink>
+                  
+                  
+                  -->
+                    
+                </h:form>
+                
+                 <h:form>
+            <p:dialog widgetVar="msgModal" header="BUSQUEDA ALUMNO" width="650px" height="500px" modal="true" hideEffect="clip" >
+
+                A. PATERNO <h:inputText value="#{matriculaB.bpaterno}"/>
+                <br/>
+                A. MATERNO <h:inputText value="#{matriculaB.bmaterno}"/>
+                <br/>
+                NOMBRES <h:inputText value="#{matriculaB.bnombre}" />
+                <br/>
+                <h:commandButton value="BUSCAR" >                
+                    <f:ajax execute="@form" render="dtBusqueda " listener="#{matriculaB.busquedaAlumno}"/>
+                </h:commandButton>
+
+                <p:dataTable id="dtBusqueda" value="#{matriculaB.listaAlumno}" var="alumno"    
+                             rowKey="#{alumno.persona}"  selection="#{matriculaB.seleccionBusqueda}"  selectionMode="single">
+                    <p:ajax event="rowSelect"  update=":frmDatos:txtCodigo"   listener="#{matriculaB.onRowSelect}"  oncomplete="msgModal.hide()" /> 
+
+                    <p:column headerText="CODIGO">
+                        #{alumno.persona}
+                    </p:column >
+                    <p:column headerText="DATOS">
+                        #{alumno.paterno} #{alumno.materno} #{alumno.nombres}
+                    </p:column>
+                    <p:column headerText="DOCUMENTO">
+
+                    </p:column>
+                     
+                </p:dataTable>
+
+                 </p:dialog>
+
+                </h:form>
+            </ui:define></ui:composition>
+    </h:body>
+</html>
+

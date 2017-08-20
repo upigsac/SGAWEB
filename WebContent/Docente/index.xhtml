@@ -1,0 +1,56 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">    
+    <ui:define name="titulo">
+        SISTEMA DE UPIG DOCENTE
+    </ui:define>           
+           <ui:define name="contenido">     
+               <div class="principal">
+                <div class="iconos-indice">
+                    <ul style="height: 135px;">
+                                <li>
+                                    <a href="http://evirtual.upig.edu.pe/moodle/" target="_blank">
+                                        <img src="../resources/imagenes/iconos-indice-alumno/icono1.png"/>
+                                    <span>CAMPUS VIRTUAL</span>
+                                    </a>
+
+                                </li>
+                                <li>
+                                    <a href="https://login.microsoftonline.com/login.srf" target="_blank">
+                                        <img src="../resources/imagenes/iconos-indice-alumno/icono2.png"/>
+                                        <span>CORREO INSTITUCIONAL</span>
+                                    </a>
+
+                                </li>
+
+                                <li>
+                                    <a href="https://www.facebook.com/upig.edu.pe" target="_blank">
+                                        <img src="../resources/imagenes/iconos-indice-alumno/icono7.png"/>
+                                    	<span>FACEBOOK</span>
+                                    </a>
+
+                                </li>
+                        
+                        
+                                <li>
+                                    <a href="http://biblioteca.upig.edu.pe/" target="_blank">
+                                        <img src="../resources/imagenes/iconos-indice-alumno/icono11.png"/>
+                                    	<span>REQUERIMIENTO MULTIMEDIA UPIG</span>
+                                    </a>
+
+                                </li>
+                              
+                                
+                                
+                                <li style="display: #{cursoSeccionDocenteTipoExamenB.mostrarOpcion(1, usuarioB.periodoS, personalB.buscarPersonalCodigo(usuarioB.persona.persona).personal) eq true?'inline-block':'none'}">
+                                    <a href="notas/ingresoNotaSegundario.xhtml" >
+                                        <img src="http://www.imaveracruz.com/images/Ima-icono%20proyecto%20de%20vida-03.png"/>
+                                        <span>CAMPO CLINICO</span>
+                                    </a>
+
+                                </li>                        
+                            </ul>
+                        </div>                        
+               </div>               
+           </ui:define>
+</ui:composition>
+

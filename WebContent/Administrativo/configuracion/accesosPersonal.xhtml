@@ -1,0 +1,323 @@
+
+        <ui:composition   xmlns:ui="http://java.sun.com/jsf/facelets"
+        				  xmlns="http://www.w3.org/1999/xhtml"
+					      xmlns:h="http://xmlns.jcp.org/jsf/html"					      					          
+					      xmlns:p="http://primefaces.org/ui"
+					      xmlns:f="http://xmlns.jcp.org/jsf/core"
+                		  template="/Administrativo/plantilla.xhtml">
+              <ui:define name="titulo">
+                
+                CONTROL DE ACCESOS
+                
+            </ui:define>  
+            <ui:define name="contenido">  
+                <style>
+                       .notify{ width: 250px;padding: 10px 5px;border-radius: 5px;color: white}
+				        .error{background-color: red}
+				        .correcto{background-color: #008000}
+                  
+                </style> 
+                
+               
+                
+                <h:form id="frmMenu" prependId="false">  
+                <span class="tituto-admin">CONTROL DE ACCESO DEL PERSONAL  </span>
+                <div class="paneles ">
+                
+                
+           
+                  
+                    <div class="column" >
+                        <h:graphicImage id="imgFoto" value="SVerImagenAlumno?alumno=#{controlAccesoB.seleccionUsuario.persona}" title="FOTOGRAFIA" style="width: 100px;height: 100px"/>
+                    </div>
+                    <div class="column" style="width: 70%">
+                        <h:outputLabel value="PERSONA:"  />
+                        <h:inputText  id="txtCodigo" value="#{controlAccesoB.seleccionUsuario.persona}" disabled="#{true}"/>
+
+
+                        <br/>
+
+                        <h:outputLabel value="NOMBRE:" />
+                        <h:inputText id="txtPersona" value="#{controlAccesoB.seleccionPersona.nombreCompletos()}" style="width: 250px" disabled="true" />
+                        <br/>
+
+                        <h:outputLabel value="USUARIO:" />
+                        <h:selectOneMenu id="cbusuario" value="#{controlAccesoB.usuario}" style="width: 135px">
+                            <f:selectItems value="#{controlAccesoB.usuarioL}" var="itemUsuario" itemLabel="#{itemUsuario.usuario}" itemValue="#{itemUsuario.usuario}" />
+                            <f:ajax execute="@this" render="pnInstitucion" listener="#{controlAccesoB.mostrarInstitucionUsuario}" />
+                        </h:selectOneMenu>
+                         <br/>
+                         <h:outputLabel  value="CLAVE:" />
+                        <h:inputText id="txtClave" value="#{controlAccesoB.clave}"  /> 
+
+                        <h:selectBooleanCheckbox value="#{controlAccesoB.verClave}" > 
+                            <f:ajax execute="@this txtClave" render="txtClave" listener="#{controlAccesoB.desencriptar()}" />
+                        </h:selectBooleanCheckbox>
+                        	VER CLAVE
+                         <br/>
+
+                        <h:outputLabel value="ESTADO" />
+                        <h:selectOneMenu>
+                        <f:selectItem itemLabel="HABILITADO" itemValue="1"/>
+                        <f:selectItem itemLabel="DESHABILITADO" itemValue="0"/>
+                        </h:selectOneMenu>
+                        <br/>
+                        
+                    </div>
+                    
+            
+                    
+                    
+               
+                     </div>
+                     
+                     <div  class="paneles" style="height: 80px;position: relative">
+                        
+                        <h:outputLabel value="INSTITUCIONES" />
+                        <h:panelGroup layout="block" id="pnInstitucion" style="overflow: auto;width: 98%;">
+                            
+                           
+                            <ui:repeat  value="#{controlAccesoB.institucionL}" var="itemUsuarioInstitucion">
+                               
+                                <div class="column paneles"  style="text-align:center;border: 1px solid #{itemUsuarioInstitucion.institucion eq controlAccesoB.institucionUsuario ?'red':'silver'};min-width: 50px">
+                                
+                               
+                                    <h:commandLink   style="display: block" title="#{itemUsuarioInstitucion.descripcion}">
+                                   
+                                        <span >#{itemUsuarioInstitucion.abreviatura}</span>
+                                        
+                                           
+                                             
+                                            <h:commandLink title="Eliminar " onclick="return confirmacion(this,'¿ Esta seguro eliminar ?');" >
+                                                <i class="fa fa-times"  style="color: red" />
+                                                <f:ajax execute="@this" render=":frmMenu:pnInstitucion" listener="#{controlAccesoB.eliminarInstitucion(itemUsuarioInstitucion.institucion)}"/>
+                                            </h:commandLink>
+                                     
+                                   
+                                    <f:ajax execute="@this" render=":frmMenu:pnInstitucion :frmMenu:pnMenuPadre" listener="#{controlAccesoB.mostrarInstitucionAcceso(itemUsuarioInstitucion.institucion)}"  />
+                                          
+                                    
+                                </h:commandLink>    
+                                     </div>
+                                    
+                            </ui:repeat>
+                           
+                            
+                        
+                            </h:panelGroup>
+                       
+                        <h:commandLink id="btIntitucion" disabled="#{empty controlAccesoB.usuario}"  title="Agregar Institucion" styleClass="boton-circulo" style="position:absolute;bottom:0;right:0"   >
+                            <i class="fa fa-plus" />
+                            <f:ajax execute="@this" render=":frmInstitucion" listener="#{controlAccesoB.mostrarInstitucion}" />
+                        </h:commandLink>
+                    </div>  
+                
+                <div class="paneles">
+                 <h:commandLink  styleClass="boton-normal"   >
+                 <i class="fa fa-search" />
+                 	BUSCAR
+                 <f:ajax  execute="@this" render=" :frmBusquedaPersonal:txtPaterno :frmBusquedaPersonal:txtMaterno :frmBusquedaPersonal:txtNombres" listener="#{controlAccesoB.buscar}" />
+                 </h:commandLink>
+                
+                
+                    <h:commandLink   disabled="true" styleClass="boton-normal" onclick="dlgGenerar.show()"  >
+                    GENERAR USUARIO
+                    
+                    <f:ajax  execute="@this"  />
+                </h:commandLink>   
+                
+                
+                
+                </div>
+               
+                
+               
+                
+    <hr/>
+   
+   
+    
+    
+    <h:panelGroup layout="block" id="pnMenu" style="border: 1px solid silver;width: 100%;min-height: 200px;">
+        <h:panelGroup layout="block" id="pnMenuHijos" styleClass="paneles column"  style="width: 78%;height: 100%;padding: 5PX">
+            
+            <span style="display: block ;text-align: center;padding: 5px;margin-bottom: 10px;border-bottom: 1px solid silver"> ..: SUB MENU :.. </span>
+        
+          
+            <ui:repeat value="#{controlAccesoB.usuarioMenuL}" var="subMenuUsuario">
+                
+             <div class="paneles column" style="width: 200px;height: 100px;" >
+             
+                     
+                        <h:commandLink style="display: block;width: 100%;height: 80px;text-align:center ">
+                       		#{subMenuUsuario.menu.id} - #{subMenuUsuario.menu.nombre} 
+                      
+	                        <f:ajax execute="@this" render=":frmMenu:pnMenuHijos" listener="#{controlAccesoB.insertarAcceso(subMenuUsuario)}"  />
+                		</h:commandLink>
+             		<p:rating value="#{subMenuUsuario.acceso.tipoSeguridad}" disabled="#{subMenuUsuario.acceso eq null}" stars="4" cancel="false"  >
+             		<p:ajax event="rate" process="@this" listener="#{controlAccesoB.nivelSeguridad(subMenuUsuario.acceso)}" />
+             		</p:rating>
+             </div>
+                   
+                      
+                
+                    
+                
+            </ui:repeat>
+           
+        </h:panelGroup>
+        
+        
+        <h:panelGroup id="pnMenuPadre" layout="block" styleClass="paneles column" style="width: 20%;height: 100%; ">
+                <span style="display: block ;text-align: center;padding: 5px;margin-bottom: 10px">MENU PRINCIPAL </span>
+                    <ui:repeat value="#{controlAccesoB.menuL}" var="subMenu">
+                
+                        
+                            <h:commandLink styleClass="boton-normal" style="vertical-align: top;margin: 2px" >
+                            	<i class="#{subMenu.classIcono}"/>
+                            	#{subMenu.nombre}
+                                <f:ajax execute="@this" render=":frmMenu:pnMenuHijos" listener="#{controlAccesoB.selectMenuPadre(subMenu)}"  />
+                            </h:commandLink>
+            </ui:repeat>
+            
+        </h:panelGroup>
+          
+        
+       
+    </h:panelGroup>
+                  
+    
+    
+    
+   
+ 
+  
+</h:form>
+                
+                <p:dialog widgetVar="dlgGenerar" header="GENERAR USUARIO" width="500"  modal="true">
+                    <h:form>
+                        USUARIO <h:inputText value="#{segUsuarioB.segUsuario.usuario}" /><br />
+                        CLAVE <h:inputSecret value="#{segUsuarioB.segUsuario.clave}"  /><br/>
+                        REPITE CLAVE <h:inputText />
+                        <br/>
+                        <h:commandButton value="ACEPTAR">
+                           
+                            <f:ajax execute="@form" listener="#{segUsuarioB.insertar(segUsuarioB.segUsuario)}" />
+                            
+                        </h:commandButton>
+                        <h:commandButton value="SALIR" type="button" onclick="dlgGenerar.hide()"/>
+                    </h:form>
+                </p:dialog>
+                
+               
+                
+              <h:form id="frmBusquedaPersonal" prependId="false">
+                <p:dialog  header="..: BUSQUEDA DE PERSONAL :.." id="frmBusqueda" widgetVar="dlgBusquedaPersona" modal="true" resizable="false" width="600px" closeOnEscape="true" >
+                
+                    <div class="paneles">
+                    <h:outputLabel value="A.PATERNO" />
+                        <h:inputText id="txtPaterno" value="#{controlAccesoB.paterno}" >
+                        <f:ajax execute="@this" render="dtBusqueda" listener="#{controlAccesoB.filtroPersona}" />
+                        
+                        </h:inputText>
+                        <br/>
+                        <h:outputLabel value="A.MATERNO" />
+                        <h:inputText id="txtMaterno" value="#{controlAccesoB.materno}" >
+                        <f:ajax execute="@this" render="dtBusqueda" listener="#{controlAccesoB.filtroPersona}" />
+                        
+                        </h:inputText>
+                        <br/>
+                        <h:outputLabel value="NOMBRE" />
+                        <h:inputText id="txtNombres" value="#{controlAccesoB.nombres}" >
+                        <f:ajax execute="@this" render="dtBusqueda" listener="#{controlAccesoB.filtroPersona}" />
+                        </h:inputText>
+                    </div>
+                        
+                     
+                        
+                    <p:dataTable id="dtBusqueda" value="#{controlAccesoB.personaL}" var="persona" rowKey="#{persona.persona}" selection="#{controlAccesoB.seleccionPersona}"  selectionMode="single" rowIndexVar="status"  scrollable="true" scrollHeight="300" >
+                              
+                            
+                            <p:ajax event="rowSelect" update="txtCodigo txtPersona cbusuario txtClave imgFoto pnInstitucion :frmMenu:btIntitucion" listener="#{controlAccesoB.onRowSelect}"  oncomplete="dlgBusquedaPersona.hide()" /> 
+                            
+                            <p:column headerText="Nro." width="10">  
+                                  <h:outputText value="#{status+1}"/>  
+                                </p:column>
+                                
+                                <p:column headerText="DATOS" >  
+                                    <h:outputText value="#{persona.nombreCompletos()}"/>  
+                                </p:column>  
+                            
+                           
+                        </p:dataTable>
+                  
+                    
+                         <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                            <h:commandLink  styleClass="boton-rojo" onclick="dlgBusquedaPersona.hide()" >
+                            CANCELAR
+                            <f:ajax execute="@this" />
+                            </h:commandLink>
+                            
+                            
+                            </div>
+                            </f:facet>
+                            
+                    
+                    
+             
+                  </p:dialog>
+                    </h:form>    
+                    <h:form id="frmInstitucion" prependId="false">
+                <p:dialog widgetVar="dlgInstitucion" header="INSTITUCION USUARIO" width="702" height="450" modal="true" resizable="false" closeOnEscape="true"  >
+                <h:panelGroup  layout="block" id="pnGria">
+                <ui:repeat var="itemInstitucion" value="#{controlAccesoB.institucionFL}">
+                
+                  <h:commandLink  >
+                            <div   class="column paneles" style="border: 1px solid #{itemInstitucion.institucion eq controlAccesoB.institucionS ?'red':'silver'};height:150px;width:150px;text-align: center">
+                               
+                            <img  src="SimagenBD?opcion=3&amp;codigo=#{itemInstitucion.institucion}" style="width: 50px;height: 50px" />
+                            <br />
+                                 
+                                    #{itemInstitucion.descripcion}
+                                    
+                            </div>
+                                <f:setPropertyActionListener value="#{itemInstitucion.institucion}" target="#{controlAccesoB.institucionS}"/>
+                                <f:ajax execute="@this" render=":frmInstitucion:pnGria :frmInstitucion:btAceptarI"  />
+                            </h:commandLink>
+                
+                
+                </ui:repeat>
+                
+                
+                </h:panelGroup>
+                
+                    
+                   
+                         <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                        <h:commandLink id="btAceptarI" disabled="#{controlAccesoB.institucionS eq 0}" styleClass="boton-verde"   >
+                                     ACEPTAR
+                            <f:ajax execute="@this" render=":frmMenu:pnInstitucion"  listener="#{controlAccesoB.insertarInstitucion}"/>
+                        </h:commandLink>
+                        <h:commandLink styleClass="boton-rojo"  onclick="dlgInstitucion.hide()">
+                        		CANCELAR
+                            <f:ajax execute="@this"/>
+                        </h:commandLink>
+                    
+                            
+                                   
+                            </div>
+                            </f:facet>
+                   
+                        
+                    
+                    
+                </p:dialog>
+                
+                </h:form>
+            </ui:define>
+                
+        </ui:composition>
+
+

@@ -1,0 +1,242 @@
+ <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                 template="/Docente/plantilla.xhtml"
+                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+                 xmlns:f="http://xmlns.jcp.org/jsf/core">
+            <ui:define name="titulo">
+                GESTOR DE CONTENIDOS
+            </ui:define>
+     <ui:define name="contenido">
+     
+        <script>
+        function start() {  
+        	 document.cookie = "Upig=true;";
+        	 
+        	 $('body').removeClass('loaded');
+        	 
+        	   tiempo=setInterval(function(){
+        		 
+        		   if(getCookie("Upig")=='false'){
+        			   clearInterval(tiempo);  
+        			   $('body').addClass('loaded');
+        			   console.log("stop");
+        			   
+        		   }else{
+        			   
+        			   console.log("procesando");
+        			
+        		   }
+        	   }, 500);
+    
+        }  
+
+      
+       
+       
+       function getCookie(cname) {
+    	    var name = cname + "=";
+    	    var ca = document.cookie.split(';');
+    	    for(var i = 0; i &lt; ca.length; i++) {
+    	        var c = ca[i];
+    	        while (c.charAt(0)==' ') {
+    	            c = c.substring(1);
+    	        }
+    	        if (c.indexOf(name) == 0) {
+    	            return c.substring(name.length,c.length);
+    	        }
+    	    }
+    	    return "";
+    	}
+        
+ 
+       
+       
+        </script>
+        <style>
+        body{background-color: #e9ebee}
+            *{list-style: none;margin: 0;padding: 0}
+          .table{border: 1px solid silver;}
+          .table .col-2{display: inline-block;vertical-align: top;width: 84.6%;outline:  1px solid silver;overflow: auto}
+          .table .col-1{display: inline-block;vertical-align: top;width: 15%;}
+          .table .col-2 .cabecera label{display: table-cell;height: 40px;text-align: center;outline: 1px solid silver;min-width: 100px;background-color: #0069b3;color: white}
+          .table .col-1 .cabecera label{display: inline-block;height: 40px;text-align: center;outline: 1px solid silver;background-color: #0069b3;color: white}
+          .table .col-1 .cabecera div label:nth-child(1),.table .col-1 .cuerpo div span:nth-child(1){   width: 10%       }
+          .table .col-1 .cabecera div label:nth-child(2),.table .col-1 .cuerpo div span:nth-child(2){    width: 88.5%      }
+          .table .col-1 .cuerpo div span:nth-child(1){}
+          .table .col-1 .cuerpo div span:nth-child(2){}
+          .table .col-1 .fila{display: block}
+          .table .col-1 .cuerpo span{display: inline-block;vertical-align: top;outline: 1px solid silver;height: 35px}
+          .table .col-2 .cuerpo span{display: table-cell;outline: 1px solid silver;width: 100px;text-align: center;height: 35px}
+          .table .col-2 .fila{height: 35px}
+     
+          .table  .col-2 .fila:hover{background-color: #eeeeee}
+          .table  .col-2 .fila b{display: block;width: 100%;position: absolute;height: 100%;top: 0;right: 0px;font-size: 1.2em}
+          .hora{position: relative;display: block;cursor: pointer}
+        
+          .hora div b:first-child{color: silver}
+          .boton{display: inline-block; ;text-align: center;margin: 2px;border: 1px solid silver;padding:  5px 8px;background-color: white;}
+          
+          .hora {
+              
+            -webkit-perspective: 800;
+            -moz-perspective: 800;
+            perspective: 800;
+            }
+            
+            .carta {
+                    
+                   box-shadow: 0px 0px 5px black;
+                    -webkit-transform-style: preserve-3d;
+                    -webkit-transition: all 0.5s;
+
+                -moz-transform-style: preserve-3d;
+                    -moz-transition: all 0.5s;
+
+                transform-style: preserve-3d;
+                    transition: all 0.5s;
+            }
+          .hora:hover .carta{
+                -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+        }
+        .carta .lado{
+	position: absolute;
+	
+	-webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        }
+        .carta .frente{
+               
+        }
+        .carta .atras{
+                color: red;
+                -webkit-transform: rotateY(180deg);
+                -moz-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+                    }
+
+
+
+			
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+
+
+
+
+
+}
+
+
+
+        </style>
+ 
+
+        <h:form id="frmCargaHorario"  >        	 
+        #{registroMarcacionDocenteB.load('1',usuarioB.periodoS,usuarioB.personal.personal)}
+               
+                   
+            <h:panelGroup layout="block"   id="pnCargaHoraria" style=";background-color: white;margin:5px ">
+          <div style="display: block;height: 50px;border: 1px solid silver;text-align: center;font-weight: bold;font-size: 1.5em;line-height: 50px;background-color: #0069b3;color: white;">
+          		PROYECCION CARGA HORARIA
+          </div>
+            <div class="table">
+                <div class="col-1" >
+                    <div class="cabecera" >                    
+                        <div style="display: block" >                           
+                            <label >Nr.</label>
+                            <label >Curso</label>                           
+                        </div>
+						
+
+                          <div class="cuerpo"  style="display: block">
+                            <ui:repeat value="#{registroMarcacionDocenteB.cuerpoL}" var="itemCursoSeccionDocentes" varStatus="index">
+                                <div class="fila">
+                                    <span style="text-align: center;line-height: 30px;font-weight: bold;">#{index.index+1}</span>
+                                    <span style=";overflow: hidden;white-space:nowrap;text-overflow: ellipsis;" title="#{itemCursoSeccionDocentes.cursoSeccionDocenteC.curso} - #{itemCursoSeccionDocentes.curso.descripcion}">
+                                        #{itemCursoSeccionDocentes.seccion.descripcion}<br/>
+                                        #{itemCursoSeccionDocentes.curso.descripcion}
+                                        
+                                    </span>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-2" >
+                <div >
+                    
+                    <div class="cabecera" >
+                        <div style="display: block;width: #{(registroMarcacionDocenteB.cabeceraL.size()+2) * 100}px">
+                             
+                                <ui:repeat value="#{registroMarcacionDocenteB.cabeceraL}" var="itemCabecera" >
+                                    <label>
+                                        <span style="display: block;text-transform: capitalize;color: #{itemCabecera.feriado?'red':'white' }" title="#{itemCabecera.item}"> #{utilB.listaDiasSemana[itemCabecera.dia].toLowerCase()}</span>
+                                        #{itemCabecera.fecha}
+                                    </label>
+                                </ui:repeat>      
+                            <label>Marcada</label>
+                            <label>Proyectada</label>
+                        </div>
+                         
+                    </div>
+                    
+                    
+                    <div  class="cuerpo" style="display: block">                    
+                            <ui:repeat value="#{registroMarcacionDocenteB.cuerpoL}" var="itemCursoSeccionDocentesCuerpo" varStatus="indexC" >
+                                <div class="fila" style="display: block;width: #{(registroMarcacionDocenteB.cabeceraL.size()+2) * 100}px">
+                                    <ui:repeat value="#{registroMarcacionDocenteB.cabeceraL}" var="itemCabeceraCuerpo" varStatus="indexCC">
+                                 
+                                       
+                                        <span class="#{itemCursoSeccionDocentesCuerpo.cuerpoHoraL[itemCabeceraCuerpo.fecha].horaMarcada eq itemCursoSeccionDocentesCuerpo.cuerpoHoraL[itemCabeceraCuerpo.fecha].horaProyectada?'':'hora'}" >  
+                                            <div class="carta" >
+                                                <b class="lado frente"  >
+                                                    #{itemCursoSeccionDocentesCuerpo.cuerpoHoraL[itemCabeceraCuerpo.fecha].horaMarcada} 
+                                                </b>   
+                                                <b  class="lado atras" title="Proyectada"  >
+                                                        #{itemCursoSeccionDocentesCuerpo.cuerpoHoraL[itemCabeceraCuerpo.fecha].horaProyectada} 
+                                                 </b>
+                                            </div>
+                                        </span>  
+                                       
+                                     </ui:repeat>
+                             
+                               </div>  
+                            </ui:repeat>                            
+                    </div> 
+                    <div class="pie" style="display: block;outline: 1px solid silver;width: #{((registroMarcacionDocenteB.cabeceraL.size()+2) * 100) }px;margin-bottom: 20px">
+                        <ui:repeat value="#{registroMarcacionDocenteB.pieL}" var="itemPie">
+                            <div style="display: table-cell;;width: #{itemPie.cantidad *100}px;outline: 1px solid silver;height: 50px;text-align: center;line-height: 50px">
+                                <span style="display: block;background-color: #0069b3;color: white;" title="#{itemPie.anio}"> #{utilB.listaMeses[itemPie.mes-1]}</span>
+                                <b style=";font-size: 1.5em;">
+                                    
+                                    <span style="color: green;" title="Marcado">
+                                    	#{registroMarcacionDocenteB.totalMarcadoMes(itemPie.anio,itemPie.mes-1)} -
+                                    </span>
+                                    <span style="color: red" title="Proyectado"> 
+                                    	#{registroMarcacionDocenteB.totalProyectadoMes(itemPie.anio,itemPie.mes-1)}
+                                     </span>
+                                </b> 
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </div>
+            
+                
+                </div>
+                
+               
+            </div>
+                </h:panelGroup>
+        </h:form>
+</ui:define>
+     </ui:composition>

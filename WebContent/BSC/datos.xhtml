@@ -1,0 +1,287 @@
+  <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                        template="index.xhtml"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        xmlns:p="http://primefaces.org/ui">   
+            <ui:define name="titulo">
+                ...::. DATOS UPIG :.::...
+            </ui:define>
+      <ui:define name="cuerpo" >
+          <style>
+               *:focus{outline: none}      
+                       
+              .perpestiva{display: block;min-height: 300px;border: 1px solid white; border-radius: 5px;margin: 10px 5px;background-color: white;padding: 5px;position: relative;background-color: white}
+              .perpestiva-cabecera{display: block;background-color: white;width: 100%;z-index: 900}
+              .perpestiva-cabecera.stick{position: fixed;top: 140px;}
+            
+              .perpestiva a{color: white}
+              .perpestiva ul{ display: block}
+              .perpestiva .cabecera li {;background-color: #0069b3;padding: 5px 0px;color: white;text-align: center}
+              
+              .perpestiva-cabecera.stick{position: fixed;top: 140px;}
+              .perpestiva ul li{display: inline-block;vertical-align: top;width: 5%;padding: 0px;min-height: 20px;margin-left: -4px}
+              .perpestiva ul li:nth-child(1){width:  20%}
+              .perpestiva ul li:nth-child(2){width:  20%}
+              .perpestiva-cuerpo-objectivo{display: block;border: 1px solid silver;padding: 5px 0px;position: relative;margin: 0px 0px 4px}
+              .perpestiva-cuerpo-objectivo-subMenu{position: absolute;top: 0px;right: 0px;opacity: 0}
+              .perpestiva-cuerpo-objectivo:hover .perpestiva-cuerpo-objectivo-subMenu{opacity: 1}
+              .perpestiva-cuerpo-objectivo-indicador{position: relative}
+              .perpestiva-cuerpo-objectivo-indicador-subMenu{position: absolute;right: 0px;top: 0px;opacity: 0}
+              .perpestiva-cuerpo-objectivo-indicador:hover .perpestiva-cuerpo-objectivo-indicador-subMenu{opacity: 1}
+              .pnFiltro{display: block;max-height: 150px;overflow: auto;border: 1px solid blue;position: absolute;width: 90%;background-color: white}
+              .pnFiltro div{display: block}
+              .pnFiltro div span{ display: inline-block;vertical-align: top}
+              .pnFiltro div:hover{color: red}
+              .subItem{display: block;width: 400px;text-align: center;margin: auto ;border: 5px solid orange;border-radius: 5px }
+              .subItem a{color: red;display: inline-block;vertical-align: top;width: 50%;padding: 10px 0px;color: #000}              
+              .pnPerpestiva input[type="text"]{width: 95%;text-align: center;height: 20px;border: none}
+              .pnPerpestiva input[type="text"]:focus{color:  blue;font-weight: bold }
+              .subItem .seleccion{background-color: #0081c2;color: white}
+              .sub-cabecera{display: block;text-align: center;border: 2px solid green;width: 100%;padding: 10px 0px;background-color: white;z-index: 9999}
+              .sub-cabecera.sticky{position: fixed;top: 0px}
+              .btNuevo{position: absolute;bottom: 5px;right: 10px;display: block;border-radius: 50%;height: 30px;width: 30px;background: #008000;color: white;text-align: center;line-height: 30px;box-shadow: 2px 3px 3px silver ;transition: all 0.5s}
+              .btNuevo:hover{width:  40px;height: 40px;line-height: 40px}
+              textArea{resize: none;min-height: 100px}
+              .itemEliminaIndicador{position: relative;border: 1px solid;padding: 5px 2px}
+              .itemEliminaIndicador a{opacity: 0 ;transition: all 0.2s}
+              .itemEliminaIndicador:hover a{opacity: 1}
+              .itemObjectivo .itemEliminaObjetivo{opacity: 0}
+              .itemObjectivo .itemEliminaObjetivo:hover{opacity: 1}
+              .perpestiva-cuerpo-objectivo-item ul:hover {background-color: #EEEEEE}
+          </style>
+          <script>
+              $(document).ready(function(){    
+                 var cabecera=$('.sub-cabecera').offset().top;
+                 $(window).scroll(function(){                     
+                     if($("body").scrollTop()>=cabecera)
+                         $(".sub-cabecera").addClass("sticky");      
+                     else
+                         $(".sub-cabecera").removeClass("sticky");                     
+                     
+                      $(".perpestiva" ).each(function( index ) {  
+                      if ($(window).scrollTop() > $(this).offset().top) {
+                                $(this).children(".perpestiva-cabecera").addClass("stick");
+                            }
+                            else {
+                                 $(this).children(".perpestiva-cabecera").removeClass("stick");
+                            }
+                    });
+                 });
+               
+                 $(".itemNuevoObjectivo").click(function(){
+                   $(".perpestiva-cuerpo-item").removeClass("perpestiva-select");
+                    $(this).parent().parent().parent().addClass("perpestiva-select");
+                 });
+              });
+          </script>    
+          <h:form id="frmDato" pt:autocomplete="off" prependId="false">
+        
+              
+              
+              <div class="sub-cabecera" >                  
+                  <h:selectOneMenu value="#{bscDatoB.anio}">
+                       <f:selectItem itemLabel="2017" itemValue="2017" />
+                       <f:selectItem itemLabel="2016" itemValue="2016" />
+                       <f:selectItem itemLabel="2015" itemValue="2015" />
+                       <f:ajax execute="@this" render="ppPerpestiva" listener="#{bscDatoB.mostrarDatos}" />
+                   </h:selectOneMenu>                 
+                  
+              <div class="subItem">
+                  
+                  <h:commandLink id="lblMeta" styleClass="#{bscDatoB.bandera eq true?'seleccion':''}" >
+                                PROGRAMACION DE METAS
+                              
+                              <p:ajax process="@this" update="lblEjecucion lblMeta @(.perpestiva-cuerpo-item)" listener="#{bscDatoB.seleccionPerfil(true)}"/>
+                          </h:commandLink>
+                      <h:commandLink id="lblEjecucion" styleClass="#{bscDatoB.bandera ne true?'seleccion':''}">
+                                EJECUCION DE LAS METAS
+                            <p:ajax process="@this" update="lblEjecucion lblMeta  @(.perpestiva-cuerpo-item)" listener="#{bscDatoB.seleccionPerfil(false)}"/>
+                          
+                      </h:commandLink>
+                  </div>
+                  
+                  
+               <div style="display: block;border: 1px solid;text-align: right">
+                  
+                  <div style="display: inline-block;padding: 5px;background-color: white">
+                      <h:inputText id="txtBusqueda" value="#{bscDatoB.filtroObjetivo}" pt:placeholder="BUSQUEDA OBJETIVO"  style="border: none"/>
+                      
+                      
+                  
+                  <h:commandLink>
+                      <i class="fa fa-search" />
+                      <p:ajax process="@this txtBusqueda" update="@(.perpestiva-cuerpo-item)"  listener="#{bscDatoB.mostrarFiltroDatos}" />
+                  </h:commandLink>  
+                  </div>
+                  
+                  
+              </div>   
+              </div>
+              
+              
+              
+              
+              <ui:repeat id="ppPerpestiva" value="#{bscDatoB.perpestivaObjetivoLL}" var="itemPerpestiva" varStatus="indexPerpestiva">
+                  <div class="perpestiva" >
+                      <div class="perpestiva-cabecera" >
+                          <h:commandLink  style="color: #008000">
+                              <H2 style="text-align: center">
+                                  PERPESTIVA  #{itemPerpestiva.bscPerpestiva.descripcion}
+                              </H2>                              
+                              <p:ajax process="@this"  listener="#{bscDatoB.seleccionPerpestiva(itemPerpestiva)}" />
+                          </h:commandLink>
+                          
+
+                        <ul class="cabecera">
+                            <li>Objetivos Estrategicos..</li>
+                            <li>Indicadores</li>
+                            <li>Ene</li><li>Feb</li>
+                            <li>Mar</li><li>Abr</li>
+                            <li>May</li><li>Jun</li>
+                            <li>Jul</li><li>Ago</li>
+                            <li>Sep</li><li>Oct</li>
+                            <li>Nov</li><li>Dic</li>
+                        </ul>
+                          
+                      </div>
+                      
+                      <div class="perpestiva-cuerpo" >
+                     <h:panelGroup layout="block" id="pnPerpestiva-cuerpo" styleClass="perpestiva-cuerpo-item">
+                              
+                         
+                          <ui:repeat id="ppObjetivo" value="#{itemPerpestiva.objetivoIndicadorL}" var="itemObjectivo" varStatus="indexObjetivo">                          
+                          <div   class="perpestiva-cuerpo-objectivo">                              
+                              <h4>
+                                  #{itemObjectivo.bscObjetivo.objetivo} -#{itemObjectivo.bscObjetivo.descripcion}
+                              </h4>                              
+                              
+                              <div class="perpestiva-cuerpo-objectivo-subMenu" >
+                                        <h:commandLink  title="Nuevo Indicador" styleClass="itemNuevoObjectivo" >
+                                            <i class="fa fa-plus" style="color: green"  />
+                                            <f:ajax execute="@this"  render=":frmDato:txtIndicadorI :frmDato:txtAbreviaturaI :frmDato:cboEstadoI :frmDato:txtPerpetivaI :frmDato:txtObjectivoI" listener="#{bscDatoB.nuevoPerpestivaObjetivoIndicador(itemPerpestiva.bscPerpestiva, itemObjectivo.bscObjetivo)}" />
+                                        </h:commandLink>
+                                        <h:commandLink title="Editar Objetivo" styleClass="itemEditarObjectivo"   >
+                                            <i class="fa fa-pencil" style="color: blue"  />
+                                            <f:ajax execute="@this" render=":frmDato:txtObjetivo :frmDato:txtPerpetivaO"  listener="#{bscDatoB.editarPerpestivaObjectivo(itemPerpestiva.bscPerpestiva,itemObjectivo.bscObjetivo)}"  />
+                                        </h:commandLink> 
+                                          
+                                        <h:commandLink title="Eliminar Objetivo" styleClass="itemEliminarObjectivo"  onclick="if (!confirm('¿Esta seguro?')) return false;">
+                                            <i class="fa fa-times" style="color: red"  />
+                                            <f:ajax execute="@this" render="@form" listener="#{bscDatoB.eliminarPerpestivaObjetivo(itemPerpestiva.bscPerpestiva, itemObjectivo.bscObjetivo)}"  />
+                                        </h:commandLink>  
+                              </div> 
+                              
+                              <h:panelGroup id="perpestiva-cuerpo-objectivo-item" layout="block"  styleClass="perpestiva-cuerpo-objectivo-item #{itemPerpestiva.bscPerpestiva.perpestiva eq 1 ?'activo':''}" >                                  
+                                    <ui:repeat value="#{itemObjectivo.indicadorMesL}" var="itemIndicador">
+                                        <ul>
+                                            <li>                                      
+                                            </li>
+                                            <li>                                      
+                                                <div class="perpestiva-cuerpo-objectivo-indicador">
+                                                    <div class="perpestiva-cuerpo-objectivo-indicador-subMenu" >
+                                                      
+                                                    <h:commandLink title="Eliminar Indicador" onclick="if (!confirm('¿Esta seguro?')) return false;" styleClass="perpestiva-cuerpo-objectivo-indicador-subMenu-eliminar" >
+                                                          <i class="fa fa-times" style="color: red"  />
+                                                          <p:ajax process="@this" update="@parent:@parent" listener="#{bscDatoB.eliminarPerpestivaIndicadorObjetivo(itemPerpestiva.bscPerpestiva, itemObjectivo.bscObjetivo, itemIndicador.bscIndicador,indexPerpestiva.index,indexObjetivo.index)}"  />
+                                                    </h:commandLink> 
+                                                    <h:commandLink  title="Editar Indicador"  >
+                                                        <i class="fa fa-pencil" style="color: #008000"  />                                              
+                                                        <f:ajax execute="@this"  render=":frmDato:txtIndicadorI :frmDato:txtPerpetivaI :frmDato:txtObjectivoI" listener="#{bscDatoB.editarIndicador(itemPerpestiva.bscPerpestiva,itemObjectivo.bscObjetivo,itemIndicador.bscIndicador)}" />
+                                                    </h:commandLink>   
+                                                  </div>
+                                                  <div  >
+                                                      <b style="display: inline-block;vertical-align: top;width: 50px;">#{itemIndicador.bscIndicador.indicador}</b>
+                                                      <p style="display: inline-block;vertical-align: top;width: 80%">#{itemIndicador.bscIndicador.descripcion}</p>  
+                                                  </div>
+                                                </div>    
+                                            </li>
+                                            <ui:repeat value="#{itemIndicador.bscPerpestivaObjetivoIndicadorDetalleL}" var="itemMes">
+                                                <li>
+                                                    <h:inputText value="#{itemMes.actual}" size="5" maxlength="3" rendered="#{not bscDatoB.bandera}" disabled="#{itemMes.meta eq 0}" >
+                                                        <f:ajax execute="@this" listener="#{bscDatoB.insertarPerpestivaObjetivoIndicadorDetalle(itemMes)}" />
+                                                    </h:inputText>
+                                                    <h:inputText value="#{itemMes.meta}" size="5" rendered="#{bscDatoB.bandera}" maxlength="3" >
+                                                        <f:ajax execute="@this" listener="#{bscDatoB.insertarPerpestivaObjetivoIndicadorDetalle(itemMes)}" />
+                                                    </h:inputText>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </ui:repeat>
+                             </h:panelGroup>
+                            </div>
+                      </ui:repeat>
+                     </h:panelGroup>
+                      </div>                          
+                     <h:commandLink title="NUEVO OBJETIVO"  styleClass="btNuevo"  >
+                             <i class="fa fa-plus"  />                      
+                             <f:ajax execute="@this" render=":frmDato:txtObjetivo :frmDato:txtAbreviatura :frmDato:cboEstado :frmDato:txtPerpetivaO"  listener="#{bscDatoB.nuevoPerpestivaObjetivo(itemPerpestiva.bscPerpestiva)}" />                             
+                      </h:commandLink>                          
+                  </div>              
+              </ui:repeat>
+              
+              <p:dialog header="MANTENIMIENTO OBJETIVO" widgetVar="dlgObjectivo" width="500" height="300" modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">
+                  <div class="pnRegistro">
+                      <h:outputLabel value="PERPESTIVA" />   
+                      <h:inputText id="txtPerpetivaO" value="#{bscDatoB.bscPerpestivaS.descripcion}" disabled="true" />
+                      <h:outputLabel value="OBJETIVO" />                        
+                      <h:inputTextarea id="txtObjetivo" value="#{bscDatoB.bscObjetivo.descripcion}" required="true" />                        
+                        <h:outputLabel value="OBSERVACION" />                        
+                        <h:inputTextarea id="txtAbreviatura" value="#{bscDatoB.bscObjetivo.abreviatura}"  />                        
+                        <h:outputLabel value="ESTADO" />                        
+                        <h:selectOneMenu id="cboEstado" value="#{bscDatoB.bscObjetivo.estadoRegistro}">
+                            <f:selectItem itemLabel="HABILITADO" itemValue="1" />
+                            <f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+                        </h:selectOneMenu>
+                  </div>  
+                  <f:facet name="footer">
+                      <div class="sub-botonera">
+                          <h:commandLink>
+                               <i class="fa fa-check" />                              
+                              ACEPTAR ..
+                              <f:ajax execute="txtObjetivo txtAbreviatura cboEstado"  render="@form" listener="#{bscDatoB.insertarObjetivo()}" />
+                          </h:commandLink>                          
+                          <h:commandLink onclick="dlgObjectivo.hide()">
+                              <i class="fa fa-reply" />
+                              CANCELAR
+                              <f:ajax execute="@this" />
+                          </h:commandLink>
+                      </div>
+                  </f:facet>
+              </p:dialog>
+              
+              <p:dialog header="MANTENIMIENTO INDICADORES" widgetVar="dlgIndicador" width="600"  modal="#{true}" closeOnEscape="#{true}" resizable="#{false}">
+                  <div class="pnRegistro">
+                      <h:outputLabel value="PERPESTIVA" />   
+                      <h:inputText id="txtPerpetivaI" value="#{bscDatoB.bscPerpestivaS.descripcion}" disabled="true" />
+                      <h:outputLabel value="OBJETIVO" />   
+                      <h:inputTextarea id="txtObjectivoI" value="#{bscDatoB.bscObjetivoS.descripcion}" disabled="true" />
+                      <h:outputLabel value="INDICADOR" />
+                      <h:inputTextarea id="txtIndicadorI" value="#{bscDatoB.bscIndicador.descripcion}" required="true" />   
+                      <h:outputLabel value="OBSERVACION" />                        
+                      <h:inputTextarea id="txtAbreviaturaI" value="#{bscDatoB.bscIndicador.abreviatura}"  />                        
+                      <h:outputLabel value="ESTADO" />                        
+                      <h:selectOneMenu id="cboEstadoI" value="#{bscDatoB.bscIndicador.estadoRegistro}">
+                            <f:selectItem itemLabel="HABILITADO" itemValue="1" />
+                            <f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+                      </h:selectOneMenu>
+                  </div>
+              <f:facet name="footer">
+                      <div class="sub-botonera">
+                          <h:commandLink>
+                               <i class="fa fa-check" />
+                              ACEPTAR         
+                              <p:ajax process="@this txtIndicadorI txtAbreviaturaI cboEstadoI" update="@(.perpestiva-cuerpo-objectivo-item)"  listener="#{bscDatoB.insertarIndicador()}" />
+                           </h:commandLink>                          
+                          <h:commandLink onclick="dlgIndicador.hide()">
+                               <i class="fa fa-reply" />
+                              CANCELAR
+                              <f:ajax execute="@this" />
+                          </h:commandLink>
+                      </div>
+                  </f:facet>
+              </p:dialog>
+          </h:form>
+      </ui:define>
+  </ui:composition>

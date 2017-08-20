@@ -1,0 +1,485 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" /><!--jquery de PF-->
+          
+        <script type="text/javascript" src="#{utilB.ruta}/SGAWEB/resources/js/modal.js"></script>  
+         <link  type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/docente/style.css" />   
+         <link  type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        <script>
+        
+        function onevent(e){
+            
+            if(e.status==='begin'){
+            	$('body').removeClass('loaded');
+            	 
+                console.log("esperando")
+            }
+            if(e.status==='success') {
+            	console.log("correcto")
+                    
+            } 
+            if(e.status==='complete') {
+              
+            	console.log("completado")
+            	 
+            	$('body').addClass('loaded');
+            } 
+          }
+        
+        
+        
+            $(document).ready(function(){                
+                 $("#main-lista li").each(function(){
+                     var $padre=$(this);
+                    if ($padre.find("ul li").length){
+                        $padre.addClass("parent hover");       
+                        $("li.parent ul").addClass("child");  
+                    }
+                    else{
+                        $padre.find("ul").remove();
+                    }
+                });
+               
+                $("#main-lista li.parent a.menu-s-b").each(function(){
+                      var texto='<b style="position: absolute;right:10px ;border-right: 5px solid transparent;border-left: 5px solid transparent;border-top: 6px solid #0088CE;;width: 0px;height: 0px;top:15px"></b>';
+                     $(this).append(texto);
+                });
+                
+                $('#icon-config').click(function(){
+                  
+                     $( "#conf-persona-ventana-b" ).slideToggle("fast");
+                   
+                });     
+                
+				$("nav ul#main-lista li.parent a").click(function(e) {
+		                 //  e.preventDefault();                     
+				     $(this).parent().toggleClass("hover",300);
+		                   //  return false;
+				});		
+            
+              
+                $("#main-lista li a").addClass("color-d"); 
+                
+                
+                 
+                
+                
+            });
+            
+         
+            function notificacion(msg,speed,fadeSpeed,type){
+                $('.notify').remove();
+
+				      if (typeof fade != "undefined"){
+				      clearTimeout(fade);
+				      }
+				      $('body').append('<div class="notify '+type+'" style="display:none;position:fixed;right:10px"><p>'+msg+'</p></div>');
+				
+				      notifyHeight = $('.notify').outerHeight();
+				
+				      $('.notify').css('top',-notifyHeight).animate({top:10,opacity:'toggle'},speed);
+				
+				      fade = setTimeout(function(){
+				
+				      $('.notify').animate({top:notifyHeight+10,opacity:'toggle'}, speed);
+				
+				      }, fadeSpeed);
+				}    
+            
+            
+        </script>
+        
+        
+         <style>
+         
+         	  .notify{ width: 250px;padding: 10px 5px;border-radius: 5px;color: white}
+        	  .error{background-color: red}
+        	  .correcto{background-color: #008000}
+         
+         
+         
+         
+         
+             #msg{       
+                            padding:10px 10px; /*Espaciado interno*/
+                            width:180px; /*Ancho del contenedor*/
+                            text-align:center; /*Alineación del texto*/
+                            background-color:rgba(245,152,52,0.4); /*Color de fondo*/
+                            position:fixed; /*Permite que se mantenga estático*/
+                            display:none; /*Oculta el contenedor*/
+                            right: 30px; /*Separación del borde izquierdo*/
+                            bottom:30px; /*Separación inferior del borde*/
+                            box-shadow:0 0 5px #555; /*Sombras CSS3*/
+                            z-index: 55;
+                            
+                  }
+                  
+                  
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+#loader-wrapper {    position: fixed;    top: 0;    left: 0;    width: 100%;    height: 100%;    z-index: 1000;}
+#logo{position:absolute;color: red;z-index: 9999999;top: 0;left: 0;width: 150px;height: 150px;background: url('http://www.upig.edu.pe/logo/upig.png')no-repeat center center;background-size:60% }
+#loader {display: block;position: relative;;width: 150px;height: 150px;margin: 0;border: 4px solid transparent;border-top-color: #3498db;border-radius: 50%;-webkit-animation: spin 2s linear infinite; /* Chrome, Opera 15+, Safari 5+ */    animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */    z-index: 1001;}
+#loader:before {content: "";position: absolute;top: 5px;left: 5px;right: 5px;bottom: 5px;border-radius: 50%;border: 4px solid transparent;border-top-color: #e74c3c;-webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */        animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */    }
+#loader:after {content: "";position: absolute;top: 15px;left: 15px;right: 15px;bottom: 15px;border-radius: 50%;border: 4px solid transparent;border-top-color: #f9c922;-webkit-animation: spin 1.5s linear infinite; /* Chrome, Opera 15+, Safari 5+ */          animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */    }
+
+    @-webkit-keyframes spin {
+        0%   { 
+            -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: rotate(0deg);  /* IE 9 */
+            transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+        }
+        100% {
+            -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: rotate(360deg);  /* IE 9 */
+            transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+        }
+    }
+    @keyframes spin {
+        0%   { 
+            -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: rotate(0deg);  /* IE 9 */
+            transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+        }
+        100% {
+            -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: rotate(360deg);  /* IE 9 */
+            transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+        }
+    }
+
+    #loader-wrapper .loader-section {
+        position: fixed;
+        top: 0;
+        width: 50%;
+        height: 100%;        
+       	background-color:rgba(0,0,0,0.8) ;
+        z-index: 1000;
+        -webkit-transform: translateX(0);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: translateX(0);  /* IE 9 */
+        transform: translateX(0);  /* Firefox 16+, IE 10+, Opera */
+    }
+
+    #loader-wrapper .loader-section.section-left {
+        left: 0;
+        
+    }
+
+    #loader-wrapper .loader-section.section-right {right: 0;
+         
+    }
+
+    /* Loaded */
+    .loaded #loader-wrapper .loader-section.section-left {
+        -webkit-transform: translateX(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: translateX(-100%);  /* IE 9 */
+                transform: translateX(-100%);  /* Firefox 16+, IE 10+, Opera */
+
+        -webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);  
+                transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    }
+
+    .loaded #loader-wrapper .loader-section.section-right {
+        -webkit-transform: translateX(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: translateX(100%);  /* IE 9 */
+                transform: translateX(100%);  /* Firefox 16+, IE 10+, Opera */
+
+-webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);  
+        transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    }
+    
+    .loaded #loader {
+        opacity: 0;
+        -webkit-transition: all 0.3s ease-out;  
+                transition: all 0.3s ease-out;
+    }
+    .loaded #loader-wrapper {
+        visibility: hidden;
+
+        -webkit-transform: translateY(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+            -ms-transform: translateY(-100%);  /* IE 9 */
+                transform: translateY(-100%);  /* Firefox 16+, IE 10+, Opera */
+
+        -webkit-transition: all 0.3s 1s ease-out;  
+                transition: all 0.3s 1s ease-out;
+    }
+    
+    /* JavaScript Turned Off */
+    .no-js #loader-wrapper {
+        display: none;
+    }
+   
+
+    #content {
+        margin: 0 auto;
+        padding-bottom: 50px;
+        width: 80%;
+        max-width: 978px;
+    }  
+                  
+                  
+                  
+        </style>
+        	<f:event type="preRenderView" listener="#{usuarioB.verificarSesion}" />
+           <title><ui:insert name="titulo"> </ui:insert>     </title>
+    </h:head>
+    
+    
+    
+             
+    <h:body styleClass="loaded" >
+    
+    <div id="modalSesion" style="display: none;width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);position: absolute;top: 0;left: 0;font-family:sans-serif;z-index: 99">
+	    <div style="display: block;width: 400px;border-radius:5px;position: absolute;top: 60px;left: 40%;background-color: white;z-index: 100" >
+	    <div style="display: block;background: #007cff;color: white;padding: 5px 2px">
+	    	<b>..: Sesion Caducada :..</b>
+	    </div>
+	    <div style="display: block;padding: 7px 10px">
+		    <div style="display: inline-block;vertical-align: top;">
+		    	<i class="fa fa-clock-o" style="font-size: 5.0em;color: red" />
+		    </div>
+	    
+		    <div style="display: inline-block;vertical-align: top;width: 300px;padding: 15px 2px;text-align: justify;">
+		    	<p>La sesion ha caducado, por favor, pulse sobre el boton.</p>
+		    </div>
+	    </div>
+	    <div style="display: block;border-top: 1px solid silver; text-align: center;">
+	    	<a id="btVover" href="#" onclick="window.location='#{facesContext.externalContext.requestContextPath}/faces/index.xhtml';" style="display: inline-block;padding: 8px ;background-color: green;color: white;margin: 4px 2px;border-radius:4px">
+		    	<i class="fa fa-refresh" />		    	
+		    	Aceptar
+	    	</a>
+	    </div>
+	    
+	    
+	    </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    <p:idleMonitor onactive="$('#modalSesion').css('display','block');"  timeout="#{session.maxInactiveInterval * 100}" >
+               <p:ajax event="active" listener="#{utilB.eliminarSesiones}"  oncomplete="console.log('limpiar')"  />
+    </p:idleMonitor>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     <div id="loader-wrapper">
+       		<div style=" display: block;position: relative;left: 45%;top: 35%;">
+       			<div id="logo"  />       			
+		       		<div id="loader" />
+       		</div>
+		    <div class="loader-section section-left" />
+		    <div class="loader-section section-right" />
+		 
+	</div>
+		
+		
+    <f:event type="preRenderView" listener="#{usuarioB.validaClaveDocente()}" />
+                       <h:form >
+                           <p:dialog closable="true" draggable="false" resizable="false" showEffect="fade" hideEffect="clip" 
+                                     widgetVar="dlgCambiarClave" modal="true"  width="500">
+                           
+                               <span style="font-weight: bold;padding: 5px 5px;display: block;text-align: center">CAMBIO DE CONTRASEÑA POR MEDIDA DE SEGURIDAD</span>
+                               <div style="background-color: white;margin: 0px 5px 0px 5px ;height: 90%">
+                                   
+                                   <div style="display: inline-block; width: 25% ;vertical-align: top" >
+                                       <span style="width: 80%;height: 100px;display: block;border: 0px solid;margin: 0px auto;
+                                             background-image: url('/SGAWEB/resources/imagenes/candado4.png')"></span>
+                                   </div>
+                                                                      
+                                   <div style="display: inline-block; width: 70%;font-size: 0.9em">
+                                          <p>
+                                          Para cambiar su contraseña, introduzca su contraseña actual
+                                          en el 1er. campo.
+                                          </p>
+                                            <br/>
+                                          <p>
+                                          Despues de haber introducido su contraseña actual, introduzca su contraseña nueva en el 2do. campo,
+                                          reescriba su nueva contraseña en 3er. campo para verificacion y pulse <b> Cambiar contraseña.</b>
+                                          </p>                                      
+                                            <br/>
+                                            1.- Contraseña actual:<br/><h:inputSecret value="#{usuarioB.claveIngresada}" required="true"/><br/>
+                                            2.- Contraseña nueva:<br/><h:inputSecret value="#{usuarioB.nuevaClave}" required="true"/><br/>
+                                            3.- Repita la contraseña nueva:<br/><h:inputSecret value="#{usuarioB.repetirClave}"/><br/><br/>
+                                          <h:commandButton value="Cambiar contraseña"  actionListener="#{usuarioB.cambiarContraseñaAdmin()}" styleClass="form-button" >
+                                              <f:ajax execute="@form" />
+                                          </h:commandButton>
+                                   </div>                                                            
+                           </div>
+                           
+                           </p:dialog>
+                        </h:form>
+        
+        
+        <div id="wrapper">
+            
+       
+        <ui:insert name="cabecera">
+            <div id="msg" >
+                <span id="msg-img" style="display: block;width: 65px;height: 65px;margin: 0px auto" />
+                <span id="msg-texto" style="display: block;margin-top: 10px;font-weight: bold" /> 
+            </div>
+            
+            <div class="wrapper-header sm-header-b">
+                <header class="header">
+                    <div class="header-hgroup inlineblock">
+                        <img src="../../resources/imagenes/logo_upig.png"  width="85px" height="85px"   class=" inlineblock"/>
+                        <div  class="lema inlineblock">
+                            <h1>UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</h1>                         
+                            <h3>"Excelencia Académica para un Mundo Globalizado"</h3>
+                        </div>
+                    </div>
+                    <div class="header-person inlineblock">
+                        <div class="header-person-det inlineblock">
+                           <!-- <span id="reloj"> </span>-->
+                           <span class="font20 span" id="nomPerson">#{usuarioB.persona.nombreCompletos()} </span>
+                            <span  style="font-weight: bolder;color:yellow" class="font18" id="userPerson">#{usuarioB.usuarios.usuario} </span><br />
+                            <input type="hidden" value="#{usuarioB.persona.persona}" id="codigo"/>
+                            
+                            <span class="conf-persona span " id="icon-config"></span>
+                            
+                            <h:form>
+                                
+                            <div id="conf-persona-ventana-b" class="sm-header" style="z-index:1110" >
+                                <div class="triangulo"/>
+                           
+                                
+                                <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" width="100" height="130"/>
+                                 
+                                 <ul id="conf-personal">
+                                    
+                                    <li><h:commandLink value="Mi Perfil" class="button font20" action="/Docente/datos/misDatos.xhtml?faces-redirect=true"/></li>
+                                    
+                                    <li>
+                                       
+                                        <h:commandLink value="Cambiar Clave" class="button font20" action="/Docente/CambiarClave?faces-redirect=true"/>
+                                    </li>
+                                                     
+                                    <li>
+                                        <h:commandLink  class="button font20" value="Ayuda" target="_blank"  action="/Docente/MANUAL_INTERFAZ_DOCENTE.pdf"/>
+                                            
+                                        
+                                    </li>
+                                    <li><h:commandLink value="Cerrar Sesion" class="button font20" action="#{usuarioB.cerrarSesion}" /></li>
+                                    
+                                </ul>    
+                            </div>
+                            </h:form>
+                        </div>
+                        <div class="header-person-img inlineblock">                         
+                                  
+                        <img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" class="img-person" width="70px" height="70px" id="button"  />
+                        </div>
+                   
+                    </div>
+               </header> 
+            </div>
+        
+            
+        </ui:insert>
+        
+        
+        
+
+        
+        
+       
+        <div class="cuerpo" id="wrapper-nav-section">
+            <!--             MENU DE LA PAGINA                     -->
+                <nav id="main-b" class="inlineblock">
+                    <div id="opc-inst-period" class="sm-background-b">
+                       
+                            
+                            <h:form>
+                                <label class="color-c font20">Institución: </label>
+                            <select id="cmbInstitucion">
+                                <option>Universidad Peruana de Integración Global</option>
+                                
+                            </select>
+                            <br/><br/>
+                            <label class="color-c font20">Periodo: </label>
+                            <br/>
+                                
+                               
+                                <h:selectOneMenu value="#{usuarioB.periodoS}" id="cmbPeriodo" >                           
+                                    <f:selectItems value="#{usuarioB.periodoL}" var="periodo" itemValue="#{periodo.periodo}" itemLabel="#{periodo.desPeriodo}"/>                                    
+                                                  <f:ajax execute="@this"    listener="#{periodoB.refrescar()}" />
+                                </h:selectOneMenu>                                
+                            </h:form>
+                       
+                    </div>
+                        
+                    
+                    
+                    
+                     <ul id="main-lista">
+                         <ui:repeat value="#{usuarioB.menuL}" var="itemPadre" > 
+                                                              
+                                   <li>
+                                       
+                                       <a href="#{itemPadre.url}" title="#{itemPadre.nombre}" class="menu-s-b font20" >
+                                         <i class="#{itemPadre.classIcono}" /> 
+                                            #{itemPadre.nombre}
+                                       
+                                       </a>
+                                       
+                                       <ul id="lista-hijo">
+                                           <ui:repeat value="#{itemPadre.menuL}" var="itemHijo">
+                                               <li>
+                                                   
+                                                   <a href="/SGAWEB/faces/Docente/#{itemHijo.url}"  title="#{itemHijo.nombre}">
+                                                        <i class="#{itemHijo.classIcono}" />
+                                                       <span style="">#{itemHijo.nombre}</span>
+                                                   </a>
+                                               </li>
+                                                <!--ver redireccion-->
+                                        </ui:repeat>
+                                       </ul>
+                                   </li>
+                                  
+                            </ui:repeat>
+                        </ul>
+                    
+                    
+                </nav>
+
+            <!--             AREA DE TRABAJO                     -->
+             <section class="inlineblock" id="wrapper-section">
+                <article class="contenido">
+                    <ui:insert name="contenido">
+                
+                        
+                        
+                    </ui:insert>
+                </article>
+              </section>
+            
+        </div>
+        </div>
+    </h:body>
+</html>
+

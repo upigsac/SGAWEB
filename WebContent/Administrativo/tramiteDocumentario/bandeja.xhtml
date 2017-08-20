@@ -1,0 +1,311 @@
+  <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+				      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core"
+				      xmlns:p="http://primefaces.org/ui"     
+				      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  
+        
+        
+        template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+               BANDEJA DE ENTRADA 
+            </ui:define>
+            
+            
+            
+             <ui:define name="contenido">
+        
+        <style>
+      
+            
+          
+	         #pnDialogo{display: none;width: 100%;height: 100%; ;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.8)}
+	         
+	         
+	
+            
+        </style>
+      <script type="text/javascript">
+		
+			$(document).ready(function(){					
+				
+				$(".btCerraPoput").click(function(e){
+					e.preventDefault();
+				
+					$("#pnDialogo").css("display","none");
+				});
+			});
+				
+			var bandera=false;
+            var idGeneral;
+         
+            function confirmacion(obj,cadena){
+                idGeneral=obj;
+                if(bandera){
+                    $(".modal-fondo").remove();
+                    $(".modal").remove();
+                    bandera=false;
+                    return true;
+                }else{
+                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+                       $('body').append('<div class="modal-fondo"  /> ');
+                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                        }else{
+                        $(".modal-fondo").remove();
+                        $(".modal").remove();
+                   }                    
+                    
+                    return false;
+                }
+                
+            }
+            
+            function valida(estado){
+                bandera=estado;           
+                $(idGeneral).click();            
+            }
+		
+		</script>
+        
+      
+            
+        <h:form id="frmBandejaTramite" prependId="false">
+        	#{tramTramiteBandejaB.load(usuarioB.persona.persona,usuarioB.personal.personal)}
+        	        	
+            <span class="tituto-admin"  >BANDEJA DE ENTRADA</span>
+            <div class="paneles">
+             	<h:outputLabel id="cbOficina" value="Oficina" />
+             	<h:selectOneMenu>
+             	<f:selectItems value="#{tramTramiteBandejaB.personalOficinaL}" var="itemPersonaOficina"  itemLabel="#{itemPersonaOficina.descripcion}" itemValue="#{itemPersonaOficina.descripcion}" />
+             	<f:ajax  execute="@this dpFechaInicio dpFechaFin" render="tbBandeja btFalta btFinalizado"  listener="#{tramTramiteBandejaB.mostrarBandejaEntrada}"  />
+             	</h:selectOneMenu>
+                <br/>
+                <h:outputLabel value="Desde:" />
+                <p:calendar id="dpFechaInicio" value="#{tramTramiteBandejaB.fechaInicio}" pattern="dd-MM-yyyy"  maxdate="#{utilB.fechaHoy()}" />
+                
+          <br />
+                <h:outputLabel value="Hasta:" />
+                <p:calendar id="dpFechaFin" value="#{tramTramiteBandejaB.fechaFin}" pattern="dd-MM-yyyy" maxdate="#{utilB.fechaHoy()}" />
+            
+               
+              
+        
+            </div>
+          <div class="paneles">
+                 
+                  <h:selectOneRadio id="rbEstadoCorreo" value="#{tramTramiteBandejaB.filtroEstado}" >
+                    <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                    <f:selectItem itemLabel="LEIDOS" itemValue="70"/>
+                    <f:selectItem itemLabel="SIN LEER" itemValue="69"/>
+               
+                    <f:ajax execute="@this dpFechaInicio dpFechaFin" render="tbBandeja btFalta btFinalizado" listener="#{tramTramiteBandejaB.mostrarBandejaEntrada}" />
+                    </h:selectOneRadio>
+               </div>
+               
+               
+               
+               <div class="paneles">
+	                FALTA                
+	                <h:commandLink id="btFalta" styleClass="boton-circulo" style="background-color: red">
+	                #{tramTramiteBandejaB.totalPedientes}
+	                <f:ajax  execute="@this" />
+	                </h:commandLink>
+	                FINALIZADO
+	                <h:commandLink id="btFinalizado" styleClass="boton-circulo" style="background-color: green">
+	                  #{tramTramiteBandejaB.totalFinalizados}
+	                <f:ajax execute="@this" />
+	                </h:commandLink>
+               </div>
+             
+              
+               <p:dataTable id="tbBandeja" value="#{tramTramiteBandejaB.tramBandejaDetalleL}"  var="detalle" rowIndexVar="status"   widgetVar="tbBandeja" style="position: relative">
+                
+                
+                <f:facet name="header">
+                    BANDEJA 
+                </f:facet>
+                <p:column width="5">
+                #{status +1}
+                </p:column>
+                
+                <p:column headerText="Expediente" style="text-align: center;position: relative;" width="100">
+                <span style="display: block;height: 100%;width: 4px;background-color: #{detalle.estadoTramite eq 23 ?'green':'red'};position: absolute;left: 0px;top: 0px"></span>
+                    <h:outputLabel value="#{detalle.expediente}" style="font-weight: bold;font-size: 1.5em" /> 
+                </p:column>
+           
+                <p:column headerText="Asunto" >
+                    
+                    <h:graphicImage value="SVerImagenAlumno?alumno=#{detalle.persona_empresa}" width="50" height="50" style="display: inline-block" title="#{tramTramiteDocumentarioPersonaB.tramTramitePersona.alumno}" />
+                    <div style="display: inline-block;vertical-align: top;padding: 3px 10px;width: 80%">
+                        <b style="color: salmon">
+                         
+                            #{detalle.desTipoTramite}
+                        </b>
+                        <br/>
+                        #{detalle.desTramite}<br/>
+                      
+                        <h:outputLabel style="font-weight: bold" value="#{detalle.desPersona}" />
+                     
+                    </div>
+                </p:column>
+                <p:column headerText="Enviado por:" width="80">
+                    #{detalle.usuarioEmisor}
+                </p:column>
+                <p:column headerText="Fecha  hora" width="80" style="text-align: center">
+                    #{detalle.fechaEntrega} 
+                    <br/>
+                    #{detalle.horaEntrega}
+                </p:column>
+                <p:column  width="100" style="font-size:1.2em" >      
+                <h:panelGroup id="pnSubMenu" layout="block" styleClass="subMenu">
+                 <p:commandLink styleClass="boton-icono"  title="Leer"  >
+                   			<i class="#{detalle.estadoCorreo eq 69?'fa fa-envelope-o':'fa fa-envelope-open-o'}" style="color:gold" />
+                       <p:ajax  process="@this" update="@(.subMenu) :frmBandejaTramite:pnReporte" listener="#{tramTramiteBandejaB.leer(detalle,status)}" />     
+                      
+                    </p:commandLink>
+                    
+                    <h:commandLink styleClass="boton-icono" title="Respondes" disabled="#{detalle.estadoCorreo eq 69}" >
+                    	<i class="fa fa-paper-plane-o" />
+                    	<f:ajax execute="@this" render=":frmBandejaTramite:cbTramiteOficina  :frmBandejaTramite:txtAsunto" listener="#{tramTramiteBandejaB.nuevoReenviar(detalle)}" /> 
+                    </h:commandLink>
+                    
+                    <h:commandLink styleClass="boton-icono" title="Flujo Oficina" disabled="#{detalle.estadoCorreo eq 69}" >
+                    		<i class="fa fa-sitemap" />
+                    		<f:ajax execute="@this" render=":frmBandejaTramite:pnTramiteSeguiento" listener="#{tramTramiteBandejaB.mostraFlujoTramite(detalle.expediente)}" />
+                    </h:commandLink>
+                    
+                    <h:commandLink styleClass="boton-icono" title="Terminar Tramite" disabled="#{detalle.estadoCorreo eq 69}"   onclick="return confirmacion(this,'¿ Esta seguro de finalizar el tramite  ?');" >
+                    	<i class="fa fa-power-off" style="color:red" />
+                    	<f:ajax execute="@this"   listener="#{tramTramiteBandejaB.finalizarTramite(tramTramiteBandejaB.tramTramiteSeguimiento.expediente)}" /> 
+                    </h:commandLink>
+                
+                </h:panelGroup>              
+                   
+                </p:column>
+                
+            </p:dataTable>
+            
+         
+            
+            
+            
+            
+            <p:dialog header="..: ENVIAR EXPEDIENTE :.." width="550"  widgetVar="dlgReenviar" modal="true" closeOnEscape="true" resizable="false">
+                 
+                    <h:outputLabel value="PARA OFICINA:"/><br/>
+                    <h:selectOneMenu id="cbTramiteOficina" value="#{tramTramiteBandejaB.tramTramiteSeguimiento.oficina}" required="true" style="display:block;width: 100%">
+                        <f:selectItem itemLabel="-- SELECCIONAR --" />
+                        
+                        <f:selectItems value="#{tramTramiteBandejaB.oficinaL}" var="oficina" itemValue="#{oficina.oficina}" itemLabel="#{oficina.descripcion}"  itemDisabled="#{oficina.oficina eq tramTramiteBandejaB.oficina}"  />
+                        <f:ajax execute="@this" />
+                    </h:selectOneMenu>
+                    
+                   
+                    <h:outputLabel value="ASUNTO:"/>
+                    <br/>
+                    <h:inputTextarea id="txtAsunto" value="#{tramTramiteBandejaB.tramTramiteSeguimiento.asunto}"  rows="5"  style="resize: none;width: 99%;#{ component.valid ? '' : 'border-color:red;'}" required="true"/>
+                    
+                 
+                    <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink styleClass="boton-verde" >
+                                    ACEPTAR
+                                    <f:ajax execute="@this cbTramiteOficina txtAsunto"  render="cbTramiteOficina txtAsunto"  listener="#{tramTramiteBandejaB.reenviar}"  />
+                                </h:commandLink>
+                                <h:commandLink styleClass="boton-rojo" onclick="dlgReenviar.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this " render="cbTramiteOficina txtAsunto"  resetValues="true" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+            </p:dialog>
+            
+            <p:dialog header="..: FLUJO DEL TRAMITE :.." widgetVar="dlgFlujo"  width="700" modal="true" closeOnEscape="true" resizable="false">
+                
+                
+                
+                <h:panelGroup layout="block" id="pnTramiteSeguiento">
+                 	<ui:repeat value="#{tramTramiteBandejaB.tramTramiteSeguimientoFlujoL}" var="tramiteFlujo" >
+                 	<div class="column paneles" >
+                 	<div style="position: relative;text-align: center;">
+                 	        <h:graphicImage value="SVerImagenAlumno?alumno=#{tramiteFlujo.usuarioReceptor}" style="" width="200" height="200" />
+                 	        
+                 	        <b style="position: absolute;bottom: 0;left: 0;display: block;background-color: rgba(0,0,0,0.5);color: white">
+		                 	 #{oficinaB.mostrarOficinaCodigo(1, tramiteFlujo.oficina).descripcion}
+		                 	</b>
+                 	</div>
+                 	
+	                        <h:outputLabel value="Fecha Recepcion" />
+	                          <br/>
+	                        #{tramiteFlujo.fechaEntrega} - #{tramiteFlujo.horaEntrega}
+	                        <br/>
+	                        <h:outputLabel value="Fecha Envio" />
+	                          <br/>
+	                        #{tramiteFlujo.fechaResivido} - #{tramiteFlujo.horaResivido}
+	               
+                 	
+                 	</div>
+	                
+	                
+	                </ui:repeat>
+                </h:panelGroup>
+               
+                
+             
+                
+                 <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink styleClass="boton-verde" >
+                                    ACEPTAR
+                                    <f:ajax execute="@this "   />
+                                </h:commandLink>
+                                <h:commandLink styleClass="boton-rojo" onclick="dlgFlujo.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this " />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+            </p:dialog>
+            
+            
+      
+            
+            
+            
+               
+        <p:dialog header="ATENDER EXPEDIENTE" widgetVar="dlgAtender" width="500" height="400">
+                   <h:outputLabel value="Estado del Documento" />
+                   <h:selectOneMenu >
+                       <f:selectItem itemLabel="OBSERVADO" itemValue="" />
+                       <f:selectItem itemLabel="FINALIZADO" itemValue="" />
+                     
+                       
+                   </h:selectOneMenu>
+                   <br />
+                   <h:outputLabel value="OBSERVACION" />
+                   <h:inputTextarea value="" />
+        </p:dialog>   
+               
+               
+        <div id="pnDialogo">
+        
+	        <div style="display: block;width: 780px;height: 80%;margin: 20px auto;border: 1px solid ;position: relative;">
+	        	<a class="btCerraPoput" style="position: absolute;top: 0;right: 5px;color: red;">X</a>
+	        	<b style="display: block;color: white;background-color: #2182C2;padding: 10px 5px" >INTRANET UPIG</b>
+	        	<h:panelGroup id="pnReporte" layout="block" style="display: block;width: 100%;height: 100%;">
+	        		<iframe src="SReporte?reporte=tramiteDocumentario\tramite&amp;param=EXPEDIENTE,#{tramTramiteBandejaB.expediente}" style="display: block;width: 100%;height: 100%;border: none;" />
+	        	</h:panelGroup>
+	       	  	
+	       	</div>
+        </div>       
+       	
+        
+            
+        </h:form>
+        
+       
+        
+          </ui:define>
+         </ui:composition>
+

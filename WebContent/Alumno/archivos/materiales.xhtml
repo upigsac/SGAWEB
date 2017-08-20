@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <h:head>
+        <title>Facelet Title</title>
+       
+    </h:head>
+    <h:body>
+        
+        
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                Gestor de Contenidos
+            </ui:define>
+                        
+            <ui:define name="contenido">
+                  
+                <span class="tituloCuerpo"> MIS ARCHIVOS </span>
+                               
+                <h:form id="archivos">
+                    
+               <!--
+                    <div id="panel"/>
+                   --> 
+                   
+                   
+                   <h:inputHidden id="oculto" value="#{subirArchivoBB.rutaArchivos}"/>
+                    <h:inputHidden id="ocultoLinea" value="#{subirArchivoBB.rutaArchivosLinea}"/>
+                   
+                     #{subirArchivoBB.cursoAlumno(usuarioB.usuarios.usuario,usuarioB.periodoS,carreraB.carrera.carrera)}
+                       
+                       
+                          <br/>  
+                          <br/>  
+                    
+                     
+                     
+                   <h:panelGroup layout="block" id="contenedor">
+                            #{subirArchivoBB.buscar()}
+                   
+                            
+                  <ul>
+                        <li class="archivos liArchivo">ARCHIVO</li>
+                        <li class="archivos liNombre">NOMBRE</li>
+                        <li class="archivos liTipo">TIPO</li>
+                        <li class="archivos liFecha">FECHA DE MODIFICACION</li>
+                        
+                    </ul>
+                    
+                <h:outputLabel value="No existen archivos" rendered="#{empty subirArchivoBB.directorios}"
+                                   style="font-size: 2em;color: red;margin-top: 5px;position: absolute"/>
+                        
+                <ui:repeat  value="#{subirArchivoBB.directorios}" var="lista"  >
+ 
+                   
+                    <ul class="listaArchivos">
+                        
+                            <li class="archivos imagen">
+                                <div style="text-align: center;width: 80px">                               
+                                        <span class="#{subirArchivoBB.Imagen(lista.get(0))}"/>
+                                </div>
+                            </li>
+                                             
+                            <h:commandLink onclick="document.getElementById('archivos:oculto').value+='\\' + '#{lista.get(0)}',
+                                           document.getElementById('archivos:ocultoLinea').value+='\\' + '#{lista.get(0)}'">
+                            
+                            <li class="archivos nombre">
+                                <h:outputLabel value="#{lista.get(1)}" style="font-size: 1.2em"/>
+                            </li>
+                                                          
+                            <li class="archivos tipo">
+                                #{lista.get(2)}
+                            </li>
+
+                            <li class="archivos fecha">
+                                #{lista.get(3)}
+                            </li>
+                                                                
+                                   <f:ajax  render=":archivos:contenedor" execute="@form"/>
+                                   
+                            </h:commandLink>
+
+                            <li class="archivos descargar">
+                                <h:commandLink actionListener="#{subirArchivoBB.Descargar(lista.get(0))}" title="Descargar archivo"
+                                               style="padding-top: 12px;display: #{lista.get(4)};width: 30px;margin-right: 10px;">
+                                    <img src="../../resources/imagenes/descarga_usu.png" height="30" width="25"/>
+                                </h:commandLink>
+                                <a style="display: #{lista.get(4)};position: initial;width: 30px;" title="Ver archivo en linea"
+                                   href="http://docs.google.com/viewer?url=#{subirArchivoBB.rutaArchivosLinea}/#{lista.get(0)}&amp;embedded=true"
+                                        onclick="window.open(this.href,'this.target','width=890,height=530,top=10,left=10,scrollbars=yes');
+                                        return false;">
+                                    <img src="../../resources/imagenes/descarga_linea.png" height="30" width="25"/>
+                                </a>
+                                
+                            </li>
+                     
+                    </ul>    
+                                      
+                </ui:repeat>
+                     
+                         
+                         
+                 </h:panelGroup>
+                   
+                   <script>   
+                   var ruta=document.getElementById('archivos:oculto').value;
+                   var cadena=ruta.split('\\');
+                    
+                    var html;
+                    html="<ul>";
+                    for (i=0; i&lt;cadena.length; i++){
+                       html+='<li>';
+                       html+= cadena[i];
+                       html+="</li>";
+                       }
+                    html+="</ul>";
+                    $("#panel").append(html);
+                    $("#panel ul li").css({display:"inline-block",
+                                            margin:"0px 5px",
+                                            cursor:"pointer"
+                                            });
+                                                                 
+                   function retroceder(valor){
+                       alert(valor);
+                   }
+                   
+                   $('#panel ul li').click(function(){
+                       
+                       alert($(this).text());
+                     
+                   ruta=ruta.replace("\\" + $(this).text() ,"");
+                   document.getElementById('archivos:oculto').value=ruta;
+                });
+                </script>
+              </h:form>   
+          
+            </ui:define>
+            
+        </ui:composition>
+                      
+    </h:body>
+</html>
+

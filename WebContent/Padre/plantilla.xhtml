@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>
+		<ui:insert name="titulo" />
+	
+	</title>
+	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	 <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+	 <link   type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/padre/style.css" />
+	  
+
+<script type="text/javascript">
+<!--
+	
+//-->
+$(document).ready(function(){
+	$("#menu ul li a").click(function(e){
+		e.preventDefault();
+		
+		$("#menu ul li a").removeClass("seleccion");
+		$(this).addClass("seleccion")
+	});
+});
+</script>
+</h:head>
+<h:body style="">
+
+
+	<div id="cabecera" >
+	<div id="logoTipo">		     <a href="/SGAWEB/faces/Padre/index.xhtml">
+	
+		<img src="../../resources/imagenes/logo_upig.png" alt=""  style="width: 80px;height: 80px" />
+	</a>	
+		
+		<div>
+			<b>UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL</b>
+			<span>"Excelencia Académica para un Mundo Globalizado"</span>
+		</div>
+		
+	</div>
+	
+	</div>
+	<div id="cuerpo">
+		<div id="menu">
+		<h:form prependId="false">
+		<div id="usuario">
+			<img src="SVerImagenAlumno?alumno=#{usuarioB.persona.persona}" alt="" />
+			<div id="usuario-datos" style=";width: 75%">
+				<b>#{usuarioB.persona.paterno} #{usuarioB.persona.materno} #{usuarioB.persona.nombres}</b>				
+				
+				
+				<div style="display: block;;text-align: right">
+				<h:commandLink title="Cerrar Seccion." style="color:red">
+					<i class="fa fa-power-off" />
+					<f:ajax execute="@this" listener="#{utilB.cerrarSeccion}" /> 
+				</h:commandLink>
+		
+				</div>
+			</div>
+			
+		</div>
+			
+		
+			</h:form>
+		</div>
+		<div id="area">
+			<ui:insert name="contenido"></ui:insert>
+		</div>
+	</div>
+
+</h:body>
+</html>

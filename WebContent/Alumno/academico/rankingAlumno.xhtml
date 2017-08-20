@@ -1,0 +1,77 @@
+        <ui:composition
+        			  xmlns:ui="http://java.sun.com/jsf/facelets"
+                      xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core"
+				      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+				      template="/Alumno/plantilla.xhtml"
+				      xmlns:p="http://primefaces.org/ui">
+            
+            <ui:define name="titulo">
+           Ranking Alumno
+            </ui:define>
+            
+            <ui:define name="contenido">
+            
+            
+<h:form>
+#{rankingAlumnoB.load(usuarioB.institucionS,usuarioB.periodoS,usuarioB.alumnoCarrera.carrera)}
+ <span class="tituloCuerpo"> Ranking  </span>
+<style>
+.ficha-ranking{min-height: 240px;position: relative;width: 200px;text-align: center;}
+.ficha-ranking:HOVER{background-color: #efefef;}
+
+.ficha-ranking-estrella {position: absolute;left: 0;bottom: 0;font-size: 1.2em}
+.ficha-ranking img{width: 130px;height: 130px;border-radius:50%}
+.ficha-rankig-cabe{display: block;width: 100%;border-bottom: 1px solid silver;height: 40px}
+.ficha-rankig-cabe b{font-size: 1.5em}
+.ficha-rankig-cabe span{width: 170px}
+.ficha-ranking-select{border-color: red}
+</style>
+
+
+<div class="paneles">
+	<ui:repeat var="itemRanking" value="#{rankingAlumnoB.detalleRankingL}"  varStatus="status">
+	<div class="ficha-ranking column paneles #{itemRanking.alumnoPeriodo.alumno eq usuarioB.usuarios.usuario?'ficha-ranking-select':''}" >
+	<div class="ficha-ranking-estrella">
+	<h:outputLabel rendered="#{status.index +1 eq 3}">
+	<i class="fa fa-star" style="color: yellow" />
+	
+	
+	</h:outputLabel>
+	<h:outputLabel rendered="#{status.index +1 eq 2}">
+	<i class="fa fa-star" style="color: yellow" />
+	<i class="fa fa-star" style="color: yellow" />
+	
+	</h:outputLabel>
+	<h:outputLabel rendered="#{status.index +1 eq 1}">
+	<i class="fa fa-star" style="color: yellow" />
+	<i class="fa fa-star" style="color: yellow" />
+	<i class="fa fa-star" style="color: yellow" />
+	</h:outputLabel>
+	
+	</div>
+	
+	<div class="ficha-rankig-cabe">
+		<b class="column">
+			#{status.index +1}
+		
+		</b>
+		<span class="column"> #{itemRanking.persona.paterno} #{itemRanking.persona.materno} #{itemRanking.persona.nombres}</span>
+	</div>
+	
+	  <img src="SVerImagenAlumno?alumno=#{itemRanking.persona.persona}" />
+	<br />
+	ALUMNO : #{itemRanking.alumnoPeriodo.alumno}<br />
+	PROMEDIO : #{itemRanking.alumnoPeriodo.promedio_semestral}<br />
+	CREDITO : #{itemRanking.alumnoPeriodo.creditos_matriculados}<br />
+	</div>
+	
+	</ui:repeat>
+</div>
+
+</h:form>
+
+</ui:define>
+</ui:composition>

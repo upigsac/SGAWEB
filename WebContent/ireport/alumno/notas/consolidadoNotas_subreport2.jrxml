@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consolidadoNotas_subreport2" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f9bb18ef-4a3a-4ee5-be92-3198eca42d22">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="formula" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="periodo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="alumno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="institucion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[
+SELECT A.INSTITUCION,A.PERIODO,A.CARRERA,A.SECCION,A.CURSO +' - '+  E.DESCRIPCION CURSO ,B.FORMULA ,C.ORDEN,C.ORDEN_RE,C.TIPO_EXAMEN,D.DESCRIPCION,
+CASE WHEN C.TIPO_EXAMEN_PADRE IS NOT NULL THEN  (SELECT DESCRIPCION FROM SIGU.HOR_TIPO_EXAMEN WHERE TIPO_EXAMEN=C.TIPO_EXAMEN_PADRE) END  TIPO_EXAMEN_PADRE,
+(SELECT NOTA FROM SIGU.ACA_ALUMNO_CURSO_NOTA AA WHERE AA.INSTITUCION=A.INSTITUCION AND AA.PERIODO=A.PERIODO AND AA.CARRERA=A.CARRERA  AND AA.MALLA=A.MALLA AND  AA.SECCION=A.SECCION AND AA.CURSO=A.CURSO AND AA.ALUMNO=A.ALUMNO AND AA.TIPO_EXAMEN=C.TIPO_EXAMEN)NOTA
+FROM  SIGU.ACA_ALUMNO_CURSO_SECCION A,SIGU.HOR_CURSO_PERIODO B,SIGU.HOR_FORMULA_EXAMEN C,SIGU.HOR_TIPO_EXAMEN D,UPA.ACA_CURSOS E
+WHERE A.INSTITUCION=$P{institucion} AND A.PERIODO=$P{periodo} AND A.ALUMNO=$P{alumno}
+AND B.INSTITUCION=A.INSTITUCION AND B.PERIODO=A.PERIODO AND B.CARRERA=A.CARRERA AND B.MALLA=A.MALLA AND B.CURSO=A.CURSO
+AND C.FORMULA=B.FORMULA
+AND E.CURSO=A.CURSO
+AND D.TIPO_EXAMEN=C.TIPO_EXAMEN AND B.FORMULA=$P{formula} AND ((C.SUB_FORMULA IS NULL AND C.DECENDENCIA IN('P','H'))  OR (C.DECENDENCIA='H' AND C.SUB_FORMULA='PROMEDIO' AND TIPO_EXAMEN_PADRE IS NOT  NULL ))
+--AND A.CURSO IN('IS1001')
+UNION
+SELECT A.INSTITUCION,A.PERIODO,A.CARRERA,A.SECCION,A.CURSO +' - '+ C.DESCRIPCION CURSO,B.FORMULA ,9,9,'PROMEDIO','PROMEDIO',NULL,
+CASE WHEN  B.FORMULA=10 AND AB.NOTA =0 THEN 0 ELSE CASE WHEN ISNULL(AA.ESTADO_REGISTRO,0)=0 THEN CONVERT(DECIMAL(5,2),ROUND(SIGU.SF_PROMEDIO_ALUMNO_CURSO(1, 1, A.PERIODO, A.CARRERA,A.MALLA,A.CURSO, A.ALUMNO,'') ,0)) ELSE
+A.PROMEDIO
+END
+END AS NOTA
+FROM  SIGU.ACA_ALUMNO_CURSO_SECCION A LEFT JOIN DI.HOR_CURSO_SECCION_CIERRE_ACTA AA
+ON AA.INSTITUCION=A.INSTITUCION AND AA.PERIODO=A.PERIODO AND AA.CARRERA=A.CARRERA AND AA.MALLA=A.MALLA AND AA.CURSO=A.CURSO AND AA.SECCION=A.SECCION
+LEFT JOIN SIGU.ACA_ALUMNO_CURSO_NOTA AB
+ON AB.INSTITUCION=A.INSTITUCION AND AB.PERIODO=A.PERIODO AND AB.CARRERA=A.CARRERA AND AB.MALLA=A.MALLA AND AB.CURSO=A.CURSO AND AB.SECCION=A.SECCION AND AB.ALUMNO=A.ALUMNO AND AB.TIPO_EXAMEN='Y5'
+,SIGU.HOR_CURSO_PERIODO B,UPA.ACA_CURSOS C
+WHERE A.INSTITUCION=$P{institucion} AND A.PERIODO=$P{periodo} AND A.ALUMNO=$P{alumno}
+AND B.INSTITUCION=A.INSTITUCION AND B.PERIODO=A.PERIODO AND B.CARRERA=A.CARRERA AND B.MALLA=A.MALLA AND B.CURSO=A.CURSO AND B.FORMULA=$P{formula}
+--AND A.CURSO IN('IS1001')
+AND C.CURSO=A.CURSO
+ORDER BY 5,6,7
+]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Short"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="FORMULA" class="java.lang.Short"/>
+	<field name="ORDEN" class="java.lang.Integer"/>
+	<field name="ORDEN_RE" class="java.lang.Integer"/>
+	<field name="TIPO_EXAMEN" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="TIPO_EXAMEN_PADRE" class="java.lang.String"/>
+	<field name="NOTA" class="java.math.BigDecimal"/>
+	<title>
+		<band height="5"/>
+	</title>
+	<summary>
+		<band height="240" splitType="Stretch">
+			<crosstab>
+				<reportElement uuid="5c6ca4cd-81ae-4712-852b-b53541754f82" mode="Transparent" x="0" y="-5" width="802" height="245"/>
+				<rowGroup name="CURSO" width="184">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CURSO}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="988cb0b5-519b-427f-b594-e6eede9c168e" x="0" y="0" width="184" height="20"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="10" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CURSO}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="TIPO_EXAMEN_PADRE" height="26" headerPosition="Stretch">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{TIPO_EXAMEN_PADRE}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="a77cbd55-bf7b-4b4d-bf1d-c0c06ea6bd4c" x="0" y="0" width="22" height="25"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{TIPO_EXAMEN_PADRE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="DESCRIPCION" height="105">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ORDEN}+ $F{DESCRIPCION}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="1f1628c8-dbce-4cd9-8033-41ce9b5e79db" x="1" y="0" width="20" height="105"/>
+								<box topPadding="2" bottomPadding="2" rightPadding="0"/>
+								<textElement verticalAlignment="Middle" rotation="Left">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{DESCRIPCION}.substring(1)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="NOTAMeasure" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{NOTA}]]></measureExpression>
+				</measure>
+				<crosstabCell width="22" height="20">
+					<cellContents mode="Transparent">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="###0" isBlankWhenNull="true">
+							<reportElement uuid="61238049-dd69-41ba-85b8-d97602886916" mode="Transparent" x="0" y="0" width="21" height="20" backcolor="#FFFFFF"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="10" isBold="false" isItalic="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{NOTAMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

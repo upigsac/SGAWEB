@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+
+    </h:head>
+    <h:body>
+
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                CURSOS EXTRACURRICULARES
+            </ui:define>
+
+            <ui:define name="contenido">
+                <style>
+                    #frmExtraCurricular table thead{font-size: 0.8em}
+                    #frmExtraCurricular #frmExtraCurricular\:tbExraCurricular_data{font-size: 0.8em}
+                    #frmExtraCurricular .ui-datatable-odd{background-color: white}
+                </style>
+                <span class="tituto-admin">CURSO GRADOS Y TITULOS </span>
+                <h:form id="frmcursoTitulacion">
+
+                    <div style="display: block;width: 100%;margin: 10px 0px">
+                        CARRERAS:
+                        <h:selectOneMenu value="#{carreraB.seleccion}">
+                            <f:selectItem itemLabel="TODOS"  itemValue="%" />
+                            <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(1)}" var="carrera" itemLabel="#{carrera.descripcion}"  itemValue="#{carrera.carrera}" />
+
+                            <f:ajax execute="@this" render="tbcursoTitulacion"  />
+                        </h:selectOneMenu>
+                    </div>
+                    <p:dataTable id="tbcursoTitulacion"  value="#{seccionPeriodoB.mostrarSeccionPeriodo(8, usuarioB.periodoS, carreraB.seleccion)}" var="detalle" rowIndexVar="status">
+                        <p:column>
+                            <p:rowToggler   />
+                        </p:column>
+                        <p:column headerText="Nº" width="10">
+                            #{status +1}
+
+                        </p:column>
+                        <p:column headerText="CARRERA" >                    
+                            <h:outputLabel value="#{detalle.carrera}" style="font-weight: bold" /> <br/>
+                            #{carreraB.mostrarCarreraCodigo(detalle.carrera).descripcion}
+                        </p:column>
+                        <p:column headerText="SECCION" width="60">
+                            #{detalle.seccion}
+                        </p:column>
+
+                        <p:column headerText="TURNO" width="75">
+                            #{turnoB.mostrarTurno(detalle.turno).descripcion}
+
+                        </p:column>
+
+
+
+                        <p:column headerText="FECHA INICIO" width="75">
+                            #{detalle.fechaInicio}                    
+                        </p:column>
+                        <p:column headerText="FECHA FINAL" width="75">
+                            #{detalle.fechaFin}
+                        </p:column>
+
+                        <p:column headerText="MATRICULADO" width="75">
+                            <h:commandButton value="ver matriculado" type="button" onclick="dlgMatriculados.show()" >
+
+                                <f:ajax render=":frmDetalleMatricula" listener="#{alumnoPeriodoB.mostrarAlumnoPeriodo(detalle.institucion, detalle.periodo, detalle.carrera, detalle.seccion)}" />
+                            </h:commandButton>
+                        </p:column>    
+
+
+                        <p:column headerText="" width="10">
+                            <span style="display: block;width: 20px;background-color: red;height: 20px"></span>
+                        </p:column>
+                        <p:rowExpansion>
+
+
+                            <p:dataTable id="tbSubTabla" value="#{cursoSeccionB.mostrarCursoSeccion(detalle.institucion, detalle.periodo, detalle.carrera, detalle.seccion)}" var="subTabla" rowIndexVar="statusSub">
+
+                                <p:column headerText="Nº">
+
+                                    <h:outputLabel value="#{statusSub+1}" />
+
+                                </p:column>
+                                <p:column  headerText="ASIGNATURA">
+
+                                    #{subTabla.curso} <BR/>
+                                    #{cursoB.mostrarCurso(subTabla.curso).descripcion}
+                                </p:column>
+
+                                <p:column  headerText="DOCENTE">                           
+
+                                    #{personalB.mostrarPersona(cursoSeccionDocenteB.mostrarCursoSeccionDocentes(subTabla.institucion, subTabla.periodo, subTabla.malla, subTabla.carrera, subTabla.curso, subTabla.seccion).personal).cPersonal}<br/>
+
+                                    #{personaB.mostrarPersona(personalB.personal.persona).nombreCompletos()}
+                                </p:column>
+
+
+
+                            </p:dataTable>
+                        </p:rowExpansion>               
+                        <f:facet name="footer">
+                            <h:commandButton value="ACTUALIZAR">
+
+                            </h:commandButton>
+
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+                <p:dialog widgetVar="dlgMatriculados" width="900" height="500" modal="true" header="DETALLE DE MATRICULADOS">
+                    <h:form id="frmDetalleMatricula">
+                        <p:dataTable value="#{alumnoPeriodoB.alumnoPeriodoL}" var="alumno" rowIndexVar="statusM" >
+                            <p:column headerText="Nº">
+                                #{statusM +1}
+                            </p:column>
+                            <p:column headerText="CODIGO">
+                                #{alumno.alumno}
+                            </p:column>
+                            <p:column headerText="ESTUDIANTE">
+
+                                #{personaB.mostrarPersona(alumnoB.mostrarAlumnoCodigo(8, alumno.alumno).persona).nombreCompletos()}
+                            </p:column>
+                            <p:column headerText="TELEFONO">
+
+                                #{personaB.persona.telefono}
+                            </p:column>
+                            <p:column headerText="E-mail">
+
+                                #{personaB.persona.emailP}
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="resumenEncuesta" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6b32059a-836c-4cd8-b4a0-090d30fcb104">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="246"/>
+	<parameter name="periodo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT AA.CARRERA,BB.DESCRIPCION,COUNT(AA.ALUMNO)TOTAL_MATRICULADOS,COUNT(Z.ALUMNO)TOTAL_ENCUESTADOS,(COUNT(Z.ALUMNO)*100)/COUNT(AA.ALUMNO) PORCENTAJE
+ FROM  SIGU.ACA_ALUMNO_PERIODO AA LEFT JOIN (SELECT A.CARRERA,ALUMNO,COUNT(B.ENCUESTA)AS TOTAL
+		FROM SIGU.ACA_ALUMNO_CURSO_SECCION A, DI.ENCUESTA_GRUPO_PREGUNTA B, SIGU.HOR_CURSO_SECCION_DOCENTE C
+		where A.INSTITUCION=1 and A.PERIODO=20151 and A.CARRERA like '%' AND A.ALUMNO LIKE '%' and A.ESTADO_REGISTRO=1 AND ENCUESTA=10
+		AND A.INSTITUCION=C.INSTITUCION AND A.PERIODO=C.PERIODO AND A.MALLA=C.MALLA AND A.CARRERA=C.CARRERA AND A.SECCION=C.SECCION AND A.CURSO=C.CURSO and c.ESTADO_REGISTRO=1
+		GROUP BY A.CARRERA,A.ALUMNO,B.ENCUESTA
+		HAVING COUNT(B.ENCUESTA)=
+		(SELECT COUNT(ENCUESTA) FROM DI.ENCUESTA_CURSO_SECCION_DOCENTE WHERE INSTITUCION=1 and PERIODO=20151 and ALUMNO =A.ALUMNO and ESTADO_REGISTRO=1 AND ENCUESTA=10
+		GROUP BY ENCUESTA))AS Z ON Z.CARRERA=AA.CARRERA AND Z.ALUMNO=AA.ALUMNO
+
+		 ,UPA.ACA_CARRERAS BB
+WHERE AA.INSTITUCION=1 AND AA.PERIODO=20151 AND AA.ESTADO_REGISTRO=5 AND BB.CARRERA=AA.CARRERA AND AA.NIVEL_REFERENCIAL<>0 AND AA.ALUMNO  NOT LIKE '%L'
+GROUP BY AA.CARRERA,BB.DESCRIPCION]]>
+	</queryString>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="TOTAL_MATRICULADOS" class="java.lang.Integer"/>
+	<field name="TOTAL_ENCUESTADOS" class="java.lang.Integer"/>
+	<field name="PORCENTAJE" class="java.lang.Integer"/>
+	<variable name="TOTAL_MATRICULADOS_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_MATRICULADOS}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_ENCUESTADOS_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_ENCUESTADOS}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="5f2cdcac-5d7d-49b4-8f0e-193737476f5f" x="25" y="14" width="474" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESUMEN DE ENCUESTA DOCENTE 2015-1]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="381eb09d-9b58-4116-a816-2454eab7d605" x="28" y="31" width="264" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARRERA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7b73617-a451-45be-9516-437fbabcf36a" x="302" y="31" width="85" height="30"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL MATRICULADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="110dd21a-8dfc-4cd1-9e7c-c1ffe9d5d113" x="399" y="31" width="82" height="30"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL ENCUESTADOSs]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="59be82dc-ce22-44c4-aa16-ca641251dec9" x="25" y="23" width="512" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="68cd963e-7cb7-4858-a207-dc668995d0e9" x="25" y="61" width="512" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="8be64bb1-e66c-45da-8fe7-1a308b9bba6c" x="488" y="31" width="44" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement uuid="97ffe7ed-f208-4291-9cfb-85931f5bbe26" x="28" y="0" width="72" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CARRERA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f1bd3f74-40d7-417b-81b8-c9dc394c714b" x="100" y="0" width="192" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="412c03ab-182c-4ca8-9428-9a5073099075" x="302" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_MATRICULADOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="14f4d872-e348-450f-b561-bdfbb82965e6" x="399" y="0" width="82" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_ENCUESTADOS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="baa638fd-6733-411c-9983-d21cc5d37c9b" x="25" y="-40" width="1" height="62"/>
+			</line>
+			<line>
+				<reportElement uuid="9f9278b2-eeab-435c-a99d-ae914c3de71c" x="537" y="-41" width="1" height="63"/>
+			</line>
+			<line>
+				<reportElement uuid="2790f491-2fb0-47bd-97b4-9db3ccb89555" x="25" y="21" width="512" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="a01f96e8-a74a-49ae-9349-f0ae9363d631" x="488" y="0" width="43" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PORCENTAJE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="5b1f34a7-384e-4e77-b2f8-ccece830cada" x="302" y="34" width="253" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="327" splitType="Stretch">
+			<bar3DChart>
+				<chart isShowLegend="true">
+					<reportElement uuid="69b78154-2f73-4f97-b7d4-fffda4b4040d" x="0" y="47" width="555" height="280"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{DESCRIPCION}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CARRERA}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{TOTAL_ENCUESTADOS}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot isShowLabels="true">
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<textField>
+				<reportElement uuid="a1da912d-159a-42e4-9b58-6eda63c98f3a" x="302" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_MATRICULADOS_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="123b26cd-07f7-45a1-92ec-c2be9fc68914" x="399" y="0" width="82" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_ENCUESTADOS_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

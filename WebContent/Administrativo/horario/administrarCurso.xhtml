@@ -1,0 +1,258 @@
+<ui:composition  
+        			  template="/Administrativo/plantilla.xhtml" 
+				      xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core"
+				      xmlns:p="http://primefaces.org/ui"
+				      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      
+      		<ui:define name="titulo">
+                ADMINISTRAR CURSO
+            </ui:define>
+            
+            
+            
+<ui:define name="contenido">
+          
+        <style>
+       		body{font-weight: normal!important;}
+            .ficha-curso{width: 150px;height: 150px;}
+            .ficha-curso .ficha-cabecera{text-align: center;background-color: #0088CE;color: white;padding: 5px 0px}
+            .ficha-curso .ficha-cuerpo{padding: 5px;font-size: 0.9em;height: 110px}
+            .ficha-curso:hover .ficha-elimina{display: block}
+            .ficha-elimina{position: absolute;top: 5px;right: 5px;color: red;display: none}
+            .subTitulo{font-weight: bold;padding: 5px 0px}
+            .ui-datatable-odd {background-color: white;}
+            .curso-padre{}
+            .ui-state-highlight{background-color: #186ba0!important;color: white;}
+        </style>
+        <h:form id="frmAdministrarCurso" prependId="false">
+         #{administrarCursoB.load(usuarioB.institucionS,usuarioB.periodoS)}
+            <div class="paneles "  >
+           
+            
+            
+            <h:panelGroup  layout="block" id="pnPrincipal" >
+          
+             <div class="paneles" style="display:  #{administrarCursoB.bandera ?'none':'block' }" >
+            <i class="fa fa-search"/>
+             <h:inputText value="#{administrarCursoB.filtroCursoP}" hp:placeholder="Busqueda curso .."  style="border:none;width: 90%" >
+            <f:ajax  event="change" execute="@this" render="@this pnCursoPrincipal" listener="#{administrarCursoB.mostrarCursoPricipal}" />
+            
+            </h:inputText>
+            </div>
+            <h:panelGroup layout="block" id="pnCursoPrincipal"  rendered="#{not administrarCursoB.bandera}" >
+           <div class="paneles" >
+            <h:commandLink  styleClass="boton-normal"   >
+                        <i class="fa fa-plus"/>
+                	Nuevo
+                    <f:ajax execute="@this" render="tbBusquedaCurso"  listener="#{administrarCursoB.nuevoCurso('P')}" />
+                </h:commandLink>
+           
+           </div>
+                <div style="display: block;border: 1px solid silver; text-align: center;">
+                    <span class="subTitulo">CURSOS PRINCIPALES</span>
+                    
+                    
+                    
+                
+                </div>
+                <div style="display: block;padding: 10px 5px;min-height: 200px;position: relative;">
+                <div style="position: fixed ;bottom  : 0;right: 0;z-index: 1" >
+                
+                </div>
+                
+                
+                
+                    <ui:repeat value="#{administrarCursoB.cursoSeccionPrincipalL}" var="itemCursoPrincipal">
+                    
+                   
+                    <div class="ficha-curso  paneles column" style="position: relative" >
+                        
+                        
+                            <h:commandLink title="ELIMINAR" styleClass="ficha-elimina" onclick="return confirmacion(this,'¿ Esta seguro eliminar ?');" >                                
+                                <i class="fa fa-times" />
+                                <f:ajax     execute="@this" render=":frmAdministrarCurso:pnCursoPrincipal"  listener="#{administrarCursoB.eliminarCursoPrincipal(itemCursoPrincipal)}" />
+                            </h:commandLink>
+                            
+                            
+                             <h:commandLink >
+                       
+                            
+                                 <div class="ficha-cabecera">
+                                     <b>#{itemCursoPrincipal.desCarrera}</b>
+                            
+                            
+                                 </div>
+                                 <div class="ficha-cuerpo">
+                                     <b>#{itemCursoPrincipal.curso}</b>-   #{itemCursoPrincipal.desCurso}
+                                        <br/>
+                                        #{itemCursoPrincipal.desSeccion}
+                                        <br/>
+                                        #{itemCursoPrincipal.malla} 
+                                        <br/>
+                                        #{itemCursoPrincipal.desTurno} 
+                                 </div>
+                           
+                            <br/>
+                           
+                            <f:ajax execute="@this" render=":frmAdministrarCurso:pnPrincipal" listener="#{administrarCursoB.seccionarCursoPrincipal(itemCursoPrincipal)}" />
+                           </h:commandLink>
+                            
+                        </div>
+                    
+                </ui:repeat>
+                </div>
+                
+                
+            </h:panelGroup>
+            
+            
+            
+            
+            
+            <h:panelGroup layout="block" id="pnCursoSecundario" rendered="#{administrarCursoB.bandera}"  >
+            <div  class="paneles"   >
+            <b>Carrera: </b>
+            <h:outputLabel  value="#{administrarCursoB.cursoSeccionPrincipal.desCarrera}" /><br />
+            <b>Curso: </b>
+            <h:outputLabel  value="#{administrarCursoB.cursoSeccionPrincipal.desCurso}" /><br />
+            <b>Seccion: </b>
+            <h:outputLabel  value="#{administrarCursoB.cursoSeccionPrincipal.desSeccion}" /><br />
+            <b>Turno: </b>
+            <h:outputLabel  value="#{administrarCursoB.cursoSeccionPrincipal.desTurno}" />
+            </div>
+            
+                 <div class="paneles">
+                    
+                       <h:commandLink styleClass="boton-normal"  >
+                        <i class="fa fa-plus"/>
+                    Nuevo
+                    <f:ajax execute="@this"  render="tbBusquedaCurso" listener="#{administrarCursoB.nuevoCurso('S')}" />
+                    </h:commandLink>
+                    
+                    <h:commandLink styleClass="boton-normal" >
+                    <i class="fa fa-arrow-left" />
+                    Atras
+                    <f:ajax execute="@this" render=":frmAdministrarCurso:pnPrincipal" listener="#{administrarCursoB.atras}" />
+                    </h:commandLink>
+                    </div>
+            
+            
+            
+            
+                <div style="display: block;border: 1px solid silver;position: relative; text-align: center">
+                    <span class="subTitulo">CURSOS SECUNDARIOS</span>
+                    
+                 
+                
+                  
+                </div>
+                
+                <div style="display: block;padding: 10px 5px">
+                    
+                
+                <ui:repeat value="#{administrarCursoB.cursoSeccionSecundarioL}" var="itemCursoSecundario">
+                    <div class="ficha-curso column paneles" style="position: relative">
+                        <h:commandLink title="ELIMINAR"  styleClass="ficha-elimina"  onclick="return confirmacion(this,'¿ Esta seguro eliminar ?');" >                                
+                                <i class="fa fa-times" />
+                                <f:ajax     execute="@this" render=":frmAdministrarCurso:pnCursoSecundario"  listener="#{administrarCursoB.eliminarCursoSecundario(itemCursoSecundario)}" />
+                        </h:commandLink>
+                        <div class="ficha-cabecera">
+                            #{itemCursoSecundario.desCarrera}
+                        
+                        </div>
+                        <div class="ficha-cuerpo">
+                            <b>#{itemCursoSecundario.curso}</b>- #{itemCursoSecundario.desCurso}
+                           
+                            <br/>
+                            #{itemCursoSecundario.desSeccion}
+                            <br/>
+                            #{itemCursoSecundario.malla}
+                            <br/>
+                            <b style="color: #008000">#{itemCursoSecundario.periodo}</b>
+                        </div>
+                       
+                        <i class="fa fa-exclamation-circle" style="position: absolute;bottom: 5px ;right: 5px;color: red;display: #{itemCursoSecundario.malla eq administrarCursoB.cursoSeccionPrincipal.malla?'none':'block'}" />
+                        
+                    </div>
+                </ui:repeat>
+                    </div>
+               
+                    
+            </h:panelGroup>
+            
+            </h:panelGroup>
+            
+            
+            
+            
+            </div>
+            
+            
+            
+            
+              <p:dialog header="BUSCAR CURSO" widgetVar="dlgCursoPrincipal" modal="true" resizable="false" closeOnEscape="true" width="700"  >
+                    <h:outputLabel value="Periodo"  />
+                      <h:selectOneMenu value="#{administrarCursoB.periodoS}" >   
+                                     
+                        <f:selectItems value="#{usuarioB.periodoL}" var="itemPeriodoS" itemLabel="#{itemPeriodoS.desPeriodo}" itemValue="#{itemPeriodoS.periodo}" />
+                        <f:ajax execute="@this" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <h:outputLabel value="Curso"  />
+                    <h:inputText id="txtBusqueda" value="#{administrarCursoB.filtroCurso}" >
+                    <f:ajax  event="change"  execute="@this" render="tbBusquedaCurso" listener="#{administrarCursoB.busquedaCurso}" />
+                    
+                    </h:inputText>
+                    
+                
+                    
+                    <p:dataTable id="tbBusquedaCurso" value="#{administrarCursoB.cursoSeccionBusquedaL}" var="itemCurso"  selectionMode="multiple" rowKey="#{itemCurso.curso}-#{itemCurso.seccion}" selection="#{administrarCursoB.cursoSeccionBusquedaLS}" rowIndexVar="status" scrollable="true" disabledSelection="#{itemCurso.estado eq null?false:true }" scrollHeight="350" rowStyleClass="#{itemCurso.estado eq 'H'?'curso-hijo':itemCurso.estado eq 'P'?'curso-padre':'' }" >
+                    <p:ajax event="rowSelect" />
+                    <p:column headerText="Nro." width="20" >
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="Periodo" width="60" >
+                        #{itemCurso.periodo}
+                    </p:column>
+                    <p:column headerText="Curso" >
+                       #{itemCurso.desCarrera}<br/>
+                       #{itemCurso.curso}- #{itemCurso.desCurso}<br/>
+                       
+                    </p:column>
+                    <p:column headerText="Seccion" width="80" >
+                        #{itemCurso.desSeccion}
+                    </p:column>
+                       <p:column  width="20" >
+                        #{itemCurso.estado}
+                    </p:column>
+                </p:dataTable>
+                    <f:facet name="footer">
+                        <div style="display: block;text-align: right">
+                            <h:commandLink styleClass="boton-verde" onclick="dlgCursoPrincipal.hide()"  >
+                                ACEPTAR
+                                <f:ajax execute="@this"  render=":frmAdministrarCurso:pnPrincipal"  listener="#{administrarCursoB.insertarCurso}" />
+                            </h:commandLink>
+                            <h:commandLink styleClass="boton-rojo" onclick="dlgCursoPrincipal.hide()" >
+                                CANCELAR
+                                <f:ajax execute="@this"  />
+                            </h:commandLink>
+                        </div>
+                    </f:facet>
+              
+            </p:dialog>
+            
+            
+      
+           
+        </h:form>
+        
+
+            
+      
+       
+</ui:define>
+</ui:composition>
+

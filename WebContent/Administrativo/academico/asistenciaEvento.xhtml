@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:i="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Registro de Aistencia de Evento</title>
+    </h:head>
+    <h:body>
+        
+        <script>
+           
+            function kespress(e, obj) {
+                //alert(e.keyCode);
+                var key = e.keyCode || e.which;
+                if (key === 65) {
+                    //alert("entre");
+                    obj.form.submit();
+                    //return true; 
+                } else {
+                    //return false; 
+                }
+            }
+            var milisegundos = 1000;
+            var derener;
+            function sorteo(){   
+                
+                
+                
+                
+                 total=($("#tbAsistencia tbody tr").size());
+                fila=(Math.floor((Math.random() * total) + 1)); 
+                $("#lbGanador").text($("#tbAsistencia tbody tr:nth-child("+ fila +") td:nth-child(2)").text());
+                //console.log($("#tbAsistencia tbody tr:nth-child("+ fila +") td:nth-child(2)").text());
+                
+              //  setInterval(chocolatear, 1000);
+              if (milisegundos>50) {
+                milisegundos-=100;
+              }
+                derener=setTimeout(sorteo,milisegundos);
+                
+            }
+            function detener(){
+                clearInterval(derener);
+                milisegundos= 1000;
+            }
+            
+
+        </script>
+        
+        <h:form id="frmAsistencia"  prependId="false"    >
+            <div style="border: 1px solid;display: block;width: 100%;margin: 10px 0px">
+                <div style="vertical-align: top;display: inline-block;width: 40%;margin-left: 5px">
+                    TIPO EVENTO:<BR/>
+                    <h:selectOneRadio  value="#{asistenciaEventoB.tipoEvento}"  >                              
+                             <f:selectItem itemValue="01" itemLabel="DIPLOMADO" />
+                             <f:selectItem itemValue="02" itemLabel="CERTIFICADO"/>
+                             <f:selectItem itemValue="03" itemLabel="CONSTANCIA"/>
+                             <f:ajax execute="@this"  render="cbEvento"  listener="#{asistenciaEventoB.mostrarEvento(asistenciaEventoB.tipoEvento)}" />
+                     </h:selectOneRadio>
+                    EVENTO<br/>
+                    <h:selectOneMenu id="cbEvento" value="#{asistenciaEventoB.eventoS}" style="width: 400PX"  >
+                        <f:selectItem  itemLabel="-- ELEGIR --"  />
+                        <f:selectItems value="#{asistenciaEventoB.eventoL}" var="evento" itemLabel="#{evento.descripcion}" itemValue="#{evento.evento}" />
+                        <f:ajax execute="@this" render="tbAsistencia" />
+                    </h:selectOneMenu>
+
+                    </div>
+
+                    <div style="vertical-align: top;display: inline-block;width: 58%;text-align: right">
+                        <span style="display: block;width: 100%;text-align: right;border: 1PX solid">
+                            LISTADO DE ESPOSITORES
+                        </span>
+                        <ui:repeat value="#{asistenciaEventoB.eventoExpositor()}" var="expositor">
+                        <img  style="width: 120px;vertical-align: top;display: inline-block" src="SVerImagenAlumno?alumno=#{expositor.persona}" />
+                        </ui:repeat>
+                        <img  style="width: 120px;height: 140px;vertical-align: top;display: inline-block;border: 1px solid" src="#" />
+                    </div>
+            </div>
+            
+            <div style="display: block;text-align: center;margin: 20px 0px">
+            <h:inputText id="txtDocumento" value="#{asistenciaEventoB.numero}"  i:placeholder="INGRESE NUMERO" tabindex="1" style="height: 25px;width: 200px;text-align: center;font-size: 1.7em;padding: 5px 2px;font-weight: bold;margin-bottom: 10px"   >               
+
+            </h:inputText>
+            <br/>
+            <h:commandButton value="INGRESO">
+                <f:ajax  execute="txtDocumento" render="@form"  listener="#{asistenciaEventoB.resgistrarAsistencia()}"    />
+            </h:commandButton>
+            <input type="button" value="BUSCAR" onclick="mdPersona.show()"/>
+            </div>
+           
+                    
+            
+            <p:dataTable id="tbAsistencia" value="#{asistenciaEventoB.detalleL}" var="detalle"  >
+                  
+                <p:column headerText="PERSONAS">
+                    #{detalle.persona}
+                </p:column>
+
+                <p:column headerText="DATOS">
+                    <h:outputLabel  value="#{detalle.nombres.toUpperCase()}" />
+                </p:column>
+                <p:column headerText="DOCUMENTO">
+                    #{detalle.documento}
+                </p:column>
+                <p:column headerText="NUMERO">
+                    #{detalle.numero}
+                </p:column>
+                <p:column headerText="HORA INGRESO">
+                    #{detalle.hora_ingreso}
+                </p:column>
+                <p:column headerText="X">
+                    <h:commandLink value="ELI">
+                        <f:ajax execute="@this" render="tbAsistencia" listener="#{asistenciaEventoB.eliminarAsistencia(detalle.persona)}" />
+                    </h:commandLink>
+                </p:column>
+                <f:facet name="footer" >  
+                    <input type="button" value="SORTEO" onclick="mdSorteo.show()" /> 
+                </f:facet>
+            </p:dataTable>
+            
+            
+            
+            <br/><br/>
+            <p:dataTable  id="dtNotas" value="#{asistenciaEventoB.notasL}" var="notas"    editable="true" editMode="cell"   selection="#{asistenciaEventoB.seleccionL}" rowKey="#{notas.alumno}" rendered="true" >
+                <p:ajax event="toggleSelect" update="@this" process="@this"/>
+                <p:ajax event="rowSelect" listener="#{asistenciaEventoB.onRowSelect}" />
+                <p:ajax event="rowSelectCheckbox" listener="#{asistenciaEventoB.onRowSelect}" />
+                <p:ajax event="rowUnselectCheckbox" listener="#{asistenciaEventoB.onRowUnselect}"  />
+                <p:ajax event="rowUnselect" listener="#{asistenciaEventoB.onRowUnselect}"  />
+                <p:column selectionMode="multiple"  disabledSelection="#{notas.promedio >= 16 ?false:true }"  />
+                <p:ajax event="cellEdit" listener="#{asistenciaEventoB.onCellEdit}"/>
+                <c:forEach items="#{asistenciaEventoB.columnasL}" var="colum" varStatus="colLoopStatus">
+                    <p:column headerText="#{colum.header}" > 
+
+                        <p:cellEditor rendered="#{colum.editable}" >
+                            <f:facet name="output" > 
+                                <h:outputText value="#{notas[colum.property]} " /> 
+                            </f:facet>
+                            <f:facet name="input" >                                
+                                <h:inputText value="#{notas[colum.property]}"  size="4" maxlength="2"  />
+                            </f:facet>
+                        </p:cellEditor>
+                        <h:outputText value="#{notas[colum.property]} " rendered="#{not colum.editable}" />
+                    </p:column>
+
+
+                </c:forEach>
+
+                <f:facet name="footer" >      
+                    <p:commandButton    icon="ui-icon-refresh" >
+                 
+                    <f:ajax execute="@this"  render="dtNotas" listener="#{asistenciaEventoB.refrescarNotas()}"  />               
+                     </p:commandButton>
+                    <ui:param name="param2" value="@INSTITUCION,1,@PERIODO,20141,@PAQUETE,00,@PERSONAS,#{asistenciaEventoB.parramArray()}" />
+                    <h:commandLink class="linkpdf"  value="VISTA DE IMPRESION" target="_blank" actionListener="#{utilB.imprimir_crystal('\\Administrativo\\matricula\\reporte\\', 'SGAWEB0022', 0, fn:split(param2,','))}"   />
+                </f:facet>
+
+            </p:dataTable>
+            <BR/>
+          
+            
+            
+            
+          <script>
+                        
+                    document.getElementById("txtDocumento").focus();
+    
+          </script>
+            
+            <p:dialog widgetVar="mdSorteo" modal="true" closeOnEscape="true" header="SORTEO" resizable="false" width="400px" height="350px" >
+                <div style="display: block; width: 98%;height: 280px;margin-bottom: 20px">
+                    <img src="../resources/imagenes/sorpresas.png" style="display: block;width: 100%;height: 80%" />
+                    <h:outputLabel id="lbGanador" value="......" style="display: block;text-align: center;font-size: 1.4em"   />
+                </div>
+                
+                 <input type="button" value="EMPRESAR" onclick="sorteo()" /> 
+                 <input type="button" value="DETENER" onclick="detener()" /> 
+            </p:dialog>
+           
+    </h:form>
+        <h:form prependId="false">
+            <p:dialog  widgetVar="mdPersona" width="600" height="500" modal="true">
+                Ape. Paterno
+                <h:inputText id="txtPaterno" value="#{personaB.busPaterno}" >
+                    <f:ajax event="change" render="tbBusqueda" execute="@this txtMaterno txtNombres" listener="#{personaB.filtroPersona(personaB.busPaterno,personaB.busMaterno,personaB.busNombres)}"/>
+                </h:inputText>
+                <br/>
+                Ape. Materno
+                <h:inputText id="txtMaterno" value="#{personaB.busMaterno}" >
+                    <f:ajax event="change" render="tbBusqueda" execute="@this  txtPaterno txtNombres" listener="#{personaB.filtroPersona(personaB.busPaterno,personaB.busMaterno,personaB.busNombres)}"/>
+                </h:inputText>
+                <br/>
+                Nombre
+                <h:inputText id="txtNombres" value="#{personaB.busNombres}" >
+                    <f:ajax event="change" render="tbBusqueda" execute="@this txtPaterno txtMaterno" listener="#{personaB.filtroPersona(personaB.busPaterno,personaB.busMaterno,personaB.busNombres)}"/>
+                </h:inputText>
+                <br/><br/>
+                <h:commandButton value="BUSCAR">
+                    <f:ajax listener="#{personaB.filtroPersona(personaB.busPaterno,personaB.busMaterno,personaB.busNombres)}" render="tbBusqueda" />
+                </h:commandButton> 
+                
+                <p:dataTable  id="tbBusqueda" value="#{personaB.personalL}" rowKey="#{persona.numero_documento}" selection="#{personaB.persona}" var="persona" selectionMode="single" >
+                    <p:ajax event="rowSelect" listener="#{asistenciaEventoB.onRowSelectBusqueda}" update=":frmAsistencia"  oncomplete="mdPersona.hide()" />
+                    <p:column headerText="PERSONA">
+                         #{persona.getpaterno()} #{persona.getmaterno()} #{persona.nombres}
+                    </p:column>
+                    <p:column headerText="DOCUMENTO">
+                        D.N.I
+                    </p:column>
+                    <p:column headerText="NUMERO">
+                      #{persona.numero_documento}
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+</h:body>
+</html>
+

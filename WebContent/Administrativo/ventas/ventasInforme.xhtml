@@ -1,0 +1,1301 @@
+<ui:composition  template="/Administrativo/plantilla.xhtml"
+         			 xmlns="http://www.w3.org/1999/xhtml"
+				      xmlns:h="http://xmlns.jcp.org/jsf/html"
+				      xmlns:p="http://primefaces.org/ui"
+				      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+				      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+				      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+				      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+         >
+            
+            <ui:define name="titulo">
+                ADMINISTRAR VENTAS
+            </ui:define>
+            
+            
+            
+          <ui:define name="contenido">
+        
+        
+        <script>
+        
+        var bandera=false;
+        var idGeneral;
+     
+        function confirmacion(obj,cadena){
+            idGeneral=obj;
+            if(bandera){
+                $(".modal-fondo").remove();
+                $(".modal").remove();
+                bandera=false;
+                return true;
+            }else{
+               if(! $('.modal-fondo').hasClass("modal-fondo")){
+                   $('body').append('<div class="modal-fondo"  /> ');
+                    $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                    }else{
+                    $(".modal-fondo").remove();
+                    $(".modal").remove();
+               }                    
+                
+                return false;
+            }
+            
+        }
+        
+        function valida(estado){
+            bandera=estado;           
+            $(idGeneral).click();            
+        }
+        
+            
+            function validar(){
+              
+                
+                //$("#frmVenta\\:txtAsunto").addClass("nuevo");
+                for (i = 0; i &lt; arguments.length; i++) {
+                    
+                    if($(arguments[i]).val()==""){
+                        $(arguments[i]).css({"border":"1px solid ","border-color":"red"});
+                    }else{
+                        $(arguments[i]).css({"border":"none ","border-color":"none"});
+                    }
+                     
+                    
+                    
+                }
+            }
+            
+            
+            $(document).ready(function(){                
+              $("body").on("mouseenter",".fichaSeccion",function(){
+                    //console.log($(this).children(".tooltipCursos").offset().left);                    
+                    posicionFicha=$(this).offset().left + $(this).width();
+                    espacioLibre=($(window).width()-posicionFicha);
+                    if(espacioLibre>220){
+                        
+                          $(this).children(".tooltipCursos").css({"left": $(this).outerWidth(),"min-height": "200px","width": "200px"});
+                          $(this).children(".tooltipCursos").children(".flecha-ficha").addClass("flecha-derecha");
+                    }else{
+                        
+                          $(this).children(".tooltipCursos").css({"right": $(this).outerWidth(),"min-height": "200px","width": "200px"});
+                          $(this).children(".tooltipCursos").children(".flecha-ficha").addClass("flecha-izquierda");
+                    }
+                 
+              }) ; 
+                
+             $("body").on("mouseleave",".fichaSeccion",function(){
+                   
+                 //   $(this).children(".tooltipCursos").css({"width": "0px","height": "0px"});
+              }) ;
+            });
+        </script>
+        
+        <style>
+        ::-webkit-input-placeholder {color: silver}
+            .error{background-color: #BC1010;padding: 6px 12px;border-radius: 4px;color: white;font-weight: bold;margin-left: 16px;margin-top: 6px;position: absolute;}
+            .error:before{   content: '';border-top: 8px solid transparent;border-bottom: 8px solid transparent;border-right: 8px solid #BC1010;border-left: 8px solid transparent;left: -16px;position: absolute;top: 5px;}
+            .ficha:hover{background-color: silver}
+            .circulo{border: 1px solid silver;display: inline-block;vertical-align: top;border-radius: 50%;width: 50px;height: 50px;color: white;text-align: center;font-size: 1.8em;line-height: 45px}
+          .tooltipCursos{position: absolute;top:20px;width: 200px;min-height: 0px;z-index: 10;background-color: white;border-radius: 5px;border: 1px solid silver;padding: 10px; display: none}
+             .flecha-derecha{content: " ";position: absolute;top:50%;left:  -24px;width: 0px ;height: 0px;  border-left: 12px solid transparent;border-right: 12px solid white;border-top: 12px solid transparent;border-bottom: 12px solid transparent;}
+             .flecha-izquierda{content: " ";position: absolute;top:50%;right:   -24px;width: 0px ;height: 0px;  border-left: 12px solid white;border-right: 12px solid transparent;border-top: 12px solid transparent;border-bottom: 12px solid transparent;}
+             .tituloProducto{display: block;padding: 5px 2px;height: 45px;color: white;text-align: center;border-bottom: 1px dashed silver;background-color: #0088CE;overflow: hidden;}
+             .grillaDetalleProducto{border: 1px solid silver;border-radius: 5px;display: inline-block;vertical-align: top;width: 34%;padding: 5px 5px 15px;}
+             .grillaDetalleProducto ul{border-bottom: 1px solid silver;font-size: 0.9em}
+             .grillaDetalleProducto ul li{display: inline-block;vertical-align: top;width: 55%;text-align: left;padding: 3px 1px}
+             .grillaDetalleProducto ul li:first-child{width: 40%;font-weight: bold}
+              .fichaSeccion:hover .tooltipCursos{display: block}
+             .fichaSeccion{background-color: white;width: 280px;display: inline-block;;vertical-align: top;height: 235px;margin: 5px;position: relative;;font-size: 0.9em;border-radius:5px;font-family: Arial,sans-serif}
+             .fichaSeccion-subMenu{text-align: center; }
+             .fichaSeccion-subMenu li {display: inline-block;vertical-align: top;}
+             .fichaSeccion-subMenu .num{font-size: 1.8em;font-weight: bold}
+             .remitente{border: none;max-height:150px;overflow: hidden;display: inline-block;vertical-align: top;width: 93% }
+             .remitente:hover{overflow: auto}
+             .remitente-persona{border: 1px solid silver;padding: 4px;margin: 2px 0px;display: inline-block;font-size: 0.7em}
+             .ficha-carrera{width: 252px;height: 200px;}
+             .ficha-carrera ul li{display:inline-block;width: 80px;text-align: center;color: #4f4f4f }
+             
+             
+         </style>
+        <f:event type="preRenderView" listener="#{ventaB.validarPermisos}" />  
+        <h:form id="frmVenta" prependId="false"  hp:autocomplete="off"  >
+        #{ventaB.load(usuarioB.institucionS,usuarioB.periodoS,usuarioB.usu,usuarioB.personal.personal)}
+        
+        
+        
+            <h:panelGroup layout="block" id="pnDatos" styleClass="paneles">
+                <div class="column"  style="width: 120px">
+                    <p:graphicImage value="SVerImagenAlumno?alumno=#{ventaB.persona.persona}" style="width: 100px;height:100px " />
+                                    
+                    
+                </div>
+                <div class="column" >
+                  
+                    <h:outputLabel value="Persona"  styleClass="label"/>
+                    <h:inputText id="txtPersonaDA" value="#{ventaB.persona.persona}" disabled="true"   />
+                    <br/>
+                    <h:outputLabel value="Datos" styleClass="label "/>
+                    <h:inputText  id="txtDatosDA" value="#{ventaB.persona.paterno} #{ventaB.persona.materno} #{ventaB.persona.nombres}"  disabled="true"  size="57" />
+                    <br/>
+					<h:outputLabel value="D.N.I" styleClass="label "/>
+                    <h:inputText  id="txtNumeroDocumentoDA" value="#{ventaB.persona.numero_documento} "  disabled="true"  />
+                    <br/>
+                    <h:outputLabel value="Correro" styleClass="label "/>
+                    <h:inputText  id="txtCorreoDA" value="#{ventaB.persona.emailP} "  disabled="true"   size="57"/>
+                    <br/>
+                    <h:outputLabel value="Telefono" styleClass="label "/>
+                    <h:inputText  id="txtTelefonoDA" value="#{ventaB.persona.telefono} "  disabled="true"  />
+                    
+                    <h:outputLabel value="Celular" styleClass="label "/>
+                    <h:inputText  id="txtCelularDA" value="#{ventaB.persona.celular} "  disabled="true"  />
+                   
+                </div>
+            </h:panelGroup>
+            
+            
+            <h:panelGroup layout="block" id="pnBotenera" styleClass="paneles">
+          <p:hotkey bind="f2" handler="dlgBusquedaAlumno.show()"   />
+            <h:commandLink styleClass="boton-normal " title="f2"  >
+            		<i class="fa fa-search" />
+            		Buscar
+                    <f:ajax execute="@this" render="pnDatosBusqueda" listener="#{ventaB.limpiarBusqueda}" />
+            </h:commandLink>
+      
+            <h:commandLink styleClass="boton-normal "  disabled="#{ventaB.persona.persona eq null}">
+            		<i class="fa fa-pencil" />
+            		Editar
+                <f:ajax execute="@this" render="pnBotenera pnPrincipal txtAPaterno txtAMaterno txtNombres txtTelefono txtDNI txtCelular txtCorreo txtDireccion" listener="#{ventaB.editarPersona}" />
+            </h:commandLink>  
+            <h:commandLink styleClass="boton-normal "   disabled="#{ventaB.bandera}">
+            <i class="fa fa-thumbs-o-up" />
+                Curso Interezado
+                <f:ajax execute="@this" render="pnBotenera pnPrincipal pnDatos" listener="#{ventaB.mostrarSeccionInterez}"  />
+            </h:commandLink>
+                
+            <h:commandLink styleClass="boton-normal "   disabled="#{ventaB.bandera}">
+            <i class="fa fa-th-large" />
+            	Mostrar Carrera
+                <f:ajax execute="@this" render="pnBotenera pnPrincipal pnDatos"  listener="#{ventaB.nuevoCarreraProducto}"  />
+            </h:commandLink>
+                 
+           <h:commandLink styleClass="boton-normal "  disabled="false">
+           	<i class="fa fa-refresh" />
+             	Actualizar
+               <f:ajax execute="@this" render="pnPrincipal"  listener="#{ventaB.actualizar}"  />
+            </h:commandLink>     
+                
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnPrincipal" style="boder:1px solid red">
+            
+            	<h:panelGroup layout="block" id="dgCarrera" styleClass="paneles" rendered="#{ventaB.accion eq 1}" >
+            	<div class="paneles">
+            	
+            		CARRERAS
+            	
+            	</div>
+            	
+                    
+             
+            	<ui:repeat value="#{ventaB.institucionCarreraL}" var="carrera"  >
+            	<h:commandLink    >
+                    <div class="ficha-carrera column paneles"  data-carrera="#{carrera.carrera}">
+                  
+                        <b style="display: block;text-align: center;padding: 5px 2px;font-size: 1.5em">#{carrera.descarrera.trim().toUpperCase()}</b>
+                        <br/>
+                       
+                        <ul>
+                            <li>
+                                APERTURADOS
+                                <br />
+                                <span class="circulo" style="background-color: #0069B3" >#{carrera.totalSecciones}</span> 
+                            </li>
+                            <li>
+                                CERRADOS
+                                <br />
+                                <span class="circulo" style="background-color:  red">#{carrera.totalCerrado}</span>                                  
+                            </li>
+                            
+                            <li>
+                                MATRICULA
+                                <br />
+                                <span class="circulo" style="background-color:  green">#{carrera.totalMatricula}</span>                                  
+                            </li>
+                        </ul>
+                    </div>        
+                    
+                    <f:ajax execute="@this" render=":frmVenta:pnPrincipal" listener="#{ventaB.seleccionCarrera(usuarioB.institucionS, usuarioB.periodoS, carrera)}" />
+                </h:commandLink>
+            	
+            	
+            	</ui:repeat>
+            	
+            	
+            	</h:panelGroup>
+           
+            
+            
+            
+            
+            
+            
+          <h:panelGroup layout="block"  id="tbSeccion" rendered="#{ventaB.accion eq 0}"  > <!-- rendered="#{ventaB.accion eq 0}" -->
+            <div class="paneles" style="">
+            	Producto 
+            	<h:selectOneMenu value="#{ventaB.filtroTipoProducto}" style="width: 150px" >
+            	 <f:selectItem itemLabel="TODOS" itemValue="%"  />
+            		<f:selectItems value="#{ventaB.tipoProductoL}" var="itemTipoProducto" itemLabel="#{itemTipoProducto.descripcion}" itemValue="#{itemTipoProducto.tipoProducto}" />
+            		<f:ajax execute="@this" render="pnFichaSeccion" listener="#{ventaB.filtrar}" />
+            	</h:selectOneMenu>
+            	
+            	<h:inputText value="#{ventaB.filtroDesProducto}" hp:placeholder="Escribir busqueda..." style="padding:5px">
+            			<f:ajax execute="@this" render="pnFichaSeccion" listener="#{ventaB.filtrar}" />
+            	</h:inputText>
+            
+            Dia
+            <h:selectOneMenu value="#{ventaB.filtroFrecuenciaDia}">
+            <f:selectItem  itemLabel="TODOS" itemValue="%"  />
+            <f:selectItems value="#{ventaB.filtroFrecuenciaDiaL}" var="itemFrecuenciaDia" itemLabel="#{itemFrecuenciaDia.descripcion}" itemValue="#{itemFrecuenciaDia.frecuenciaDia}" />
+            <f:ajax execute="@this" render="pnFichaSeccion" listener="#{ventaB.filtrar}" />
+            </h:selectOneMenu>
+            Estado
+            <h:selectOneMenu value="#{ventaB.filtroEstado}">
+            <f:selectItem  itemLabel="TODOS" itemValue="%"  />
+            <f:selectItem  itemLabel="Matricula" itemValue="40"  />
+            <f:selectItem  itemLabel="Cerrado" itemValue="42"  />
+            <f:ajax execute="@this" render="pnFichaSeccion" listener="#{ventaB.filtrar}" />
+            </h:selectOneMenu>
+            
+            </div>
+            
+            
+           
+                    
+                    <div class="paneles" style="text-align: right;">
+                        <h:commandLink title="ATRAS" styleClass="boton-normal" disabled="#{not ventaB.subBandera}" >
+                               <i class="fa fa-arrow-left"/>
+                           <br />
+                         ATRAS
+                         
+                        <f:ajax execute="@this"  render=":frmVenta:pnPrincipal" listener="#{ ventaB.atras}" />
+                    </h:commandLink>
+                        
+                        <h:commandLink title="NUEVO" styleClass="boton-normal"  disabled="#{ventaB.accesos.tipoSeguridad ne 4?true:not ventaB.subBandera}" >
+                        <i class="fa fa-plus-square-o"/>
+                            <br />
+                         NUEVO
+                         <f:ajax execute="@this" render=":frmVenta:pnManteProductoSeccion" listener="#{ventaB.nuevoProductoSeccion}" />
+                    </h:commandLink>
+                        
+                    <h:commandLink title="ELIMINAR" styleClass="boton-normal" disabled="#{ventaB.accesos.tipoSeguridad ne 4?true:not ventaB.subBandera}" >
+                        <i class="fa fa-trash-o"/>
+                            <br />
+                         ELIMINAR
+                         <f:ajax execute="@this" render=":frmVenta:tbSeccion" listener="#{ventaB.preEliminar}"  />
+                    </h:commandLink>
+                    <h:commandLink title="EDITAR" styleClass="boton-normal" disabled="#{true}">
+                        <i class="fa fa-pencil"/>
+                            <br />
+                         EDITAR
+                         <f:ajax execute="@this" render=":frmVenta:pnManteProductoSeccion" />
+                    </h:commandLink>    
+                        
+                        
+                    <h:commandLink title="CANCELAR" styleClass="boton-normal" disabled="#{ ventaB.subBandera}">
+                        <i class="fa fa-ban"/>
+                            <br />
+                         CANCELAR
+                         <f:ajax execute="@this" render=":frmVenta:tbSeccion" listener="#{ventaB.preCancelar}" />
+                    </h:commandLink>
+                    <h:commandLink title="IMPRIMIR" styleClass="boton-normal" disabled="#{not ventaB.subBandera}">
+                       <i class="fa fa-print"/>
+                            <br />
+                         IMPRIMIR
+                         <f:ajax execute="@this" render=":frmVenta:tbSeccion" listener="#{ventaB.preImprimir}" />
+                    </h:commandLink>    
+                        
+                        
+                     <h:commandLink title="REFRESCAR" styleClass="boton-normal" disabled="#{not ventaB.subBandera}">
+                         <i class="fa fa-refresh"/>
+                         <br />
+                         REFRESCAR
+                         <f:ajax execute="@this" render="tbSeccion" listener="#{ventaB.filtrar}" />
+                    </h:commandLink>
+                    </div>
+                    
+                    <div class="paneles">
+                    
+                    
+                    
+                
+                    <div style="display: block;border: 1px solid silver;text-align: center;padding: 5px 0px;font-size: 1.5em;">
+                        <b>#{ventaB.institucionCarreraS.descarrera.toString().toUpperCase()}</b>  
+                    </div>
+            
+                      
+                <h:panelGroup layout="block" id="pnFichaSeccion" style="background-color: #eeeeee">
+                
+                
+                
+                <ui:repeat  value="#{ventaB.carreraSeccionesL}" var="seccion" >                    
+                   <div class="fichaSeccion" >
+                   
+                   
+                     <h:panelGroup layout="block" id="pnBloqueo" rendered="#{seccion.estadoRegistro eq 42}" style="display: block;height: 100%;width:  100%;background-color: rgba(0,0,0,0.5) ;position: absolute;cursor: not-allowed" />
+                     <ui:param name="registroEval" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{seccion.carrera},SECCION,#{seccion.seccion}" />
+                     <div style="position: absolute;top: 0 ;right: 0">
+                     <h:commandLink immediate="true"  target="_blank" title="IMPRIMIR REGISTRO" actionListener="#{utilB.imprimirIreports(seccion.producto eq '0000000021'?'admin/ventas/registroEvaluacionCetpro-v':'admin/ventas/registroEvaluacionCetpro', 1,fn:split(registroEval,','))}" rendered="#{ventaB.accionSecion eq 6}">
+                            <i class="fa fa-print" />
+                      </h:commandLink>    
+                     <h:commandLink title="ELIMINAR SECCION"  rendered="#{seccion.estadoRegistro eq 40?ventaB.accionSecion eq 3:false}" onclick="return confirmacion(this,'¿ Esta seguro eliminar ?');"  >
+                         <i class="fa fa-times" style="color: red;font-size: 1.2em"/>
+                         <f:ajax execute="@this" listener="#{ventaB.eliminarSeccionProducto(seccion)}"  />
+                     </h:commandLink>
+                     
+                     </div>                     
+                     
+                     
+                     <div class="tituloProducto" >                        
+                         #{seccion.desProducto}                     
+                     </div>
+                     
+                     <div style="padding: 2px 10px;text-align: center">
+                         <h:outputLabel value="SECCION:" /> 
+                         <b>#{seccion.seccion}</b>                         
+                     <br />
+                     <h:outputLabel value="FECHA INICIO:" />
+                     <b>
+                         <h:outputLabel value="#{seccion.venVencimiento eq 0? seccion.fechaInicio:seccion.venFechaInicio}" style="color: #{seccion.venVencimiento eq 0?seccion.fechaInicio.after(utilB.fechaHoy()) ?'':'red':seccion.venFechaInicio.after(utilB.fechaHoy())?'':'blue'}" >
+                                <f:convertDateTime pattern="dd  MMMM yyyy " />
+                         </h:outputLabel>
+                         <h:commandLink rendered="#{seccion.venVencimiento eq 0?  seccion.fechaInicio.before(utilB.fechaHoy()):seccion.venFechaInicio.before(utilB.fechaHoy())}" >
+                              <i class="fa fa-pencil"/>                              
+                              <f:ajax execute="@this" render=":frmVenta:pnSeccionFechaVencimiento" listener="#{ventaB.nuevoSeccionVencimiento(seccion)}" />
+                         </h:commandLink>
+                     </b>
+                     <br />                  
+                     <h:outputLabel value="FRECUENCIA:" />
+                     <b><h:outputLabel value="#{seccion.desFrecuencia}" rendered="#{seccion.frecuencia ne 0}"/> </b>
+                     <b><h:outputLabel value="#{seccion.desFrecuenciaDia} (#{seccion.desFrecuenciaHora}) " rendered="#{seccion.frecuencia eq 0}" /></b>                     
+                     <br />
+                     <h:outputLabel value="TURNO:" />
+                     <b>#{seccion.desTurno}</b>   
+                     
+                     
+                     
+                     <ul class="fichaSeccion-subMenu">
+                         <li>
+                             <b title="VACANTES">
+                                 <i class="fa fa-users" />
+                                 VACT.
+                             </b>
+                             <br/>                            
+                                     <h:outputLabel styleClass="num" value="#{seccion.vacantes}"    />                            
+                         
+                         </li>
+                         <li>
+                             <b>
+                                 <h:commandLink  disabled="#{ventaB.bandera? true:seccion.preMatricula eq -1?true:false}" style="color: #{seccion.preMatricula eq 1 ?'#0088CE':'#4F4F4F'}" title="MATRICULAR" >
+                                     <i class="fa fa-graduation-cap"/>
+                                     MATR.                                     
+                                     
+                                     <f:ajax execute="@this" render=":frmVenta:tbSeccion" listener="#{ventaB.matricular(seccion)}"  disabled="#{seccion.preMatricula eq 1}"  />
+                                     <f:ajax execute="@this" render=":frmVenta:tbSeccion"  listener="#{ventaB.eliminarMatricula(seccion)}"  disabled="#{seccion.preMatricula eq 0}"  />
+                                 </h:commandLink>
+                                 
+                             </b>
+                             <br/> 
+                             
+                                 <h:commandLink disabled="#{seccion.matriculados eq 0}"  styleClass="num">
+                                 #{seccion.matriculados}                               
+                                 <f:ajax execute="@this" render=":frmVenta:dgMatriculados" listener="#{ventaB.mostrarMatriculados(usuarioB.institucionS, usuarioB.periodoS, seccion)}" />
+                                </h:commandLink>        
+                            
+                             
+                         </li>
+                         
+                         <li>
+                             <b>
+                              
+                                 <h:commandLink disabled="#{ventaB.bandera? true:seccion.estadoRegistro eq 40?seccion.preMatricula ne -1:true}" style="color:#{seccion.preMatricula eq -1?'#4F4F4F':'#0088CE'}" title="INTEREZADO" >
+                                     <i class="fa fa-thumbs-o-up" />
+                                     INTE.
+                                     <f:ajax execute="@this" render=":frmVenta:tbSeccion"   listener="#{ventaB.interezado(seccion)}" />
+                                 </h:commandLink>
+                             </b>
+                             <br/>
+                             
+                                 <h:commandLink  onclick="PF('dlgCorreo').show()" styleClass="num"  >
+                                 #{seccion.interezados}
+                                 <f:ajax execute="@this"  listener="#{ventaB.nuevoCorreo(usuarioB.institucionS, usuarioB.periodoS,seccion)}" />
+                                </h:commandLink>
+                             
+                         </li>
+                         
+                          
+                         
+                     </ul>
+                     
+                      
+                     </div>
+                     <div class="tooltipCursos">
+                         <span class="flecha-ficha" />
+                         <span style="display: block;background-color: #0088CE;color: white;text-align: center;padding: 5px">CURSOS...</span>
+                      
+                         <h:selectManyCheckbox value="#{seccion.curso}" layout="pageDirection" >
+                         <f:selectItems value="#{seccion.cursoL}" var="itemCurso"  itemLabel="#{itemCurso.descripcion}" itemValue="#{itemCurso.curso}" itemDisabled="#{itemCurso.estadoRegistro eq 1}" />
+                         <f:ajax execute="@this" />
+                         </h:selectManyCheckbox>
+                         
+                        
+                         
+                         
+                         
+                         
+                         
+                         <div class="paneles">
+                         <h:commandLink  styleClass="boton-normal "  rendered="false" >
+                             <i class="fa fa-users" />
+                             Matri
+                             <f:ajax execute="@this" render=":frmVenta:pnDocenteCurso" listener="#{ventaB.matricula(seccion)}" />
+                         </h:commandLink>
+                         
+                         
+                         <h:commandLink  styleClass="boton-normal "  >
+                             <i class="fa fa-users" />
+                             Docente
+                             <f:ajax execute="@this" render=":frmVenta:pnDocenteCurso" listener="#{ventaB.nuevaCursoPersonal(seccion)}" />
+                         </h:commandLink>
+                         </div>
+                         
+                     </div>
+                     <hr/>
+                     <div style="display: block;text-align: center">
+                         <h:commandLink styleClass="boton" type="button" title="CERRAR MATRICULA" rendered="#{false}">
+                            <i class="fa fa-expeditedssl" />
+                            CERRAR MATRICULA
+                            <f:ajax execute="@this" render="tbSeccion" listener="#{ventaB.cerrarMatricula(seccion)}" />
+                        </h:commandLink>
+                     </div>                    
+                     <h:panelGroup  layout="block" id="pnSubBotonera2" class="subBotonera" rendered="#{not ventaB.bandera}" >                        
+                         <ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{seccion.carrera},SECCION,#{seccion.seccion},PERSONA,#{ventaB.persona.persona},USUARIO,#{usuarioB.usu}" />
+                        <h:commandLink styleClass="boton-normal "  immediate="#{true}" type="button" title="IMPRIMIR FICHA MATRICULA" rendered="#{usuarioB.institucionS eq 11?false:  seccion.preMatricula eq 1}" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/ventas/fichaMatricula', 1,fn:split(param1,','))}"  >
+                             <i class="fa fa-print"/>
+                            FICHA                            
+                        </h:commandLink>                         
+                         <ui:param name="param2" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{seccion.carrera},SECCION,#{seccion.seccion},PERSONA,#{ventaB.persona.persona},USUARIO,#{usuarioB.usu}" />
+                        <h:commandLink styleClass="boton-normal "  immediate="#{true}" type="button" title="IMPRIMIR FICHA MATRICULA" rendered="#{usuarioB.institucionS ne 11?false:  seccion.preMatricula eq 1}" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/matricula/fichaMatricula', 1,fn:split(param2,','))}"  >
+                             <i class="fa fa-print"/>
+                            FICHA                            
+                        </h:commandLink>
+                         
+                       
+                         <h:commandLink  styleClass="boton-normal"  value="DESCUENTO" rendered="#{seccion.preMatricula eq 0}" onclick="PF('dlgDescuento').show()"  >
+                            <f:ajax execute="@this" render=":frmVenta:pbDescuento"  listener="#{ventaB.mostrarConceptoSeccion(seccion)}"  />
+                        </h:commandLink>
+                    </h:panelGroup >
+                    
+                 </div>
+              </ui:repeat>
+               </h:panelGroup>
+            </div>
+            </h:panelGroup>
+            
+            
+            
+            
+            <p:dataGrid id="dgInterezado" value="#{ventaB.carreraSeccionesInterezL}" columns="4" var="interezado" rendered="#{ventaB.accion eq 2}"   > <!-- rendered="#{ventaB.accion eq 2}"  -->
+                <f:facet name="header">
+                        CURSOS INTERESADOS
+                </f:facet>
+             
+               
+                #{interezado.desCarrera}
+               
+                <br />
+                <div style="position: relative;;border: 1px solid silver;width: 100%;min-height: 200px;">
+                  
+                     
+                     <div style="display: block;padding: 5px 2px;height: 35px;background-color: #0088CE;color: white;text-align: center">
+                        
+                         #{interezado.desProducto}
+               
+                         <br/>
+                    
+                     </div>
+                     <div style="padding: 2px 10px;text-align: center">
+                         <h:outputLabel value="SECCION:" /> 
+                         <b>#{interezado.seccion}</b>
+                         
+                     <br />
+                     <h:outputLabel value="FECHA INICIO:." />
+                     <b> 
+                        
+                         <h:outputLabel value="#{interezado.fechaInicio}" >
+                                <f:convertDateTime pattern="dd  MMMM yyyy " />
+                         </h:outputLabel>  
+                     </b>
+                     <br />
+                     <h:outputLabel value="FRECUENCIA:" />
+                     <b><h:outputLabel value="#{interezado.desFrecuencia}" rendered="#{interezado.frecuencia ne 0}"/> </b>
+                     <b><h:outputLabel value="#{interezado.desFrecuenciaDia} (#{interezado.desFrecuenciaHora}) " rendered="#{interezado.frecuencia eq 0}" /></b>
+                     
+                     <br />
+                     <h:outputLabel value="TURNO:" />
+                     <b>#{interezado.desTurno}</b>
+                     
+                   
+                     <ul >
+                         <li>
+                             <b>VACT.</b><br/><h:outputLabel value="#{interezado.vacantes}"   onmouseout="console.log('onmouseout')" />
+                         </li>
+                         <li>
+                             <b>
+                                                    
+                               <h:commandLink  disabled="#{ventaB.bandera? true:seccion.preMatricula eq -1?true:false}" style="color: #{interezado.preMatricula eq 1 ?'#0088CE':'#4F4F4F'}" title="MATRICULAR" >
+                                      <i class="fa fa-graduation-cap"/>
+                                      MATR.                                     
+
+                                      <f:ajax execute="@this" render=":frmVenta:dgInterezado" listener="#{ventaB.matricular(interezado)}"  disabled="#{interezado.preMatricula eq 1}"  />  
+
+                                      <f:ajax execute="@this" render=":frmVenta:dgInterezado"  listener="#{ventaB.eliminarMatricula(interezado)}"  disabled="#{interezado.preMatricula eq 0}"  />
+
+                                  </h:commandLink>
+                                                
+                                 </b>
+                              <br/> 
+                             <h:commandLink  onclick="PF('dlgMatriculados').show()" disabled="#{interezado.matriculados eq 0}" >
+                                 #{interezado.matriculados}
+                               
+                                 <f:ajax execute="@this" render=":frmVenta:dgMatriculados"  listener="#{ventaB.mostrarMatriculados(usuarioB.institucionS, usuarioB.periodoS, interezado)}" />
+                             </h:commandLink>        
+                         </li>
+                         <li>
+                             <b>INTE.</b><br/>
+                        #{interezado.interezados}
+                         </li>
+                     </ul>
+                     </div>
+                     
+                     
+                     
+                     
+                    <h:panelGroup layout="block" id="pnSubBotonera1" class="subBotonera" rendered="#{not ventaB.bandera}">
+                        <ui:param name="param1" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{interezado.carrera},SECCION,#{interezado.seccion},PERSONA,#{ventaB.persona.persona},USUARIO,#{usuarioB.usu}" />                    
+                         
+                         <h:commandLink styleClass="boton-normal "  immediate="#{true}" type="button" title="IMPRIMIR FICHA MATRICULA" rendered="#{interezado.preMatricula eq 1}" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/ventas/fichaMatricula', 1,fn:split(param1,','))}"  >
+                             <i class="fa fa-print"/>
+                            FICHA
+                            
+                        </h:commandLink>
+                      <ui:param name="param2" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{interezado.carrera},SECCION,#{interezado.seccion},PERSONA,#{ventaB.persona.persona},USUARIO,#{usuarioB.usu}" />
+                        <h:commandLink styleClass="boton-normal "  immediate="#{true}" type="button" title="IMPRIMIR FICHA MATRICULA" rendered="#{usuarioB.institucionS ne 11?false:  seccion.preMatricula eq 1}" target="_blank" actionListener="#{utilB.imprimirIreports('administrativo/matricula/fichaMatricula', 1,fn:split(param2,','))}"  >
+                             <i class="fa fa-print"/>
+                            FICHA.                            
+                        </h:commandLink>
+                         
+
+                         <h:commandLink  styleClass="boton-normal" type="button" value="DESCUENTO." rendered="#{interezado.preMatricula eq 0}"   >
+                            <f:ajax execute="@this" render=":frmVenta:pbDescuento"  listener="#{ventaB.mostrarConceptoSeccion(interezado)}"  />
+                        </h:commandLink>
+                    </h:panelGroup>
+                 </div>  
+            </p:dataGrid>
+            
+            
+            </h:panelGroup>
+            
+            
+            
+            
+            
+            
+            
+            <p:dialog header="DESCUENTO PERSONA" width="800" widgetVar="dlgDescuento" modal="#{true}" resizable="#{false}" >
+                
+                <h:panelGroup layout="block" id="pbDescuento">
+                    
+                    <p:dataTable id="tbDescuento" value="#{ventaB.descuentoSeccionL}" var="concepto" style="font-size: 0.8em" rowIndexVar="status" >
+                                   
+                        <p:column headerText="Tipo Concepto" >
+                        #{concepto.desTipoConcepto}
+                    </p:column>
+                    <p:column headerText="Concepto">
+                      
+                        #{concepto.desConcepto}
+                    </p:column>
+                    <p:column headerText="Cant." width="30">
+                        #{concepto.numCuota}
+                    </p:column>
+                    <p:column headerText="Moneda" width="40">
+                        #{concepto.desTipoMoneda}
+                    </p:column>
+                    <p:column headerText="Precio" width="40">
+                        #{concepto.montoPago}
+                    </p:column>
+                    
+                    <p:column headerText="Descuento">  
+                      <h:selectOneMenu value="#{concepto.descuento}">
+                                 <f:selectItems value="#{descuentoB.mostrarDescuento(usuarioB.institucionS, usuarioB.periodoS, concepto.concepto)}" var="descuento" itemValue="#{descuento.descuento}" itemLabel="#{descuento.descripcion}" />
+                                 <f:ajax execute="@this" render="tbDescuento"  listener="#{ventaB.calcularDescuento(status)}"/>
+                      </h:selectOneMenu>
+                     
+                        
+                        
+                      
+                    </p:column>
+                    <p:column headerText="Mon. Descuento" width="50">
+                          #{concepto.montoDecuento}
+                    </p:column>
+                    <p:column headerText="Total" width="50">
+                        #{concepto.total}
+                    </p:column>
+                </p:dataTable>
+               
+                    <div style="text-align: right;padding: 15px">
+                        <h:commandLink  value="ACEPTAR"  >
+                            <f:ajax execute="tbDescuento" render=":frmVenta:pnPrincipal"   listener="#{ventaB.matricularDescuento()}" />
+                        </h:commandLink>
+                        <h:commandLink  value="CANCELAR" onclick="PF('dlgDescuento').hide()" >
+                            <f:ajax execute="@this" />
+                        </h:commandLink> 
+                    </div>
+                </h:panelGroup>
+                
+            </p:dialog>
+             
+            
+            <p:dialog widgetVar="dlgSeccion" header="..: PRODUCTO SECCION :.." width="800"  modal="true" resizable="false" closeOnEscape="true" >
+              
+                <h:panelGroup layout="block" id="pnManteProductoSeccion" style="height: 500px" >
+                
+                <h:panelGroup  id="tbProductoCarrera" layout="block" rendered="#{ventaB.accionProducto eq 1}" style="display:block;height:100%" >
+                
+                <div style="display: block;padding: 5px;height: 485px;border: 1px solid silver;;background-color:#eeeeee">
+                	<ui:repeat  value="#{ventaB.productoCarreraL}" var="producto" >	                 	
+		               <h:commandLink>   	                        
+	                        <div class="column paneles"   style="width: 30%;height: 150px" data-producto="#{producto.producto}">
+	                             
+	                             <b >#{producto.desProducto}</b>
+	                        </div>
+	                        <f:ajax execute="@this"  render=":frmVenta:pnManteProductoSeccion :frmVenta:btGuardarProducto :frmVenta:btAtrasProducto" listener="#{ventaB.nuevoFrecuenciaDia(producto)}" />
+	                    </h:commandLink> 
+	                </ui:repeat>
+                </div>
+	                
+                
+                </h:panelGroup>
+                
+                <h:panelGroup id="dgFrecuenciaDia"  layout="block"  rendered="#{ventaB.accionProducto eq 2}" >
+                
+                <div style="display: block;overflow-x: auto;height: 485px;border: 1px solid silver;padding: 5px;background-color:#eeeeee ">
+	                <ui:repeat value="#{ventaB.frecuenciaDiaL}" var="frecuenciaDia">
+	                	 <h:commandLink>
+	                            <div class="column paneles" style="width: 30%;height: 120px;text-align: center;background-color:white ">
+	                                 <b style="font-size: 1.5em">#{frecuenciaDia.descripcion}</b>
+	                              </div>    
+	                            <f:ajax execute="@this" render=":frmVenta:pnManteProductoSeccion :frmVenta:btGuardarProducto :frmVenta:btAtrasProducto"  listener="#{ventaB.nuevoFrecuenciaHora(frecuenciaDia)}" />
+	                     </h:commandLink>  
+	                
+	                </ui:repeat>
+                
+                </div>
+                
+                
+                </h:panelGroup>
+               
+                <h:panelGroup id="dgFrecuenciaHora"  layout="block"  rendered="#{ventaB.accionProducto eq 3}">
+                
+                <div style="display: block;overflow-x: auto;height: 485px;border: 1px solid silver;padding: 5px;background-color:#eeeeee">
+	                <ui:repeat value="#{ventaB.frecuenciaHoraL}" var="frecuenciaHora">
+	                 <h:commandLink  >
+	                        <div class="column paneles" style="width: 30%;height: 120px">
+	                            <b style="font-size: 1.5em">#{frecuenciaHora.descripcion}</b> 
+	                        
+	                        </div>
+	                            <f:ajax execute="@this" render=":frmVenta:pnManteProductoSeccion :frmVenta:btGuardarProducto :frmVenta:btAtrasProducto" listener="#{ventaB.nuevoProductoFrecuencia(frecuenciaHora)}" />
+	                        </h:commandLink>
+	                
+	                </ui:repeat>
+                </div>
+                
+                 
+                </h:panelGroup>
+                              
+                <h:panelGroup layout="block" id="pnManteProducto" rendered="#{ventaB.accionProducto eq 4}">
+                
+                <div style=";padding: 5px;display: block;">
+                	<h:outputLabel value="PRODUCTO:" />
+                    <br/>
+                    <b>#{ventaB.productoCarreraS.desProducto}</b>
+                    <br/>
+                    <h:outputLabel value="FRECUENCIA:" />
+                    <br/>
+                    <b>#{ventaB.frecuenciaDiaS.descripcion} - #{ventaB.frecuenciaHoraS.descripcion}</b>
+                    <br/>         
+                    <h:outputLabel value="SEDE:"  />
+                    <br/>
+                    <h:selectOneMenu id="txtSede" value="#{ventaB.seccionPeriodo.sede}">                        
+                        <f:selectItems value="#{localB.filtroLocal(usuarioB.institucionS)}" var="sede" itemLabel="#{sede.descripcion}" itemValue="#{sede.local}" />
+                    </h:selectOneMenu>
+                    <br/>
+                     <h:outputLabel value="FECHA INICIO:"  />                    
+                    <br/>  
+                    <p:calendar  id="txtFechaInicio" value="#{ventaB.seccionPeriodo.fechaInicio}" pattern="dd-MM-yyyy"   required="true" >
+                    <p:ajax event="dateSelect"  process="@this" update="txtFechaFin" />
+                    </p:calendar>
+                    <br/>
+                     <h:outputLabel value="FECHA FIN:"  />  
+                     <br />                                  
+                    <p:calendar  id="txtFechaFin" value="#{ventaB.seccionPeriodo.fechaFin}"  mindate="#{ventaB.seccionPeriodo.fechaInicio}" pattern="dd-MM-yyyy" required="true" /> 
+                    <br/>
+                    <h:outputLabel value="VACANTES:" />       
+                    <br/>
+                    <h:inputText hp:type="number"  id="txtVacantes" value="#{ventaB.seccionPeriodo.vacantes}" required="true" size="5" />
+                    
+                </div>
+                    
+                </h:panelGroup>
+                
+                </h:panelGroup>
+                
+                    <f:facet name="footer">
+                            <div style="display: block;text-align: right">                            
+	                           <h:commandLink   id="btAtrasProducto"  styleClass="boton-normal" disabled="#{ventaB.accionProducto eq 1}"  >
+	                           		ATRAS
+	                                <f:ajax execute="@this"  render="@this :frmVenta:pnManteProductoSeccion :frmVenta:btGuardarProducto" listener="#{ventaB.atrasProducto}" />
+	                            </h:commandLink> 
+	                           
+	                         
+	                             <h:commandLink  onclick="dlgSeccion.hide()" styleClass="boton-normal"  >
+	                             	CANCELAR
+	                                <f:ajax execute="@this"  />
+	                            </h:commandLink> 
+	                             <h:commandLink   id="btGuardarProducto" disabled="#{ventaB.accionProducto ne 4 }" styleClass="boton-normal"  >
+	                             	GUARDAR
+			                        <f:ajax execute="txtFechaInicio txtFechaFin txtVacantes txtSede" render=":frmVenta:tbSeccion" listener="#{ventaB.insertarProductoSeccion()}" />
+			                    </h:commandLink> 
+                            </div>
+                        </f:facet>
+                
+                
+            </p:dialog>
+            
+            <p:dialog  header="..: BUSQUEDA DE ALUMNO ::.." widgetVar="dlgBusquedaAlumno" modal="true" resizable="false" width="750px"  >
+                    
+                    <h:panelGroup layout="block" id="pnDatosBusqueda">
+                        <h:outputLabel value="PATERNO" styleClass="label" />
+                        <h:inputText id="txtPaternoB" value="#{ventaB.busPaterno}" >
+                        <f:ajax execute="@this" render="dtBusquedaAlumno" listener="#{personaB.filtroPersona(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}" />
+                        </h:inputText>
+                        
+                        <br/>
+                        <h:outputLabel value="MATERNO" styleClass="label" />
+                        <h:inputText id="txtMaternoB" value="#{ventaB.busMaterno}" >
+                        <f:ajax execute="@this" render="dtBusquedaAlumno" listener="#{personaB.filtroPersona(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}" />
+                        </h:inputText>
+                        <br/>
+                        <h:outputLabel value="NOMBRE" styleClass="label" />
+                        <h:inputText id="txtNombresB" value="#{ventaB.busNombres}" >
+                        	<f:ajax execute="@this" render="dtBusquedaAlumno" listener="#{personaB.filtroPersona(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}" />
+                        </h:inputText>
+                        <br/>
+                    </h:panelGroup>
+              
+                 
+                 <p:dataTable id="dtBusquedaAlumno" value="#{personaB.personalL}" var="personaAlumno" rowKey="#{personaAlumno.persona}" selection="#{ventaB.persona}"  selectionMode="single" rowIndexVar="status" scrollable="true" scrollHeight="300" >                                                          
+                     <p:ajax event="rowSelect" update=":frmVenta:pnDatos :frmVenta:pnBotenera :frmVenta:pnPrincipal" listener="#{ventaB.seleccionPersona}" oncomplete="dlgBusquedaAlumno.hide()" /> 
+                            
+                                <p:column headerText="Nro." width="10">  
+                                        <h:outputText value="#{status+1}"/>  
+                                </p:column>
+                                
+                                <p:column headerText="DATOS" >  
+                                    <h:outputText value="#{personaAlumno.nombreCompletos()}"/>  
+                                </p:column>  
+                                <p:column headerText="NUMERO" width="80" >  
+                                    <h:outputText value="#{personaAlumno.numero_documento}"/>  
+                                </p:column>  
+                  </p:dataTable>
+                    <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                            <h:commandLink  value="NUEVO"  styleClass="boton-verde"   >
+                                <f:ajax execute="@this" render="txtDNI txtAPaterno txtAMaterno txtNombres txtTelefono txtCelular txtCorreo txtDireccion" listener="#{ventaB.nuevaPersona}" />
+                            </h:commandLink> 
+                            
+                             <h:commandLink  value="CANCELAR"  styleClass="boton-rojo" onclick="dlgBusquedaAlumno.hide()"  >
+                                <f:ajax execute="@this"  />
+                            </h:commandLink> 
+                            </div>
+                        </f:facet>
+                
+                  </p:dialog>
+            
+            <p:dialog widgetVar="dlgPersonal" header="..: MANTENIMIENTO DE PERSONA :.." width="600" modal="true" resizable="false" closeOnEscape="true" >
+               <h:panelGroup layout="block" id="pnPersona">
+               <h:outputLabel value="DNI"    />
+                 <h:inputText id="txtDNI" value="#{ventaB.persona.numero_documento}" style="#{ component.valid ? '' : 'border-color:red;'}"  onkeypress="return soloNumeros(event)" maxlength="8" size="8" required="true" />                
+                <br />
+                <h:outputLabel value="PATERNO"  />               
+                <h:inputText id="txtAPaterno" value="#{ventaB.persona.paterno}" style="#{ component.valid ? '' : 'border-color:red;'}"  required="true"  />
+                <br />
+                <h:outputLabel value="MATERNO"  />                
+                <h:inputText id="txtAMaterno" value="#{ventaB.persona.materno}" style="#{ component.valid ? '' : 'border-color:red;'}"  required="true" />
+                 <br />
+                <h:outputLabel value="NOMBRES" />
+                
+                <h:inputText id="txtNombres" value="#{ventaB.persona.nombres}" style="#{ component.valid ? '' : 'border-color:red;'}"  required="true"  />
+                <br />
+                 <h:outputLabel value="TELEFONO" />
+                 <h:inputText id="txtTelefono" style="#{ component.valid ? '' : 'border-color:red;'}" value="#{ventaB.persona.telefono}"  size="20" required="true"  />
+               	<br />
+                 <h:outputLabel value="CELULAR"    />
+                 <h:inputText id="txtCelular" style="#{ component.valid ? '' : 'border-color:red;'}"  value="#{ventaB.persona.celular}" size="20" required="true"/>
+                
+                 <br />
+                 <h:outputLabel value="E-MAIL" />
+                 <h:inputText id="txtCorreo" value="#{ventaB.persona.emailP}"   required="false" hp:placeholder="ejemplo@dominio.com"  >                      
+                      <!--  <f:validateRegex pattern=".+@.+\.[a-z]+"/>-->
+                 </h:inputText>
+                <br />
+                <h:outputLabel value="DIRECCION"   />
+                <br/>
+                 <h:inputTextarea id="txtDireccion" value="#{ventaB.persona.direccion_referencial}" style="resize: none;width: 100%;height: 60px" />
+                
+               
+               </h:panelGroup>
+                
+                 <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                             <h:commandLink value="GUARDAR"  styleClass="boton-verde"  >
+		                        <f:ajax  execute="txtAPaterno txtAMaterno txtNombres txtTelefono txtDNI txtCelular txtCorreo txtDireccion" render="txtDNI txtAPaterno txtAMaterno txtNombres txtTelefono txtCelular" listener="#{ventaB.ingresoPersona}" />                    
+		                    </h:commandLink>
+		                    <h:commandLink value="CANCELAR" styleClass="boton-rojo" onclick="dlgPersonal.hide()"  >
+		                        <f:ajax  execute="@this" render="txtDNI txtAPaterno txtAMaterno txtNombres txtTelefono" resetValues="true" />                    
+		                    </h:commandLink>    
+                            
+                            </div>
+                 </f:facet>
+                
+            </p:dialog>
+            
+            
+            
+            
+            <p:dialog header="..: PERSONAS MATRICULADAS :.." widgetVar="dlgMatriculados"  width="600"  resizable="false" modal="true" closeOnEscape="true" >
+                #{ventaB.institucionCarreraS.carrera}
+                
+              
+                
+                
+                <p:dataGrid id="dgMatriculados" value="#{ventaB.personaProductoL}" var="personaM" columns="1" style="height: 380px;overflow-y: auto" >
+                    <div style="display: block;width: 100%;height: 100px;border: 1px solid silver;">
+                        <div style="display: inline-block;vertical-align: top;width: 100px">
+                         <p:graphicImage value="SVerImagenAlumno?alumno=#{personaM.persona}" style="width: 90px;height:80px " />                                    
+                        
+
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;width: 420px;padding: 5px">
+                            <b>#{personaM.alumno}</b> 
+                            <br/>
+                            #{personaM.paterno} #{personaM.materno} #{personaM.nombres}
+                            <br/>
+                            <i class="fa fa-phone">#{personaM.telefono}</i>
+                            <i class="fa fa-mobile">#{personaM.celular}</i>
+
+                            <br/>
+                            <i class="fa fa-envelope-o">#{personaM.correo}</i>
+                        </div>
+                    </div>
+                   
+                </p:dataGrid>
+                  <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                              <ui:param name="registroEval" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{ventaB.carreraSeccionesS.carrera},SECCION,#{ventaB.carreraSeccionesS.seccion}" />
+				                <h:commandLink immediate="#{true}" target="_blank"  actionListener="#{utilB.imprimirIreports('admin/ventas/registroEvaluacionCetpro', 1,fn:split(registroEval,','))}">
+				                    <i class="fa fa-print" />
+				                    IMPRIMIR
+				                </h:commandLink>
+                            
+                            
+                            
+                             <h:commandLink  value="CANCELAR"  onclick="dlgMatriculados.hide()"  >
+                                <f:ajax execute="@this"  />
+                            </h:commandLink> 
+                            </div>
+                        </f:facet>
+               
+            </p:dialog>
+            
+            <p:dialog header="..: APERTURAR FECHA :.." widgetVar="dlgFechaVencimiento" width="400" modal="true" closeOnEscape="true" resizable="false"   >
+                
+                <h:panelGroup layout="block" id="pnSeccionFechaVencimiento" >
+                    <h:outputLabel value="PRODUTO" class="label"  />
+                    <br />
+                    <h:inputTextarea value="#{ventaB.carreraSeccionesS.desProducto}" disabled="true" style="width: 100%;resize:none;height: 60" />
+                    <br/>
+                    <h:outputLabel value="SECCION" class="label" />
+                    <br />
+                    <h:inputText value="#{ventaB.carreraSeccionesS.seccion}" disabled="true" />
+                    <br/>
+                  
+                    <h:outputLabel value="FECHA" class="label" />
+                    <br />
+                    <p:calendar id="txtFechaVen" value="#{ventaB.periodoSeccionVecimiento.fechaInicio}" pattern="dd / MM / yyyy" mindate="#{ventaB.carreraSeccionesS.venFechaInicio}" />
+
+                    
+                    <br/>
+                
+                    
+                </h:panelGroup>
+                <f:facet name="footer">
+                <div style="display: block;text-align: right">
+                        <h:commandLink value="CREAR">
+                            <f:ajax execute="@this txtFechaVen" render=":frmVenta:tbSeccion" listener="#{ventaB.insertarSeccionVencimiento()}" />
+                        </h:commandLink>
+
+                        <h:commandLink value="CANCELAR" onclick="PF('dlgFechaVencimiento').hide()">
+                            <f:ajax execute="@this" />
+                        </h:commandLink>
+                            
+                </div>
+                </f:facet>
+                
+            </p:dialog>
+            
+            
+            
+            <p:dialog header="NUEVO PRODUCTO" widgetVar="dlgProducto" width="800" height="600" modal="#{true}" resizable="#{false}" closeOnEscape="#{true}">
+                
+                <h:panelGroup layout="block" id="pnMantenimientoProducto">
+                 
+                 <h:outputLabel value="T. PRODUCTO" styleClass="label" />
+                 <h:selectOneMenu id="cboTipoProducto" value="#{ventaB.producto.tipoProducto}">
+                     <f:selectItems value="#{tipoProductoB.mostrarTipoProducto()}" var="tipoProducto" itemLabel="#{tipoProducto.descripcion}" itemValue="#{tipoProducto.tipoProducto}" />                     
+                 </h:selectOneMenu>
+                
+                <br/>
+                  <h:outputLabel value="PRODUCTO"  styleClass="label"/>
+                <h:inputText id="txtProducto" value="#{ventaB.producto.descripcion}"/>
+                <br/>
+                 <h:outputLabel value="TIPO FRECUENCIA" styleClass="label" />
+                 <h:selectOneMenu id="cboTipoFrecuencia" value="#{ventaB.tipoFrecuencia}">
+                     <f:selectItem itemLabel="SEMANAL" itemValue="1" />
+                     <f:selectItem itemLabel="FIN DE SEMANA" itemValue="2"/>
+                 </h:selectOneMenu>
+                <br/>
+                                <h:outputLabel value="CURSOS PRODUCTO" />
+                <p:selectManyCheckbox id="cboProductoCurso" value="#{ventaB.productoCurso}" style="border: 1px solid red;height: 100px;width: 100%" required="#{false}" layout="grid"  columns="3" >
+                                        
+                    <f:selectItems value="#{cursoB.mostrarCursoInstitucionCarreraMalla(18, ventaB.institucionCarreraS.carrera, '201501')}" var="curso" itemLabel="#{curso.descripcion}" itemValue="#{curso.curso}" />
+                </p:selectManyCheckbox>
+                                
+                                
+                                                
+                <h:outputLabel value="TIPO CONCEPTO:" />
+                <h:selectOneMenu id="cboTipoConcepto" value="#{ventaB.detalleProductoConcepto.tipoConcepto}" >
+                    <f:selectItems value="#{tipoConceptoB.mostrarTipoConcepto()}" var="tipoConcepto" itemLabel="#{tipoConcepto.descripcion}" itemValue="#{tipoConcepto.tipoConcepto}" />                 
+                 </h:selectOneMenu>
+                <br/>
+               
+                 <h:outputLabel value="CONCEPTO:" />                
+                 <h:inputText id="txtdesConcepto" value="#{ventaB.detalleProductoConcepto.desconcepto}" required="#{false}"/>
+                
+                 
+                 <br/>
+                 <h:outputLabel value="TIPO MONEDA:" />
+                 <h:selectOneMenu id="cboTipoMoneda" value="#{ventaB.detalleProductoConcepto.tipoMoneda}">
+                     <f:selectItem itemLabel="SOLES" itemValue="1" />
+                    <f:selectItem itemLabel="DORALES" itemValue="2" />
+                 </h:selectOneMenu>
+                 
+                 
+                 <h:outputLabel value="MONTO PAGO:" />
+                 <h:inputText id="txtMontoPago" value="#{ventaB.detalleProductoConcepto.montoPago}"/>
+                 
+                  <h:outputLabel value="NUMERO CUOTA:" />
+                  <h:inputText id="txtNumeroCuota" hp:type="number" hp:min="1" hp:max="48" value="#{ventaB.detalleProductoConcepto.numCuota}"  style="width: 50px" size="1"  >
+                     
+                  </h:inputText>
+                
+                 <br/>
+                 <hr/>
+                  <h:outputLabel value="DESCUENTO" />
+                  <h:selectOneMenu id="cboDescuento" value="#{ventaB.descuentoConcepto}">
+                      <f:selectItems value="#{descuentoB.mostrarDescuento()}" var="descuento" itemLabel="#{descuento.descripcion}" itemValue="#{descuento.descuento}" />
+                   
+                 </h:selectOneMenu>
+              <br/>
+                 <h:commandLink type="button" value="AGREGAR" >
+                     <f:ajax execute="@this cboTipoMoneda txtdesConcepto txtMontoPago txtNumeroCuota cboTipoConcepto cboDescuento" render="tbProductoConcepto txtMontoPago txtdesConcepto txtNumeroCuota cboTipoConcepto cboDescuento" listener="#{ventaB.agregarProductoConcepto()}" />
+                 </h:commandLink>
+                 
+                
+              
+                 
+                <br/>
+                <p:dataTable id="tbProductoConcepto" value="#{ventaB.detalleProductoConceptoL}" var="itemProductoConcepto" style="width: 780px" rowIndexVar="status" scrollable="#{true}" scrollHeight="150">
+                    <f:facet name="header">
+                        PRODUCTOS CONCEPTO
+                    </f:facet>
+                    <p:column headerText="Nro." width="20">
+                        #{status+1}
+                    </p:column>
+                    <p:column headerText="TIPO CONCEPTO" width="100">
+                        #{itemProductoConcepto.tipoConcepto}
+                    </p:column>
+                    <p:column headerText="CONCEPTO" >
+                        #{itemProductoConcepto.concepto}
+                        <br/>
+                        #{itemProductoConcepto.desconcepto}
+                    </p:column>
+                    <p:column headerText="CUOTAS" width="80">
+                        #{itemProductoConcepto.numCuota}
+                    </p:column>
+                    
+                    
+                    <p:column headerText="MONTO PAGO" width="80">
+                        #{itemProductoConcepto.montoPago}
+                    </p:column>
+                    
+                    
+               
+                    
+                    <p:column headerText="LISTA DESCUENTO" width="80">
+                        <ui:repeat value="#{itemProductoConcepto.descuentoL}" var="descuentoL">
+                            #{descuentoL.descuento}
+                            
+                            <br/>
+                        </ui:repeat>
+                        
+                    </p:column>
+                    
+                      <p:column  width="20">
+                          <h:commandLink title="ELIMAR CONCEPTO" >
+                              <i class="fa fa-trash-o"/>
+                              <f:ajax execute="@this " render="tbProductoConcepto" listener="#{ventaB.eliminarProductoConcepto(status)}" />
+                          </h:commandLink>
+                          
+                          <h:commandLink  title="AGREGAR DESCUENTO">
+                              <i class="fa fa-credit-card"/>
+                              <f:ajax execute="@this :frmVenta:cboDescuento" render="tbProductoConcepto" listener="#{ventaB.agregarDescuentoConcepto(status)}" />
+                          </h:commandLink>
+                    </p:column>
+                </p:dataTable>
+                
+                
+                <h:commandLink type="button" value="ACEPTAR" >
+                    <f:ajax execute="@this cboTipoProducto txtProducto cboProductoCurso cboTipoFrecuencia tbProductoConcepto"  listener="#{ventaB.insertarProducto()}" />
+                </h:commandLink>
+                <h:commandLink type="button" value="CANCELAR" onclick="PF('dlgProducto').hide()" >
+                    <f:ajax execute="@this"  />
+                </h:commandLink>
+                </h:panelGroup>
+                
+            </p:dialog>
+                     
+                     
+                     
+                     <p:dialog  header="..: INGRESO DE DOCENTE :.." widgetVar="pnCargaElectiva"  width="800"  modal="true" closeOnEscape="true" resizable="false" >
+                         <h:panelGroup id="pnDocenteCurso">
+                                
+                             
+                             
+                             <h:panelGroup id="pnDatosDocente" layout="block" style="min-height: 150px;margin: 0px 0px 20px">
+                             <div style="display: inline-block;vertical-align: top;width: 60%" >
+                              <div style="display: block;width: 100%">
+                                <div style="display: inline-block;vertical-align: top;width: 110px">
+                                         <p:graphicImage value="#{imagenes.image2}" style="width: 100px;height: 100px" >
+                                            <f:param id="codigo_persona2" value="#{ventaB.personal.persona}"/>
+                                        </p:graphicImage>
+                                  </div>
+                                     <div style="display: inline-block;vertical-align: top;">
+                                
+                                     
+                                        <h:outputLabel value="PERSONAL" class="label" />
+                                        <h:inputText value="#{ventaB.personal.personal}" disabled="#{true}" />
+                                        <br/>
+                                        <h:outputLabel value="PATERNO" class="label" />
+                                        <h:inputText value="#{ventaB.personaDocente.paterno}" disabled="#{true}" />
+                                        <br/>
+                                        <h:outputLabel value="MATERNO" class="label" />
+                                        <h:inputText value="#{ventaB.personaDocente.materno}" disabled="#{true}" />
+                                        <br/>
+                                        <h:outputLabel value="NOMBRES " class="label" />
+                                        <h:inputText value="#{ventaB.personaDocente.nombres}" disabled="#{true}" /> 
+                                 </div>
+                                </div>
+                                 
+                             <h:commandLink  styleClass="boton-normal "   onclick="dlgBusquedaPersonal.show()">
+                                
+                                 <i class="fa fa-search"/>
+                                 BUSCAR PERSONAL
+                                 <f:ajax execute="@this" />
+                             </h:commandLink>
+                                 
+                                 
+                            
+                             </div>
+                             
+                                 <div class="grillaDetalleProducto" >
+                                 <span style="display: block;text-align: center;color: silver;font-weight: bold;">
+                                     <i class="fa fa-info" style="position: relative;left: -30px;color: #0069B3" />DETALLE DEL PRODUCTO
+                                 </span>
+                                     <hr/>
+                                 <ul>
+                                    <li>CARRERA</li>
+                                    <li>#{ventaB.carreraSeccionesS.desCarrera}</li>
+                                 </ul>
+                                 <ul>
+                                    <li>SECCION</li>
+                                    <li>#{ventaB.carreraSeccionesS.seccion}</li>
+                                 </ul>
+                                 <ul>
+                                    <li>FECHA INI.</li>                                    
+                                    <li><h:outputLabel value="#{ventaB.carreraSeccionesS.fechaInicio}"  /> </li>
+                                 </ul>
+                                 <ul>
+                                    <li>FRECUENCIA</li>                                    
+                                    <li><h:outputLabel value="#{ventaB.carreraSeccionesS.frecuencia eq 0?ventaB.carreraSeccionesS.desFrecuenciaDia.concat(' ').concat(ventaB.carreraSeccionesS.desFrecuenciaHora) :ventaB.carreraSeccionesS.desFrecuencia}"  /> </li>
+                                 </ul>
+                                 <ul>
+                                    <li>TURNO</li>
+                                    <li>#{ventaB.carreraSeccionesS.desTurno}</li>
+                                 </ul>
+                                 </div>   
+                         </h:panelGroup>
+                         
+                         
+                       
+                         
+                             <p:dataTable id="tbCursoDocente" value="#{ventaB.carreraSeccionesS.seccionCursoL}" var="cursoPersonal"  rowIndexVar="status" scrollable="true"  scrollHeight="300" style="font-size:0.7em" >
+                             <f:facet name="header">
+                                 #{ventaB.carreraSeccionesS.desProducto}
+                             </f:facet>
+                             
+                             <p:column headerText="Nr." width="20">
+                                 #{status+1}
+                             </p:column>                             
+                             <p:column headerText="CODIGO" width="60">
+                                 #{cursoPersonal.curso}
+                             </p:column>
+                             <p:column headerText="CURSO" width="150">
+                                 #{cursoPersonal.descurso}
+                             </p:column>
+                             <p:column headerText="PERSONAL">
+                                 <div style="display: block">
+                                     <div style="display: inline-block;vertical-align: top;width: 60px">
+                                         <p:graphicImage value="#{imagenes.image}" style="width: 50px;height: 50px" >
+                                            <f:param id="codigo_persona" value="#{cursoPersonal.persona}"/>
+                                        </p:graphicImage>
+                                     </div>
+                                     <div style="display: inline-block;vertical-align: top;width: 250px;">
+                                         <b>#{cursoPersonal.personal} </b>
+                                         <br/>
+                                         <h:outputLabel value="#{cursoPersonal.desPersonal}" style="color:#{ventaB.personal.personal eq cursoPersonal.personal?'green':''}"  />
+                                     </div>
+                                 </div>
+                             </p:column>
+                             <p:column headerText="" width="50">                                 
+                              
+                                 <h:commandLink  title="INSERTAR PERSONAL" rendered="#{not empty ventaB.personaDocente.persona ?empty cursoPersonal.personal:  false }">
+                               
+                                     <i class="fa fa-plus" style="color:green"/>
+                                     <f:ajax execute="@this" render="tbCursoDocente" listener="#{ventaB.insertarCursoPersonal(cursoPersonal)}" />
+                                 </h:commandLink>
+                                 <h:commandLink title="ELIMINAR PERSONAL" rendered="#{not empty cursoPersonal.personal }"   >
+                                     
+                                     <i class="fa fa-times" style="color:red"/>
+                                     <f:ajax execute="@this"  render="tbCursoDocente" listener="#{ventaB.eliminarCursoPersonal(cursoPersonal)}" />
+                                 </h:commandLink>                            
+                             </p:column>                             
+                         </p:dataTable>
+                         </h:panelGroup>                         
+                     </p:dialog>
+                         
+              <p:dialog  header="..: BUSQUEDA DE PERSONAL :.." widgetVar="dlgBusquedaPersonal" modal="true" resizable="false" width="750px" closeOnEscape="true"  >                    
+                    <h:panelGroup layout="block" id="pnDatosBusquedaDocente">
+                        <h:outputLabel value="PATERNO" styleClass="label" />
+                        <h:inputText id="txtPaternoDocente" value="#{ventaB.busPaterno}" >
+                        	<f:ajax execute="@this" render="dtBusquedaDocente" listener="#{personaB.filtroPersonal(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}"/>
+                        </h:inputText>
+                        <br/>
+                        <h:outputLabel value="MATERNO" styleClass="label" />
+                        <h:inputText id="txtMaternoDocente" value="#{ventaB.busMaterno}" >
+                        	<f:ajax execute="@this" render="dtBusquedaDocente" listener="#{personaB.filtroPersonal(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}"/>
+                        </h:inputText>
+                        <br/>
+                        <h:outputLabel value="NOMBRE" styleClass="label" />
+                        <h:inputText id="txtNombresDocente" value="#{ventaB.busNombres}" >
+                        	<f:ajax execute="@this" render="dtBusquedaDocente" listener="#{personaB.filtroPersonal(ventaB.busPaterno,ventaB.busMaterno,ventaB.busNombres)}"/>
+                        </h:inputText>
+                        <br/>
+                    </h:panelGroup>
+                    
+                 
+                  <p:dataTable id="dtBusquedaDocente" value="#{personaB.personalL}" var="personaDocente" rowKey="#{personaDocente.persona}" selection="#{ventaB.personaDocente}"  selectionMode="single" rowIndexVar="status" scrollable="#{true}" scrollHeight="350"  >                                                          
+                     <p:ajax event="rowSelect"  update=":frmVenta:pnDocenteCurso" listener="#{ventaB.seleccionPersonaDocente}" oncomplete="dlgBusquedaPersonal.hide()" /> 
+                            
+                     <p:column headerText="Nro." width="10">  
+                                          
+                                        #{status+1}
+                     </p:column>
+                                
+                     <p:column headerText="DATO"  >  
+                                    <h:outputText value="#{personaDocente.nombreCompletos()}"/>  
+                     </p:column>  
+                     <p:column headerText="DOCUMENTO" width="100"  >  
+                              <h:outputText value="#{personaDocente.numero_documento}"/>  
+                     </p:column> 
+                  </p:dataTable>
+                  
+                
+                  </p:dialog>
+                    
+               <p:dialog header="..: ENVIAR CORREO :.." widgetVar="dlgCorreo"  modal="true" width="800"   resizable="false" closeOnEscape="true" >
+               <h:panelGroup layout="block" id="pnCorreo">
+               
+                   <h:outputLabel value="PARA" /> 
+                   <div class="remitente">
+                       
+                  
+                       <h:panelGroup layout="block" id="pnRemitente" >
+                           <ui:repeat value="#{ventaB.personaProductoL}" var="personaInterezado" varStatus="item" >
+                            <span class="remitente-persona" title="#{personaInterezado.paterno} #{personaInterezado.materno} #{personaInterezado.nombres}">
+                                <p:graphicImage value="SVerImagenAlumno?alumno=#{personaInterezado.persona}" style="width: 20px;height:20px " />
+                                
+                                #{personaInterezado.correo}
+                                <h:commandLink type="button" title="ELIMINAR">
+                                    <i class="fa fa-times" />
+                                    <f:ajax execute="@this" render=":frmVenta:pnRemitente"  listener="#{ventaB.eliminarCorreo(item.index)}"  />
+                                </h:commandLink>
+
+                            </span>
+
+                        </ui:repeat>
+                       </h:panelGroup>
+                    </div>
+            
+               <hr/>
+              
+              <h:inputText id="txtAsunto"  value="#{ventaB.asunto}" hp:placeholder="  AGREGAR  EL  ASUNTO  ." style="width: 100%;padding: 5px 0px;border: none" required="#{true}"   />
+               <hr/>
+               <p:editor id="txtEditor" widgetVar="editorWidget" value="#{ventaB.contenidoCorreo}" style="width: 100%" controls="bold italic underline strikethrough size color highlight bullets numbering alignleft center alignright" required="#{true}" />
+                     
+               </h:panelGroup>
+               <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                            <h:commandLink type="button"  title="ENVIAR CORREO" disabled="#{false}" style="border: none;color: white;padding: 5px 10px;background-color: #0073AA;margin: 5px;border-radius: 3px" onclick="validar('#frmVenta\\:txtAsunto','#frmVenta\\:txtEditor')" >
+		                       <i class="fa fa-envelope-o" />
+		                       ENVIAR
+		                       <f:ajax execute=" txtAsunto txtEditor"   listener="#{ventaB.enviarCorreo()}" onevent="onevent" />
+               				</h:commandLink>
+                            </div>
+                 </f:facet>
+        </p:dialog>         
+        </h:form>
+            </ui:define>
+         </ui:composition>
+

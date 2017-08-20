@@ -1,0 +1,105 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Practicas y Examenes
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                
+                                
+                <span class="tituloCuerpo"> PRACTICAS Y EXAMENES </span>
+                <script>
+                    $(function() {
+                    $("#tabs").tabs();
+                    });
+                  </script>
+                
+                <h:messages globalOnly="true" showSummary="true" showDetail="false" style="color: red;font-size: 1.1em;"/>
+                
+                <div id="tabs">
+                     <ul>
+                        <li><a href="#pestaña-1">Practica I</a></li>
+                        <li><a href="#pestaña-2">Practica II</a></li>
+                        <li><a href="#pestaña-3">Examen Parcial</a></li>
+                        <li><a href="#pestaña-4">Examen Final</a></li>
+                        <li><a href="#pestaña-5">Examen Sustitutorio</a></li>
+                        </ul>
+                    <h:form id="frmPestañas">
+                        
+                        <div id="oculto" style="display: none;">
+                            
+                        #{programacionExamenesB.mostrar1("practica1",carreraB.carrera.carrera,usuarioB.periodoS)}
+                        #{programacionExamenesB.mostrar2("practica2",carreraB.carrera.carrera,usuarioB.periodoS)}
+                        #{programacionExamenesB.mostrar3("examen_parcial",carreraB.carrera.carrera,usuarioB.periodoS)}
+                        #{programacionExamenesB.mostrar4("examen_final",carreraB.carrera.carrera,usuarioB.periodoS)}
+                        #{programacionExamenesB.mostrar5("sustitutorios",carreraB.carrera.carrera,usuarioB.periodoS)}
+                        </div>
+                        
+                    <div id="pestaña-1">
+                       
+                        <ui:repeat value="#{programacionExamenesB.examenesL1}" var="exam">
+                                 
+                            <h:commandLink value="#{exam.nombre}" actionListener="#{programacionExamenesB.descargar(exam.ruta)}"/>
+                                                                              
+                            
+                       
+                            <br/>
+                               
+                        </ui:repeat>
+                       
+                    </div>
+                 
+                    <div id="pestaña-2">
+                        <ui:repeat value="#{programacionExamenesB.examenesL2}" var="exam">
+                                                    
+                           <h:commandLink value="#{exam.nombre}" actionListener="#{programacionExamenesB.descargar(exam.ruta)}"/>
+                        
+                           
+                       
+                           <br/>
+                        </ui:repeat>
+                    </div>
+                   
+                   
+                    <div id="pestaña-3">
+                        <ui:repeat value="#{programacionExamenesB.examenesL3}" var="exam">
+                            
+                           <h:commandLink value="#{exam.nombre}" actionListener="#{programacionExamenesB.descargar(exam.ruta)}"/>
+                        
+                           
+                            
+                           <br/>
+                        </ui:repeat>
+                    </div>
+                    
+                  
+                    <div id="pestaña-4">
+                        <ui:repeat value="#{programacionExamenesB.examenesL4}" var="exam">
+                            
+                            <h:commandLink value="#{exam.nombre}" actionListener="#{programacionExamenesB.descargar(exam.ruta)}"/>
+                        
+                            
+                       
+                            <br/>
+                        
+                        </ui:repeat>
+                    </div>
+                      <div id="pestaña-5">
+                        <ui:repeat value="#{programacionExamenesB.examenesL5}" var="exam">                            
+                            <h:commandLink value="#{exam.nombre}" actionListener="#{programacionExamenesB.descargar(exam.ruta)}"/>                                  
+                            <br/>
+                        </ui:repeat>
+                    </div>                           
+                    </h:form>
+                </div>
+               
+            </ui:define>
+            
+        </ui:composition>
+
+

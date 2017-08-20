@@ -1,0 +1,112 @@
+
+
+<ui:composition template="/Administrativo/plantilla.xhtml"
+ 	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:hp="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+   <ui:define name="titulo">
+                CONSTANCIA DE PRACTICA
+            </ui:define>
+             <ui:define name="contenido">
+             <script>
+             var bandera=false;
+             var idGeneral;
+          
+             function confirmacion(obj,cadena){
+                 idGeneral=obj;
+                 if(bandera){
+                     $(".modal-fondo").remove();
+                     $(".modal").remove();
+                     bandera=false;
+                     return true;
+                 }else{
+                    if(! $('.modal-fondo').hasClass("modal-fondo")){
+                        $('body').append('<div class="modal-fondo"  /> ');
+                         $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                         }else{
+                         $(".modal-fondo").remove();
+                         $(".modal").remove();
+                    }                    
+                     
+                     return false;
+                 }
+                 
+             }
+             
+             function valida(estado){
+                 bandera=estado;           
+                 $(idGeneral).click();            
+             }
+             
+             
+             </script>
+             
+             <span class="tituto-admin">CONSTANCIA DE PRACTICA </span>
+<h:form prependId="false">
+<div class="paneles">
+<h:outputLabel  value="Alumno"  />
+<h:inputText value="#{constanciaPracticaB.filtroAlumno}" >
+<f:ajax event="change" execute="@this" render="tbConstancia" listener="#{constanciaPracticaB.filtrar}" />
+</h:inputText>
+<br />
+<h:outputLabel  value="Persona" />
+
+<h:inputText value="#{constanciaPracticaB.filtroDesPersona}" >
+<f:ajax event="change" execute="@this" render="tbConstancia" listener="#{constanciaPracticaB.filtrar}" />
+</h:inputText>
+
+</div>
+<div class="paneles">
+<ui:param name="param" value="INSTITUCION:1:CURSO:%:ALUMNO:%:PARAMARRAY:#{constanciaPracticaB.imprimir()}" />
+<h:commandLink id="btImprimir" disabled="#{constanciaPracticaB.constanciaSL.size() eq 0}" target="_blank" styleClass="boton-normal" actionListener="#{utilB.imprimirIreports('administrativo/practica/constanciaPracticaIniciales', 1, fn:split(param,':'))}" >
+ <i class="fa fa-print"/>
+Imprimir
+
+</h:commandLink>
+
+</div>
+<p:dataTable id="tbConstancia" value="#{constanciaPracticaB.constanciaL}" var="itemConstancia" rowKey="#{itemConstancia}" selection="#{constanciaPracticaB.constanciaSL}" disabledSelection="#{itemConstancia.alumnoPractica.fechaConstancia ne null}" rowIndexVar="status">
+<p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+<p:ajax event="rowSelect" update="btImprimir"    />
+            <p:ajax event="rowSelectCheckbox" update="btImprimir"  />
+            <p:ajax event="rowUnselectCheckbox" update="btImprimir"  />
+            <p:ajax event="rowUnselect" update="btImprimir"  />
+            <p:ajax event="toggleSelect"   update="btImprimir"   />
+			<p:column headerText="Nº" width="10">
+			#{status + 1 }
+			</p:column>
+			<p:column headerText="Alumno" width="80">
+				#{itemConstancia.alumnoPractica.alumno}
+			</p:column>
+			<p:column headerText="Persona">
+			#{itemConstancia.paterno} #{itemConstancia.materno} #{itemConstancia.nombres}
+			</p:column>
+			<p:column headerText="Fecha Inicio" width="70">
+			#{itemConstancia.fechaInicio}
+			</p:column>
+			<p:column headerText="Fecha Final" width="70">
+			#{itemConstancia.fechaFinal}
+			</p:column>
+			<p:column headerText="Fecha Constancia" width="60">
+			<h:commandLink  rendered="#{itemConstancia.alumnoPractica.fechaConstancia eq null}" onclick="return confirmacion(this,'¿ Está seguro de entregar ya no podrá volver a imprimir ?');" >
+			Entregado
+			<f:ajax execute="@this"  render="tbConstancia" listener="#{constanciaPracticaB.entregar(itemConstancia.alumnoPractica)}" />
+			</h:commandLink>
+			<h:outputLabel value="#{itemConstancia.alumnoPractica.fechaConstancia}" rendered="#{itemConstancia.alumnoPractica.fechaConstancia ne null}"/>
+				
+				
+				
+</p:column>
+</p:dataTable>
+
+</h:form>
+             
+             
+             </ui:define>
+     </ui:composition>
+

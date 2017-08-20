@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>....HORARIO DE EXAMENES...</title>
+       
+          <h:outputScript library="primefaces" name="jquery/jquery.js" /><!--jquery de PF-->
+          <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script> 
+       <style>
+                        *{padding: 0px ;margin: 0px}
+                        ul{list-style: none}
+                        
+                        #frmHorarioExamen\:pnHorario{margin: 0px 0px 20px 0px  }
+                        .dia{display: table-cell;vertical-align: top;list-style: none;width: 14%;position: relative;border-left:   1px  solid silver;background: gainsboro;}
+                        .dia li{outline: 1px solid silver;}
+                        .dia li:first-child{height: 40px;background-color:rgb(16,108,200);color: white;text-align: center;font-weight: bold;font-family: arial;}
+                        .hora {height: 60px;background-color:rgb(16,108,200);position: relative}
+                        .hora:before{content: "";/*width: 10000%;*/height: 1px;position: absolute;bottom: 0px;left:  0px;background-color: silver;z-index: 1}
+                        .hora-padre{display: table;height: 100%;width: 100%;text-align: center;color: white}
+                        .hora-hijo{display: table-cell;vertical-align: middle}
+                        .celda{position: absolute;font-size: 0.8em;width: 100%;background-color: white;text-align: center;display: block;z-index: 2;border: 1px solid silver}                        
+                        .mover{cursor: move}
+                        .celda div span{display: block}
+                        .cursoDocente{display: inline-block;vertical-align: top;height: 150px;width: 200px;border: 1px solid silver;padding: 2px 4px}
+                        .listaDias{display: block;text-align: center;}
+                        .listaDias ul li{display: inline-block;vertical-align: top;border: 1px solid silver;width: 24px;margin-right:-2px}
+                        .listaDias ul li b{display: block}
+                        .paneles{border: 1px solid silver;padding: 10px;margin: 5px 0px;min-height: 10px}
+                        .botones{padding: 5px;min-width: 80px;margin: 2px;border: none;background-color: #0088CE;color: white;cursor: pointer}
+                        span.botones{opacity: 0.5; cursor: default}
+                        .label{display: inline-block;vertical-align: top;width: 120px}
+                        .celda-examen:hover{z-index: 100}
+                        .celda-regular{opacity: 0.1;z-index: 0; }
+                        .preview{display: block;color: silver;cursor: pointer}    
+                        .preview:hover{color: white}
+                        .horario-cabecera{position: relative;display: block;height: 50px;width: 100%;background-color:rgb(16,108,200);border-radius: 8px 8px 0px 0px}
+                        .fijar{position: fixed;top: 0;z-index: 10}
+	
+
+		
+	
+	
+	.overlay-container {
+		display: none;
+		content: " ";
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		background: -moz-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%, rgba(127,127,127,0.9) 100%);
+		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(127,127,127,0)), color-stop(100%,rgba(127,127,127,0.9)));
+		background: -webkit-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+		background: -o-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+		background: -ms-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+		background: radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(127,127,127,0.9) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007f7f7f', endColorstr='#e67f7f7f',GradientType=1 );
+	}
+	
+	.window-container {
+		display: block;
+		background: #fcfcfc;
+		margin: 8em auto;
+		width: 500px;
+		padding: 10px 20px 20px;
+		text-align: left;
+		z-index: 3;
+		border-radius: 3px;
+		box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+		-webkit-transition: 0.4s ease-out;
+		-moz-transition: 0.4s ease-out;
+		-ms-transition: 0.4s ease-out;
+		-o-transition: 0.4s ease-out;
+		transition: 0.4s ease-out;
+		opacity: 0;
+	}
+	
+	.zoomin {
+		-webkit-transform:  scale(1.2);
+		-moz-transform:  scale(1.2);
+		-ms-transform:  scale(1.2);
+		transform:  scale(1.2);
+	}
+	
+	
+	
+	.window-container-visible {
+		-webkit-transform:  scale(1);
+		-moz-transform:  scale(1);
+		-ms-transform:  scale(1);
+		transform:  scale(1);
+		opacity: 1;
+	}
+	
+	
+		
+		
+	
+		
+	
+			
+                    </style>
+           <script>
+        
+        $(document).ready(function() {
+              
+            $(window).scroll(function() {
+               var alto=$(window).scrollTop();
+               var top=$("#frmHorarioExamen\\:pnHorario").position().top;
+               
+               var distancia=top-alto; 
+                console.log(distancia);
+               if (distancia>-0){
+                   
+                   $(".horario-cabecera").removeClass("fijar");
+               //    console.log("normal");
+               }else{
+                   
+                  $(".horario-cabecera").addClass("fijar");
+                 //  console.log("inmovilizar");
+               }
+            });
+            
+  $( "body" ).on("mouseup",".preview",function() {
+      $(".celda-regular").css({"opacity":"0.1","z-index":"0","transition":"all 0.8s"});
+      $(".celda-examen").css({"opacity":"1","z-index":"5","transition":"all 0.8s"});
+  });
+  
+  $( "body").on("mousedown",".preview",function() {
+    console.log("salio");
+    $(".celda-regular").css({"opacity":"1","z-index":"5","transition":"all 0.8s"});
+    $(".celda-examen").css({"opacity":"0.1","z-index":"0","transition":"all 0.8s"});
+    
+  });
+            
+    $('.close').click(function() {
+				$('.overlay-container').fadeOut().end().find('.window-container').removeClass('window-container-visible');
+                            }); 
+            
+            $('.button').click(function() {
+
+	
+
+	$('.overlay-container').fadeIn(function() {
+
+		window.setTimeout(function(){
+		$('.window-container.zoomin').addClass('window-container-visible');
+		}, 100);
+
+	});
+});
+
+            
+            
+           
+         $("body").on("mouseenter",".celda",function(){
+                           
+                           $(".mover").draggable({
+                               addClasses: false,cursor:'move',grid: [0, 5], revert: true,containment: '#impresion',snap: '#impresion',
+                                 start: function(){
+                                        console.log("comenzo......:");
+                                        $(this).css({"transition":"0"});
+                                 }
+                                 ,stop: function(){
+                                    $(".celda-regular").css({"opacity":"0"});
+                                    if(0>$(this).position().top){
+                                        $(this).css({"top":"0"});
+                                    }
+                                     $(this).find(".valor").val($(this).position().top);
+                                     minutos=(parseInt($(this).find(".valor").val())+ 480);                                
+                                     horaInicio=(Math.floor(minutos / 60)) +":"+(minutos % 60)+":00";
+                                     minutos+=parseInt($(this).find(".valorAlto").val());
+                                     horaFin=((Math.floor(minutos / 60)) +":"+(minutos % 60))+":00";
+                                     $(this).find(".hora-ini").text(horaInicio);
+                                     $(this).find(".txtHoraInicio").val(horaInicio);
+                                     $(this).find(".hora-fin").text(horaFin);
+                                     $(this).find(".txtHoraFinal").val(horaFin);
+                                 }
+                           });
+                           
+                           
+                           
+                             $(".dia").droppable({ 
+                        drop: function( event, ui ) { 
+                        
+               ui.draggable.draggable( 'option', 'revert', false );
+               //$(this).droppable( 'disable' );
+            //    ui.draggable.draggable( 'disable' );
+       // ui.draggable.data("soltado", false); 
+      
+    
+   } 
+});
+                           
+                       });
+                      
+                       
+                   
+                    });   
+    </script>
+    </h:head>
+   
+  
+    <h:body>
+        <h:form id="frmHorarioExamen">
+         
+          
+            
+       
+            
+            <h:panelGroup layout="block" id="pnDatos" styleClass="paneles">
+                <h:outputLabel value="CARRERA" styleClass="label" />
+                <h:selectOneMenu id="cbCarrera" value="#{horarioExamenB.carreraS}" disabled="#{horarioExamenB.bandera}" required="#{true}">
+                    <f:selectItem itemLabel="--SELECCIONAR--" />
+                    <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(1)}" var="carrera" itemLabel="#{carrera.abreviatura}" itemValue="#{carrera.carrera}" />
+                    <f:ajax execute="@this" render="cbSeccion" />
+                </h:selectOneMenu>
+                <br />
+                
+                
+                <h:outputLabel value="TURNO:" styleClass="label" />
+                <h:selectOneMenu id="cbTurno" value="#{horarioExamenB.turnoS}" disabled="#{horarioExamenB.bandera}" required="#{true}">
+                    <f:selectItem itemLabel="--SELECCIONAR--" />
+                    <f:selectItem itemLabel="MAÑANA" itemValue="1" />
+                    <f:selectItem itemLabel="TARDE" itemValue="2" />
+                    <f:selectItem itemLabel="NOCHE" itemValue="3" />                    
+                    <f:ajax execute="@this" render="cbSeccion" />
+                </h:selectOneMenu>
+                <br />
+                
+                <h:outputLabel value="SECCION" styleClass="label" />
+                <h:selectOneMenu id="cbSeccion" value="#{horarioExamenB.seccionS}" disabled="#{horarioExamenB.bandera}" required="#{true}" >
+                    <f:selectItem itemLabel="--SELECCIONAR--" />
+                    <f:selectItems value="#{seccionB.filtroSeccion(1, '20171',  horarioExamenB.carreraS,horarioExamenB.turnoS)}" var="seccion" itemLabel="#{seccion.descripcion}" itemValue="#{seccion.seccion}" />
+                    <f:ajax execute="@this" />
+                </h:selectOneMenu>
+            
+            <br />
+                <h:outputLabel value="TIPO EXAMEN:" styleClass="label"  />
+                <h:selectOneMenu id="cbTipoExamen" value="#{horarioExamenB.tipoExamenS}" disabled="#{horarioExamenB.bandera}" required="#{true}" >
+                    <f:selectItem itemLabel="--SELECCIONAR--" />
+                    <f:selectItem itemValue="EP" itemLabel="EXAMEN PARCIAL" />
+                    <f:selectItem itemValue="EF" itemLabel="EXAMEN FINAL" />
+                </h:selectOneMenu>
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="pnBotonera" styleClass="paneles " >
+              
+                
+                
+                <h:commandLink value="MOSTRAR"  disabled="#{horarioExamenB.accion eq 0?false: horarioExamenB.bandera}" styleClass="botones" >
+                    <f:ajax execute="@this cbCarrera  cbSeccion cbTipoExamen" render="pnHorario pnCursos pnBotonera" listener="#{horarioExamenB.mostrar}" />
+                </h:commandLink>
+                <h:commandLink  disabled="#{horarioExamenB.accion eq 0?true: horarioExamenB.bandera}" styleClass="botones"  >
+                    <i class="fa fa-pencil"/>
+                    EDITAR
+                    <f:ajax execute="@this pnHorario " render="pnHorario pnBotonera pnCursos pnDatos" listener="#{horarioExamenB.editar}" />
+                </h:commandLink>
+                  <h:commandLink disabled="#{horarioExamenB.accion eq 0?true: not horarioExamenB.bandera}" styleClass="botones" >
+                      <i class="fa fa-floppy-o"/>
+                      GUARDAR
+                      <f:ajax execute="@this pnHorario pnCursos"  render="pnHorario pnBotonera pnCursos pnDatos" listener="#{horarioExamenB.guardar}" />
+                </h:commandLink>
+                  <h:commandLink disabled="#{horarioExamenB.accion eq 0?true:not horarioExamenB.bandera}" styleClass="botones"  >
+                      <i class="fa fa-undo"/>
+                      CANCELAR
+                      <f:ajax execute="@this " render="pnHorario pnBotonera pnCursos pnDatos" listener="#{horarioExamenB.cancelar}" />
+                </h:commandLink>
+                <h:commandLink  disabled="#{true}" styleClass="botones"  >
+                    <i class="fa fa-print"/>
+                    IMPRIMIR
+                    <f:ajax execute="@this" />
+                </h:commandLink>
+             
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnCursos"  styleClass="paneles" style="overflow-x: auto"   >
+                 
+                <ul style="min-width: #{horarioExamenB.detalleDiaL[0].detalleHorarioL.size() * 215}px">
+                    <h:outputLabel value="TODOS LOS CURSOS FUERON ASIGNADOS" style="color: silver"   rendered="#{horarioExamenB.detalleDiaL[0].detalleHorarioL.size() eq 0?true:false}"    />
+                    <ui:repeat value="#{horarioExamenB.detalleDiaL[0].detalleHorarioL}" var="cursoDocente" step="1" varStatus="status">                        
+                    <li class="cursoDocente" >
+                        <div style="display: block;height: 80%">
+                            <div>
+                                <div style="display: inline-block;vertical-align: top;width: 60px ">
+                                    <img src="SVerImagenAlumno?alumno=#{cursoDocente.persona}"  width="60px" height="70px" style="border: 1px solid"  />
+                                </div>
+                                <div style="display: inline-block;vertical-align: top;width: 130px ">
+                                     <b>#{cursoDocente.cpersonal}</b>
+                                     <br />
+                                     <span style="text-transform: capitalize;font-size: 0.8em;display: block;">#{cursoDocente.desPersonal}  </span>                                   
+                                </div>                                   
+                            </div>                            
+                            <span style="display: block;width: 100%;text-align: center">#{cursoDocente.curso} -#{cursoDocente.desCurso}</span>                             
+                        </div>
+                        
+                        <div class="listaDias" >
+                            <ul >
+                                <li>
+                              
+                                    <h:commandLink  title="LUNES" disabled="#{not horarioExamenB.bandera}">
+                                        <b>L</b>
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario" listener="#{horarioExamenB.agregar(cursoDocente,1,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                </h:commandLink>
+                                  </li>
+                                <li>
+                                    
+                                
+                                <h:commandLink  title="MARTES" disabled="#{not horarioExamenB.bandera}">
+                                    <b>M </b>
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario" listener="#{horarioExamenB.agregar(cursoDocente,2,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                </h:commandLink>
+                                </li>
+                                <li>
+                                     <h:commandLink title="MIERCOLES" disabled="#{not horarioExamenB.bandera}">
+                                         <b>MI</b>   
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario" listener="#{horarioExamenB.agregar(cursoDocente,3,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                    </h:commandLink>  
+                                </li>
+                                <li>
+                                      <h:commandLink title="JUEVES" disabled="#{not horarioExamenB.bandera}">
+                                          <b>J</b>   
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario" listener="#{horarioExamenB.agregar(cursoDocente,4,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                        </h:commandLink>
+                                </li>
+                                <li>
+                                     <h:commandLink  title="VIERNES" disabled="#{not horarioExamenB.bandera}">
+                                         <b>V</b>  
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario" listener="#{horarioExamenB.agregar(cursoDocente,5,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                    </h:commandLink> 
+                                </li>
+                                <li>
+                                    <h:commandLink title="SABADO" disabled="#{not horarioExamenB.bandera}">
+                                            <b>S</b>  
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario"  listener="#{horarioExamenB.agregar(cursoDocente,6,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                </h:commandLink> 
+                                </li>
+                                <li>
+                                   <h:commandLink title="DOMINGO" disabled="#{not horarioExamenB.bandera}">
+                                           <b>D</b>  
+                                    <f:ajax execute="@this :frmHorarioExamen:pnHorario"  listener="#{horarioExamenB.agregar(cursoDocente,7,status.index)}" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" />
+                                </h:commandLink> 
+                                </li>
+
+                                  
+                            </ul>
+                        </div>
+                        
+                    </li>
+                </ui:repeat>
+               </ul>
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" id="pnHorario">
+                <div class="horario-cabecera" >
+                    <H2 style="color: white;text-align: center;padding: 5PX 0PX">CALENDARIO DE EXAMENES</H2>
+                    <div style="position: absolute;right: 10px;bottom: 5px">
+                      
+                        <b class="preview" >
+                            <i class="fa fa-magic" />
+                        <i class="fa fa-th"/>
+                        <br/>
+                        Mirar
+                        </b>
+                    </div>
+                </div>
+                         <div id="impresion" >
+                    <ul class="dia" style="width:  60px">
+                        <li style="width: 60px;" ><i class="fa fa-clock-o" style="font-size: 1.7em;"/></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">8:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">9:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">10:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">11:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">12:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">13:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">14:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">15:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">16:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">17:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">18:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">19:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">20:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">21:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">22:00</div></div></li>
+                        <li class="hora"><div class="hora-padre"><div class="hora-hijo">23:00</div></div></li>
+                    </ul>
+                        <ui:repeat value="#{horarioExamenB.detalleDiaL}" var="dia"  varStatus="index" offset="1" >
+                        <ul class="dia semana" data-dia="#{utilB.listaDiasSemana[dia.dia]}">
+                            <li>  
+                                <span style="display: block;">#{utilB.listaDiasSemana[dia.dia]}</span>
+                                
+                                <span style="display: block;">#{utilB.convertDateString(utilB.dateAdd(dia.fecha, 5, index.index -1),'dd / MM / yyyy')}</span>
+
+                            </li>
+                            <li  class="pizarra" style="width: 100%;height: 900px;position: relative">
+                                <ui:repeat value="#{dia.detalleHorarioL}" var="hora" varStatus="statusDia">  
+                                    <div  style="height: #{hora.alto}px;top: #{hora.top}px;background-color:#{hora.tipoClase eq 4 and (hora.estadoRegistro eq 57 or hora.estadoRegistro eq 56 ) ?'khaki':'white'} " data-curso="#{hora.curso}" class="celda #{horarioExamenB.bandera and hora.tipoClase eq 4 and hora.estadoRegistro eq 0?'mover':''} #{hora.tipoClase eq 4?'celda-examen':'celda-regular'} ">
+                                    <div style="display: table;height: 100%;width: 100%;position: relative">
+                                        <div style="display: table-cell;vertical-align: middle">
+                                           
+                                            <h:commandLink title="ELIMINAR" rendered="#{horarioExamenB.bandera and hora.tipoClase eq 4 and hora.estadoRegistro eq 0}"  style="position: absolute;top: -10px;right: -10px;height: 20px;width: 20px;border: 1px solid silver;border-radius: 50%;background-color: white;display: block;text-align: center;line-height: 20px">
+                                                <i class="fa fa-times" style="color: red" />
+                                                <f:ajax execute="@this :frmHorarioExamen:pnHorario" render=":frmHorarioExamen:pnHorario :frmHorarioExamen:pnCursos" listener="#{horarioExamenB.eliminar(hora, hora.dia, statusDia.index)}" />
+                                            </h:commandLink>
+                                            <span style="color: #008000">#{hora.desPersonal}</span>
+                                            <span ><b>#{hora.desCurso}</b> </span>
+                                            <span>#{hora.seccion} - #{hora.aula}</span>
+
+                                            <span style="color: red"> <b class="hora-ini"> #{utilB.convertDateString(hora.horaInicio,"HH:mm")}</b> = <b class="hora-fin">#{utilB.convertDateString(hora.horaFinal,"HH:mm")}</b></span>
+                                            
+                                            <h:inputText value="#{hora.top}" class="valor" style="width: 30px;display: none" />
+                                            <h:inputText value="#{hora.dia}" class="valorDia" style="width: 30px;display: none" />
+                                            <h:inputText value="#{hora.alto}" class="valorAlto" style="width: 30px;display: none" />
+                                            <h:inputText value="#{hora.horaInicio}" styleClass="txtHoraInicio" style="width: 40px" >
+                                                <f:convertDateTime pattern="HH:mm"/>
+                                            </h:inputText>
+                                            <h:inputText value="#{hora.horaFinal}" styleClass="txtHoraFinal" style="width: 40px" >
+                                                <f:convertDateTime pattern="HH:mm"/>
+                                            </h:inputText>
+                                            
+                                            
+                                        </div>
+
+                                    </div>
+                                </div>
+                            
+                            </ui:repeat> 
+                        </li>
+                        </ul>
+                    </ui:repeat>
+
+                  
+                </div>           
+                  
+            </h:panelGroup>
+            
+          
+           
+            
+            
+            
+            
+        </h:form>
+    </h:body>
+</html>
+

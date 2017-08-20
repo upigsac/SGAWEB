@@ -1,0 +1,426 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Facelet Title</title>
+
+            <style type="text/css">
+                .textoouput{
+                    font-family: sans-serif;
+                    font-size: 2%;
+                    float: right;
+                    vertical-align: 8px;
+                    margin-left: 10%;
+                }
+                .textooutptcel{
+                    font-family: sans-serif;
+                    font-size: 2%;
+
+                    vertical-align: 8px;
+                    margin-left: 10%; 
+                }
+                .inputtext{
+                    font-family: sans-serif;
+                    font-size: 77%;
+                }
+                .ui-panelgrid tr, .ui-panelgrid td {
+                    border:0 !important;
+                }
+            </style>
+
+        </h:head>
+        <h:body>
+
+            <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+                <ui:define name="titulo">
+                    Caja UPIG
+                </ui:define>
+
+
+                <ui:define name="contenido">
+                    <h:form id="frmconceptos">
+                        <p:growl id="msjgrowl" showDetail="false"  life="5000"/>
+                        <p:panelGrid id="pnlgrdcabconcepto" style="width: 100%; margin-left: auto;margin-right: auto;">
+                            <p:row>
+                                <p:column style="width: 10%;">
+                                    <p:outputLabel value="Periodo :" styleClass="textoouput" style="font-size: 98%;" />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{conceptosBean.idperiodo}" id="periodo"  styleClass="inputtext">
+                                        <p:ajax listener="#{conceptosBean.selecciontconcepto}" process="@this" update="conceptosTable categoria"/>
+                                        <f:selectItems value="#{conceptosBean.selectperiodoscompl}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Categoria :" styleClass="textooutptcel" />
+                                    <p:inputText value="#{conceptosBean.categoria}" id="categoria"  size="3" style="margin-left: 5%; vertical-align: 8px;" styleClass="inputtext"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Codigo Persona :" style="float: right;"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{conceptosBean.codpers}" id="codpersona" size="20" styleClass="inputtext"/>
+                                    <p:commandButton image="cssbotonbsqd" oncomplete="PF('DialogFrmPersonas').show();" style="margin-left: 8px;" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Carrera :"  styleClass="textoouput" style="font-size: 98%;"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{conceptosBean.carrera}" id="cbocarreras" style="width: 300px;">
+                                        <p:ajax listener="#{conceptosBean.selecciontconcepto}" process="@this" update="conceptosTable"/>
+                                        <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                                        <f:selectItems value="#{conceptosBean.selectcarreras}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton value="Agregar Conceptos" actionListener="#{conceptosBean.agregaralumnos}" oncomplete="PF('DialogFrmAgregar').show();" update=":frmagconceptos" style="margin-left: 3%; vertical-align: 13px;"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Nombres :" style="float: right;"/>
+                                </p:column>
+                                <p:column>                            
+                                    <p:inputText value="#{conceptosBean.nompers}" id="nompersona" size="25" style="font-family: sans-serif;font-size: 85%"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="4">
+
+
+                                    <p:dataTable id="conceptosTable" tableStyleClass="inputtext" var="conceptos" value="#{conceptosBean.tabconceptos}" rowKey="#{conceptos.concepto}" editable="true"  rows="20">
+                                        <p:ajax event="rowEdit" listener="#{conceptosBean.updateconcep}" update="conceptosTable"/>
+                                        <p:column style="width:3%">
+                                            <p:rowEditor />
+                                        </p:column>
+                                        <p:columnGroup type="header">
+                                            <p:row>
+                                                <p:column style="width:1%"/> 
+                                                <p:column headerText="Alumno" colspan="3" style="width: 1%;"/>
+                                                <p:column colspan="4" headerText="Conceptos"/>
+                                                <p:column colspan="4" headerText="Importes"/>
+                                                <p:column headerText="Total" style="width: 5%;"/>
+                                                <p:column colspan="5" headerText="Otros"/>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column style="width:1%"/>
+                                                <p:column headerText="Mat" />
+                                                <p:column headerText="Carrera"/>
+                                                <p:column headerText="Alumno"/>
+                                                <p:column headerText="Desc." style="width: 8%;"/>
+                                                <p:column headerText="Cuota" style="width: 1%;"/>
+                                                <p:column headerText="Parte" style="width: 1%;"/>
+                                                <p:column headerText="Cat" style="width: 1%"/>
+                                                <p:column headerText="Base" width="2"/>
+                                                <p:column headerText="Parte"/>
+                                                <p:column headerText="Desc"/>
+                                                <p:column headerText="Mora"/>
+                                                <p:column headerText="total"/>
+                                                <p:column headerText="F.Ven"/>
+                                                <p:column headerText="Com"/>
+                                                <p:column headerText="N.Comp."/>
+                                                <p:column headerText="Est."/>
+                                                <p:column headerText="Obs"/>
+                                            </p:row>
+                                        </p:columnGroup>
+
+                                        <p:column>
+
+                                            <p:outputLabel value="#{conceptos.mat}" />
+                                        </p:column>
+                                        <p:column>
+
+                                            <p:outputLabel value="#{conceptos.descarrera}" />
+                                        </p:column>
+                                        <p:column>
+
+                                            <p:outputLabel value="#{conceptos.codigo}" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel value="#{conceptos.desconcepto}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.num_cuota}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.num_cuota}" size="1" style="width: 28%;"/></f:facet>
+                                            </p:cellEditor>
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.num_parte}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.num_parte}" size="1" style="width: 28%;"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.categoriapago}"/></f:facet>
+                                                <f:facet name="input"> 
+                                                    <p:selectOneMenu value="#{conceptos.categoriapago}" style="width: 80%;" >
+                                                        <f:selectItems value="#{conceptosBean.selectcategoria}"/>
+                                                    </p:selectOneMenu> 
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.monto_pago}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.monto_pago}" size="2" style="width: 70%;"/></f:facet>
+                                            </p:cellEditor>
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.monto_parte}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.monto_parte}" size="2" style="width: 70%;"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.monto_descuento}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.monto_descuento}" size="2" style="width: 70%;"/></f:facet>
+                                            </p:cellEditor>
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.monto_interes}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.monto_interes}" size="2" style="width: 70%;"/></f:facet>
+                                            </p:cellEditor>
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.monto_total}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.monto_total}" size="2" style="width: 70%;"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"> 
+                                                    <p:outputLabel value="#{conceptos.fechavencimiento}" >
+                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                    </p:outputLabel>
+                                                </f:facet>
+                                                <f:facet name="input"><p:calendar  effect="slideDown" navigator="true" pattern="dd/MM/yyyy"  value="#{conceptos.fechavencimiento}" title="Seleecione Fecha" size="7" id="dtimefecha" yearRange="2014:2020"/></f:facet>
+                                            </p:cellEditor>             
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.destdocumento}"/></f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{conceptos.tipo_comp}" style="width: 113%;" >
+                                                        <f:selectItems value="#{conceptosBean.selecttdocumento}"/>
+                                                    </p:selectOneMenu> 
+                                                </f:facet>
+                                            </p:cellEditor>
+
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.desdocumento}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.desdocumento}" styleClass="inputtext" style="width: 100%;"/></f:facet>
+                                            </p:cellEditor>
+
+                                        </p:column>
+                                        <p:column >
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.estado}"/></f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu id="cboestados" value="#{conceptos.estregistro}">
+                                                        <f:selectItem itemLabel="CANCELADO" itemValue="28"/>
+                                                        <f:selectItem itemLabel="B.LOGICO" itemValue="2"/>
+                                                        <f:selectItem itemLabel="PENDIENTE" itemValue="27"/>
+                                                    </p:selectOneMenu>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column >
+                                            <p:cellEditor>
+                                                <f:facet name="output"><p:outputLabel value="#{conceptos.observacion}"/></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{conceptos.observacion}" size="5"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column width="2%">
+                                            <p:commandLink  value="eliminar" actionListener="#{conceptosBean.deleteAlumno()}" update="conceptosTable" style="width: 80%; height: 75%;">
+                                                <f:param name="alumn" value="#{conceptos.item}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+
+
+                    <!--         BUSQUEDA DE PERSONAS              -->
+                    <p:dialog id="DialogPersonas" width="60%" widgetVar="DialogFrmPersonas" modal="true" 
+                              showEffect="explode" hideEffect="fade" resizable="false">
+                        <h:form id="busqueda">
+                            <h:panelGrid id="pnlbusqueda" columns="2">
+                                <h:outputText value="Apellido Paterno :"/>
+                                <p:inputText style="width: 100%;" value="#{conceptosBean.apepat}" id="paterno" maxlength="20" />
+                                <h:outputText value="Apellido Materno :" />
+                                <p:inputText style="width: 100%;" value="#{conceptosBean.apemat}" id="materno" maxlength="20"/>
+                                <h:outputText value="Nombres :" style="float: right;"/>
+                                <p:inputText style="width: 100%" value="#{conceptosBean.nomper}" id="nombres"/>
+                                <p:commandButton value="  B U S C A R  "  id="btnbuscar"  update=":form:dtpersonas"  actionListener="#{conceptosBean.nombresconcepto}"/>
+                            </h:panelGrid>
+                        </h:form>
+
+                        <h:form id="form" >
+                            <p:dataTable var="data" id="dtpersonas" styleClass="tamaño" value="#{conceptosBean.tabpersonas}"  
+                                         rows="100" scrollable="true"   rowKey="#{data.persona}" selectionMode="single"  scrollHeight="250"  selection="#{conceptosBean.persona}" 
+                                         emptyMessage="No hay registros">                  
+
+                                <p:ajax event="rowSelect" listener="#{conceptosBean.onRowSelect}"  update=":frmconceptos:codpersona :frmconceptos:nompersona :frmconceptos:cbocarreras :frmconceptos:periodo :frmconceptos:conceptosTable :frmconceptos:categoria :frmconceptos:msjgrowl"
+                                        process="@this"  oncomplete="PF('DialogFrmPersonas').hide();"/>
+
+                                <p:columns value="#{conceptosBean.colpersonas}"  var="column" columnIndexVar="colIndex">
+                                    <f:facet name="header">
+                                        <h:outputText value=" #{column.header}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{data[column.property]}" styleClass="selecttr"/>
+                                </p:columns> 
+                            </p:dataTable>
+                        </h:form>
+                    </p:dialog>
+                    <!--                          FIN DE BUSQUEDA                                                                                                     -->                  
+
+                    <!--                          AGREGAR CONCEPTOS                                                                                                    -->
+                    <p:dialog id="DialogAgregar" width="100%" widgetVar="DialogFrmAgregar" modal="true" 
+                              showEffect="explode" hideEffect="fade" resizable="false">
+                        <h:form id="frmagconceptos">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column style="width: 10%;">
+                                        <p:outputLabel value="Institucion :" styleClass="textoouput"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{conceptosBean.alumnos}" effect="explode" id="cboinstitucion" styleClass="inputtext">
+                                            <p:ajax process="@this" listener="#{conceptosBean.buscaalumno}" update="txtalumno" event="change"/>
+                                            <f:selectItems value="#{conceptosBean.selectalumnoinst}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column width="100%">
+
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Alumno :" style="float: right;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{conceptosBean.idalumno}" id="txtalumno" styleClass="inputtext">
+                                            <f:selectItems value="#{conceptosBean.selectalumnos}"/>
+                                        </p:selectOneMenu>                                          
+
+                                        <p:commandButton value="Agregar a Conceptos" actionListener="#{conceptosBean.grabarconceptos}" oncomplete="PF('DialogFrmAgregar').hide();" update=":frmconceptos agconceptostable" style="margin-left: 3%; vertical-align: 55%;" />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Bsucar por :" styleClass="textoouput"/>
+                                    </p:column>
+                                    <p:column colspan="4">
+                                        <p:inputText value="#{conceptosBean.cadena}" size="50" styleClass="inputtext">
+                                            <p:ajax event="keyup" listener="#{conceptosBean.filtrarconcepto}" process="@this" update="agconceptostable"/>
+                                        </p:inputText>
+                                        <p:outputLabel value="Fecha de Vencimiento :" style="padding-left: 1%;" styleClass="inputtext"/>
+                                        <p:calendar  effect="slideDown" navigator="true" pattern="dd/MM/yyyy"  value="#{conceptosBean.fecha}" title="Seleecione Fecha" size="9" id="dtimefecha" yearRange="2014:2020"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    
+                                    <p:column colspan="5">
+                                        <p:remoteCommand name="pruebaactu" update=":frmagconceptos:agconceptostable"/>
+                                        <p:dataTable var="agcon"  tableStyleClass="inputtext" id="agconceptostable" value="#{conceptosBean.tabagregar}" widgetVar="dtagconceptostable"  rows="10" scrollable="true" editable="true" editMode="cell"
+                                                     rowKey="#{agcon.concepto}" scrollHeight="200" emptyMessage="No hay Registros"  selection="#{conceptosBean.agregar}" >
+
+                                            <p:ajax event="cellEdit" listener="#{conceptosBean.modificarfilas}" process="@this" oncomplete="pruebaactu()"/>
+
+                                            <p:column selectionMode="multiple" style="width:3%; text-align: center;"/>  
+
+                                            <p:column width="30%" headerText="Concepto">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.desconcepto}"/></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{agcon.desconcepto}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="5%" style="text-align: center;" headerText="Cant.">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.cantidad}"/></f:facet>
+                                                    <f:facet name="input"> <p:inputText value="#{agcon.cantidad}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Cuota">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.num_cuota}"/></f:facet>
+                                                    <f:facet name="input"> <p:inputText value="#{agcon.num_cuota}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Parte">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.num_parte}"/></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{agcon.num_parte}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Pago">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.monto_pago}"/></f:facet>
+                                                    <f:facet name="input"> <p:inputText value="#{agcon.monto_pago}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Parte">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.monto_parte}"/></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{agcon.monto_parte}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Dscto.">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.monto_descuento}"/></f:facet>                                            
+                                                    <f:facet name="input"><p:inputText value="#{agcon.monto_descuento}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+
+                                            <p:column width="6%" style="text-align: center;" headerText="Mora">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.monto_interes}"/></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{agcon.monto_interes}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column  width="6%" style="text-align: center;" headerText="Total" id="total">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{agcon.monto_total}"/></f:facet> 
+                                                    <f:facet name="input"><p:inputText value="#{agcon.monto_total}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Observacion">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><p:outputLabel value="#{conceptosBean.obs}"/></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{conceptosBean.obs}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                    <!--                          FIN DE AGREGAR                                                                                                       -->
+                </ui:define>
+            </ui:composition>
+        </h:body>
+    </f:view>
+</html>
+

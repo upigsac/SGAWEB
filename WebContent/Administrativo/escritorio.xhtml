@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+    
+    <ui:define name="titulo">
+        SISTEMA DE UPIG ADMINISTRATIVO
+    </ui:define>
+    <ui:define name="contenido">
+        <style>
+            .submenu{margin: 20px 0px}
+            .submenu ul li{display: inline-block;width: 100px;height: 125px;margin: 5px;padding:3px 5px}
+            
+            .submenu ul li span{font-size: 1.2em ;text-overflow:ellipsis;white-space:nowrap;overflow:hidden }
+            .submenu ul li:hover{border-radius:  5px;background-color: RGBA(0,0,0,0.4);color: white;transition:  all 0.6s }
+            .submenu h2{border-bottom:  1px solid}
+        </style>
+        <h:form>
+        <h:panelGroup layout="block" id="pnSubMenu">
+        <div class="submenu">
+            <h2>PROCESOS</h2>
+            <ul>
+            <ui:repeat value="#{accesosB.mostrarSubmenu(15, 'madmision', 'anavarro','p')}" var="procesos" >
+                <h:commandLink  action="#{accesosB.redirect(procesos.url)}" title="#{procesos.nombre}">
+                       <li>
+                               <img src="#{procesos.imgMod}" width="100" height="100"  />
+                               <span style="display: block;text-align: center">#{procesos.nombre}</span>
+                       
+                       
+                       </li>
+                       
+                   </h:commandLink>          
+            </ui:repeat>
+            </ul>
+        </div>
+       
+        <div class="submenu">
+            <h2>REPORTE</h2>
+            
+              <ul>
+               <ui:repeat value="#{accesosB.mostrarSubmenu(15, 'madmision', 'anavarro','r')}" var="reportes" >
+                   
+                   <h:commandLink  action="#{accesosB.redirect(reportes.url)}" title="#{procesos.nombre}">
+                  
+                    
+                    <li>
+                               <img src="#{reportes.imgMod}" width="100" height="100" />
+                               <span style="display: block;text-align: center">#{reportes.nombre}</span>
+                       
+                       
+                       </li>
+                   </h:commandLink>
+                          
+            </ui:repeat>
+            </ul>
+        </div>
+            
+             <div class="submenu">
+            <h2>ARCHIVOS</h2>
+            
+              <ul>
+               <ui:repeat value="#{accesosB.mostrarSubmenu(15, 'madmision', 'anavarro','a')}" var="archivo" >
+                   
+                   
+                   <h:commandLink  action="#{accesosB.redirect(archivo.url)}">
+                       <li>#{archivo.nombre}</li>
+                       
+                   </h:commandLink>
+                   
+            </ui:repeat>
+            </ul>
+        </div>
+        </h:panelGroup>
+        </h:form>
+    </ui:define>
+    </ui:composition>
+        
+    </h:body>
+</html>
+

@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pp="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>MATRICULA INSTITUTO</title>
+    </h:head>
+    <h:body>
+
+
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                MATRICULA
+            </ui:define>
+
+            <ui:define name="contenido">
+                <style>
+                    #frmDatosPersonales\:pnDatos label,#frmBusqueda label{display: inline-block;width: 100px;padding:  2px 2px }
+                    #frmDatos\:pnBotonera{display: block;}
+                    #frmDatos\:pnBotonera input[type="submit"]{min-height: 70px ;margin: 20px 5px;width: 120px;white-space:  normal;vertical-align: top}
+
+                    #frmDatos table thead th{font-size: 0.8em;padding: 5px;margin: 0;}
+                    #frmDatos table thead tr th.ui-state-default{background: #D8D8D8;border: 1px solid;}
+                    #frmDatos\:tbMatricula_data {font-size: 0.8em}
+                    .btBusqueda{border: none;width: 24px;height: 24px;cursor: pointer;vertical-align: top;background: url('http://www.enladisco.com/static.img/lu.png') center no-repeat }
+                    .infoPersona .desc{font-weight: bold;}
+                    #frmListaAlumno\:j_idt116_data{font-size: 0.8em}
+                </style>
+                <span class="tituto-admin">REGISTRO DE MATRICULA    </span>
+                <h:form id="frmDatosPersonales">
+                    <h:panelGroup layout="block" id="pnDatos" >
+                        <div class="infoPersona" style="display: inline-block;width: 80%">
+                            <h:outputLabel value="CODIGO:" />
+                            <div style="border: 1px solid #A9A9A9;display: inline-block;margin:  0px 0px 0px -2px;width: 148px">
+                                <h:inputText  value="#{alumnoB.alumno.alumno}" maxlength="10" style="font-weight: bold;border: none;    font-size: 18px;width: 120px;padding: 2px 2px"  pp:placeholder="BUSQUEDA" >                         
+                                    <f:ajax event="change" execute="@this" render="pnDatos :frmDatos:tbAlumnoCursos" listener="#{personaB.mostrarPersona(alumnoB.mostrarAlumnoCodigo(usuarioB.institucionS, alumnoB.alumno.alumno).persona)}" onevent="onevent" />
+                                </h:inputText>
+                                <h:commandButton  class="btBusqueda" type="button" onclick="dlgModal.show()" />
+                            </div>
+                            <BR/>                    
+                            <h:outputLabel value="APELLIDOS:" />
+                            <h:inputText readonly="true"  style="width: 300px"  value="#{personaB.persona.materno} #{personaB.persona.materno}"/><br/>
+                            <h:outputLabel value="NOMBRES:" />
+                            <h:inputText  readonly="true" style="width: 300px" value="#{personaB.persona.nombres}"/><br/>
+                            <h:outputLabel value="N°- DOCUMENTO:" />
+                            <h:inputText readonly="true" value="#{personaB.persona.numero_documento}"/><br/>
+                            <h:outputLabel value="TELEFONO:" />
+                            <h:inputText readonly="true" value="#{personaB.persona.telefono}"/>
+
+                            <h:outputLabel value="CELULAR:" />
+                            <h:inputText readonly="true" value="#{personaB.persona.telefono}"/><br/>
+
+                            <h:outputLabel value="E-MAIL:" />
+                            <h:inputText   readonly="true" style="width: 200px" value="#{personaB.persona.emailP}"/><br/>
+                            <h:outputLabel value="DIRECCION:" />
+                            <h:inputTextarea readonly="true" style="width: 300px;vertical-align: top" value="#{personaB.persona.direccion_recidencial}"/><br/>
+                        </div>
+                        <div style="display: inline-block;vertical-align: top;text-align: center;">
+                            <img  style="height: 180px;border: 1px solid;width: 150px"  src="SVerImagenAlumno?alumno=#{personaB.persona.persona}" /><br/>
+                            <h:outputLabel style="width: 100%;font-weight: bold;" value="#{alumnoB.alumno.persona}" />
+                        </div>
+                    </h:panelGroup>
+                </h:form>      
+
+                <h:form id="frmDatos">
+                    <p:dataTable id="tbMatricula" value="#{seccionPeriodoB.mostrarSeccionPeriodo(usuarioB.institucionS, usuarioB.periodoS, '%')}" var="detalleMatricula" selectionMode="single" rowIndexVar="status" rowKey="#{detalleMatricula.seccion}" selection="#{matriculaInstitutosB.seccion}" emptyMessage="">
+                        <p:ajax event="rowSelect" update=":frmDatos:pnBotonera"   />
+                        <p:column width="1%" >
+                            #{status + 1 }
+                        </p:column>
+                        <p:column width="1%">
+                            <p:rowToggler   />
+                        </p:column>
+
+                        <p:column headerText="SECCION" >
+
+                            <h:outputLabel style="font-weight: bold" value="#{detalleMatricula.seccion}" /><br/>
+                            <h:outputLabel style="" value="#{seccionB.mostrarSeccion(detalleMatricula.institucion, detalleMatricula.seccion).descripcion}" />
+
+                        </p:column>
+                        <p:column headerText="FECHA INICIO" width="90" >
+                            #{detalleMatricula.fechaInicio}
+                        </p:column>
+                        <p:column headerText="FECHA CIERRE" width="90" >
+                            #{detalleMatricula.fechaFin}
+                        </p:column>
+
+                        <p:column headerText="SEDE" >
+                            <h:outputLabel value="#{localB.mostarLocal(detalleMatricula.sede).descripcion}"  style="font-weight: bold"/>
+
+
+                        </p:column>
+
+                        <p:column headerText="VACANTES MAX" style="text-align: center" width="50">
+                            #{detalleMatricula.vacantes} 
+                        </p:column>
+                        <p:column headerText="TOTAL MATRI." style="text-align: center" width="50">
+                            <p:commandLink style="border-bottom: 1px solid;color: blue "  value="#{seccionPeriodoB.cantVacantes(detalleMatricula.institucion, detalleMatricula.periodo, detalleMatricula.carrera, detalleMatricula.seccion).toString()}" onclick="dlgListadoAlumno.show()" >
+                                <f:ajax render=":frmListaAlumno" listener="#{matriculaInstitutosB.mostrarListAlumno(detalleMatricula.institucion, detalleMatricula.periodo, detalleMatricula.carrera, detalleMatricula.seccion)}" />
+                            </p:commandLink>
+                        </p:column>
+
+                        <p:column headerText="FRECUENCIA" >
+                            <h:outputLabel value="#{frecuenciaB.mostrarFrecuencia(detalleMatricula.frecuencia).descripcion}" style="font-weight: bold" />
+                        </p:column>
+                        <p:column headerText="ESTADO">
+                            <h:outputLabel style="color: #{detalleMatricula.estadoRegistro eq 30?'red':'#4f4f4f'}" value="#{estadoB.mostrarEstadoCodigo(detalleMatricula.estadoRegistro).descripcion}" />
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:dataTable id="subTable" value="#{cursoSeccionB.mostrarCursoSeccion(detalleMatricula.institucion, detalleMatricula.periodo, detalleMatricula.carrera,  detalleMatricula.seccion)}" var="subDetalle" emptyMessage="No hay un docente asignando">
+                                <p:column headerText="CODIGO">
+                                    #{subDetalle.curso}
+                                </p:column>
+                                <p:column headerText="ASIGNATURA">
+                                    #{cursoB.mostrarCurso(subDetalle.curso).descripcion}
+                                </p:column>
+                                <p:column headerText="DOCENTE">
+                                   
+                                </p:column>
+                          
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                    <h:panelGroup layout="block" id="pnBotonera">            
+
+                        <h:commandButton value="INSERTAR MATRICULA"  >
+                            <f:ajax  execute="tbMatricula"  render=":frmDatos:tbAlumnoCursos :frmDatos:tbMatricula" listener="#{matriculaInstitutosB.insertarMatricula(usuarioB.institucionS, usuarioB.periodoS,matriculaInstitutosB.seccion.seccion, alumnoB.alumno.alumno,14)}" onevent="onevent" />
+                        </h:commandButton>
+                    </h:panelGroup>
+
+                    <p:dataTable id="tbAlumnoCursos" value="#{alumnoCursoSeccionB.mostrarAlumnoCursoSeccion(usuarioB.institucionS, usuarioB.periodoS, alumnoB.alumno.alumno)}" var="alumnoSeccion" rowIndexVar="status" emptyMessage="">
+                        <p:column headerText="N">
+                            #{status +1}
+                        </p:column>
+
+                        <p:column headerText="PAQUETE">                    
+                            #{seccionB.mostrarSeccion(alumnoSeccion.institucion, alumnoSeccion.seccion).descripcion}
+                        </p:column>
+                        <p:column headerText="GRUPO">
+                            #{alumnoSeccion.grupo}
+                        </p:column>
+                        <p:column headerText="FRECUENCIA">
+                            #{frecuenciaB.mostrarFrecuencia(seccionPeriodoB.mostrarSeccionPeriodo(alumnoSeccion.institucion, alumnoSeccion.periodo, alumnoSeccion.carrera, alumnoSeccion.seccion).frecuencia).descripcion}
+
+                        </p:column>
+                        <p:column headerText="ESTADO">
+                            #{estadoB.mostrarEstadoCodigo(alumnoSeccion.estadoRegistro).descripcion}                    
+                        </p:column>
+                        <p:column headerText="">
+                            <h:commandLink style="display: block" value="QUITAR" rendered="#{(alumnoSeccion.estadoRegistro eq 1) || (alumnoSeccion.estadoRegistro eq 14)}" onclick="if (!confirm('¿Esta seguro de Eliminar ?'))
+                                return false;" >
+                                <f:ajax execute="@this" render=":frmDatos:tbAlumnoCursos :frmDatos:tbMatricula" listener="#{matriculaInstitutosB.eliminarMatricula(alumnoSeccion)}" />
+                            </h:commandLink>
+
+                            <h:commandLink style="display: block" value="MATRICULAR" rendered="#{alumnoSeccion.estadoRegistro eq 14}" >
+                                <f:ajax execute="@form"  render=":frmDatos:tbAlumnoCursos :frmDatos:tbMatricula" listener="#{matriculaInstitutosB.insertarMatricula(alumnoSeccion.institucion, alumnoSeccion.periodo,alumnoSeccion.seccion, alumnoB.alumno.alumno,1)}" />                        
+                            </h:commandLink>
+
+
+                            <ui:param name="param2" value="INSTITUCION,#{alumnoSeccion.institucion},PERIODO,#{alumnoSeccion.periodo},ALUMNO,#{alumnoSeccion.alumno},SECCION,#{alumnoSeccion.seccion}" />
+                            <h:commandLink style="display: block" rendered="#{alumnoSeccion.estadoRegistro eq 1}"   value="IMPRIMIR" target="_blank" actionListener="#{utilB.imprimirIreports('FICHAMATRICULA', 1,fn:split(param2,','))}"   />
+
+
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+
+
+
+
+                <h:form id="frmBusqueda">
+                    <p:dialog widgetVar="dlgModal" width="650px" height="450px"  modal="true"  header="BUSQUEDA DE ESTUDIANTE">
+                        <label for="txtbus_paterno">PATERNO</label>
+                        <h:inputText id="txtbus_paterno" value="#{personaB.busPaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_materno">MATERNO</label>
+                        <h:inputText id="txtbus_materno" value="#{personaB.busMaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_nombres">NOMBRES</label>
+                        <h:inputText id="txtbus_nombres" value="#{personaB.busNombres}" >
+                            <f:ajax execute="@this" render="tbBusqueda " />
+                        </h:inputText>
+                        <br/><br/>
+                        <p:dataTable id="tbBusqueda" value="#{personaB.buscarAlumno(usuarioB.institucionS, personaB.busPaterno, personaB.busMaterno, personaB.busNombres)}" var="detalle" selection="#{personaB.persona}" selectionMode="single" rowKey="#{detalle.persona}" emptyMessage="No hay resultados">
+
+                            <p:ajax event="rowSelect"  update=":frmDatos :frmDatosPersonales"   listener="#{personaB.mostrarPersona(alumnoB.mostrarAlumnoCodigo(usuarioB.institucionS, personaB.persona.persona).persona) }"    oncomplete="dlgModal.hide()"  /> 
+                            <p:column headerText="CODIGO" >
+                                #{detalle.persona}
+                            </p:column>
+                            <p:column headerText="PERSONAL" >
+                                #{detalle.paterno} #{detalle.materno}, #{detalle.nombres}
+                            </p:column>
+                            <p:column headerText="TELEFONO" >
+                                #{detalle.telefono}
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+                
+                
+                
+                <h:form id="frmBusquedaPersonal">
+                    <p:dialog widgetVar="dlgBusquedaPersonal" width="650px" height="450px"  modal="true"  header="BUSQUEDA DE PERSONAL">
+                        <label for="txtbus_paterno">PATERNO</label>
+                        <h:inputText id="txtbus_paterno" value="#{personaB.busPaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_materno">MATERNO</label>
+                        <h:inputText id="txtbus_materno" value="#{personaB.busMaterno}" >
+                            <f:ajax execute="@this" render="tbBusqueda" />
+                        </h:inputText><br/>
+                        <label for="txtbus_nombres">NOMBRES</label>
+                        <h:inputText id="txtbus_nombres" value="#{personaB.busNombres}" >
+                            <f:ajax execute="@this" render="tbBusqueda " />
+                        </h:inputText>
+                        <br/><br/>
+                        <p:dataTable id="tbBusqueda" value="#{personaB.filtroPersonal(personaB.busPaterno, personaB.busMaterno, personaB.busNombres)}" var="detallePersonal" selection="#{personaB.persona}" selectionMode="single" rowKey="#{detallePersonal.persona}" emptyMessage="No hay resultados" rowIndexVar="status">
+
+                            <p:ajax event="rowSelect"  update=":frmDatos:tbMatricula:subTable"   oncomplete="dlgBusquedaPersonal.hide()"  /> 
+                            <p:column headerText="Nro" >
+                                #{status +1 }
+                            </p:column>
+                            <p:column headerText="PERSONAL" >
+                                #{detallePersonal.nombreCompletos()}
+                            </p:column>
+                            <p:column headerText="TELEFONO" >
+                                #{detallePersonal.telefono}
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+
+                <p:dialog widgetVar="dlgListadoAlumno" width="750" height="700" header="LISTADO DE ALUMNO" modal="true" resizable="false">
+                    <h:form id="frmListaAlumno">
+                        <p:dataTable value="#{matriculaInstitutosB.alumnoMatriculadosL}" var="listaAlumno" rowIndexVar="contado">
+                            <p:column headerText="N°">
+                                #{contado +1}
+                            </p:column>
+
+                            <p:column headerText="FOTO">
+                                <img  style="height: 80px;border: 1px solid;width: 80px"  src="SVerImagenAlumno?alumno=#{listaAlumno.persona}" /><br/>
+                            </p:column>
+                            <p:column headerText="ALUMNO" style="width: 350PX">
+                                <h:outputLabel value="#{listaAlumno.alumno}" style="font-weight: bold;" /><BR/>
+                                #{listaAlumno.datos}
+                            </p:column>
+                            <p:column headerText="FECHA MATRICULA">
+                                #{listaAlumno.fecha}
+                            </p:column>
+                            <p:column headerText="HORA MATRICULA">
+                                #{listaAlumno.hora}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                </p:dialog>
+
+
+                <script>
+                    function onevent(e) {
+                        if (e.status === 'begin') {
+                            document.getElementById('tope').style.display = 'block';
+                        }
+                        if (e.status === 'success') {
+
+                        }
+                        if (e.status === 'complete') {
+                            document.getElementById('tope').style.display = 'none';
+                        }
+                    }
+
+                </script>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="actaTipoExamen" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7cc64b9e-b48f-4ba4-a20b-442035f61afa">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{NOTA}<=10]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="INSTITUCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CARRERA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURSO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SECCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="TIPOEXAMEN" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.INSTITUCION,R.DESCRIPCION DESINSTITUCION,A.PERIODO,Q.DESCRIPCION DESPERIODO,P.FACULTAD,P.DESCRIPCION DESFACULTAD,A.CARRERA,N.DESCRIPCION DESCARRERA,A.MALLA,A.CURSO, J.DESCRIPCION DESCURSO
+,A.SECCION,L.DESCRIPCION DESSECCION,K.TURNO,M.DESCRIPCION DESTURNO,A.ALUMNO,E.APELLIDO_PATERNO +' '+ E.APELLIDO_MATERNO +' '+E.NOMBRES DESALUMNO,F.PERSONAL
+,H.APELLIDO_PATERNO +' '+ H.APELLIDO_MATERNO +' '+ H.NOMBRES DESDOCENTE,I.NIVEL_MODULAR,I.CREDITOS,S.DESCRIPCION DESTIPOEXAMEN,ISNULL(AA.ESTADO_REGISTRO,0) ISPRINCIPAL
+ FROM SIGU.ACA_ALUMNO_CURSO_SECCION A
+ LEFT JOIN DI.HOR_CURSO_SECCION_PRINCIPAL AA ON AA.INSTITUCION=A.INSTITUCION AND AA.PERIODO=A.PERIODO AND AA.CARRERA=A.CARRERA AND AA.MALLA=A.MALLA AND AA.CURSO=A.CURSO AND AA.SECCION=A.SECCION
+ ,SIGU.ACA_ALUMNO D,UPA.DAT_PERSONAS E
+ ,SIGU.HOR_CURSO_SECCION_DOCENTE F,SIGU.PER_PERSONAL G,UPA.DAT_PERSONAS H,SIGU.HOR_MALLA_CURRICULAR_CURSO_ACT I,UPA.ACA_CURSOS J,SIGU.HOR_PERIODO_SECCION K,SIGU.HOR_SECCION L
+ ,UPA.ACA_TURNOS M,UPA.ACA_CARRERAS N,SIGU.ACA_FACULTAD_CARRERA O,SIGU.ACA_FACULTAD P,UPA.ACA_PERIODOS Q,UPA.SYS_INSTITUCION R,SIGU.HOR_TIPO_EXAMEN S
+WHERE A.INSTITUCION=$P{INSTITUCION} AND A.PERIODO=$P{PERIODO} AND A.CARRERA=$P{CARRERA} AND A.CURSO=$P{CURSO} AND A.SECCION=$P{SECCION}
+
+AND D.INSTITUCION=A.INSTITUCION AND D.ALUMNO=A.ALUMNO
+AND E.PERSONA=D.PERSONA
+AND F.INSTITUCION=A.INSTITUCION AND F.PERIODO=A.PERIODO AND F.CARRERA=A.CARRERA AND F.MALLA=A.MALLA AND F.CURSO=A.CURSO AND F.SECCION=A.SECCION AND F.ESTADO_REGISTRO IN(1,59)
+AND G.PERSONAL=F.PERSONAL
+AND H.PERSONA=G.PERSONA
+AND I.INSTITUCION=A.INSTITUCION AND I.CARRERA=A.CARRERA AND I.MALLA=A.MALLA AND I.CURSO=A.CURSO
+AND J.CURSO=A.CURSO
+AND K.INSTITUCION=A.INSTITUCION AND K.PERIODO=A.PERIODO AND K.CARRERA=A.CARRERA AND K.SECCION=A.SECCION
+AND L.INSTITUCION=A.INSTITUCION AND L.SECCION=A.SECCION
+AND M.TURNO=K.TURNO
+AND N.CARRERA=A.CARRERA
+AND O.INSTITUCION=A.INSTITUCION AND O.CARRERA=A.CARRERA
+AND P.INSTITUCION=O.INSTITUCION AND  P.FACULTAD=O.FACULTAD
+AND Q.INSTITUCION=A.INSTITUCION AND Q.PERIODO=A.PERIODO
+AND R.INSTITUCION=A.INSTITUCION
+AND S.TIPO_EXAMEN=$P{TIPOEXAMEN}
+
+UNION
+SELECT C.INSTITUCION,R.DESCRIPCION DESINSTITUCION,C.PERIODO,Q.DESCRIPCION DESPERIODO,P.FACULTAD,P.DESCRIPCION DESFACULTAD,C.CARRERA,N.DESCRIPCION DESCARRERA,C.MALLA,C.CURSO, J.DESCRIPCION DESCURSO
+,C.SECCION,L.DESCRIPCION DESSECCION,K.TURNO,M.DESCRIPCION DESTURNO,C.ALUMNO,E.APELLIDO_PATERNO +' '+ E.APELLIDO_MATERNO +' '+E.NOMBRES DESALUMNO,F.PERSONAL
+,H.APELLIDO_PATERNO +' '+ H.APELLIDO_MATERNO +' '+ H.NOMBRES DESDOCENTE,I.NIVEL_MODULAR,I.CREDITOS,S.DESCRIPCION DESTIPOEXAMEN,1
+ FROM  DI.HOR_CURSO_SECCION_PRINCIPAL A ,DI.HOR_CURSO_SECCION_SECUNDARIO B,SIGU.ACA_ALUMNO_CURSO_SECCION C,SIGU.ACA_ALUMNO D,UPA.DAT_PERSONAS E
+ ,SIGU.HOR_CURSO_SECCION_DOCENTE F,SIGU.PER_PERSONAL G,UPA.DAT_PERSONAS H,SIGU.HOR_MALLA_CURRICULAR_CURSO_ACT I,UPA.ACA_CURSOS J,SIGU.HOR_PERIODO_SECCION K,SIGU.HOR_SECCION L
+ ,UPA.ACA_TURNOS M,UPA.ACA_CARRERAS N,SIGU.ACA_FACULTAD_CARRERA O,SIGU.ACA_FACULTAD P,UPA.ACA_PERIODOS Q,UPA.SYS_INSTITUCION R,SIGU.HOR_TIPO_EXAMEN S
+WHERE A.INSTITUCION=$P{INSTITUCION} AND A.PERIODO=$P{PERIODO} AND A.CARRERA=$P{CARRERA} AND A.CURSO=$P{CURSO} AND A.SECCION=$P{SECCION}
+AND B.PRINCIPAL=A.PRINCIPAL
+AND C.INSTITUCION=B.INSTITUCION AND C.PERIODO=B.PERIODO AND C.CARRERA=B.CARRERA AND  C.MALLA=B.MALLA AND C.CURSO=B.CURSO AND C.SECCION=B.SECCION
+AND D.INSTITUCION=C.INSTITUCION AND D.ALUMNO=C.ALUMNO
+AND E.PERSONA=D.PERSONA
+AND F.INSTITUCION=A.INSTITUCION AND F.PERIODO=A.PERIODO AND F.CARRERA=A.CARRERA AND F.MALLA=A.MALLA AND F.CURSO=A.CURSO AND F.SECCION=A.SECCION AND F.ESTADO_REGISTRO IN(1,59)
+AND G.PERSONAL=F.PERSONAL
+AND H.PERSONA=G.PERSONA
+AND I.INSTITUCION=A.INSTITUCION AND I.CARRERA=A.CARRERA AND I.MALLA=A.MALLA AND I.CURSO=A.CURSO
+AND J.CURSO=A.CURSO
+AND K.INSTITUCION=A.INSTITUCION AND K.PERIODO=A.PERIODO AND K.CARRERA=A.CARRERA AND K.SECCION=A.SECCION
+AND L.INSTITUCION=A.INSTITUCION AND L.SECCION=A.SECCION
+AND M.TURNO=K.TURNO
+AND N.CARRERA=A.CARRERA
+AND O.INSTITUCION=A.INSTITUCION AND O.CARRERA=A.CARRERA
+AND P.INSTITUCION=O.INSTITUCION AND  P.FACULTAD=O.FACULTAD
+AND Q.INSTITUCION=A.INSTITUCION AND Q.PERIODO=A.PERIODO
+AND R.INSTITUCION=A.INSTITUCION
+AND S.TIPO_EXAMEN=$P{TIPOEXAMEN}
+ORDER BY DESALUMNO]]>
+	</queryString>
+	<field name="INSTITUCION" class="java.lang.Short"/>
+	<field name="DESINSTITUCION" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="DESPERIODO" class="java.lang.String"/>
+	<field name="FACULTAD" class="java.lang.String"/>
+	<field name="DESFACULTAD" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="MALLA" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="DESSECCION" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.Short"/>
+	<field name="DESTURNO" class="java.lang.String"/>
+	<field name="ALUMNO" class="java.lang.String"/>
+	<field name="DESALUMNO" class="java.lang.String"/>
+	<field name="PERSONAL" class="java.lang.String"/>
+	<field name="DESDOCENTE" class="java.lang.String"/>
+	<field name="NIVEL_MODULAR" class="java.lang.Short"/>
+	<field name="CREDITOS" class="java.math.BigDecimal"/>
+	<field name="DESTIPOEXAMEN" class="java.lang.String"/>
+	<field name="ISPRINCIPAL" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73">
+			<staticText>
+				<reportElement uuid="afe8c36b-55f4-48b8-a82e-5d4538cbaf2d" x="93" y="0" width="455" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="28a0d03d-2c0a-4854-a6fd-278603fd0bb5" x="6" y="71" width="542" height="1" forecolor="#999999"/>
+			</line>
+			<staticText>
+				<reportElement uuid="3e442f4e-62b4-4a14-b4de-a7ab44a88f4f" x="93" y="41" width="455" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCIÓN N° 099-2007 CONAFU]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="99feeef2-b62c-4ca8-b9b3-5a7e14ede79b" x="11" y="0" width="64" height="71"/>
+				<imageExpression><![CDATA["D:\\imagenReporte\\logos upig-pequeño.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="109" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="03dc5258-4851-4ffc-abcf-2e66ab7310a5" x="356" y="61" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SECCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ae9aac6c-c346-4e7f-bce7-4eec6e38a77a" x="356" y="90" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CICLO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09de0925-8853-4c59-b982-12808883d6d6" x="33" y="61" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CURSO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bf59c783-ca8e-4c94-a873-f5ca7b7ba08d" x="33" y="76" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CRÉDITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="37ababfc-e80b-45e7-a602-ab87088dae89" x="33" y="91" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="00929430-9e0a-4fe4-87ac-5788f9fbc79a" x="356" y="75" width="60" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TURNO]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="640ccc3c-5cb3-4996-8aa9-2f0cdbda7708" x="93" y="92" width="231" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESDOCENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5b346a14-7b7c-4a1f-9e6a-046ca3456de0" x="93" y="77" width="231" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CREDITOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="273b18a6-91f2-43ea-96f2-b4bbc39553ce" x="93" y="61" width="231" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESCURSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="eb4759bc-e82d-4265-b58c-80475400b1dc" x="416" y="91" width="121" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NIVEL_MODULAR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="66061c39-4f6a-4dde-b1e0-4f63646c6174" x="416" y="77" width="121" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESTURNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5bc7b5f1-fd69-4fd6-911b-5220e6ce27ee" x="416" y="61" width="121" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESSECCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="99a7d110-26b0-4a47-acb0-68a4c94542c1" x="11" y="6" width="526" height="15"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA['ACTA DE NOTA ' +$F{DESTIPOEXAMEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c1fa5a1d-8219-4448-b782-e44a36b468f0" x="11" y="21" width="526" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[( $F{ISPRINCIPAL}==0? 'FACULTAD DE ' + $F{DESFACULTAD} : '' )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3d9f8c10-25e3-4392-805b-7c64e9bf3f2c" x="11" y="36" width="526" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[( $F{ISPRINCIPAL}==0 ? 'ESCUELA PROFESIONAL DE '+$F{DESCARRERA} : '' )]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b60b2699-0213-4348-97dc-f9d26c479c26" x="33" y="2" width="71" height="30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="245e1588-584b-4e94-a0b4-1a66056b024f" x="104" y="2" width="208" height="30"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS Y NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4922d201-5b67-4f81-b0ea-cd973d7fe973" x="312" y="2" width="38" height="30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA
+(Nº)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4c5bcb1e-cba1-40aa-ab8b-984961344af4" x="11" y="2" width="22" height="30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="143f83a3-3cff-4501-8f19-36ad15fc0159" x="412" y="2" width="136" height="30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL ESTUDIANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cdf508ef-8192-408d-af1f-99549155f288" x="350" y="2" width="62" height="30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA
+LETRA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement uuid="565a8bfb-7a5e-4236-8ce0-d608af3207b4" x="33" y="0" width="71" height="13"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2a4a4c6a-c25f-49d7-924b-2af182f76212" x="104" y="0" width="208" height="13"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESALUMNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="33500d20-4722-40d0-8b2d-91e5f3d4ce76" x="412" y="0" width="136" height="13"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3e6e25c4-2ed2-4ae5-bac6-6a7bf91c530c" x="312" y="0" width="38" height="13"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9314fe0b-144e-4d5d-976b-a6f5614431be" x="11" y="0" width="22" height="13"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d186fcd1-d114-4ebd-9d65-09c0da45bf03" x="350" y="0" width="62" height="13"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="5a3cb8c8-6e58-4006-a0ef-6c0ef85e9411" x="4" y="6" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{USUARIO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="cb4474e8-70ba-4af5-b442-3c2c98147e06" x="0" y="3" width="548" height="1" forecolor="#CCCCCC"/>
+			</line>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement uuid="ddb140b1-51d3-45eb-8b9c-efb07d542e47" x="377" y="6" width="171" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

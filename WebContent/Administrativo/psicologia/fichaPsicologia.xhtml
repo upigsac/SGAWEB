@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+                <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">        
+              <ui:define name="titulo">                
+                CAMBIAR CLAVE                
+            </ui:define>
+             
+                         
+                    <ui:define name="contenido">
+                        <span class="tituto-admin">FICHA PSICOLOGICA</span>
+        <h:form>
+            <div style="margin: 20px 0px">
+                
+            
+            CARRERA:
+            <h:selectOneMenu value="#{carreraB.seleccion}">
+                <f:selectItem itemValue="%" itemLabel="-- TODOS --"/>
+                <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(1)}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.descripcion}"     />
+                <f:ajax execute="@this"  render="tbDetalle" />
+            </h:selectOneMenu>
+            <BR/>   
+            CICLO:
+             <h:selectOneRadio value="#{cicloB.seleccionCiclo}" id="cboPersonal"  style="display: inline-block;vertical-align: top">                        
+                        
+                        <f:selectItem itemLabel="I" itemValue="1"/>
+                        <f:selectItem itemLabel="II" itemValue="2"/>
+                        <f:selectItem itemLabel="III" itemValue="3"/>
+                        <f:selectItem itemLabel="IV" itemValue="4"/>
+                        <f:selectItem itemLabel="V" itemValue="5"/>
+                        <f:selectItem itemLabel="VI" itemValue="6"/>
+                        <f:selectItem itemLabel="VII" itemValue="7"/>
+                        <f:selectItem itemLabel="VIII" itemValue="8"/>
+                        <f:selectItem itemLabel="IX" itemValue="9"/>
+                        <f:selectItem itemLabel="X" itemValue="10"/>
+                        <f:ajax execute="@this"  render="tbDetalle" />
+            </h:selectOneRadio>
+            </div>
+            
+            <p:dataTable  id="tbDetalle" value="#{fichaPsicologiaB.mostrarEncuesta(institucionB.seleccionInstitucion,usuarioB.periodoS,carreraB.seleccion,cicloB.seleccionCiclo,4)}" var="detalle" rowIndexVar="status" emptyMessage="">
+            
+            <p:column headerText="N.">
+                #{status+1}
+            </p:column>    
+                
+            <p:column headerText="PERIODO">
+                #{detalle.periodo}
+            </p:column>
+               
+                
+            <p:column headerText="ESTUDIANTE">
+                #{detalle.persona}
+            </p:column>
+            <p:column headerText="CARRERA">
+               
+                #{carreraB.mostrarCarreraCodigo(detalle.carrera).descripcion}
+            </p:column>
+                
+                
+            <p:column headerText="CICLO">
+                #{detalle.ciclo}
+            </p:column>              
+                
+            <p:column headerText="FECHA">
+                #{detalle.fecha}
+            </p:column>
+                
+                <p:column headerText="">
+                    <ui:param name="param2" value="USUARIO,#{detalle.usuario}" />
+                <h:commandLink value="ver" target="_blank" actionListener="#{utilB.imprimirIreports('fichaPsicologica', 1, fn:split(param2,','))}" />
+            </p:column>
+           
+                <f:facet name="footer">
+                    
+                </f:facet>
+        </p:dataTable>
+            </h:form>
+                </ui:define>
+                </ui:composition>
+    </h:body>
+</html>
+

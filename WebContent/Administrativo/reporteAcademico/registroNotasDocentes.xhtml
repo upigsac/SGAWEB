@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition  template="/Administrativo/plantilla.xhtml">
+
+            <ui:define name="titulo">
+                REGISTRO DE NOTAS DOCENTE
+            </ui:define>
+
+            <br></br>
+            <ui:define name="contenido">
+                 <style>
+                    .texto_a{display: inline-block;width: 100px;margin: 8px 0px}
+                </style>
+                <span class="tituto-admin">REGISTRO DE NOTAS DOCENTE</span>
+                <h:form prependId="false">
+                    <span class="texto_a"> CARRERA </span>
+
+                    <h:selectOneMenu value="#{carreraB.seleccion}"   >
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%"/>
+                        <f:selectItems value="#{carreraB.mostrarCarreraInstitucionPeriodo(usuarioB.institucionS)}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.descripcion}" />
+                        <f:ajax execute="@this"  render="cboPersonal"  />
+                    </h:selectOneMenu>
+                    <br/>
+
+                    <span class="texto_a"> PERSONAL </span>
+
+                    <h:selectOneMenu value="#{personaB.seleccion}" id="cboPersonal"       >
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%"/>
+                        <f:selectItems value="#{personaB.mostrarPersonalCarrera(usuarioB.institucionS, usuarioB.periodoS,carreraB.seleccion)}" var="persona" itemValue="#{persona.persona}" itemLabel="#{persona.paterno} #{persona.materno} #{persona.nombres}" />
+                        <f:ajax execute="@this" render="cboSeccion" />
+                    </h:selectOneMenu>
+
+                    <br/>
+                    <span class="texto_a"> SECCION </span>                    
+                    <h:selectOneMenu value="#{seccionB.seleccionSeccion}" id="cboSeccion"       >
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%"/>
+                        <f:selectItems value="#{seccionB.mostrarSeccionInstitucionPeriodoCarreraDocente(usuarioB.institucionS,usuarioB.periodoS,carreraB.seleccion,personaB.seleccion)}" var="seccion" itemValue="#{seccion.seccion}" itemLabel="#{seccion.descripcion}" />
+                        <f:ajax execute="@this "  render="cboCurso" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <span class="texto_a"> CURSO </span>                    
+                    <h:selectOneMenu value="#{cursoB.seleccion}" id="cboCurso"       >
+                        <f:selectItem itemLabel="-- TODOS --" itemValue="%"/>
+                        <f:selectItems value="#{cursoB.mostrarSeccionInstitucionPeriodoCarreraDocente(usuarioB.institucionS, usuarioB.periodoS, carreraB.seleccion, personaB.seleccion, seccionB.seleccionSeccion)}" var="curso" itemValue="#{curso.curso}" itemLabel="#{curso.descripcion}" />
+                        <f:ajax execute="@this"  />
+                    </h:selectOneMenu>
+                    <br/>
+
+                    <ui:param name="param2" value="@LITIPSQL,1,@LSINSTIT,#{usuarioB.institucionS},@LSPERIOD,#{usuarioB.periodoS},@LSCARRER,#{carreraB.seleccion},@LSCURSOS,#{cursoB.seleccion},@LSSECCIO,#{seccionB.seleccionSeccion},@LSNIVELE,%,@LSTURNOS,%,@LSPARAM1,%,@LSPARAM2,#{personaB.seleccion},@LSPARAM3,%,@LSESTADO,5" />
+
+                    <h:commandLink class="linkpdf"  value="VISTA DE IMPRESION " target="_blank" actionListener="#{utilB.imprimirIreports('SGAWEB0031', 1,fn:split(param2,','))}"   />
+                    <h:commandLink  class="linkexcel"  value="EXPORTAR EXCEL " target="_blank" actionListener="#{utilB.imprimirIreports('SGAWEB0031', 2,fn:split(param2,','))}"   />
+
+
+               
+
+
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

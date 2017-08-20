@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>        
+    </h:head>
+    <h:body>
+
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        template="/Administrativo/plantilla.xhtml">
+            <ui:define name="titulo">
+                REGISTRO DE VISITAS
+            </ui:define>  
+
+            <ui:define name="contenido">
+                <style scoped="true">
+                    html,body{padding: 0;margin: 0;}*{box-sizing: border-box;}
+                    .vertical-top{vertical-align: top;}
+                    .contenido fieldset{padding: 5px;}
+                    .bold{font-weight: bold;}
+                    .contenido fieldset legend{font-size: 1.5em;padding: 0 15px;margin: 0 10px;}
+                    #frmRegistroVisita > label,#frmConsultaVisita > label:not(.excepcion),#frmListadoConsulta label{display: block;width: 100%;margin: 0px 0px 5px 0px;}
+                    #frmRegistroVisita input[type="checkbox"] + input[type="text"]{font-weight: bold;margin: 0 0 0 20px;font-size: 1.2em;background-color: white;border: none;}
+                    #frmRegistroVisita label span,#frmConsultaVisita label span,#frmListadoConsulta label span{display: inline-block;width: 150px;}
+                    #frmRegistroVisita input[type="text"],#frmRegistroVisita textArea,#frmRegistroVisita select,
+                    #frmConsultaVisita input[type="text"],#frmConsultaVisita textArea,#frmConsultaVisita select{padding: 2px 5px;margin: 0px 0px 5px 0px;}
+                    textarea {resize: vertical;min-height: 100px;}
+                    #frmRegistroVisita input[type="submit"],#frmRegistroVisita input[type="reset"],
+                    #frmConsultaVisita input[type="submit"],#frmConsultaVisita input[type="reset"],button{padding: 5px;}
+                    .upper{text-transform: uppercase;}.msg_error{color: red;font-weight: bold;}
+                    #frmRegistroVisita ul{margin: 0;}                    
+                    #frmListadoConsulta table thead tr th,#frmListadoConsulta table tbody tr td{padding: 0;margin: 0;/*font-size: 0.8em;*/}
+                    #frmListadoConsulta table tbody tr td{text-align: center;}#frmListadoConsulta table tbody tr td:last-child{text-decoration: underline;color: blue;}
+                    .contenido .contenido-registro,.contenido .contenido-consulta{width: 50%;display: inline-block;vertical-align: top;}                    
+                    .labelPF input[type="text"]{/*background: initial;*/box-shadow: initial;border-radius: initial;color: initial;font-family: initial;font-size: initial;text-shadow: initial;font-weight: initial;opacity: 1;}
+                    .ui-widget{font-family: "majalla";/*font-size: 1em;*/}
+                </style>        
+
+                <span class="tituto-admin">VISITAS</span>
+
+                <div class="contenido">
+                    <div >
+                        <button onclick="PF('dlgconsulta').show();">CONSULTAR VISITA</button>
+                    </div>
+
+                    <div class="contenido-registro">
+
+                        <fieldset>
+                            <legend>REGISTRO DE VISITAS</legend>
+
+                            <h:form id="frmRegistroVisita" pt:autocomplete="off">
+
+                                <h:messages showDetail="false" errorClass="msg_error"/>
+
+                                <p:remoteCommand name="buscarEnter" process="@this txtdni" update="@form" actionListener="#{rvisitaB.datosXDNI}"/>
+                                
+                                <label>
+                                    <span>DNI *</span>
+                                    <h:inputText id="txtdni" value="#{rvisitaB.entidad.dni}" maxlength="10" disabled="#{rvisitaB.chck_visita}" pt:pattern=".{8,10}" pt:required="required" title="Ingrese un número de DNI valido de 8 digitos"
+                                                 onkeypress="if (event.keyCode === 13) {
+                                                             buscarEnter();
+                                                         }" >
+                                        <f:ajax event="blur" render="@form" listener="#{rvisitaB.datosXDNI}"/>                                    
+                                    </h:inputText>                                    
+                                </label>
+
+                                <label>
+                                    <span>APELLIDOS Y NOMBRES</span>
+                                    <h:inputText id="txtapenom" value="#{rvisitaB.entidad.apellidos_nombres}" pt:placeholder="#{rvisitaB.avisoNoDNI}" size="50" styleClass="upper" maxlength="255" disabled="#{rvisitaB.chck_visita}" 
+                                                 required="true" requiredMessage="Ingrese sus apellidos y nombres"/>
+                                </label>
+
+                                <label>
+                                    <span>AREA</span>
+                                    <h:selectOneMenu id="cboarea" value="#{rvisitaB.entidad.oficina}" disabled="#{rvisitaB.chck_visita}" pt:required="required">
+                                        <f:selectItem itemValue="#{null}" itemLabel="--ELIJA EL AREA--"/>
+                                        <f:selectItems value="#{rvisitaB.listadoOficina}" var="ofi" itemValue="#{ofi.oficina}" itemLabel="#{ofi.descripcion}"/>
+                                        <f:ajax execute="@this" render=":frmRegistroVisita:cboautori" listener="#{rvisitaB.listarAutorizacionXOficina}"/>
+                                    </h:selectOneMenu>
+                                </label>
+
+                                <label>
+                                    <span>AUTORIZACION</span>
+                                    <h:selectOneMenu id="cboautori" value="#{rvisitaB.entidad.autorizacion}" disabled="#{rvisitaB.chck_visita}" required="true" requiredMessage="Seleccione al personal que autorizó su visita">
+                                        <f:selectItem itemValue="#{null}" itemLabel="--ELIJA AL PERSONAL--" itemDisabled="true"/>
+                                        <f:selectItems value="#{rvisitaB.listadoOficinaPersonal}" var="op" itemValue="#{op.personal}" itemLabel="#{op.cargo_texto} - #{op.nombre_completo}"/>
+                                    </h:selectOneMenu>
+                                </label>
+
+                                <label>
+                                    <span>TIENE PERTENECIA(S)</span>
+                                    <h:selectBooleanCheckbox id="chckvehiculo" value="#{rvisitaB.entidad.pertenencia}" disabled="#{rvisitaB.chck_visita}">
+                                        <f:ajax render="boolpertenencia" listener="#{rvisitaB.pertenecia_dato}"/>
+                                    </h:selectBooleanCheckbox>
+                                </label>
+
+                                <h:panelGroup id="boolpertenencia" layout="block">
+                                    <h:panelGroup rendered="#{rvisitaB.entidad.pertenencia}" layout="block">
+                                        <label>
+                                            <span class="vertical-top">DATOS DE LA(S) PERTENECIA(S)</span>
+                                            <h:inputTextarea id="txtdato" value="#{rvisitaB.entidad.dato_pertenencia}" styleClass="upper" cols="50" rows="5" pt:max-length="255" disabled="#{rvisitaB.chck_visita}" 
+                                                             required="true" requiredMessage="Describa sus pertenencias"/>
+                                        </label>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                                <label>
+                                    <span class="vertical-top">MOTIVO DE LA VISITA</span>
+                                    <h:inputTextarea id="txtmotivo" value="#{rvisitaB.entidad.motivo}" styleClass="upper" cols="50" rows="5" pt:max-length="500" disabled="#{rvisitaB.chck_visita}" 
+                                                     required="true" requiredMessage="Especifique el motivo de su visita"/>
+                                </label>
+
+                                <label>
+                                    <span>HORA INGRESO</span>
+                                    <h:selectBooleanCheckbox id="txthing" value="#{rvisitaB.chck_ingreso}" disabled="#{rvisitaB.chck_ingreso and rvisitaB.chck_visita}" required="true">
+                                        <f:ajax render="@this hora_ingreso btningreso" listener="#{rvisitaB.obtenerHoraEntrada}"/>
+                                    </h:selectBooleanCheckbox>
+                                    <h:inputText id="hora_ingreso" value="#{rvisitaB.entidad.hora_ingreso}" disabled="true"/>
+                                </label>
+
+                                <label>
+                                    <span>HORA SALIDA</span>
+                                    <h:selectBooleanCheckbox id="txthsal" value="#{rvisitaB.chck_salida}" disabled="#{!rvisitaB.chck_visita}">
+                                        <f:ajax render="@this hora_salida btnsalida" listener="#{rvisitaB.obtenerHoraSalida}"/>
+                                    </h:selectBooleanCheckbox>
+                                    <h:inputText id="hora_salida" value="#{rvisitaB.entidad.hora_salida}" disabled="true"/>
+                                </label>
+
+                                <h:commandButton id="btningreso" value="REGISTRAR ENTRADA" action="#{rvisitaB.registrar}" rendered="#{!rvisitaB.chck_visita}" disabled="#{!rvisitaB.chck_ingreso or empty rvisitaB.entidad.dni or empty rvisitaB.entidad.apellidos_nombres}"/>
+                                <h:commandButton id="btnsalida" value="REGISTRAR SALIDA" action="#{rvisitaB.registrar}" rendered="#{rvisitaB.chck_visita}" disabled="#{!rvisitaB.chck_salida}"/>
+                                <h:commandButton id="btnlimpiar" value="CANCELAR" action="#{rvisitaB.limpiar}" immediate="true">
+                                    <f:ajax render="@form" resetValues="true"/>                                    
+                                </h:commandButton>
+
+                            </h:form>
+
+                        </fieldset>
+
+                    </div                        
+                    ><h:panelGroup rendered="#{not empty rvisitaB.consultado}" layout="block" class="contenido-consulta">
+
+                        <fieldset>
+                            <legend>CONSULTA DE VISITAS</legend>
+
+                            <h:form id="frmConsultaVisita">
+
+                                <label>
+                                    <span>FECHA DE VISITA</span>
+                                    <h:selectOneMenu id="confec" value="#{rvisitaB.consultado.id}">
+                                        <f:selectItem itemLabel="--ELIJA UNA FECHA--" itemDisabled="true"/>
+                                        <f:selectItems value="#{rvisitaB.listadoFechaVisitas}" var="fecha" itemLabel="#{fecha.value}" itemValue="#{fecha.key}"/>
+                                        <f:ajax render="@form" listener="#{rvisitaB.datosConsultaVisita}"/>
+                                    </h:selectOneMenu>
+                                </label>
+
+                                <label>
+                                    <span>DNI</span>
+                                    <h:outputLabel id="condni" value="#{rvisitaB.consultado.dni}" styleClass="bold"/>
+                                </label>
+
+                                <label>
+                                    <span>APELLIDOS Y NOMBRES</span>
+                                    <h:outputLabel id="conapenom" value="#{rvisitaB.consultado.apellidos_nombres}" styleClass="bold upper excepcion"/>
+                                </label>
+
+                                <label>
+                                    <span>FECHA</span>
+                                    <h:outputLabel styleClass="bold" id="confecvi" value="#{rvisitaB.consultado.fecha_visita}"/>
+                                </label>
+
+                                <label>
+                                    <span>AREA</span>
+                                    <h:selectOneMenu id="conarea" value="#{rvisitaB.consultado.oficina}" disabled="true"> 
+                                        <f:selectItem itemValue="#{null}"/>
+                                        <f:selectItems value="#{rvisitaB.listadoOficina}" var="ofi" itemValue="#{ofi.oficina}" itemLabel="#{ofi.descripcion}"/>
+                                    </h:selectOneMenu>
+                                </label>
+
+                                <label>
+                                    <span>AUTORIZACION</span>
+                                    <h:selectOneMenu id="conautori" value="#{rvisitaB.consultado.autorizacion}" disabled="true">
+                                        <f:selectItem itemValue="#{null}"/>
+                                        <f:selectItems value="#{rvisitaB.listadoConsultadoOficinaPersonal}" var="op" itemValue="#{op.personal}" itemLabel="#{op.cargo_texto} - #{op.nombre_completo}"/>
+                                    </h:selectOneMenu>
+                                </label>
+                                
+                                <label>
+                                    <span class="vertical-top">DATOS DE LA(S) PERTENECIA(S)</span>
+                                    <h:inputTextarea id="condato" value="#{rvisitaB.consultado.dato_pertenencia}" cols="50" rows="4" styleClass="upper" disabled="true"/>
+                                </label>
+
+                                <label>
+                                    <span class="vertical-top">MOTIVO DE LA VISITA</span>
+                                    <h:inputTextarea id="conmotivo" value="#{rvisitaB.consultado.motivo}" cols="50" rows="3" styleClass="upper" disabled="true"/>
+                                </label>
+
+                                <label>
+                                    <span>HORA INGRESO</span>
+                                    <h:outputLabel id="conhora_ingreso" value="#{rvisitaB.consultado.hora_ingreso}"/>
+                                </label>
+
+                                <label>
+                                    <span>HORA SALIDA</span>
+                                    <h:outputLabel id="conhora_salida" value="#{rvisitaB.consultado.hora_salida}"/>
+                                </label>
+
+                            </h:form>
+
+                        </fieldset>
+
+                    </h:panelGroup>
+
+                </div>
+
+                <p:dialog widgetVar="dlgconsulta" draggable="true" maximizable="false" minimizable="false" modal="true" header="CONSULTA DE VISITAS" 
+                          resizable="false" showHeader="true" width="800" height="600" minWidth="800" minHeight="600">
+
+                    <h:form id="frmListadoConsulta" onsubmit="return false;">
+
+                        <label>
+                            <span>POR DNI</span>
+                            <h:inputText id="dlgdni" value="#{rvisitaB.busquedaDNI}" maxlength="8" size="12">
+                                <f:ajax event="keyup" render=":frmListadoConsulta:tbListado" listener="#{rvisitaB.visitasDNI}"/>
+                            </h:inputText>
+                        </label>
+
+                        <label>
+                            <span>POR APELLIDOS Y NOMBRES</span>
+                            <h:inputText id="dlgnom" value="#{rvisitaB.busquedaApe_nom}">
+                                <f:ajax event="keyup" render=":frmListadoConsulta:tbListado" listener="#{rvisitaB.visitasDNI}"/>
+                            </h:inputText>
+                        </label>
+
+                        <label>
+                            <span>POR OFICINA</span>
+                            <h:selectOneMenu id="dlgofi" value="#{rvisitaB.busquedaOficina}">
+                                <f:selectItem itemValue="%" itemLabel="TODOS"/>
+                                <f:selectItems value="#{rvisitaB.listadoOficina}" var="ofi" itemValue="#{ofi.oficina}" itemLabel="#{ofi.descripcion}"/>
+                                <f:ajax render=":frmListadoConsulta:tbListado" listener="#{rvisitaB.visitasDNI}"/>
+                            </h:selectOneMenu>
+                        </label>
+
+                        <p:dataTable id="tbListado" value="#{rvisitaB.listadoVisitas}" var="vis" emptyMessage="">
+
+                            <p:column headerText="FECHA VISITA">
+                                <span>#{vis.fecha_visita}</span>
+                            </p:column>
+
+                            <p:column headerText="DNI" width="100">
+                                <span>#{vis.dni}</span>
+                            </p:column>                        
+                            <p:column headerText="APELLIDOS Y NOMBRES">
+                                <span>#{vis.apellidos_nombres.toUpperCase()}</span>
+                            </p:column>                  
+
+                            <p:column headerText="AREA / OFICINA">
+                                <span>#{vis.oficina_texto}</span>
+                            </p:column>
+                            <p:column headerText="AUTORIZACION">
+                                <span>#{vis.autorizacion_nombre}</span>
+                            </p:column>
+
+                            <p:column width="100">
+                                <h:commandLink value="VER DETALLE" action="#{rvisitaB.datosConsultaDetalle}">
+                                    <f:setPropertyActionListener value="#{vis}" target="#{rvisitaB.consultado}"/>
+                                </h:commandLink>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </h:form>
+
+                </p:dialog>          
+
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

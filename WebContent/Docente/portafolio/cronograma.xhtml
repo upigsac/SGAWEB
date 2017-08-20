@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Docente/plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+                CRONOGRAMAS
+                
+            </ui:define>
+                                       
+             
+            <ui:define name="contenido">
+        <span class="tituto-docente"> CRONOGRAMAS </span>
+          <ul>
+                    <ui:repeat value="#{archivosB.mostrarCarpeta('CRONOGRAMA','')}" var="reglamentos" >
+                        <a href="https://docs.google.com/viewer?url=http://www.upig.edu.pe/#{reglamentos.url}" target="_blank" >
+                            <li style="background-image: url('#{reglamentos.portada}"><b>#{reglamentos.titulo}</b></li>
+                        </a>
+                    </ui:repeat>
+         </ul>
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

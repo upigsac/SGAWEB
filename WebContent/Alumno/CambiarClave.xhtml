@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      >
+   
+    <h:body>
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+        
+              <ui:define name="titulo">
+                
+                CAMBIAR CLAVE
+                
+            </ui:define>
+                          
+        <ui:define name="contenido">
+            <span class="tituloCuerpo"> CAMBIO DE CONTRASEÑA </span>
+            <h:form id="form-cambiarclave" class="form-style-a" style="margin-left: 2%">
+                 
+                   <!-- <fieldset class="form-field"><legend>CAMBIO DE CONTRASEÑA</legend> -->
+                       <label class="form-label">Contraseña actual:</label> <h:inputText id="aclave" value="#{usuarioB.claveIngresada}" required="true"
+                                                      requiredMessage="Ingrese su contraseña actual" styleClass="form-text"/>    
+                      <h:message for="aclave" styleClass="mensajeP" />  <br />  
+                      <label class="form-label">Nueva contraseña:</label> <h:inputSecret id="nclave" value="#{usuarioB.nuevaClave}" required="true"
+                                               requiredMessage="Ingrese su nueva contraseña" styleClass="form-text" />
+                      <h:message for="nclave" styleClass="mensajeP" /><br />
+                      <label class="form-label">Repeta contraseña:</label> <h:inputSecret id="rclave" value="#{usuarioB.repetirClave}" required="true" 
+                                                   requiredMessage="Ingrese nuevamente su contraseña" styleClass="form-text"/>
+                      <h:message for="rclave" styleClass="mensajeP"/><br />
+                      <div id="wrapper-button">
+                        <h:commandButton value="Cambiar contraseña" id="btnCampass" action="#{usuarioB.cambiarContraseña}"  styleClass="form-button"/><br />
+                        <h:messages globalOnly="true" showDetail="true" showSummary="true" styleClass="mensajeS"/>
+                      </div>
+                      <br />
+               <!--    </fieldset> -->
+               
+             </h:form>
+          
+    </ui:define>
+      
+     </ui:composition>
+    </h:body>
+</html>
+

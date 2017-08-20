@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                
+                DATOS DOCENTE ASIGNATURA
+                
+            </ui:define>    
+                    
+            <ui:define name="contenido">
+                
+                <style>
+                    label{width: 120px;display: inline-block;margin-bottom: 10px}
+                    
+                </style>
+                
+                <span class="tituto-admin">RELACIONDE ALUMNO</span>
+        
+        
+        
+                <h:form prependId="false" target="_black">
+                                    
+                   <span>DOCENTE</span> 
+                            <h:selectOneMenu value="#{admin_notaB.seleccionDocente}"  id="cboDocente" required="true" >
+                                <f:selectItem itemLabel="-- SELECCIONE --" />
+                                <f:selectItem itemLabel=" TODOS " itemValue="%"/>
+                                <f:selectItems value="#{admin_notaB.listaDocentePeriodo}" var="docente" itemValue="#{docente.persona}" itemLabel="#{docente.paterno} #{docente.materno} #{docente.nombres}" />
+                                
+                            </h:selectOneMenu> 
+                   <br/>
+                   <br/>
+                   
+                  <ui:param name="param" value="@LITIPSQL,11,@LIINSTIT,1,@LSPERIOD,#{usuarioB.periodoS},@LSFACULT,%,@LSCARRER,%,@LSMALLAS,%,@LSCURSOS,%,@LSSECCIO,%,@LSGRUPOS,%,@LSPERSON,%,@LSPERNAL,#{admin_notaB.seleccionDocente},@LSALUMNO,%,@LSTIPEXA,%,@LSESTADO,%" />
+                  
+                  <h:commandLink class="linkpdf" value="IMPRIMIR FORMATO "    target="_blank"  actionListener="#{utilB.imprimir_crystal('\\Administrativo\\academico\\reporte\\','SGAWEB0008', 0, fn:split(param,','))}" />
+                   <h:commandLink class="linkexcel" value="IMPRIMIR FORMATO "   actionListener="#{utilB.imprimir_crystal('\\Administrativo\\academico\\reporte\\','SGAWEB0008', 1, fn:split(param,','))}" />
+                   
+                   
+             
+                </h:form>
+                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

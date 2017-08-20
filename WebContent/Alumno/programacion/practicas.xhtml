@@ -1,0 +1,134 @@
+        <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        xmlns:h="http://xmlns.jcp.org/jsf/html"
+                        xmlns:f="http://xmlns.jcp.org/jsf/core"
+                        template="/Alumno/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+            Practicas y Examenes
+            </ui:define>
+            
+            
+            <ui:define name="contenido">
+                <style>
+                .ficha-practica{width: 150px;text-align: center;height: 80px }
+                .ficha-practica-menu{height: 50px;display: block}
+                .ficha-practica-menu i{font-size: 1.5em;line-height: 50px}
+                </style>
+                                
+                <span class="tituloCuerpo"> PRACTICAS Y EXAMENES </span>
+                
+                <h:form prependId="false">
+              
+                
+               #{programacionExamenesB.load(usuarioB.institucionS,usuarioB.periodoS,usuarioB.carrera.carrera,usuarioB.seccionPeriodoS.vencimiento)}
+             
+                Practica I
+                <div class="paneles" style="min-height: 80px" >
+                    <ui:repeat value="#{programacionExamenesB.examenesL1}" var="exam">
+	                    <div class="column paneles ficha-practica"   >
+	                    	<div class="ficha-practica-menu">
+	                    	<h:commandLink   title="Descargar" actionListener="#{programacionExamenesB.descargar(exam.ruta)}">
+	                    	<i class="fa fa-cloud-download" />	
+	                    	 	</h:commandLink>
+	                    	 	<h:commandLink>
+	                    			<i class="fa fa-cloud" /> 	
+	                    	 	</h:commandLink>
+	                    	
+	                    	</div>
+	                    	
+	                    	#{exam.archivo}
+	                   
+	                    </div>
+                    </ui:repeat>
+                </div>
+                Practica II
+                <div class="paneles"  style="min-height: 80px">
+                  <ui:repeat value="#{programacionExamenesB.examenesL2}" var="exam">
+                            <div class="column paneles ficha-practica">
+                            <div class="ficha-practica-menu">
+		                           <h:commandLink  actionListener="#{programacionExamenesB.descargar(exam.ruta)}">
+		                           <i class="fa fa-cloud-download" />
+		                             
+		                           </h:commandLink>
+		                           <h:commandLink>
+		                           	<i class="fa fa-cloud" />
+		                           	<f:ajax  execute="@this" />
+		                           </h:commandLink>
+                           
+                           </div>
+                           #{exam.archivo}
+                          </div>
+                        </ui:repeat>
+                </div>
+                Examen Parcial
+                <div class="paneles" style="min-height: 80px">
+                
+                    <ui:repeat value="#{programacionExamenesB.examenesL3}" var="exam">
+                  <div class="column paneles ficha-practica">
+                  
+                           <div class="ficha-practica-menu">
+                           <h:commandLink actionListener="#{programacionExamenesB.descargar(exam.ruta)}">
+                           
+                              <i class="fa fa-cloud-download" />
+                              
+                               </h:commandLink>
+                               <h:commandLink>
+		                           	<i class="fa fa-cloud" />
+		                           	<f:ajax  execute="@this" />
+		                           </h:commandLink>
+                        </div>
+                           #{exam.archivo}
+                           
+                          
+                          </div>
+                       </ui:repeat>      
+                </div>
+                 
+                Examen Final
+                <div class="paneles" style="min-height: 80px">
+                 <ui:repeat value="#{programacionExamenesB.examenesL4}" var="exam">
+                  <div class="column paneles ficha-practica">
+                    <div class="ficha-practica-menu">
+                           <h:commandLink actionListener="#{programacionExamenesB.descargar(exam.ruta)}">
+                              <i class="fa fa-cloud-download" />
+                     
+                           </h:commandLink>
+                            <h:commandLink>
+		                           	<i class="fa fa-cloud" />
+		                           	<f:ajax  execute="@this" />
+		                           </h:commandLink>
+                         
+                           </div>
+                               <b>
+                           #{exam.archivo}
+                           </b>
+                          </div>
+                          </ui:repeat>
+                </div>
+                Examen Sustitutorio
+                <div class="paneles" style="min-height: 100px">
+                 <ui:repeat value="#{programacionExamenesB.examenesL5}" var="exam">
+                  <div class="column paneles ficha-practica">
+                   <div class="ficha-practica-menu">
+                           <h:commandLink  actionListener="#{programacionExamenesB.descargar(exam.ruta)}">
+                              <i class="fa fa-cloud-download" />                        
+                           
+                           </h:commandLink>
+                              <h:commandLink>
+		                           	<i class="fa fa-cloud" />
+		                           	<f:ajax  execute="@this" />
+		                           </h:commandLink>
+                             </div>
+                           #{exam.archivo}
+                          </div>
+                          </ui:repeat>
+                </div>
+                </h:form>
+               
+               
+            </ui:define>
+            
+        </ui:composition>
+
+

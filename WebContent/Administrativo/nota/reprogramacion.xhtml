@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Reprogramacion</title>
+    </h:head>
+    <h:body>
+         <ui:composition  template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                INGRESO DE NOTAS ALUMNO
+            </ui:define>
+            
+            
+            
+             <ui:define name="contenido">
+                 <style>
+                     .label{display: inline-block;width: 100px}
+                     table tbody tr td{font-size: 12px;}
+                     table thead th{font-size:14px }
+                 </style>
+      <span class="tituto-admin">REPROGRAMACION DE NOTAS </span>
+        <h:form id="frmNotas">
+            <div style="display: block">
+                <div style="display: inline-block;width: 20%;text-align: center">
+                    
+                    <h:graphicImage id="imgDocente" value="SVerImagenAlumno?alumno=#{reprogramacionB.seleccionDocente}" width="150" height="150" alt="FOTO" style="border: 1px solid" />
+                </div>
+                <div style="display: inline-block;width: 75%;vertical-align: top;height: 165px">
+                <span class="label">DOCENTE</span> 
+                    <h:selectOneMenu value="#{reprogramacionB.seleccionDocente}" class="carreras" id="cboDocente" required="true" >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{reprogramacionB.listaDocentePeriodo}" var="docente" itemValue="#{docente.persona}" itemLabel="#{docente.paterno} #{docente.materno} #{docente.nombres}" />
+                        <f:ajax execute="@this" render="cboCarrera imgDocente" listener="#{reprogramacionB.mostrarCarreraDocente()}" />
+                    </h:selectOneMenu>    
+                        
+                    <br/>
+                    <span class="label">CARRERA</span> 
+                    <h:selectOneMenu value="#{reprogramacionB.seleccionCarrera}" class="carreras" id="cboCarrera" required="true" >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{reprogramacionB.listaCarreraDocente}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+                        <f:ajax execute="@this" render="cboSeccion" listener="#{reprogramacionB.mostrarSeccionDocente}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <span class="label">SECCION</span> 
+                    <h:selectOneMenu value="#{reprogramacionB.seleccionSeccion}" id="cboSeccion" required="true" class="cboSeccion"     >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{reprogramacionB.listaSeccionDocente}" var="seccion" itemValue="#{seccion.seccion}" itemLabel="#{seccion.descripcion}" />
+                        <f:ajax execute="@this" render="cboCurso "  listener="#{reprogramacionB.mostrarCursosDocente}" />
+                    </h:selectOneMenu>
+
+                    <br/>
+
+                    <span class="label">CURSO</span> 
+                    <h:selectOneMenu value="#{reprogramacionB.seleccionCurso}" id="cboCurso" required="true">
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{reprogramacionB.listaCursoDocente}" var="curso" itemValue="#{curso.curso}" itemLabel="#{curso.curso} - #{curso.descripcion}"/>
+                        <f:ajax execute="@this" render="notas" listener="#{reprogramacionB.mostrarDetalle()}" />
+                        
+                        
+                    </h:selectOneMenu>
+                
+            </div>             
+            </div>           
+            
+            <div >
+                <h:panelGroup id='detalle' layout="_block" style="display: inline-block;width:78%;vertical-align: top">
+                    
+            
+            
+                    <p:dataTable id="notas" value="#{reprogramacionB.notasL}" var="registro"   emptyMessage="" selectionMode="single"  rowKey="#{registro.alumno}"  rowStyleClass="#{reprogramacionB.alumno eq registro.alumno?'ui-state-highlight':''}"  rendered="#{reprogramacionB.bandera}"   >
+                        
+                        <f:facet name="header">                            
+                            <h3>REGISTROS DE NOTAS #{reprogramacionB.malla eq '2014SM'? 'SEMI-PRESENCIAL':'PRESENCIAL' } - #{reprogramacionB.periodo}</h3>
+                            reg: #{reprogramacionB.notasL.size()}
+                        </f:facet>
+                        
+                    <p:ajax event="rowSelect" listener="#{reprogramacionB.onRowSelect}" update=":frmNotas:imgAlumno :frmNotas:lblAlumno"  />
+                        <c:forEach items="#{reprogramacionB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}" > 
+                                
+                                <f:facet name="header" >  
+                                <p:commandLink  rendered="#{(column.property eq 'u0') ||   (column.property eq 'u5') || (column.property eq 'y0')}"     style="width: 30px;"  update=":frmNotas:detalle"   actionListener="#{reprogramacionB.mostrarDetalle}" >
+                                          <h:outputLabel escape="false"  value="#{column.header} "   style="display: block;cursor: pointer;color: blue"  title="#{column.property}"   />
+                                      <f:param name="cabecera" value="#{column.property}" />
+                                </p:commandLink>
+                                      
+                               <p:outputLabel  escape="false" value="#{column.header}" styleClass="#{column.editable == true ? 'editable':''}" 
+                                                     rendered="#{(column.property ne 'u5') and (column.property ne 'u0') and (column.property ne 'y0') }" title="#{column.property}"/> 
+                            </f:facet>  
+                            
+                            
+                                
+                                
+                                
+                            <p:cellEditor rendered="#{column.editable}" >
+                            <f:facet name="output" > 
+                                <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} "  />
+                            </f:facet>
+                            <f:facet name="input" >
+                                <p:inputText  value="#{registro[column.property]}" style="width: 40px;display: block;margin: 0 auto"  maxlength="2"   >
+                                  <f:validateDoubleRange minimum="0" maximum="20" />
+                                </p:inputText>
+                            </f:facet>
+                            </p:cellEditor>
+                                
+                            <h:outputText value="#{column.property eq 'promedio'?utilB.redondeo(registro[column.property]):registro[column.property]}"    rendered="#{not column.editable  }"  /> 
+                            </p:column>
+                        </c:forEach> 
+
+               <f:facet name="footer" >
+                  
+                   <span>#{reprogramacionB.formula} </span>  
+              </f:facet>
+                        
+              
+            </p:dataTable> 
+                
+                
+                    <p:dataTable  id="notasSub" value="#{reprogramacionB.notasL}" var="registro"   emptyMessage="" selectionMode="single"  rowKey="#{registro.alumno}"  rowStyleClass="#{reprogramacionB.alumno eq registro.alumno?'ui-state-highlight':''}"  style="min-height: 250px"    rendered="#{not reprogramacionB.bandera}"   >
+                         <p:ajax event="rowSelect" listener="#{reprogramacionB.onRowSelect}" update=":frmNotas:imgAlumno :frmNotas:lblAlumno"  />
+                         <c:forEach items="#{reprogramacionB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}"  >                            
+                                  <f:facet name="header" >  
+                                           <h:outputLabel escape="false"  value="#{column.header}" title="#{column.property}"    />    
+                                   </f:facet>  
+                            <p:cellEditor rendered="#{column.editable}">
+                            <f:facet name="output">                     
+                            <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} " />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} " />
+                            
+                            </f:facet>
+                            </p:cellEditor>
+                            <h:outputText value="#{registro[column.property]}"  rendered="#{not column.editable}"/> 
+                            </p:column>
+                        </c:forEach> 
+                            <f:facet name="footer" >   
+                                <p:commandButton  icon="ui-icon-refresh" style="display: block">
+                                    <f:ajax render="notasSub" execute="@this" listener="#{reprogramacionB.refrescar}" />
+                                </p:commandButton>
+                                <p:commandButton  value="atras" style="display: block">
+                                    <f:ajax  execute="@this" render=":frmNotas:detalle @this" listener="#{reprogramacionB.atras()}" />
+                                </p:commandButton>
+                            </f:facet>
+                        </p:dataTable>
+               </h:panelGroup>
+            
+            
+                <div style="display: inline-block;width:20%;">
+                    <h:outputLabel id="lblAlumno" value="#{reprogramacionB.alumno}" style="width:  150px;height: 20px;display: block;text-align: center;border: 1px solid" />
+                    
+                    <h:graphicImage id="imgAlumno" value="SVerImagenAlumno?alumno=#{reprogramacionB.persona}" width="150" height="150" alt="FOTO" style="border: 1px solid red" />
+                <br/>
+                Tipo de Evaluacion: <br/>
+                <h:selectOneMenu id="cboEvaluacion" value="#{reprogramacionB.tipoEvaluacion}"  >
+                    <f:selectItem itemLabel="-Seleccionar-" itemValue=""/>   
+                    <f:selectItems value="#{reprogramacionB.tipoEvaluacionL}" var="tipo" itemLabel="#{tipo.tipo_examen} - #{tipo.descripcion}" itemValue="#{tipo.tipo_examen}" itemDisabled="#{(tipo.tipo_examen ne 'U4') and  (tipo.tipo_examen ne 'U2') and (tipo.tipo_examen ne 'ES') and (tipo.tipo_examen ne 'U7') and (tipo.tipo_examen ne 'U9')}" />
+                </h:selectOneMenu>
+                <br/>
+                
+                Autoriza: <br/>
+                <h:selectOneMenu value="#{reprogramacionB.autoriza}" >
+                    <f:selectItem itemLabel="-Seleccionar-" itemValue=""/>                    
+                    <f:selectItems value="#{reprogramacionB.personaL}" var="persona"  itemValue="#{persona.persona}" itemLabel="#{persona.paterno} #{persona.materno} #{persona.nombres}" />       
+                </h:selectOneMenu>
+                <br/>
+                Obsevación:<br/>
+                <h:inputTextarea id="txtObservacion" value="#{reprogramacionB.observacion}" /><br/>
+                Cambiar Nota:
+                <h:inputText id="txtNota" value="#{reprogramacionB.nota}" size="10" maxlength="2"  onkeypress="return soloNumeros(event);" onblur="valorIncorecto(this,14)" >     
+                    <f:ajax execute="@this" render="btnCabiarNota" />
+                </h:inputText>
+                <br/>
+                <h:commandButton id="btnCabiarNota" value="CAMBIAR NOTA" disabled="#{(reprogramacionB.nota ge 15) or (reprogramacionB.nota le 0)}" actionListener="#{reprogramacionB.registrarReprogramacion(reprogramacionB.seleccionCarrera,reprogramacionB.seleccionCurso,reprogramacionB.seleccionSeccion)}" >
+                    <f:ajax execute="@this cboEvaluacion txtObservacion txtNota"  />
+                </h:commandButton>
+            </div>
+            </div>
+        </h:form>
+      </ui:define>
+         </ui:composition>
+            
+    </h:body>
+</html>
+

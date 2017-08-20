@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"      
+      >
+    <h:head>
+        <title>Revista</title>
+        
+        
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="turn.js"></script>
+
+    </h:head>
+    <h:body  >
+        <div style="height: 98%;display: block;position: relative">
+            <div id="book"   >
+            <div style="background-image: url('http://www.upig.edu.pe/intranet/documentos/revista/ENFERMERIA/PORTADA.jpg')">
+                
+                <h1>
+                    <input type="hidden" id="pagina" value="#{revistaB.pagina}"  />
+                </h1>
+            </div>
+            </div>
+            <div id="pnControles">
+                <ul>
+                    <li><a id="lblAnterior" href="#">ANTERIOR</a></li>
+                    <li><a id="lblSiguiente" href="#">SIGUIENTE</a></li>
+                    <li><input id="page-number" type="text" size="5" /></li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        
+<style type="text/css">
+body{
+background-image: url('http://i3.minus.com/ijZLDwzvGxWmP.jpg');
+
+margin: 0px;
+padding: 0px;
+    
+}
+#book{
+width:900px;
+height:700px;
+margin: 20px auto;
+
+}
+#pnControles{height: 80px;width: 100%;background-color: rgba(0,0,0,0.5);position: absolute;bottom: 0px}
+#pnControles ul{list-style: none;color: white;text-align: center}
+#pnControles ul li{display: inline-block;padding-right: 5px }
+#pnControles ul li a{width: 120px;display: block;padding: 10px 0px;background-color: #019EE3;color: white;text-decoration: none;}
+#book .turn-page{
+background-color:white;
+}
+ 
+#book .cover{
+background:#333;
+}
+ 
+#book .cover h1{
+color:white;
+text-align:center;
+font-size:50px;
+line-height:500px;
+margin:0px;
+}
+ 
+#book .loader{
+background-image:url(loader.gif);
+width:24px;
+height:24px;
+display:block;
+position:absolute;
+top:238px;
+left:188px;
+}
+ 
+#book .data{
+text-align:center;
+font-size:40px;
+color:#999;
+line-height:500px;
+}
+ 
+#controls{
+width:800px;
+text-align:center;
+margin:20px 0px;
+font:30px arial;
+}
+ 
+#controls input, #controls label{
+font:30px arial;
+}
+ 
+#book .odd{
+	
+background-image:-webkit-linear-gradient(left, #FFF 95%, #ddd 100%);
+background-image:-moz-linear-gradient(left, #FFF 95%, #ddd 100%);
+background-image:-o-linear-gradient(left, #FFF 95%, #ddd 100%);
+background-image:-ms-linear-gradient(left, #FFF 95%, #ddd 100%);
+ 
+}
+ 
+#book .even{
+	
+background-image:-webkit-linear-gradient(right, #FFF 95%, #ddd 100%);
+background-image:-moz-linear-gradient(right, #FFF 95%, #ddd 100%);
+background-image:-o-linear-gradient(right, #FFF 95%, #ddd 100%);
+background-image:-ms-linear-gradient(right, #FFF 95%, #ddd 100%);
+
+ 
+}
+
+.pagina{display: block;text-align: center;padding: 5px 0px;color: silver}
+.page{border: 2px solid ;padding: 5px}
+</style>
+
+<script type="text/javascript">
+ 
+// Sample using dynamic pages with turn.js
+ var colores = $("#pagina").val().split(",");
+
+
+ 
+
+
+var numberOfPages = colores.length+1;
+ 
+ 
+// Agrega las paginas que el libro va a necesitar
+function addPage(page, book) {
+// Chequea si la página esta en el libro
+if (!book.turn('hasPage', page)) {
+// Crea un elemento para esta página
+var element = $('<div />', {'class' : 'page '+((page%2===0) ? 'odd' : 'even'), 'id': 'page-'+page}).html('<i></i>');
+
+//Si no entonces agrega la página
+book.turn('addPage', element, page);
+// Asumimos que los datos entre ida y vuelta del servidor tardan 1 segundo
+setTimeout(function(){
+element.html('<div style=" border:2px solid ;width: 95%;margin-left:'+((page%2===0) ?  '0%':'5%')+' ;height:98%;background-image: url('+ colores[page-2] +');background-size:100%"><span class="pagina">'+page+'</span></div>');
+
+}, 1000);
+}
+}
+ 
+$(window).ready(function(){
+$('#book').turn({acceleration: true,
+pages: numberOfPages,
+elevation: 50,
+gradients: !$.isTouch,
+when: {
+turning: function(e, page, view) {
+ 
+// Toma el rango de páginas que el libro necesita
+var range = $(this).turn('range', page);
+ 
+// Chequea si cada pagina esta en el libro
+for (page = range[0]; page&lt;=range[1]; page++)
+addPage(page, $(this));
+ 
+},
+ 
+turned: function(e, page) {
+$('#page-number').val(page);
+}
+}
+});
+ 
+$('#number-pages').html(numberOfPages);
+ 
+$('#page-number').keydown(function(e){
+ 
+if (e.keyCode===13)
+$('#book').turn('page', $('#page-number').val());
+ 
+});
+});
+ 
+$(window).bind('keydown', function(e){
+ 
+if (e.target &amp;&amp; e.target.tagName.toLowerCase()!='input')
+if (e.keyCode===37)
+$('#book').turn('previous');
+else if (e.keyCode===39)
+$('#book').turn('next');
+ 
+ 
+ 
+ 
+});
+
+$("#lblSiguiente").click(function(e){
+    e.preventDefault();
+    $('#book').turn('next');
+});
+
+$("#lblAnterior").click(function(e){
+    e.preventDefault();
+    $('#book').turn('previous');
+});
+
+
+
+</script>
+         
+        
+        
+        
+    </h:body>
+    
+</html>
+

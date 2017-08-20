@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+   
+    <h:body>
+         <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="plantilla.xhtml">
+        
+             <ui:define name="titulo">
+                
+                CAMBIAR CONTRASEÑA
+                
+            </ui:define>
+             
+             
+        <ui:define name="contenido">
+            <span class="tituto-docente"> CAMBIAR CONTRASEÑA </span>
+            <h:form id="form-cambiarclave" class="form-style-a">
+                 
+                    
+                       <label class="form-label">Contraseña actual:</label> 
+                       <h:inputText id="aclave" value="#{usuarioB.claveIngresada}"  pt:required="true"
+                                                       styleClass="form-text"/>    
+                      <br />  
+                      <label class="form-label">Nueva contraseña:</label> 
+                      <h:inputSecret id="nclave" value="#{usuarioB.nuevaClave}"  pt:required="true"
+                                               styleClass="form-text" />
+                      <br />
+                      <label class="form-label">Repita contraseña:</label> 
+                      <h:inputSecret id="rclave" value="#{usuarioB.repetirClave}"  pt:required="true"
+                                                    />
+                      <br />
+                      <div id="wrapper-button">
+                          <h:commandButton value="Cambiar contraseña"  actionListener="#{usuarioB.cambiarContraseñaAdmin}"  styleClass="form-button">
+                            <f:ajax execute="@form" />
+                          </h:commandButton>
+                        
+                      </div>
+                      <br />
+                   
+                
+             </h:form>
+            
+            
+        </ui:define>
+      
+     </ui:composition>
+    </h:body>
+</html>
+

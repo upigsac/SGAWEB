@@ -1,0 +1,652 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ht="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+  		<link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/administrativo/style.css" />
+        <link   type="text/css" rel="stylesheet" href="/SGAWEB/resources/css/font-awesome.css" />
+        <title>ADMINISTRAR CONCEPTO</title>
+        <script>
+        var bandera=false;
+        var idGeneral;
+     
+        function confirmacion(obj,cadena){
+            idGeneral=obj;
+            if(bandera){
+                $(".modal-fondo").remove();
+                $(".modal").remove();
+                bandera=false;
+                return true;
+            }else{
+               if(! $('.modal-fondo').hasClass("modal-fondo")){
+                   $('body').append('<div class="modal-fondo"  /> ');
+                    $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+                    }else{
+                    $(".modal-fondo").remove();
+                    $(".modal").remove();
+               }                    
+                
+                return false;
+            }
+            
+        }
+        
+        function valida(estado){
+            bandera=estado;           
+            $(idGeneral).click();            
+        }
+        function niveles(option){
+        	console.log(option);
+        	$(".bloque").removeClass("mostrar");
+        	$(option).addClass("mostrar");
+        }
+        
+        </script>
+        <style>
+        	
+        	
+        	.bloque{display: none;}
+        	.mostrar{display: block;}
+        </style>
+</h:head>
+<h:body style=";background-color:#eeeeee">
+<h:form id="frmConcepto" prependId="false" style="padding:5px 10px">
+<div id="pnConcetoInstitucion" class="bloque">
+
+
+
+			<b class="titulo" >Administrar Concepto Institucion</b>
+			<div class="paneles">
+				<h:outputLabel for="cbTipoConceptoCI" value="Tipo" />
+					<h:selectOneMenu id="cbTipoConceptoCI"  value="#{adminConceptoB.concepto.tipoConcepto}" disabled="true" >
+								<f:selectItems value="#{adminConceptoB.tipoConceptoL}" var="itemTipoConcepto"  itemLabel="#{itemTipoConcepto.descripcion}" itemValue="#{itemTipoConcepto.tipoConcepto}" />
+						<f:ajax execute="@this" render="tbConcepto" listener="#{adminConceptoB.filtroConcepto}" />
+					</h:selectOneMenu>
+					<br />
+					<h:outputLabel for="txtdesConceptoCI" value="Concepto" />
+					<h:inputText id="txtdesConceptoCI" value="#{adminConceptoB.concepto.descripcion}" disabled="true" style="width:450px"/>
+				
+			</div>
+			<div class="paneles">
+					<h:commandLink styleClass="boton-normal">
+						<i class="fa fa-plus" />
+							NUEVO
+						<f:ajax execute="@this"  render=":frmConcepto:cbInstitucionCI :frmConcepto:ckCategoriaCI :frmConcepto:cbEstadoCI"  listener="#{adminConceptoB.nuevoConceptoInstitucion}" /> 
+					</h:commandLink>
+					 <h:commandLink styleClass="boton-normal" onclick="niveles('#pnConceptoDescuento')" >
+						<i class="fa fa-reply" />
+			                 ATRAS
+			            <f:ajax execute="@this "    />
+			      </h:commandLink>
+				
+				</div>
+
+
+
+				<p:dataTable id="tbConceptoInstitucion" value="#{adminConceptoB.conceptoInstitucionL}" var="itemConceptoInstitucion" >
+				<p:column headerText="Institucion">
+					#{itemConceptoInstitucion.institucion}
+				</p:column>
+				<p:column headerText="Categoria" width="50">
+					#{itemConceptoInstitucion.categoria}
+				</p:column>
+				<p:column headerText="Estado" width="100">
+					#{itemConceptoInstitucion.estadoRegistro}
+				</p:column>
+				<p:column  width="50">
+				<h:commandLink title="Editar" style="color:green"  >
+					<i class="fa fa-pencil" />
+					<f:ajax execute="@this" render=":frmConcepto:cbInstitucionCI :frmConcepto:ckCategoriaCI :frmConcepto:cbEstadoCI" listener="#{adminConceptoB.editarConceptoInstitucion(itemConceptoInstitucion)}"  />
+				</h:commandLink>
+			
+				<h:commandLink title="Eliminar" style="color:red"  onclick="return confirmacion(this,'¿ Esta seguro de eliminar  ?');"  >
+					<i class="fa fa-times" />
+					<f:ajax execute="@this" render="tbConceptoInstitucion" listener="#{adminConceptoB.eliminarConceptoInstitucion(itemConceptoInstitucion)}"   />
+				</h:commandLink>
+</p:column>
+</p:dataTable>
+</div>
+
+
+
+
+
+
+<div id="pnCentroCosto" class="bloque" >
+<b class="titulo" >Administrar Centro de Costo</b>
+	<div class="paneles">
+	<h:outputLabel value="Nivel" />
+	<h:selectOneMenu value="#{adminConceptoB.nivelF}" >
+	<f:selectItem itemLabel="Todos" itemValue="%" />
+		<f:selectItem itemLabel="1" itemValue="1" /> 
+		<f:selectItem itemLabel="2" itemValue="2" />
+		<f:selectItem itemLabel="3" itemValue="3" />
+		<f:selectItem itemLabel="4" itemValue="4" />
+		<f:selectItem itemLabel="5" itemValue="5" />
+		<f:ajax execute="@this"  render="tbCentroCosto" listener="#{adminConceptoB.filtroCentroCosto}" /> 
+	</h:selectOneMenu>
+	<br />
+	<h:outputLabel value="Padre" />
+	<h:inputText value="#{adminConceptoB.costoPadreF}" style="width:450px" ht:placeholder='Escribir busqueda ..' >
+	<f:ajax event="change" render="tbCentroCosto" listener="#{adminConceptoB.filtroCentroCosto}" />
+	
+	</h:inputText>
+	
+	<br />
+	<h:outputLabel value="Descripcion" />
+	
+	<h:inputText value="#{adminConceptoB.desCentroCostoF}" style="width:450px" ht:placeholder='Escribir busqueda ..' >
+	<f:ajax event="change" render="tbCentroCosto" listener="#{adminConceptoB.filtroCentroCosto}" />
+	
+	</h:inputText>
+
+	</div>
+	<div class="paneles">
+		<h:commandLink styleClass="boton-normal">
+		<i class="fa fa-plus" />
+			NUEVO
+		<f:ajax execute="@this" render=":frmConcepto:txtCentroCostoCC :frmConcepto:cbCentroCostoPadreCC :frmConcepto:cbNivelCC :frmConcepto:txtDescripcionCC :frmConcepto:cbEstadoCC" listener="#{adminConceptoB.nuevoCentroCosto}" /> 
+		</h:commandLink>
+		 <h:commandLink styleClass="boton-normal" onclick="niveles('#pnConceptoDescuento')" >
+		<i class="fa fa-reply" />
+                 ATRAS
+                 <f:ajax execute="@this "    />
+      </h:commandLink>
+	
+	</div>
+	
+	
+	<p:dataTable id="tbCentroCosto" value="#{adminConceptoB.centroCostoL}" var="itemCentroCosto" rowIndexVar="status" >
+	<p:column headerText="N." width="10">
+	#{status +1 }
+	</p:column >
+	
+	<p:column headerText="Centro Costo Padre" width="100">
+	#{itemCentroCosto.centroCostoPadre}
+	</p:column >
+	
+	<p:column headerText="Centro Costo" width="100">
+	#{itemCentroCosto.centroCosto}
+	</p:column >
+	
+	
+	
+	<p:column headerText="Nivel" width="50">
+	#{itemCentroCosto.nivel}
+	</p:column >
+	
+	<p:column headerText="Descripcion">
+	#{itemCentroCosto.descripcion}
+	</p:column >
+	
+	<p:column headerText="Estado" width="50">
+	#{itemCentroCosto.estadoRegistro}
+	</p:column >
+	
+	<p:column  width="50">
+			<h:commandLink title="Editar" style="color:green"  >
+					<i class="fa fa-pencil" />
+					<f:ajax execute="@this"  render=":frmConcepto:txtCentroCostoCC :frmConcepto:cbCentroCostoPadreCC :frmConcepto:cbNivelCC :frmConcepto:txtDescripcionCC :frmConcepto:cbEstadoCC" listener="#{adminConceptoB.editarCentroCosto(itemCentroCosto)}"  />
+				</h:commandLink>
+			
+				<h:commandLink title="Eliminar" style="color:red"  onclick="return confirmacion(this,'¿ Esta seguro de eliminar  ?');"  >
+					<i class="fa fa-times" />
+					<f:ajax execute="@this"  render="tbCentroCosto" listener="#{adminConceptoB.elimnarCentroCosto}" />
+				</h:commandLink>
+	</p:column >
+	
+	
+	</p:dataTable>
+	
+</div>
+
+<div id="pnConceptoPeriodo" class="bloque">
+<b class="titulo" >Administrar Conceptos Institucion Periodo</b>
+
+	<div class="paneles">
+	<h:outputLabel for="cbTipoConceptoCIP" value="Tipo" />
+		<h:selectOneMenu id="cbTipoConceptoCIP"  value="#{adminConceptoB.concepto.tipoConcepto}" disabled="true" >
+					<f:selectItems value="#{adminConceptoB.tipoConceptoL}" var="itemTipoConcepto"  itemLabel="#{itemTipoConcepto.descripcion}" itemValue="#{itemTipoConcepto.tipoConcepto}" />
+			<f:ajax execute="@this" render="tbConcepto" listener="#{adminConceptoB.filtroConcepto}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel for="txtdesConceptoCIP" value="Concepto" />
+		<h:inputText id="txtdesConceptoCIP" value="#{adminConceptoB.concepto.descripcion}" disabled="true" style="width:450px"/>
+	
+	</div>
+	<div class="paneles">
+		<h:commandLink styleClass="boton-normal">
+		<i class="fa fa-plus" />
+			NUEVO
+		<f:ajax execute="@this" render=":frmConcepto:cbInstitucionCIP  :frmConcepto:cbPeriodoCIP :frmConcepto:txtMontoPagoCIP :frmConcepto:cbTipoMonedaCIP :frmConcepto:txtMontoInterezCIP :frmConcepto:cbEstadoCIP" listener="#{adminConceptoB.nuevoConceptoInstitucionPeriodo}" /> 
+		</h:commandLink>
+		<h:commandLink styleClass="boton-normal" onclick="niveles('#pnConceptoDescuento')" >
+	 				<i class="fa fa-reply" />
+                     ATRAS
+                     <f:ajax execute="@this "    />
+      </h:commandLink>
+	
+	</div>
+	
+	<p:dataTable id="tbConceptoInstitucionPeriodo" value="#{adminConceptoB.conceptoInstitucionPeriodoL}" var="itemConceptoInstitucionPeriodo">
+		<p:column headerText="Institucion">
+			#{itemConceptoInstitucionPeriodo.institucion}
+		</p:column>
+		<p:column headerText="Periodo" width="100">
+			#{itemConceptoInstitucionPeriodo.periodo}
+		</p:column>
+		<p:column headerText="Tipo Moneda" width="100" 	>
+			#{itemConceptoInstitucionPeriodo.tipoMoneda}
+		</p:column>
+		<p:column headerText="Monto Pago" width="100" 	>
+			#{itemConceptoInstitucionPeriodo.montoPago}
+		</p:column>
+		<p:column headerText="Tipo Interes" width="100">
+			#{itemConceptoInstitucionPeriodo.tipoInteres}
+		</p:column>
+		<p:column headerText="Interes" width="100">
+			#{itemConceptoInstitucionPeriodo.montoInteres}
+		</p:column>
+		<p:column width="50">
+			<h:commandLink title="Editar" style="color:green"  >
+				<i class="fa fa-pencil" />
+				<f:ajax execute="@this"  render=":frmConcepto:cbInstitucionCIP :frmConcepto:cbPeriodoCIP  :frmConcepto:cbTipoMonedaCIP :frmConcepto:txtMontoPagoCIP :frmConcepto:txtMontoInterezCIP :frmConcepto:cbEstadoCIP"  listener="#{adminConceptoB.editarConceptoInstitucionPeriodo(itemConceptoInstitucionPeriodo)}"  />
+			</h:commandLink>
+		
+			<h:commandLink title="Eliminar" style="color:red"  onclick="return confirmacion(this,'¿ Esta seguro de eliminar  ?');" >
+				<i class="fa fa-times" />
+				<f:ajax execute="@this"  />
+			</h:commandLink>
+		
+		</p:column>
+	</p:dataTable>
+
+
+
+</div>
+
+
+
+
+
+
+<div id="pnConceptoDescuento" class="bloque">
+<b class="titulo" >Administrar Conceptos Institucion Descuento</b>
+	<div class="paneles">
+	<h:outputLabel for="cbTipoConceptoCID" value="Tipo" />
+		<h:selectOneMenu id="cbTipoConceptoCID"  value="#{adminConceptoB.concepto.tipoConcepto}" disabled="true" >
+					<f:selectItems value="#{adminConceptoB.tipoConceptoL}" var="itemTipoConcepto"  itemLabel="#{itemTipoConcepto.descripcion}" itemValue="#{itemTipoConcepto.tipoConcepto}" />
+			<f:ajax execute="@this" render="tbConcepto" listener="#{adminConceptoB.filtroConcepto}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel for="txtdesConceptoCID" value="Concepto" />
+		<h:inputText id="txtdesConceptoCID" value="#{adminConceptoB.concepto.descripcion}" disabled="true" style="width:450px"/>
+	
+	</div>
+	
+	
+	<div class="paneles">
+	 <h:commandLink styleClass="boton-normal">
+	 	<i class="fa fa-plus" />
+                     NUEVO
+                     <f:ajax execute="@this "  render="cbInstitucionCID cbPeriodoCID cbDescuentoCID cbCentroCostoCID cbEstadoCID" listener="#{adminConceptoB.nuevoConceptoInstitucionDescuento}"  />
+      </h:commandLink>
+       <h:commandLink styleClass="boton-normal" >
+	 				<i class="fa fa-plus" />
+                     INSTITUCION PERIODO
+                     <f:ajax execute="@this "  render="tbConceptoInstitucionPeriodo cbTipoConceptoCIP txtdesConceptoCIP" listener="#{adminConceptoB.mostrarConceptoInstitucionPeriodo}"  />
+      </h:commandLink>
+      <h:commandLink styleClass="boton-normal" onclick="niveles('#pnConcetoInstitucion')" >
+	 				<i class="fa fa-plus" />
+                     CONCEPTO INSTITUCION
+                     <f:ajax execute="@this "  render="tbConceptoInstitucion cbTipoConceptoCI txtdesConceptoCI" listener="#{adminConceptoB.mostrarConceptoInstitucion}"   />
+      </h:commandLink>
+      <h:commandLink styleClass="boton-normal" onclick="niveles('#pnCentroCosto')" >
+	 				<i class="fa fa-plus" />
+                     CENTRO COSTO
+                     <f:ajax execute="@this "    />
+      </h:commandLink>
+     <h:commandLink styleClass="boton-normal" onclick="niveles('#pnConcepto')" >
+	 				<i class="fa fa-reply" />
+                     ATRAS
+                     <f:ajax execute="@this "    />
+      </h:commandLink>
+                 
+                
+	</div>
+
+	<p:dataTable id="tbConceptoInstitucionDescuento" value="#{adminConceptoB.conceptoInstitucionDescuentoL}" var="itemConceptoInstitucionDescuento"  rowIndexVar="status" >	
+		<p:column headerText="N." width="10">
+				#{status +1}
+		</p:column>
+		
+		<p:column headerText="Institucion" >
+			#{itemConceptoInstitucionDescuento.institucion}
+		</p:column>
+		<p:column  width="100">
+		<f:facet name="header">
+			<h:commandLink>
+					Periodo
+				<f:ajax execute="@this" render=":frmConcepto:tbConceptoInstitucionPeriodo :frmConcepto:cbTipoConceptoCIP :frmConcepto:txtdesConceptoCIP" listener="#{adminConceptoB.mostrarConceptoInstitucionPeriodo}"  />
+		</h:commandLink>
+		</f:facet>
+			#{itemConceptoInstitucionDescuento.periodo}
+		</p:column>
+		<p:column headerText="Centro Costo" width="80" >
+			<f:facet name="header">
+			 <h:commandLink  onclick="niveles('#pnCentroCosto')" >
+		 			
+	                     Centro Costo
+	                     <f:ajax execute="@this "    />
+	      	</h:commandLink>
+			</f:facet>
+			#{itemConceptoInstitucionDescuento.centroCosto}
+		</p:column>
+		<p:column headerText="Descuento" width="80">
+			#{itemConceptoInstitucionDescuento.descuento}
+		</p:column>
+		<p:column style="text-align:center"  width="50">
+		<h:commandLink title="Editar" style="color:green" >
+			<i class="fa fa-pencil" />
+			<f:ajax execute="@this"  render=":frmConcepto:cbInstitucionCID :frmConcepto:cbPeriodoCID :frmConcepto:cbDescuentoCID :frmConcepto:cbCentroCostoCID :frmConcepto:cbEstadoCID" listener="#{adminConceptoB.editarConceptoInstitucionDescuento(itemConceptoInstitucionDescuento)}" />
+		</h:commandLink>
+		
+		<h:commandLink title="Eliminar" style="color:red"  onclick="return confirmacion(this,'¿ Esta seguro de eliminar el concepto descuento ?');" >
+			<i class="fa fa-times" />
+			<f:ajax execute="@this" render="tbConceptoInstitucionDescuento" listener="#{adminConceptoB.eliminarConceptoInstitucionDescuento(itemConceptoInstitucionDescuento)}"  />
+		</h:commandLink>
+		</p:column>
+	
+	</p:dataTable>
+</div>
+
+<div id="pnConcepto" class="mostrar bloque">
+
+
+	<b class="titulo" >Administrar Conceptos</b>
+	<div class="paneles">
+		<h:outputLabel value="Tipo" />
+		<h:selectOneMenu  value="#{adminConceptoB.tipoConceptoF}" >
+			<f:selectItem itemLabel="TODOS" itemValue="%" />
+			<f:selectItems value="#{adminConceptoB.tipoConceptoL}" var="itemTipoConcepto"  itemLabel="#{itemTipoConcepto.descripcion}" itemValue="#{itemTipoConcepto.tipoConcepto}" />
+			<f:ajax execute="@this" render="tbConcepto" listener="#{adminConceptoB.filtroConcepto}" />
+		</h:selectOneMenu>
+		<br />
+		<h:outputLabel value="Concepto" />
+		<h:inputText value="#{adminConceptoB.conceptoF}" ht:placeholder='Escribir busqueda ..'  style="width:450px">
+			<f:ajax event="change" execute="@this" render="tbConcepto" listener="#{adminConceptoB.filtroConcepto}"  />
+		</h:inputText>
+	</div>
+	
+	
+	<div class="paneles">
+	
+			<h:commandLink styleClass="boton-normal" >
+			<i class="fa fa-plus" />
+				NUEVO
+			<f:ajax execute="@this" render=":frmConcepto:cbTipoConcepto :frmConcepto:txtDescripcion :frmConcepto:txtCuenta :frmConcepto:txtRubro :frmConcepto:txtConcepto :frmConcepto:cbEstado" listener="#{adminConceptoB.nuevo}" />
+			</h:commandLink>
+			
+	</div>
+	
+	
+	<p:dataTable id="tbConcepto" value="#{adminConceptoB.conceptoL}" var="itemConcepto" rowKey="#{itemConcepto}" selectionMode="single" selection="#{adminConceptoB.concepto}" rowIndexVar="status" style="font-size:0.8em">
+		<p:ajax event="rowDblselect" update=":frmConcepto:tbConceptoInstitucionDescuento :frmConcepto:txtdesConceptoCID :frmConcepto:cbTipoConceptoCID" listener="#{adminConceptoB.mostrarConceptoInstitucionDescuento}"  />
+		
+		<p:column headerText="N." width="10">
+			#{status +1}
+		</p:column>
+		<p:column headerText="Tipo" width="50">
+			#{itemConcepto.tipoConcepto}
+		</p:column>
+		
+		<p:column headerText="Descripcion">
+			#{itemConcepto.concepto} - #{itemConcepto.descripcion}
+		</p:column>
+	
+		<p:column headerText="Cuenta" width="50">
+			#{itemConcepto.cuenta}
+		</p:column>
+		
+		
+		
+		<p:column headerText="Rubro" width="150">
+			#{itemConcepto.rubro}
+		</p:column>
+		<p:column headerText="Estado" width="50">
+			#{itemConcepto.estadoRegistro}
+		</p:column>
+		<p:column width="50" style="text-align:center" >
+			<h:commandLink title="Editar" style="color:green">
+				<i class="fa fa-pencil" />
+				<f:ajax execute="@this" render=":frmConcepto:cbTipoConcepto :frmConcepto:txtDescripcion :frmConcepto:txtCuenta :frmConcepto:txtRubro :frmConcepto:txtConcepto :frmConcepto:cbEstado"  listener="#{adminConceptoB.editar(itemConcepto)}" />
+			</h:commandLink>
+			<h:commandLink title="Eliminar" style="color:red" onclick="return confirmacion(this,'¿ Esta seguro de eliminar el concepto ?');" >
+				<i class="fa fa-times" />
+				<f:ajax execute="@this" render="tbConcepto" listener="#{adminConceptoB.eliminar(itemConcepto)}" />
+			</h:commandLink>
+		
+		</p:column>
+		
+	</p:dataTable>
+</div>
+
+<p:dialog header="CONCEPTO" widgetVar="dlgConcepto" width="500" modal="true" resizable="false" closeOnEscape="true">
+	<h:outputLabel value="Concepto" />
+	<h:inputText id="txtConcepto" value="#{adminConceptoB.concepto.concepto}" disabled="true" />
+	<br />
+	<h:outputLabel value="Tipo" />
+	<h:selectOneMenu id="cbTipoConcepto" value="#{adminConceptoB.concepto.tipoConcepto}">
+		<f:selectItems value="#{adminConceptoB.tipoConceptoL}" var="itemTipoConcepto"  itemLabel="#{itemTipoConcepto.descripcion}" itemValue="#{itemTipoConcepto.tipoConcepto}" />
+	</h:selectOneMenu>
+	<br />
+	
+		<h:outputLabel value="Concepto" />
+		<h:inputText id="txtDescripcion" value="#{adminConceptoB.concepto.descripcion}" />
+		<br />
+		<h:outputLabel value="Cuenta" />
+		<h:inputText id="txtCuenta" value="#{adminConceptoB.concepto.cuenta}" />
+		<br />
+		<h:outputLabel value="Rubro" />
+		<h:inputText id="txtRubro" value="#{adminConceptoB.concepto.rubro}" />
+		<br />
+		<h:outputLabel value="Estado" />
+		<h:selectOneMenu id="cbEstado" value="#{adminConceptoB.concepto.estadoRegistro}">
+			<f:selectItem itemLabel="Habilidato" itemValue="1" />
+			<f:selectItem itemLabel="Deshabilidato" itemValue="0" />
+		</h:selectOneMenu>
+    <f:facet name="footer">
+             <div style="display: block;text-align: right">
+                 <h:commandLink >
+                     ACEPTAR
+                     <f:ajax execute="@this :frmConcepto:cbTipoConcepto :frmConcepto:txtConcepto :frmConcepto:txtDescripcion :frmConcepto:txtCuenta :frmConcepto:txtRubro :frmConcepto:cbEstado"  render="tbConcepto"   listener="#{adminConceptoB.insertar}" />
+                 </h:commandLink>
+                 
+                 <h:commandLink onclick="dlgConcepto.hide()"  >
+                     CANCELAR
+                     <f:ajax execute="@this" />
+                 </h:commandLink>
+             </div>
+     </f:facet>
+</p:dialog>
+
+
+<p:dialog header="Mantenimiento Concepto Descuento" widgetVar="dlgConceptoDescuento" modal="true" resizable="false" closeOnEscape="true">
+	<h:outputLabel  value="Institucion" />
+	<h:selectOneMenu id="cbInstitucionCID" value="#{adminConceptoB.conceptoInstitucionDescuento.institucion}" disabled="#{not adminConceptoB.banderaConceptoInstitucionDescuento}">
+		<f:selectItems value="#{adminConceptoB.institucionL}" var="itemInstitucion" itemLabel="#{itemInstitucion.descripcion}" itemValue="#{itemInstitucion.institucion}" />
+		<f:ajax execute="@this" render="cbPeriodoCID"  listener="#{adminConceptoB.mostrarPeriodo}"  /> 
+		</h:selectOneMenu>
+	<br />
+	<h:outputLabel  value="Periodo" />
+	<h:selectOneMenu id="cbPeriodoCID" value="#{adminConceptoB.conceptoInstitucionDescuento.periodo}" disabled="#{not adminConceptoB.banderaConceptoInstitucionDescuento}">	
+		<f:selectItems value="#{adminConceptoB.periodoL}" var="itemPeriodo" itemLabel="#{itemPeriodo.desPeriodo}" itemValue="#{itemPeriodo.periodo}" />
+		</h:selectOneMenu>
+	<br />
+	
+	<h:outputLabel  value="Descuento" />
+	<h:selectOneMenu id="cbDescuentoCID" value="#{adminConceptoB.conceptoInstitucionDescuento.descuento}" disabled="#{not adminConceptoB.banderaConceptoInstitucionDescuento}">	
+		<f:selectItems value="#{adminConceptoB.descuentoL}" var="itemDescuento" itemLabel="#{itemDescuento.descripcion}" itemValue="#{itemDescuento.descuento}" />
+	</h:selectOneMenu>
+	<br />
+	<h:outputLabel  value="Centro Costo" />
+	<h:selectOneMenu id="cbCentroCostoCID" value="#{adminConceptoB.conceptoInstitucionDescuento.centroCosto}">	
+	<f:selectItems value="#{adminConceptoB.centroCostoL}" var="itemCentroCosto" itemLabel="#{itemCentroCosto.nivel} - #{itemCentroCosto.descripcion}" itemValue="#{itemCentroCosto.centroCosto}" />
+	</h:selectOneMenu>
+	<br />
+	<h:outputLabel value="Estado" />
+	<h:selectOneMenu id="cbEstadoCID" value="#{adminConceptoB.conceptoInstitucionDescuento.estadoRegistro}">
+		<f:selectItem itemLabel="Habilidato" itemValue="1" />
+		<f:selectItem itemLabel="Deshabilidato" itemValue="0" />
+	</h:selectOneMenu>
+	<f:facet name="footer">
+             <div style="display: block;text-align: right">
+                 <h:commandLink >
+                     ACEPTAR..
+                     <f:ajax execute="@this cbInstitucionCID cbPeriodoCID cbDescuentoCID cbCentroCostoCID cbEstadoCID" render="tbConceptoInstitucionDescuento"  listener="#{adminConceptoB.insertarConceptoInstitucionDescuento}"  />
+                 </h:commandLink>
+                 
+                 <h:commandLink onclick="dlgConceptoDescuento.hide()"  >
+                     CANCELAR
+                     <f:ajax execute="@this" />
+                 </h:commandLink>
+             </div>
+     </f:facet>
+</p:dialog>
+
+<p:dialog header="CONCETO INSTITUCION PERIODO" widgetVar="dlgConeptoInstitucionPeriodo" modal="true" resizable="false" closeOnEscape="true">
+
+	<h:outputLabel value="Institucion" />
+	<h:selectOneMenu id="cbInstitucionCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.institucion}" disabled="#{not adminConceptoB.banderaConceptoInstitucionPeriodo}">
+		<f:selectItems value="#{adminConceptoB.institucionL}" var="itemInstitucion" itemLabel="#{itemInstitucion.descripcion}" itemValue="#{itemInstitucion.institucion}" />
+		<f:ajax execute="@this " render="cbPeriodoCIP" listener="#{adminConceptoB.seleccionInstitucion}" />
+	</h:selectOneMenu>
+	<br />
+	<h:outputLabel value="Periodo" />
+	<h:selectOneMenu id="cbPeriodoCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.periodo}" disabled="#{not adminConceptoB.banderaConceptoInstitucionPeriodo}">
+		<f:selectItems value="#{adminConceptoB.periodoL}" var="itemPeriodo" itemLabel="#{itemPeriodo.desPeriodo}" itemValue="#{itemPeriodo.periodo}" />
+	</h:selectOneMenu>
+	<br />
+	
+	<h:outputLabel value="Tipo Moneda" />
+	<h:selectOneMenu id="cbTipoMonedaCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.tipoMoneda}">
+	<f:selectItems value="#{adminConceptoB.tipoMonedaL}" var="itemTipoMoneda" itemLabel="#{itemTipoMoneda.descripcion}" itemValue="#{itemTipoMoneda.tipoMoneda}" />
+	</h:selectOneMenu>
+	<br />
+	
+	<h:outputLabel value="Monto pago" />
+	<h:inputText id="txtMontoPagoCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.montoPago}" />
+	<br />
+	<h:outputLabel value="Monto Interez" />
+	<h:inputText id="txtMontoInterezCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.montoInteres}" />
+	<br />
+	<h:outputLabel value="Estado" />
+	<h:selectOneMenu id="cbEstadoCIP" value="#{adminConceptoB.conceptoInstitucionPeriodo.estadoRegistro}">
+		<f:selectItem itemLabel="Habilidato" itemValue="1" />
+		<f:selectItem itemLabel="Deshabilidato" itemValue="0" />
+	</h:selectOneMenu>
+	<f:facet name="footer">
+             <div style="display: block;text-align: right">
+                 <h:commandLink >
+                     ACEPTAR
+                     <f:ajax execute="@this :frmConcepto:cbInstitucionCIP :frmConcepto:cbPeriodoCIP :frmConcepto:txtMontoPagoCIP :frmConcepto:txtMontoInterezCIP" render="tbConceptoInstitucionPeriodo"  listener="#{adminConceptoB.insertarConceptoInstitucionPeriodo}" />
+                 </h:commandLink>
+                 
+                 <h:commandLink onclick="dlgConeptoInstitucionPeriodo.hide()"  >
+                     CANCELAR
+                     <f:ajax execute="@this" />
+                 </h:commandLink>
+             </div>
+     </f:facet>
+
+</p:dialog>
+
+<p:dialog  widgetVar="dlgCentroCosto" header="Centro De Costo" modal="true" resizable="false" closeOnEscape="true" >
+
+<h:outputLabel value="Centro Costo Padre" />
+
+<h:selectOneMenu id="cbCentroCostoPadreCC" value="#{adminConceptoB.centroCosto.centroCostoPadre}">
+<f:selectItems value="#{adminConceptoB.centroCostoPadreL}" var="itemCentroCostoPadre" itemLabel="#{itemCentroCostoPadre.centroCosto}" itemValue="#{itemCentroCostoPadre.centroCosto}" />
+
+</h:selectOneMenu>
+
+<br />
+
+
+<h:outputLabel value="Centro Costo" />
+<h:inputText id="txtCentroCostoCC" value="#{adminConceptoB.centroCosto.centroCosto}" disabled="#{not adminConceptoB.banderaCentroCosto}" maxlength="10" />
+<br />
+
+<h:outputLabel value="Nivel" />
+<h:selectOneMenu id="cbNivelCC" value="#{adminConceptoB.centroCosto.nivel}" >
+	<f:selectItem itemLabel="1" itemValue="1" /> 
+	<f:selectItem itemLabel="2" itemValue="2" />
+	<f:selectItem itemLabel="3" itemValue="3" />
+	<f:selectItem itemLabel="4" itemValue="4" />
+	<f:selectItem itemLabel="5" itemValue="5" />	 
+</h:selectOneMenu>
+<br />
+<h:outputLabel value="Descripcion" />
+<h:inputText id="txtDescripcionCC" value="#{adminConceptoB.centroCosto.descripcion}" />
+<br />
+		<h:outputLabel value="Estado" />
+		<h:selectOneMenu id="cbEstadoCC"  value="#{adminConceptoB.centroCosto.estadoRegistro}">
+			<f:selectItem itemLabel="Habilidato" itemValue="1" />
+			<f:selectItem itemLabel="Deshabilidato" itemValue="0" />
+		</h:selectOneMenu>
+
+
+<f:facet name="footer">
+             <div style="display: block;text-align: right">
+                 <h:commandLink >
+                     ACEPTAR
+                     <f:ajax execute="txtCentroCostoCC cbCentroCostoPadreCC cbNivelCC txtDescripcionCC cbEstadoCC" render=":frmConcepto:tbCentroCosto"  listener="#{adminConceptoB.insertarCentroCosto}" />
+                 </h:commandLink>
+                 
+                 <h:commandLink onclick="dlgCentroCosto.hide()"  >
+                     CANCELAR
+                     <f:ajax execute="@this" />
+                 </h:commandLink>
+             </div>
+     </f:facet>
+</p:dialog>
+<p:dialog header="Concepto Institucion" widgetVar="dlgConceptoInstitucion" modal="true" resizable="false" closeOnEscape="true">
+		<h:outputLabel value="Institucion" />
+		<h:selectOneMenu id="cbInstitucionCI" value="#{adminConceptoB.conceptoInstitucion.institucion}" >
+			<f:selectItems value="#{adminConceptoB.institucionL}" var="itemInstitucion" itemLabel="#{itemInstitucion.descripcion}" itemValue="#{itemInstitucion.institucion}" />			
+		</h:selectOneMenu>	
+		<br />
+		<h:outputLabel value="Categoria" />
+		<h:selectBooleanCheckbox id="ckCategoriaCI" value="#{adminConceptoB.conceptoInstitucion.categoria}" />	
+		<br />
+		<h:outputLabel value="Estado" />
+		<h:selectOneMenu id="cbEstadoCI"  value="#{adminConceptoB.conceptoInstitucion.estadoRegistro}">
+			<f:selectItem itemLabel="Habilidato" itemValue="1" />
+			<f:selectItem itemLabel="Deshabilidato" itemValue="0" />
+		</h:selectOneMenu>
+
+<f:facet name="footer">
+             <div style="display: block;text-align: right">
+                 <h:commandLink >
+                     ACEPTAR
+                     <f:ajax execute="@this cbInstitucionCI ckCategoriaCI cbEstadoCI"  render=":frmConcepto:tbConceptoInstitucion"  listener="#{adminConceptoB.insertarConceptoInstitucion}" />
+                 </h:commandLink>
+                 
+                 <h:commandLink onclick="dlgConceptoInstitucion.hide()"  >
+                     CANCELAR
+                     <f:ajax execute="@this" />
+                 </h:commandLink>
+             </div>
+     </f:facet>
+
+</p:dialog>
+
+</h:form>
+</h:body>
+</html>

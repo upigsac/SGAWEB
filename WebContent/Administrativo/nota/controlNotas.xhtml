@@ -1,0 +1,486 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+            
+ 
+    </h:head>
+
+  
+        
+    <h:body>
+        <ui:composition  template="/Administrativo/plantilla.xhtml">
+            
+            <ui:define name="titulo">
+                INGRESO DE NOTAS ALUMNO
+            </ui:define>
+            
+            
+            
+       <ui:define name="contenido">
+       <f:event type="preRenderView" listener="#{usuarioB.validaPagina}" />
+   
+                <script>
+                var bandera=false;
+	            var idGeneral;
+	         
+	            function confirmacion(obj,cadena){
+	                idGeneral=obj;
+	                if(bandera){
+	                    $(".modal-fondo").remove();
+	                    $(".modal").remove();
+	                    bandera=false;
+	                    return true;
+	                }else{
+	                   if(! $('.modal-fondo').hasClass("modal-fondo")){
+	                       $('body').append('<div class="modal-fondo"  /> ');
+	                        $('body').append('<div class="modal" ><div class="modal-titulo" > INTRANET UPIG </div><div class="modal-cuerpo"> <div class="column modal-icono"><i class="fa fa-exclamation "  /></div><div class="column modal-texto"><span>' +cadena+'</span></div></div><hr/><div class="modal-botonera"><a  class="positivo"  onclick="valida(true)" >Si</a> <a class="negativo" onclick="valida(false)" > No</a></div>  </div>');
+	                        }else{
+	                        $(".modal-fondo").remove();
+	                        $(".modal").remove();
+	                   }                    
+	                    
+	                    return false;
+	                }
+	                
+	            }
+	            
+	            function valida(estado){
+	                bandera=estado;           
+	                $(idGeneral).click();            
+	            }
+                    
+                $(document).ready(function(){
+                    
+                    
+                    
+                    
+                    
+                  $(document).on("keydown", ".ui-cell-editor-input input", function(event) {
+                        
+                    if (event.keyCode === 13 || event.keyCode===40 ) {
+                        
+                        var fila=$(this).closest("tr").index()+1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===38 ) { 
+      
+                        var fila=$(this).closest("tr").index()-1;
+                         var colum=$(this).closest("td").index();
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }else if (event.keyCode===37 ) { 
+      
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()-1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    else if (event.keyCode===39 ) { 
+                            
+                        var fila=$(this).closest("tr").index();
+                         var colum=$(this).closest("td").index()+1;
+                        $(this).closest("tbody").children("tr:nth("+ fila + ")").children("td:nth("+ colum +")").click();
+                      
+                    }
+                    
+                });
+                    
+                });    
+                
+                    
+                    
+                </script>
+              
+           <style>
+               
+               
+            #frmsubNotas .ui-datatable-tablewrapper{overflow: auto;max-height: 550px}
+            #frmsubNotas    select ,input[type=text]{background-color: #ECF0F1;border-radius: 3px}
+            input[type=text]{border: 1px solid silver;padding: 3px 2px;margin: 2px 0px}
+            select:focus,input[type=text]:focus{border: 1px solid red;background-color: white;transition: all 0.5s}
+            table thead tr th {font-size: 15px;}
+            .ui-datatable-odd{background-color: white}
+            #frmNotas\:notas_data tr:hover{background-color: #EEEEEE;cursor: pointer}
+            #frmsubNotas\:notasSub_data tr:hover{background-color: #EEEEEE;cursor: pointer}
+                        
+            .button{display: inline-block;padding: 8px;border: 1px solid silver;background-color: buttonface;color: buttontext;font: normal normal normal 13.3333330154419px/normal Arial}
+            
+            
+            .temaAdmin table tbody{font-size: 0.8em}
+            
+            .temaAdmin table thead th:nth-child(1){width: 20px}
+            .temaAdmin table thead th:nth-child(2){width: 80px}
+            .temaAdmin table thead th:nth-child(3){width: 350px}
+            .temaAdmin table tbody tr td{text-align: center}
+            .temaAdmin table tbody tr td:nth-child(3){text-align: left}
+            .temaAdmin table tbody tr td:nth-last-child(2){font-weight: bold;}
+            
+            #frmAutorizaNota\:trTipoExamen{font-size: 0.7em}
+            #frmAutorizaNota\:subBotonera {padding: 10px;margin: 10px 0px;border: 1px solid silver;text-align: center}
+          
+            #frmAutorizaNota input{box-shadow: none;padding: 2px;border-radius: 0px}
+            #frmAutorizaNota textArea{padding: 5px}
+            
+            
+           </style>     
+           
+           
+           
+        
+           <span class="tituto-admin">INGRESO DE NOTAS </span>
+           
+                #{admin_notaB.refrescarInstitucionPeriodo(usuarioB.institucionS,usuarioB.periodoS,usuarioB.usu, usuarioB.institucionAcceso.programa, 12)}
+                
+              
+                <h:form id="frmNotas" prependId="false"   pt:autocomplete="off"> 
+                    
+                    <div class="paneles">
+                    <div class='notas-opciones' style="width: 70%;display: inline-block">
+                    <span>DOCENTE: </span> 
+                    <h:selectOneMenu value="#{admin_notaB.seleccionDocente}" class="carreras" id="cboDocente"  >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>                       
+                        <f:selectItems value="#{admin_notaB.listaDocentePeriodo}" var="docente" itemValue="#{docente.persona}" itemLabel="#{docente.paterno} #{docente.materno} #{docente.nombres}" />
+                        <f:ajax execute="@this" render="cboCarrera imgDocente"  listener="#{admin_notaB.mostrarCarreraDocente}" />
+                    </h:selectOneMenu>    
+                        
+                    <br/>
+                    <span>CARRERA:</span> 
+                    <h:selectOneMenu value="#{admin_notaB.seleccionCarrera}" class="carreras" id="cboCarrera" required="true" >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaCarreraDocente}" var="carrera" itemValue="#{carrera.carrera}" itemLabel="#{carrera.abreviatura}" />
+                        <f:ajax execute="@this" render="cboSeccion" listener="#{admin_notaB.mostrarSeccionDocente}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    <span>SECCION:</span> 
+                    <h:selectOneMenu value="#{admin_notaB.seleccionSeccion}" id="cboSeccion" required="true" class="cboSeccion"     >
+                        <f:selectItem itemLabel="-- SELECCIONE --" itemValue=""/>
+                        <f:selectItems value="#{admin_notaB.listaSeccionDocente}" var="seccion" itemValue="#{seccion.seccion}" itemLabel="#{seccion.descripcion}" />
+                        <f:ajax execute="@this" render="cboCurso notas"  listener="#{admin_notaB.mostrarCursosDocente}" />
+                    </h:selectOneMenu>
+
+                    <br/>
+
+                    <span>CURSO: </span> 
+                    <h:selectOneMenu value="#{admin_notaB.seleccionCurso}" id="cboCurso" required="true">
+                        <f:selectItem itemLabel="-- SELECCIONE --" />
+                        <f:selectItems value="#{admin_notaB.listaCursoDocente}" var="curso" itemValue="#{curso.curso}" itemLabel="#{curso.curso} - #{curso.descripcion}"/>
+                        <f:ajax execute="@this" render="notas pnBotonera lblDesaprobados lblAprobados lblMatriculados" listener="#{admin_notaB.mostrarDetalle}"/>
+                    </h:selectOneMenu>
+                    
+                    
+                    
+                   
+                     
+                     
+                   
+                    
+                    
+                    </div>
+                        <div style="display: inline-block;width: 29%;vertical-align: top;text-align: center;">
+                            <div style="width: 120px;display: inline-block;vertical-align: top;padding: 10px;height: 100%">
+                               <ul>
+                                    <li>T. MATRICULADOS</li>
+                                    <li><h:outputLabel id="lblMatriculados" value="#{admin_notaB.totalApro + admin_notaB.totalDesa}" style="font-weight: bold ;font-size: 1.5em;font-family: arial" /></li>
+                                </ul>
+                                <ul>
+                                    <li>T. APROBADOS</li>
+                                    <li><h:outputLabel id="lblAprobados" value="#{admin_notaB.totalApro}" style="color: blue;font-weight: bold;font-size: 1.5em;font-family: arial " /> </li>
+                                </ul>
+                                <ul>
+                                    <li>T. DESAPROBADOS</li>
+                                    <li><h:outputLabel id="lblDesaprobados" value="#{admin_notaB.totalDesa}" style="color: red;font-weight: bold ;font-size: 1.5em;font-family: arial" /></li>
+                                </ul>
+                            </div>
+                            <h:graphicImage id="imgDocente" width="150" height="150" style="border: 1px solid; display: inline-block " value="SVerImagenAlumno?alumno=#{admin_notaB.seleccionDocente}" />
+                            
+                        <ui:param id="ExamenParcial" name="param2" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},USUARIO,#{usuarioB.usu}" />                            
+                        <p:splitButton ajax="false" target="_blank" value="ACTA FINAL" actionListener="#{utilB.imprimirIreports('notas/actaFinal', 1, fn:split(param2,','))}" icon="ui-icon-print"   >
+                            <ui:param name="u4" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{admin_notaB.periodo},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},tipoExamen,U4,USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="1ra. Practica"  actionListener="#{utilB.imprimirIreports('notas/actaTipoExamen', 1, fn:split(u4,','))}"  />
+                            <ui:param name="u9" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{admin_notaB.periodo},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},tipoExamen,U9,USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="2da. Practica" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamen', 1, fn:split(u9,','))}" />
+                            <ui:param name="ep" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{admin_notaB.periodo},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},tipoExamen,EP,USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="Examen Parcial" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamen', 1, fn:split(ep,','))}" />
+                            <ui:param name="ef" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{admin_notaB.periodo},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},tipoExamen,EF,USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="Examen Final" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamen', 1, fn:split(ef,','))}"  />
+                            <p:separator />
+                            <ui:param name="es" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{admin_notaB.periodo},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},tipoExamen,ES,USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="Examen Sustitorio" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamen', 1, fn:split(es,','))}" />
+                            
+                            <p:separator />
+                            <p:menuitem ajax="false" target="_blank" value="Grupo Examen Parcial" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamenUnion', 1, fn:split(ep,','))}" />                            
+                            <p:menuitem ajax="false" target="_blank" value="Grupo Examen Final" actionListener="#{utilB.imprimirIreports('notas/actaTipoExamenUnion', 1, fn:split(ef,','))}"  />
+                            <ui:param name="AFU" value="INSTITUCION,#{usuarioB.institucionS},PERIODO,#{usuarioB.periodoS},CARRERA,#{admin_notaB.seleccionCarrera},PERSONAL,%,CURSO,#{admin_notaB.seleccionCurso},SECCION,#{admin_notaB.seleccionSeccion},USUARIO,#{usuarioB.usu}" />
+                            <p:menuitem ajax="false" target="_blank" value="Grupo Acta Final" actionListener="#{utilB.imprimirIreports('notas/actaFinalUnion', 1, fn:split(AFU,','))}" />
+                        </p:splitButton>
+                        </div>
+                    </div>
+                    <h:panelGroup layout="block" id="pnBotonera" styleClass="paneles" >   
+                    
+                    	<h:commandLink styleClass="boton-normal" >
+                    	<i class="fa fa-search" />
+                    	Buscar
+                    	<f:ajax execute="@this" render=":frmBusqueda:tbBusqueda :frmBusqueda:txtBuPersona :frmBusqueda:txtBuCurso" listener="#{admin_notaB.nuevaBusqueda}" />
+                    	</h:commandLink>                     
+                        
+                        <h:commandLink styleClass="boton-normal" onclick="return confirmacion(this,'¿ Esta seguro de Cerrar Actas ?');"   disabled="#{(admin_notaB.seleccionCurso eq null ?true:admin_notaB.validaActas eq 1) }" >
+                            
+                            <i class="fa fa-lock" />
+                            Cerrar Actas
+                            
+                            <f:ajax execute="@this" render="notas pnBotonera" listener="#{admin_notaB.cerrarActas}" />
+                        </h:commandLink>
+                       
+                        <h:commandLink  styleClass="boton-normal"  disabled="#{(admin_notaB.seleccionCurso eq null ?true:admin_notaB.validaActas eq 1) }">
+                            <i class="fa fa-pencil-square-o"/>
+                           
+                            Autorizar Nota
+                            <f:ajax execute="@this" render=":frmAutorizaNota" listener="#{admin_notaB.nuevoAutorizaNota}" />
+                        </h:commandLink>
+                        
+                    </h:panelGroup>     
+                        
+                                   
+                    <p:dataTable id="notas" value="#{admin_notaB.notasL}" var="registro" editable="true" editMode="cell" emptyMessage="" style="display: #{empty admin_notaB.seleccionCurso?'none':'block' }"  rowIndexVar="status"  styleClass="temaAdmin"  reflow="true"  >
+                        
+                        <f:facet name="header">                 
+                            <h3>REGISTROS DE NOTAS </h3>
+                            <h:outputText value="MOSTRAR LIBRES: " />
+                            <p:inputSwitch value="#{admin_notaB.fitroAlumno}" offLabel="SI" onLabel="NO" >
+                                <p:ajax listener="#{admin_notaB.mostrarDetalle}" update="notas"  process="@this" />
+                            </p:inputSwitch>
+                        </f:facet>
+                        <p:ajax event="cellEdit"  listener="#{admin_notaB.onCellEdit}" update=":frmNotas:notas" />
+                        <p:column headerText="Nro." >                           
+                            #{status+1}
+                        </p:column>
+                        
+                        <c:forEach items="#{admin_notaB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}"  > 
+                                
+                           <f:facet name="header"  >  
+                               <p:commandLink  rendered="#{(column.lectura eq 1)}"  oncomplete="dlgModal.show()" update=":frmsubNotas:notasSub"      actionListener="#{admin_notaB.mostrarDetalle}"  >
+                                            <h:outputLabel escape="false"  value="#{column.header} "   style="display: block;cursor: pointer;color: blue"  title="#{column.property}"   />
+                                            <f:param name="cabecera" value="#{column.property}" />
+                                    </p:commandLink>
+                                      
+                               <p:outputLabel escape="false" value="#{column.header}" styleClass="#{column.editable == true ? 'editable':''}" 
+                                                     rendered="#{(column.lectura ne 1)}" title="#{column.property}"/> 
+                            </f:facet>  
+                            
+                            <p:cellEditor rendered="#{admin_notaB.validaActas eq 0 ? column.editable and registro['estado_registro'] eq 1?admin_notaB.acceso.tipoSeguridad eq 4:false:false}" >
+                            <f:facet name="output" > 
+                                <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} "  />
+                            </f:facet>
+                                <f:facet name="input"   >
+                                <p:inputText  value="#{registro[column.property]}" style="width: 100%;display: block;text-align: center"  maxlength="2"  onkeypress="return soloNumeros(event)"  onblur="valorIncorecto(this,20)"  >
+                                  <f:validateDoubleRange minimum="#{column.numeroMinimo}" maximum="#{column.numeroMaximo}" />
+                                  
+                                </p:inputText>
+                            </f:facet>
+                            </p:cellEditor>                                
+                              <h:outputText value="#{column.property eq 'promedio'?utilB.redondeo(registro[column.property]):column.property eq 'estado_registro'?estadoB.mostrarEstadoCodigo(registro[column.property]).descripcion:registro[column.property]}" 
+                                              
+                                              rendered="#{admin_notaB.validaActas eq 1 ?true :column.editable eq true?admin_notaB.acceso.tipoSeguridad ne 4?true:false:true}"  style="#{column.property eq 'promedio'?utilB.redondeo(registro[column.property]) > 10 ? 'color:blue': 'color:red':''}"    /> 
+                            <h:outputText value="#{registro[column.property]}" rendered="#{(( column.editable) and registro['estado_registro'] eq 68)}"      /> 
+                            
+                            </p:column>
+                        </c:forEach> 
+
+               <f:facet name="footer" >           
+                   <ul style="padding: 10px 0px;margin: 0px">
+                       <li style="display: inline-block;vertical-align: top;width: 5%">
+                           <h:commandLink   icon="ui-icon-refresh" style=""  >
+                                <f:ajax render="notas" execute="@this" listener="#{admin_notaB.refrescar}" />
+                            </h:commandLink> 
+                           
+                       </li>
+                       <li style="display: inline-block;vertical-align: top;width: 90%;text-align: center">
+                           <h:outputLabel value="#{formulaB.mostrarFormula(admin_notaB.formula).des_formula}"   title="#{admin_notaB.formula}" />
+                           
+                       </li>
+                   </ul>
+                   
+              </f:facet>
+                        
+              
+            </p:dataTable> 
+          </h:form>
+
+
+                 
+
+
+
+
+               
+                    
+                    <h:form id="frmsubNotas">
+                        
+                        <p:dialog id="modal"  header="REGISTRAR  SUB NOTAS" widgetVar="dlgModal" modal="true"   resizable="false"   closeOnEscape="#{true}" width="80%" height="100%"  >
+                             <p:ajax event="close" listener="#{admin_notaB.cerrar}" update=":frmNotas:notas" />
+                             
+                             <p:dataTable  id="notasSub" value="#{admin_notaB.notasL}" var="registro" editable="true" editMode="cell"         rowIndexVar="status" styleClass="temaAdmin">
+
+                            <p:ajax event="cellEdit" listener="#{admin_notaB.onCellEdit}"  />
+                             <p:column headerText="Nro.">
+                            #{status+1}
+                        </p:column>
+                          <c:forEach items="#{admin_notaB.columnas}" var="column" varStatus="colLoopStatus">
+                            <p:column headerText="#{column.property}"  >
+                            
+                                  <f:facet name="header" >  
+                                   
+                                      <h:outputLabel escape="false"  value="#{column.header}" title="#{column.property}" styleClass="#{column.editable == true ? 'editable':''}"   />    
+                           
+                                </f:facet>  
+                            
+                            
+                            <p:cellEditor rendered="#{admin_notaB.validaActas eq 0 ? column.editable and registro['estado_registro'] eq 1?admin_notaB.acceso.tipoSeguridad eq 4:false:false}">
+                            <f:facet name="output">       
+                                <h:outputText value="#{registro[column.property]}" styleClass="#{registro[column.property] > 10.0 ? 'aprovado': 'deshaprovado'} " />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{registro[column.property]}" style="width: 40px;display: block;margin: 0 auto"   maxlength="2"  onkeypress="return soloNumeros(event)"  onblur="valorIncorecto(this,20)" >
+                                    <f:validateDoubleRange minimum="#{column.numeroMinimo}" maximum="#{column.numeroMaximo}" />
+                                </p:inputText>                            
+                            </f:facet>
+                            </p:cellEditor>
+                                
+                            <h:outputText value="#{column.property eq 'promedio'?utilB.redondeoDecimal(registro[column.property]):column.property eq 'estado_registro'?estadoB.mostrarEstadoCodigo(registro[column.property]).descripcion:registro[column.property]}"   
+                                          rendered="#{admin_notaB.validaActas eq 1 ?true :column.editable eq true?admin_notaB.acceso.tipoSeguridad ne 4?true:false:true}"  style="#{column.property eq 'promedio'?registro[column.property] > 10.0 ? 'color:blue': 'color:red':''}"  /> 
+                            
+                            <h:outputText value="#{registro[column.property]}" rendered="#{(( column.editable) and registro['estado_registro'] eq 68)}"/> 
+                            </p:column>
+                              
+                        </c:forEach> 
+                            
+                            
+                            
+                            
+                            <f:facet name="footer" >   
+                                <h:commandLink  icon="ui-icon-refresh" style="display: block">
+                                    <f:ajax render="notasSub" execute="@this" listener="#{admin_notaB.refrescar}" />
+                                    </h:commandLink>
+                            </f:facet>
+                                 
+
+                        </p:dataTable> 
+
+       
+                    </p:dialog>
+               </h:form>  
+                
+                      <h:form id="frmAutorizaNota">
+                <p:dialog header="..: AUTORIZACION DE NOTA :.."  width="700" widgetVar="dlgAutorizaNota" modal="true" closeOnEscape="true" resizable="false" >
+              
+                        <div style="display: inline-block;vertical-align: top;border: 1px solid silver;width: 50%;height: 450px">
+                            <p:tree id="trTipoExamen" value="#{admin_notaB.root3}"  var="tipoExamen" selectionMode="checkbox" selection="#{admin_notaB.selectedNodes1}" animate="#{false}"    style="border: 1px solid silver;width: 100%;height: 100%;overflow: auto"  required="#{true}">
+                                <p:treeNode  >
+                                    <h:outputLabel value="#{tipoExamen.descripcion}" />
+                                </p:treeNode>
+                        </p:tree>
+                        </div>    
+                        <div style="display: inline-block;vertical-align: top;width: 47%" >
+                            <h:outputLabel value="Fecha Desde:" />
+                            <p:calendar id="txtFechaInicio" value="#{admin_notaB.fechaInicio}"  pattern="dd/MM/yyyy" required="#{true}" mindate="#{utilB.fechaHoy()}">
+                               
+                                <p:ajax event="dateSelect"  update="txtFechaFinal" />
+                            </p:calendar>
+                            <br/>
+                            <h:outputLabel value="Fecha Hasta:"/>
+                            <p:calendar id="txtFechaFinal" value="#{admin_notaB.fechaFin}"  pattern="dd/MM/yyyy" required="#{true}" mindate="#{admin_notaB.fechaInicio}">
+                            </p:calendar>
+                            <h:outputLabel value="Observacion"/><br/>
+                            <h:inputTextarea id="txtObservacion" value="#{admin_notaB.observacion}" style="width: 95%;height: 100px;resize: none" />
+                            
+                           
+                            
+
+                                                     
+                        </div>                    
+                
+                      <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                    <h:commandLink  value="GUARDAR">
+                                <f:ajax execute="trTipoExamen txtFechaInicio txtFechaFinal txtObservacion" listener="#{admin_notaB.guardarTipoExamen}" />
+                            </h:commandLink>
+                            <h:commandLink  value="CANCELAR" onclick="dlgAutorizaNota.hide()">
+                                <f:ajax execute="@this"  />
+                            </h:commandLink>
+                            </div>
+                        </f:facet>
+                        
+                </p:dialog>
+                    </h:form>
+                
+                
+                
+           <h:form id="frmBusqueda" prependId="false">
+                 <p:dialog widgetVar="dlgBuquedaPersona"  header="Busqueda Personal" modal="true" resizable="false" closeOnEscape="true" width="700" >
+             <h:outputLabel  value="Persona" />
+                <h:inputText id="txtBuPersona" value="#{admin_notaB.filtroPersona}" >
+                	<f:ajax execute="@this" render="tbBusqueda" listener="#{admin_notaB.filtro}"  /> 
+                </h:inputText>
+                <br />
+                <h:outputLabel value="Curso" />
+                <h:inputText id="txtBuCurso" value="#{admin_notaB.filtroCurso}">
+                	<f:ajax  execute="@this" render="tbBusqueda" listener="#{admin_notaB.filtro}" />
+                </h:inputText>
+                
+                <p:dataTable  id="tbBusqueda" value="#{admin_notaB.busquedaL}" var="itemBusqueda" rowKey="#{itemBusqueda}" selectionMode="single" selection="#{admin_notaB.busqueda}" scrollable="true" scrollHeight="300" emptyMessage="" rowIndexVar="status" style="font-size:0.8em" >
+                <p:ajax event="rowSelect"  />
+                <p:column headerText="N." width="10">
+                	#{status +1}
+                
+                </p:column>
+                <p:column headerText="Datos" width="250">
+                #{itemBusqueda.paterno} #{itemBusqueda.materno} #{itemBusqueda.nombres}
+                
+                </p:column>
+                
+                <p:column headerText="Curso">
+                	
+                	#{itemBusqueda.desSeccion}
+                	#{itemBusqueda.frecuenciaDia}
+                	#{itemBusqueda.frecuenciaHora}
+                	
+                	<br />
+                	#{itemBusqueda.desCurso}
+                </p:column>
+                </p:dataTable>
+                
+                 <f:facet name="footer">
+                            <div style="display: block;text-align: right">
+                                <h:commandLink >
+                                    ACEPTAR
+                                    <f:ajax execute="@this "  render=":frmNotas:cboDocente :frmNotas:cboCarrera :frmNotas:cboSeccion :frmNotas:cboCurso :frmNotas:notas :frmNotas:pnBotonera :frmNotas:lblDesaprobados :frmNotas:lblAprobados :frmNotas:lblMatriculados :frmNotas:imgDocente" listener="#{admin_notaB.seleccionBusqueda}"  />
+                                </h:commandLink>
+                                
+                                <h:commandLink onclick="dlgBuquedaPersona.hide()"  >
+                                    CANCELAR
+                                    <f:ajax execute="@this" />
+                                </h:commandLink>
+                            </div>
+                        </f:facet>
+                </p:dialog>
+                
+                </h:form>
+               
+               
+          
+              </ui:define>
+   
+</ui:composition>
+    </h:body>
+</html>
+

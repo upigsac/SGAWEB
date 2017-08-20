@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>ENCUESTA EGRESADO</title>
+        <script  type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    </h:head>
+
+    <h:body>        
+        <style>
+            .divEncuesta #detalle ul{transition: all 1s linear;}
+            .ocultarChecked{display: none;}
+            .ocultarClickOpacity{opacity: 0;}
+            //.ocultarClickDisplay{display: none;}
+        </style>
+
+        <div class="divEncuesta">
+            <span class="tituloEncuesta" >ENCUESTA DE UBICACION LABORAL</span>
+            <p>
+                DISTINGUIDO ALUMNO, ESTA ENCUESTA ES PARA MEJORAR LA  CALIDAD DEL SERVICIO QUE LA UNIVERSIDAD BRINDA A LOS 
+                ESTUDIANTES, POR TAL MOTIVO MARQUE CON RESPONSABILIDAD LA ALTERNATIVA SEGÚN SU PERCEPCIÍON, GRACIAS.
+            </p>
+
+            <hr/> 
+
+            <h:form id="detalle">
+                <h:messages showDetail="false" style="color: red"/>
+                <br/>
+                <ui:repeat value="#{encuestaB.gruposL}" var="grupos">
+                    <!--<div class="div#{grupos.get(0)}">-->
+                    <span class="titulo" style="cursor: pointer">#{grupos.get(0)} - #{grupos.get(1)}</span>
+                    <ui:repeat value="#{encuestaB.mostrarPreguntas(grupos.get(0))}" var="pregunta">            
+                        <ul>
+                            <li>
+                                <span style="display: none">#{pregunta.get(0)}-. </span><span class="pregunta"> #{pregunta.get(1)}</span>
+                            </li>
+
+                            <li>
+                                <h:inputText rendered="#{pregunta.get(2) eq 'texto'}"  class="cajas respuesta" value="#{encuestaB.texto}" required="true"  requiredMessage="Responda la pregunta  #{pregunta.get(0)}" >
+                                    <f:ajax  execute="@this "  listener="#{encuestaB.insertarEncuesta('2009010010',2,pregunta.get(0),0)}" />
+                                </h:inputText>
+                                #{encuestaB.refrescar("2009010010", pregunta.get(0))}
+                                <h:selectOneRadio class="radios" id="tipo" value="#{encuestaB.respuesta}"   rendered="#{pregunta.get(2) ne 'texto'}"  required="true" requiredMessage="Responda la pregunta  #{pregunta.get(0)}" >                              
+                                    <f:selectItems   value="#{encuestaB.respuesta(pregunta.get(0))}" var="respuesta" itemValue="#{respuesta.get(0)}" itemLabel="#{respuesta.get(1)}" />
+                                    <f:ajax execute="@this "   listener="#{encuestaB.insertarEncuesta('2009010010',2,pregunta.get(0),1)}" />
+                                </h:selectOneRadio> 
+                            </li>
+                        </ul>    
+                    </ui:repeat>
+                    <!--</div>-->
+                </ui:repeat>
+                <br/>
+                <span class="pie">OFICINA DE PLANIFICACIÓN Y PRESUPUESTO - UPIG -JULIO 2014.</span>
+            </h:form>
+        </div>
+        <style>
+            body{background-color: silver;margin: 0px}           
+            .divEncuesta{width: 900px;margin:  0px auto;padding: 30px 20px;position: relative;background-color: white;box-shadow: 0px 0px 25px black}
+            .tituloEncuesta{border-bottom:   4px solid black ;padding: 10px 0px;color: white;background-color: #66B1DA;font-weight: bold;display: block;font-size: 22px;text-align: center ;margin: 0px -20px}
+            .divEncuesta p{width: 100%;display: block;}
+            .divEncuesta span.pie{margin:10px auto 25px;display: block;text-transform: uppercase;font-size: 1em;}
+            ul {border: 1px solid;margin: 0px}
+            ul li{display: inline-block}
+            ul li:nth-child(1){;width: 450px;border-right: 1px solid}
+            .titulo{color: #0073AA;text-transform: uppercase;font-weight: bold;font-size: 18px;margin:  20px ;display: block}
+            .columna{display: inline-block;width: 130px;margin-left: 50px;}
+        </style>
+        <script>
+            //$(document).ready(function() {
+                $("input[type=radio]").each(function() {
+                    if ($(this).attr("checked") === "checked") {
+                        //$(this).closest("ul").css("display","none");
+                        $(this).closest("ul").addClass("ocultarChecked");
+                    }
+                });
+                $("input[type=radio]").click(function() {
+                    var radio = $(this);
+                    //radio.closest("ul").css("opacity","0");
+                    radio.closest("ul").addClass("ocultarClickOpacity");
+                    setTimeout(function() {
+                        //radio.closest("ul").css("display","none");
+                        radio.closest("ul").removeClass("ocultarClickOpacity").addClass("ocultarChecked");
+                    }, 1100);
+                });
+                /*
+                 $("span.titulo").click(function(){
+                 $(this).parent("div").next("ul").removeClass("ocultarChecked");
+                 });
+                 */
+            //});
+        </script>
+    </h:body>
+</html>
+

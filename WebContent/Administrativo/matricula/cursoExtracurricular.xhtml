@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        
+    </h:head>
+    <h:body>
+        
+        <ui:composition template="/Administrativo/plantilla.xhtml">
+    
+            <ui:define name="titulo">
+                CURSOS EXTRACURRICULARES
+            </ui:define>
+              
+            <ui:define name="contenido">
+                <style>
+                    #frmExtraCurricular table thead{font-size: 0.8em}
+                    #frmExtraCurricular #frmExtraCurricular\:tbExraCurricular_data{font-size: 0.8em}
+                    #frmExtraCurricular .ui-datatable-odd{background-color: white}
+                </style>
+                <span class="tituto-admin">CURSO EXTRACURRICULAR </span>
+                <h:form id="frmExtraCurricular">
+                    
+                    <div style="display: block;width: 100%;margin: 10px 0px">
+            CENTRO DE PRODUCCION:
+            <h:selectOneMenu value="#{extraCurricularB.centroProduccion}">
+                <f:selectItem itemLabel="TODOS" itemValue="%"/>
+                <f:selectItem itemLabel="CENTRO DE SALUD ASISTENCIAL" itemValue="11"/>
+                <f:selectItem itemLabel="MARKETING PARA EJECUTIVOS" itemValue="6"/>
+                <f:selectItem itemLabel="CENTRO DE CONSULTORIA JURIDICA" itemValue="15"/>
+                <f:selectItem itemLabel="CONSULTORIA EN TECNOLOGIAS DE SISTEMAS" itemValue="16"/>
+                <f:selectItem itemLabel="CENTRO EN CONSULTORIA Y ASESORIA EN OBRAS CIVILES" itemValue="7"/>
+                <f:ajax execute="@this" render="tbExraCurricular"  />
+            </h:selectOneMenu>
+            </div>
+                    <p:dataTable id="tbExraCurricular"  value="#{cursoSeccionB.mostrarCursoSeccionTipo(extraCurricularB.centroProduccion,usuarioB.periodoS, '%','8')}" var="detalle" rowIndexVar="status">
+                <p:column>
+                       <p:rowToggler   />
+                </p:column>
+                <p:column headerText="Nº">
+                    #{status +1}
+                </p:column>
+                <p:column headerText="INSTITUCION" rendered="#{false}">
+                    #{institucionB.mostrarInstitucionCodigo(detalle.institucion).descripcion}
+                    
+                </p:column>
+             
+                
+                <p:column headerText="CURSO" width="250">                    
+                    <h:outputLabel value="#{detalle.curso}" style="font-weight: bold" /> <br/>
+                    #{cursoB.mostrarCurso(detalle.curso).descripcion}                        
+                </p:column>
+                <p:column headerText="SECCION" width="60">
+                    #{detalle.seccion}
+                </p:column>
+                <p:column headerText="GRUPO" style="text-align: center;font-weight: bold">
+                    #{detalle.grupo}
+                    
+                </p:column>
+                
+                <p:column headerText="TOTAL MATRI." width="70">
+                    <h:outputLabel value="#{detalle.vacantesActuales} de #{detalle.vacantesMaximas}"  style="color:  #{detalle.vacantesActuales eq 0?'red':'black'}" />
+                    
+                </p:column>
+                <p:column headerText="FECHA INICIO" width="75">
+                    #{seccionPeriodoB.mostrarSeccionPeriodo(detalle.institucion, detalle.periodo, detalle.carrera, detalle.seccion).fechaInicio}                    
+                </p:column>
+                <p:column headerText="FECHA FINAL" width="75">
+                    #{seccionPeriodoB.seccionPeriodo.fechaFin}
+                </p:column>
+                        
+                 
+                <p:column headerText="PERSONAL">
+                    <span style="display: none" >#{cursoSeccionDocenteB.mostrarCursoSeccionDocentes(detalle.institucion, detalle.periodo, detalle.malla, detalle.carrera, detalle.curso, detalle.seccion).personal}</span>
+                    
+                    <h:outputLabel style="font-weight: bold" value="#{personalB.mostrarPersona(cursoSeccionDocenteB.cursoSeccionDocente.personal).cPersonal}" /><br/>
+                   
+                    <h:outputLabel value="#{personaB.mostrarPersona(personalB.personal.persona).nombreCompletos()}" />
+                </p:column>
+                <p:column headerText="" width="10">
+                     <span style="display: block;width: 20px;background-color: red;height: 20px"></span>
+                </p:column>
+                <p:rowExpansion>
+                    <p:dataTable id="tbSubTabla" value="#{alumnoCursoSeccionB.mostrarAlumnoCursoSeccion(detalle.institucion, detalle.periodo, detalle.carrera, detalle.malla, detalle.seccion, detalle.curso)}" var="subTabla" rowIndexVar="statusSub">
+                        <f:facet name="header">
+                            #{detalle.institucion} - #{institucionB.mostrarInstitucionCodigo(detalle.institucion).descripcion}
+                            <h:commandLink >
+                                <img src="../../resources/imagenes/excel.png" width="36"/>
+                                <p:dataExporter type="xls" target="tbSubTabla" fileName="alumnos"/>
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputLabel value="Nº" />
+                            </f:facet>
+                            <h:outputLabel value="#{statusSub+1}" />
+                            
+                        </p:column>
+                        <p:column >
+                              <f:facet name="header">
+                                <h:outputLabel value="ALUMNO" />
+                            </f:facet>
+                            <h:outputLabel value="#{alumnoB.mostrarAlumnoCodigo(subTabla.institucion, subTabla.alumno).alumno}" />
+                            
+                        </p:column>
+                        
+                         
+                         <p:column >  
+                            <f:facet name="header">
+                                <h:outputLabel value="DATOS" />
+                            </f:facet>
+                             <h:outputLabel value="#{personaB.mostrarPersona(alumnoB.alumno.persona).nombreCompletos()}" />
+                             
+                            
+                        </p:column>      
+                         <p:column >   
+                            <f:facet name="header">
+                                <h:outputLabel value="CELULAR" />
+                            </f:facet>
+                             <h:outputLabel value="#{personaB.persona.telefono}" />
+                            
+                        </p:column> 
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputLabel value="E-MAIL" />
+                            </f:facet>
+                            
+                            <h:outputLabel value="#{personaB.persona.emailP}" />
+                            
+                        </p:column>      
+                        
+                    </p:dataTable>
+                </p:rowExpansion>               
+                <f:facet name="footer">
+                    <h:commandButton value="ACTUALIZAR">
+                        <f:ajax render="tbExraCurricular" />
+                    </h:commandButton>
+                    
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

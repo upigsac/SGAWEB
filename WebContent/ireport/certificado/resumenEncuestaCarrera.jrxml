@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="resumenEncuestaCarrera" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fadfea04-5006-4af6-9260-6d2dfbe5f84c">
+	<property name="ireport.zoom" value="1.7715610000000037"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="366"/>
+	<parameter name="CARRERA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{CALL DI.RESUMEN_ENCUESTA (1,'20151',$P{CARRERA})}]]>
+	</queryString>
+	<field name="ENCUESTA" class="java.lang.Integer"/>
+	<field name="INSTITUCION" class="java.lang.Integer"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CPERSONAL" class="java.lang.String"/>
+	<field name="DESPERSONA" class="java.lang.String"/>
+	<field name="CARRERA" class="java.lang.String"/>
+	<field name="DESCARRERA" class="java.lang.String"/>
+	<field name="SECCION" class="java.lang.String"/>
+	<field name="CURSO" class="java.lang.String"/>
+	<field name="DESCURSO" class="java.lang.String"/>
+	<field name="NUMEROAULA" class="java.lang.Integer"/>
+	<field name="NUMEROALUMNO" class="java.lang.Integer"/>
+	<field name="PUNTUJA_MAYOR" class="java.lang.Integer"/>
+	<field name="TOTAL_MAXIMO_ALUMNOS" class="java.lang.Integer"/>
+	<field name="TOTAL_MAXIMO_ENCUESTADOS" class="java.lang.Integer"/>
+	<field name="PUNTAJE_TOTAL_OBTENIDO" class="java.lang.Integer"/>
+	<field name="PUNTAJE" class="java.lang.Integer"/>
+	<field name="PROCENTAJE" class="java.lang.Integer"/>
+	<field name="DESEMPEÑO" class="java.lang.String"/>
+	<variable name="ITEM" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{CURSO}]]></variableExpression>
+	</variable>
+	<group name="DESEMPEÑO">
+		<groupExpression><![CDATA[$F{DESEMPEÑO}]]></groupExpression>
+	</group>
+	<group name="CARRERA">
+		<groupExpression><![CDATA[$F{CARRERA}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="00d839ee-7d17-4f2b-b3e6-8fe15139dd78" x="103" y="39" width="449" height="27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EVALUACION DEL DESEMPEÑO DOCENTE]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="091904a3-a889-41b4-badb-65ed0c676bbc" x="3" y="0" width="100" height="86"/>
+				<imageExpression><![CDATA["D:\\imagenReporte\\logos upig-pequeño.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="bb59fba6-4a11-454e-bcef-be68fa1fc58a" x="103" y="0" width="449" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD PERUANA DE INTEGRACIÓN GLOBAL]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f5290e78-ef5d-4fae-a635-8c293077b795" x="29" y="53" width="164" height="31"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[DOCENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="49096dee-8794-4dcf-ad43-dfe37b769ac3" x="193" y="53" width="49" height="31"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NUMERO AULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5163365d-5e82-4d4f-b05f-68cfd0c85aa1" x="242" y="53" width="49" height="31"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NUMERO ALUMNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57909cdd-344e-42b7-afd3-faffe38c5cf4" x="291" y="53" width="64" height="31"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[PUNTAJE  OBTENIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="268fb19b-18f0-4c91-b913-2dadf0929ca9" x="404" y="53" width="56" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="01f6b472-04f1-4770-855a-803946332ca3" x="460" y="53" width="92" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DESEMPEÑO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="4a6e87d8-67d0-47aa-b39c-eb31ae0ca92c" x="2" y="50" width="551" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="edafaae0-9e0f-4fab-b025-12904af75737" x="2" y="87" width="551" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="12029af1-3e2e-4950-bd81-1e089e8ef504" x="103" y="27" width="432" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCARRERA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5220a620-9c8a-4873-ad9b-db45047d912d" x="3" y="27" width="97" height="20"/>
+				<textElement/>
+				<text><![CDATA[CARRERA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="76a3d4b0-71b7-49e9-8ab9-88ff84aa64f2" x="2" y="53" width="26" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6c0b8609-763a-4e8f-84fa-37c35d436aa3" x="3" y="7" width="97" height="20"/>
+				<textElement/>
+				<text><![CDATA[PERIDO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9247e141-4a34-4d23-bb3b-b5ca955d2cfe" x="355" y="53" width="49" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PUNTAJE]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1b30c268-89b4-4935-aa3a-4f150c5f0a14" x="103" y="7" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PERIODO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement uuid="e0fd9218-a3a5-44bd-baa6-8e75afd59860" x="28" y="6" width="165" height="20"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESPERSONA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5cdbb8f2-6438-4ec8-9e72-207f1c30ec44" x="3" y="6" width="25" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{ITEM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3efb3159-aa2c-4b56-912b-5deb7557d5dc" x="193" y="6" width="49" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NUMEROAULA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0c9a95ca-8146-436d-840f-992cd00aa565" x="242" y="6" width="49" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NUMEROALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1cb10b9e-eef6-4ca0-aceb-61e1e2a4a166" x="291" y="6" width="64" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PUNTAJE_TOTAL_OBTENIDO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0000">
+				<reportElement uuid="c2054b66-f949-4fa9-aed6-4e0b628e0295" x="404" y="6" width="56" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROCENTAJE}+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9bbf3bed-4dd2-4c82-9bf5-2fea7c63c03d" x="460" y="6" width="92" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESEMPEÑO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="463538b6-8b29-438b-97f7-a07aa32f55b0" x="2" y="-39" width="1" height="65"/>
+			</line>
+			<line>
+				<reportElement uuid="d7385747-a615-4053-8145-878d9d90f9a2" x="553" y="-40" width="1" height="66"/>
+			</line>
+			<line>
+				<reportElement uuid="5ca69efa-df1d-4a15-a835-74d594c14653" x="28" y="-38" width="1" height="64"/>
+			</line>
+			<textField>
+				<reportElement uuid="e5e3dc4b-d48a-4d06-adce-43749db19128" x="355" y="6" width="49" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PUNTAJE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="300" splitType="Stretch">
+			<line>
+				<reportElement uuid="326b11a2-1ca8-4d57-9c35-8d7ca0478634" x="2" y="0" width="551" height="1"/>
+			</line>
+			<pie3DChart>
+				<chart>
+					<reportElement uuid="10940515-d606-459e-92ab-673eb1d79a94" x="16" y="43" width="519" height="233"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{DESEMPEÑO}]]></keyExpression>
+					<valueExpression><![CDATA[$V{DESEMPEÑO_COUNT}]]></valueExpression>
+					<labelExpression><![CDATA[$F{DESEMPEÑO}+"\n"+( new java.text.DecimalFormat("#.##").format(($V{DESEMPEÑO_COUNT}*100/ 66))) +"%"]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot legendLabelFormat="">
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+			<staticText>
+				<reportElement uuid="38fd8646-b13d-4ab0-b9f4-37c3490c5f0a" x="16" y="23" width="519" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRÁFICO ]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

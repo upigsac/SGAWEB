@@ -1,0 +1,87 @@
+
+package DAO;
+
+
+import static Conexiones.Conexion.ConexionWeb;
+import static Conexiones.Conexion.cerrarCall;
+import static Conexiones.Conexion.cerrarConexion;
+
+import ENTIDAD.comisionC;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class comisionDAO {
+    public List<comisionC> mostrarComisionContrato(String personal,int contrato) {        
+        Connection c ;
+        CallableStatement cs ;
+        ResultSet rs ;
+        comisionC item ;
+        List<comisionC> lista=new ArrayList<>();
+        try {
+
+            c = ConexionWeb();
+            cs = c.prepareCall("{CALL DI.SP_MOSTRAR_COMISION(1,?,?)}");
+            cs.setString(1, personal);
+            cs.setInt(2, contrato);
+            rs = cs.executeQuery();
+
+            while (rs.next()) {
+                item = new comisionC();
+                item.setComision(rs.getInt("COMISION"));
+                item.setDescripcion(rs.getString("DESCRIPCION"));
+                item.setAbreviatura(rs.getString("ABREVIATURA"));                
+                item.setEstadoRegistro(rs.getInt("ESTADO_REGISTRO"));
+                lista.add(item);               
+
+            }
+            cerrarCall(cs);
+            cerrarConexion(c);
+        } catch (SQLException e) {
+            
+            
+            System.out.println(e.getMessage());
+        }
+        return lista;
+    }
+    
+    public List<comisionC> mostrarComision() {        
+        Connection c ;
+        CallableStatement cs ;
+        ResultSet rs ;
+        comisionC item ;
+        List<comisionC> lista=new ArrayList<>();
+        try {
+
+            c = ConexionWeb();
+            cs = c.prepareCall("SELECT *FROM DI.SYS_COMISION WHERE ESTADO_REGISTRO=1");
+            
+            rs = cs.executeQuery();
+
+            while (rs.next()) {
+                item = new comisionC();
+                item.setComision(rs.getInt("COMISION"));
+                item.setDescripcion(rs.getString("DESCRIPCION"));
+                item.setAbreviatura(rs.getString("ABREVIATURA"));                
+                item.setEstadoRegistro(rs.getInt("ESTADO_REGISTRO"));
+                lista.add(item);               
+
+            }
+            cerrarCall(cs);
+            cerrarConexion(c);
+        } catch (SQLException e) {
+            
+            
+            System.out.println(e.getMessage());
+        }
+        return lista;
+    }
+    
+    
+    
+}
